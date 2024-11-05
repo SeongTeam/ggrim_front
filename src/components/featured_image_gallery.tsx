@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import styles from "@/components/style/gallery.module.css";
 
@@ -15,64 +15,53 @@ export const FeaturedImageGallery: React.FC<FeaturedImageGalleryProps> = ({
     "https://images.unsplash.com/photo-1499696010180-025ef6e1a8f9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
   );
 
-  // return (
-  //   <div
-  //     // className="grid gap-4 max-w-lg bg-slate-400"
-  //     className="grid gap-4 max-w-lg w-full aspect-[4/5] border-4 border-gray-300 rounded-lg overflow-hidden bg-white flex items-center justify-center"
-  //   >
-  //     <div className="p-4">
-  //       <img
-  //         // className="h-auto w-full  rounded-lg object-cover object-center md:h-[480px]"
-  //         className="object-contain h-full w-full"
-  //         src={active}
-  //         alt=""
-  //       />
-  //     </div>
-  //     <div className="grid grid-cols-5 gap-4">
-  //       {imageData.map(({ imgelink }, index) => (
-  //         <div key={index}>
-  //           <img
-  //             onClick={() => setActive(imgelink)}
-  //             src={imgelink}
-  //             className="h-20 max-w-full cursor-pointer rounded-lg object-cover object-center"
-  //             alt="gallery-image"
-  //           />
-  //         </div>
-  //       ))}
-  //     </div>
-  //   </div>
-  // );
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const currentImage = imageData[currentIndex]?.imgelink;
+
+  // 이전 이미지로 이동하는 함수
+  const goToPrevious = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0 ? imageData.length - 1 : prevIndex - 1
+    );
+  };
+
+  // 다음 이미지로 이동하는 함수
+  const goToNext = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === imageData.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+
+  // TODO 그림에 따라서 이미지 크기 조절
   return (
-    <div className="flex gap-8 mx-auto flex-col-reverse xl:flex-row">
+    <div className="flex flex-col md:flex-row items-start gap-4 p-6 max-w-4xl mx-auto border-b border-gray-300">
       {/* Main Image Carousel */}
-      <div className="max-w-lg w-full aspect-[4/5] xl:w-[1062px]">
+      <div className="w-full md:w-1/2 bg-purple-400 relative">
         <img
-          // className="h-auto w-full  rounded-lg object-cover object-center md:h-[480px]"
-          className="object-contain h-full w-full"
-          src={active}
-          alt=""
+          src={currentImage}
+          alt="Main Image"
+          className="object-cover w-full h-full rounded-lg"
         />
+        {/* 왼쪽 버튼 */}
+        <button
+          onClick={goToPrevious}
+          className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full"
+        >
+          ◀
+        </button>
+        {/* 오른쪽 버튼 */}
+        <button
+          onClick={goToNext}
+          className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full"
+        >
+          ▶
+        </button>
       </div>
 
       {/* Thumbnail Navigation */}
-      <div className="xl:w-[126px] w-full">
-        <Swiper
-          slidesPerView={0}
-          spaceBetween={10}
-          direction="vertical"
-          className={`${styles.navForSlider}`}
-        >
-          {imageData.map(({ imgelink }, index) => (
-            <SwiperSlide key={index}>
-              <img
-                src={imgelink}
-                alt={`Thumbnail ${index}`}
-                onClick={() => setActive(imgelink)}
-                className="cursor-pointer h-[110px] rounded-2xl border-2 border-gray-200 hover:border-indigo-600 object-cover"
-              />
-            </SwiperSlide>
-          ))}
-        </Swiper>
+      <div className="xl:w-[126px] w-full bg-red-800">
+        {/* Thumbnail images here, if needed */}
       </div>
     </div>
   );
