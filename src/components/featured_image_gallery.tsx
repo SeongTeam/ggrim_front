@@ -35,13 +35,13 @@ export const FeaturedImageGallery: React.FC<FeaturedImageGalleryProps> = ({
 
   // TODO 그림에 따라서 이미지 크기 조절
   return (
-    <div className="flex flex-col md:flex-row items-start gap-4 p-6 max-w-4xl mx-auto border-b border-gray-300">
+    <div className="flex flex-col md:flex-row items-start gap-5 p-6 max-w-4xl mx-auto min-h-[600px]">
       {/* Main Image Carousel */}
-      <div className="w-full md:w-1/2 bg-purple-400 relative">
+      <div className="w-full md:w-1/2 min-h-[450px] relative flex justify-center items-center bg-ggrimBeige1">
         <img
           src={currentImage}
           alt="Main Image"
-          className="object-cover w-full h-full rounded-lg"
+          className="object-contain max-h-[850px] max-w-full  p-1 "
         />
         {/* 왼쪽 버튼 */}
         <button
@@ -58,10 +58,16 @@ export const FeaturedImageGallery: React.FC<FeaturedImageGalleryProps> = ({
           ▶
         </button>
       </div>
-
       {/* Thumbnail Navigation */}
-      <div className="xl:w-[126px] w-full bg-red-800">
-        {/* Thumbnail images here, if needed */}
+      <div className="flex flex-col w-full md:w-1/2 bg-yellow-400">
+        <h2 className="text-xl font-bold text-gray-800 mb-2">
+          PAINTING OF THE WEEK
+        </h2>
+        <h3 className="text-2xl font-semibold text-gray-900"> artwork-title</h3>
+        <p className="text-blue-600 text-sm mb-2">
+          "artwork-artist" &middot; "artwork-year"
+        </p>
+        <p className="text-gray-700 text-sm mb-4">"artwork-description"</p>
       </div>
     </div>
   );
