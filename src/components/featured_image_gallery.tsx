@@ -37,7 +37,7 @@ export const FeaturedImageGallery: React.FC<FeaturedImageGalleryProps> = ({
   return (
     <div className="flex flex-col md:flex-row items-start gap-5 p-6 max-w-4xl mx-auto min-h-[600px]">
       {/* Main Image Carousel */}
-      <div className="w-full md:w-1/2 min-h-[450px] relative flex justify-center items-center bg-ggrimBeige1">
+      <div className="w-full md:w-1/2 min-h-[450px] relative flex justify-center items-center bg-gray-200">
         <img
           src={currentImage}
           alt="Main Image"
