@@ -11,6 +11,10 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        ggrimGrey1: "#F5F5F5",
+        ggrimBeige1: "#F2EAD3",
+        ggrimBeige2: "#DFD7BF",
+        ggrimBrown1: "#3F2305",
       },
     },
   },
