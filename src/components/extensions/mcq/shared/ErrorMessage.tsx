@@ -1,7 +1,7 @@
 // displays error messages in mcq components
 
-import React from 'react';
-import * as Icons from '@/components/ui/Icons';
+import * as Icons from "@/components/ui/icons";
+import React from "react";
 
 interface ErrorMessageProps {
   message: string;

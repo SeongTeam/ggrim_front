@@ -9,11 +9,7 @@ import {
 } from "@material-tailwind/react";
 
 import React from "react";
-export function ArtworkCarousel<C extends React.ElementType>(
-  props: TypographyProps<C, { component?: C }> & {
-    isValid: boolean;
-  }
-) {
+export function ArtworkCarousel<C extends React.ElementType>() {
   const imageData = [
     {
       imgelink:
@@ -51,10 +47,7 @@ export function ArtworkCarousel<C extends React.ElementType>(
         <div className="flex max-w-md flex-col items-start">
           {/* 여기서 max-w-lg로 조정 */}
           <div className="pt-5 pl-20 mb-2 ">
-            <Typography
-              className="!text-ggrimBrown1 text-3xl font-bold relative after:content-[''] after:block after:w-full after:h-1 after:bg-ggrimBrown1 after:mt-2"
-              {...props}
-            >
+            <Typography className="!text-ggrimBrown1 text-3xl font-bold relative after:content-[''] after:block after:w-full after:h-1 after:bg-ggrimBrown1 after:mt-2">
               Painting of the Week
             </Typography>
           </div>
