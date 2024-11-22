@@ -5,7 +5,7 @@ import { MCQAttributes } from "@/types/mcq_types";
 // import { submitMCQAnswer } from "@/services/mcqClientService";
 
 const useMCQReader = (attrs: MCQAttributes) => {
-  const { answers, selectedAnswer, id } = attrs;
+  const { displayAnswers: answers, selectedAnswer, id } = attrs;
 
   // State Initialization
   const [errorMessage, setErrorMessage] = useState<string | null>(null);

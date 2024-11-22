@@ -3,13 +3,19 @@
 import React from "react";
 import * as Icons from "@/components/ui/icons";
 import useMCQReader from "./use_MCQ_reader";
-import HintPane from "@/components/ui/hint_pane";
+import HintPane from "@/components/extensions/mcq/reader/parts/hint_pane";
 import { ErrorMessage } from "../shared";
-import SubmissionFeedback from "./submission_feedback";
+import SubmissionFeedback from "./parts/submission_feedback";
 import { MCQReaderViewProps } from "@/types/mcq_types";
 
 const MCQReaderView = ({ attrs }: MCQReaderViewProps) => {
-  const { question, answers, selectedAnswer, id, showHintButton } = attrs;
+  const {
+    question,
+    displayAnswers: answers,
+    selectedAnswer,
+    id,
+    showHintButton,
+  } = attrs;
 
   const {
     errorMessage,
@@ -25,30 +31,34 @@ const MCQReaderView = ({ attrs }: MCQReaderViewProps) => {
   } = useMCQReader(attrs);
 
   return (
-    <div className="p-4 rounded-md shadow bg-base-200">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">{question}</h2>
+    <div className="p-4 rounded-md shadow bg-ggrimBeige2 ">
+      <h3 className="text-xl font-bold text-gray-800 mb-6">{question}</h3>
       {errorMessage && <ErrorMessage message={errorMessage} />}
-      <ul className="my-2">
+      <ul className="my-2 pl-8">
         {answers.map((answer, index) => (
-          <li key={index} className="flex items-center gap-2 mb-6">
+          <li key={index} className="flex items-center gab-4 mb-2">
             <input
               type="radio"
-              name={`mcq-reader-${id}`}
+              name={`mcq-reader-${id}-${index}`}
               checked={readerSelectedAnswer === index}
               onChange={() => handleReaderSelectAnswer(index)}
-              className="radio radio-primary"
+              className="h-5 w-5 radio radio-primary"
               disabled={isSubmitted && attemptedAnswers.includes(index)}
             />
+            <div className="mx-2"></div>
             <span className="text-base font-medium text-gray-700">
               {answer}
             </span>
             {isSubmitted && isCorrect && index === selectedAnswer && (
-              <Icons.CircleCheck className="w-6 h-6 text-success ml-2" />
+              <Icons.CircleCheck
+                className="w-6 h-6 text-success ml-2"
+                fill="green"
+              />
             )}
             {isSubmitted &&
               attemptedAnswers.includes(index) &&
               index !== selectedAnswer && (
-                <Icons.CircleX className="w-6 h-6 text-error ml-2" />
+                <Icons.CircleX className="w-6 h-6 text-error ml-2" fill="red" />
               )}
           </li>
         ))}
