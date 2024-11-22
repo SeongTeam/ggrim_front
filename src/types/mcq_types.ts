@@ -15,7 +15,8 @@ export interface MCQHintRequest {
 
 export interface MCQAttributes {
   question: string;
-  answers: string[];
+  displayAnswers: string[];
+  answer: string;
   selectedAnswer: number | null;
   isFinalized: boolean;
   id: string;
