@@ -3,27 +3,23 @@
 import MCQReaderView from "@/components/extensions/mcq/reader/MCQ_reader_view";
 import SubmissionPane from "@/components/ui/sudmission_pane";
 import { MCQSelectionProvider } from "@/context/MCQ_selection_context";
+import { mcqListState } from "@/recoil/atoms/mcq_state";
 import { MCQAttributes, MCQReaderViewProps } from "@/types/mcq_types";
 import { Typography } from "@material-tailwind/react";
 import React from "react";
+import { useRecoilState } from "recoil";
 
 export function ArtworkQuiz<C extends React.ElementType>() {
+  // TODO recoil 적용
+  const [mcqList, setMcqList] = useRecoilState(mcqListState);
+
   const attrs1: MCQAttributes = {
-    answers: [
-      "000",
-      "111",
-      "222",
-      "333",
-      "444",
-      "555",
-      "666",
-      "777",
-      "888",
-      "999",
-    ],
+    displayAnswers: ["최후의 만찬", "천지창조", "아테네 학당", "피에타"],
+    answer: "아테네 학당",
     id: "1234",
     isFinalized: true,
-    question: "test question",
+    question:
+      "라파엘로의 가장 유명한 작품 중 하나로, 바티칸 궁전의 벽화를 장식하며 고전 철학자들을 묘사한 작품의 제목은 무엇인가?",
     selectedAnswer: 3,
     showHintButton: true,
   };
@@ -48,9 +44,10 @@ export function ArtworkQuiz<C extends React.ElementType>() {
             question={"Test question"}
           /> */}
           <MCQSelectionProvider>
-            <div className="relative w-full mt-4 mb-12"></div>
+            <div className="relative w-full mt-4 mb-12 px-16">
+              <MCQReaderView attrs={attrs1} />
+            </div>
           </MCQSelectionProvider>
-          {/* <MCQReaderView attrs={attrs1} /> */}
         </div>
       </div>
     </section>
