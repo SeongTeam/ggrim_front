@@ -10,7 +10,7 @@ export default function Campaign() {
     <>
       <ArtworkCarousel />
       <ArtworkQuiz />
-      <MackRecoilUI></MackRecoilUI>
+      {/* <MackRecoilUI></MackRecoilUI> */}
       {/* <Footer /> */}
     </>
   );
