@@ -20,6 +20,7 @@ import {
     CircleX,
     RefreshCcw,
     Lightbulb,
+    CornerRightUp,
 } from 'lucide-react';
 
 export {
@@ -42,4 +43,5 @@ export {
     CircleX,
     RefreshCcw,
     Lightbulb,
+    CornerRightUp,
 };

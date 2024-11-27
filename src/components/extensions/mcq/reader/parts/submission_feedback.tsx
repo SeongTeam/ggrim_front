@@ -2,6 +2,7 @@
 
 import React from 'react';
 import * as Icons from '@/components/ui/icons';
+import Button from '@material-tailwind/react/components/Button';
 
 interface SubmissionFeedbackProps {
     isCorrect: boolean;
@@ -23,16 +24,20 @@ const SubmissionFeedback: React.FC<SubmissionFeedbackProps> = ({
     showHintButton,
 }) => {
     return (
-        <div>
+        <div className="mt-6 text-right">
+            {' '}
+            {/* 오른쪽 정렬 */}
             {isSubmitted && !isCorrect ? (
                 <div>
                     <div className="text-lg font-semibold text-error mb-2 text-red-500">
                         Incorrect... Try again!
                     </div>
-                    <div className="flex items-center space-x-4">
+                    <div className="flex justify-end items-center space-x-4">
+                        {' '}
+                        {/* 버튼 우측 정렬 */}
                         <button
                             onClick={handleSubmit}
-                            className="btn btn-sm btn-primary  text-ggrimBrown1"
+                            className="btn btn-sm btn-primary text-ggrimBrown1"
                             disabled={readerSelectedAnswer === null}
                         >
                             Try Again
@@ -40,7 +45,7 @@ const SubmissionFeedback: React.FC<SubmissionFeedbackProps> = ({
                         {showHintButton && !isCorrect && (
                             <button
                                 onClick={handleHintButtonClick}
-                                className="btn btn-sm btn-outline btn-secondary flex items-center  text-ggrimBrown1"
+                                className="btn btn-sm btn-outline btn-secondary flex items-center text-ggrimBrown1"
                             >
                                 <Icons.Lightbulb className="w-4 h-4" />
                                 <span className="pr-1">Smart Hint</span>
@@ -61,18 +66,20 @@ const SubmissionFeedback: React.FC<SubmissionFeedbackProps> = ({
                     </button>
                 </div>
             ) : (
-                <div className="flex items-center space-x-4">
-                    <button
-                        onClick={handleSubmit}
-                        className="btn btn-sm btn-primary text-ggrimBrown1"
-                        disabled={readerSelectedAnswer === null}
+                <div className="flex justify-end items-center space-x-4">
+                    {' '}
+                    {/* 버튼 우측 정렬 */}
+                    <Button
+                        variant="filled"
+                        className="py-2 px-4 flex items-center gap-3 text-gray-600 bg-green-200"
                     >
-                        Submit Answer
-                    </button>
+                        Submit
+                        <Icons.CornerRightUp />
+                    </Button>
                     {showHintButton && !isCorrect && (
                         <button
                             onClick={handleHintButtonClick}
-                            className="btn btn-sm btn-outline btn-secondary flex items-center  text-ggrimBrown1"
+                            className="btn btn-sm btn-outline btn-secondary flex items-center text-ggrimBrown1"
                         >
                             <Icons.Lightbulb className="w-4 h-4" />
                             <span className="pr-1">Smart Hint</span>

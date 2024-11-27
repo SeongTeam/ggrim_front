@@ -41,27 +41,21 @@ const MCQView = ({ attribute: attrs }: MCQReaderViewProps) => {
             {errorMessage && <ErrorMessage message={errorMessage} />}
 
             <div className="grid md:grid-cols-2 gap-4 sm:grid-cols-1">
-                {displayPaintings.map((answer, index) => (
+                {displayPaintings.map((painting, index) => (
                     <div
-                        key={answer.title + answer.artistName}
+                        key={painting.title + painting.artistName}
                         className={`flex flex-col items-center p-4 rounded-md bg-white shadow-md ${
                             selectedIndex === index ? 'border-4 border-primary' : ''
                         }`}
                         onClick={() => handleImageClick(index)}
                     >
-                        <div className="flex flex-col items-start gap-4">
-                            <span className="text-base font-medium text-gray-700">
-                                {answer.title}
-                            </span>
-
-                            <img
-                                src="https://imagescdn.gettyimagesbank.com/500/202311/jv13117838.jpg"
-                                alt={`Answer ${index}`}
-                                className={`w-50 h-auto rounded-md mb-2 ${
-                                    selectedIndex === index ? 'ring-4 ring-primary' : ''
-                                }`}
-                            />
-                        </div>
+                        <img
+                            src={painting.image}
+                            alt={`Answer ${index}`}
+                            className={`w-50 h-auto max-h-[250px] max-w-full  mb-2 ${
+                                selectedIndex === index ? 'ring-4 ring-primary' : ''
+                            }`}
+                        />
 
                         {isSubmitted && isCorrect && index === selectedAnswer && (
                             <Icons.CircleCheck className="w-6 h-6 text-success ml-2" fill="green" />
@@ -73,6 +67,17 @@ const MCQView = ({ attribute: attrs }: MCQReaderViewProps) => {
                             )}
                     </div>
                 ))}
+            </div>
+            <div className="flex justify-end items-center">
+                <SubmissionFeedback
+                    isCorrect={isCorrect}
+                    isSubmitted={isSubmitted}
+                    readerSelectedAnswer={readerSelectedAnswer}
+                    handleSubmit={handleSubmit}
+                    handleHintButtonClick={handleHintButtonClick}
+                    handleClearSubmission={handleClearSubmission}
+                    showHintButton={false}
+                />
             </div>
         </div>
     );
