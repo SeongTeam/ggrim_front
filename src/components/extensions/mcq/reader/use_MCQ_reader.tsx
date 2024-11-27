@@ -1,11 +1,11 @@
 // custom hook for managing mcq logic in reader mode
 
+import { MCQAttribute } from '@/types/mcq_types';
 import { useState } from 'react';
-import { MCQAttributes } from '@/types/mcq_types';
 // import { submitMCQAnswer } from "@/services/mcqClientService";
 
-const useMCQReader = (attrs: MCQAttributes) => {
-    const { displayAnswers: answers, selectedAnswer, id } = attrs;
+const useMCQReader = (attrs: MCQAttribute) => {
+    const { displayPaintings: answers, selectedAnswer, id } = attrs;
 
     // State Initialization
     const [errorMessage, setErrorMessage] = useState<string | null>(null);

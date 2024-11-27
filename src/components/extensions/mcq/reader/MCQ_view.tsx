@@ -10,7 +10,7 @@ import { MCQReaderViewProps } from '@/types/mcq_types';
 import { Painting } from '@/mock/data/entity/mock_painting';
 
 // TODO displayAnswers 필드 값 변경
-const MCQReaderView = ({ attribute: attrs }: MCQReaderViewProps) => {
+const MCQView = ({ attribute: attrs }: MCQReaderViewProps) => {
     const { question, answers, displayPaintings, selectedAnswer, id } = attrs;
 
     const {
@@ -76,4 +76,4 @@ const MCQReaderView = ({ attribute: attrs }: MCQReaderViewProps) => {
     );
 };
 
-export default MCQReaderView;
+export default MCQView;

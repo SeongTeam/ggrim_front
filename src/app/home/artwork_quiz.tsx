@@ -1,6 +1,6 @@
 'use client';
 
-import MCQReaderView from '@/components/extensions/mcq/reader/MCQ_reader_view';
+import MCQView from '@/components/extensions/mcq/reader/MCQ_view';
 import SubmissionPane from '@/components/ui/sudmission_pane';
 import { MCQSelectionProvider } from '@/context/MCQ_selection_context';
 import { mcqListState } from '@/recoil/atoms/mcq_state';
@@ -33,7 +33,7 @@ export function ArtworkQuiz<C extends React.ElementType>(artworkQuizProps: Artwo
                 </div>
                 <div className="w-lg bg-ggrimGrey1">
                     <div className="relative w-full mt-4 mb-12 px-16">
-                        <MCQReaderView attribute={mcqAttributes[0]} />
+                        <MCQView attribute={mcqAttributes[0]} />
                     </div>
                 </div>
             </div>
