@@ -2,8 +2,8 @@ import { MCQAttribute } from "@/types/mcq_types";
 import { atom } from "recoil";
 
 const defaultMCQAttributes: MCQAttribute = {
-  displayAnswers: [],
-  answer: [],
+  displayPaintings: [],
+  answers: [],
   id: "initMCQ",
   isFinalized: true,
   question: "question",

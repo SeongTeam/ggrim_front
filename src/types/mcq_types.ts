@@ -17,8 +17,8 @@ export interface MCQHintRequest {
 
 export interface MCQAttribute {
   question: string;
-  displayAnswers: Painting[];
-  answer: Painting[];
+  displayPaintings: Painting[];
+  answers: Painting[];
   selectedAnswer: number | null;
   isFinalized: boolean;
   id: string;
@@ -26,10 +26,10 @@ export interface MCQAttribute {
 }
 
 export interface MCQInstructorViewProps {
-  attrs: MCQAttribute;
-  updateAttributes: (attrs: Partial<MCQAttribute>) => void;
+  attribute: MCQAttribute;
+  updateAttributes: (attribute: Partial<MCQAttribute>) => void;
 }
 
 export interface MCQReaderViewProps {
-  attrs: MCQAttribute;
+  attribute: MCQAttribute;
 }
