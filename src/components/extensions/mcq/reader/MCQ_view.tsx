@@ -1,6 +1,6 @@
 // main component for the reader's mcq interface
 
-import React from 'react';
+import React, { useState } from 'react';
 import * as Icons from '@/components/ui/icons';
 import useMCQReader from './use_MCQ_reader';
 import HintPane from '@/components/extensions/mcq/reader/parts/hint_pane';
@@ -26,7 +26,14 @@ const MCQView = ({ attribute: attrs }: MCQReaderViewProps) => {
         handleClearSubmission,
     } = useMCQReader(attrs);
 
-    // const _displayAnswers = makeDisplayAnswer(answer, displayAnswers);
+    const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+
+    const handleImageClick = (index: number) => {
+        if (!isSubmitted || !attemptedAnswers.includes(index)) {
+            setSelectedIndex(index);
+            handleReaderSelectAnswer(index);
+        }
+    };
 
     return (
         <div className="p-4 rounded-md shadow bg-ggrimBeige2">
@@ -37,27 +44,22 @@ const MCQView = ({ attribute: attrs }: MCQReaderViewProps) => {
                 {displayPaintings.map((answer, index) => (
                     <div
                         key={answer.title + answer.artistName}
-                        className="flex flex-col items-center p-4 rounded-md bg-white shadow-md"
+                        className={`flex flex-col items-center p-4 rounded-md bg-white shadow-md ${
+                            selectedIndex === index ? 'border-4 border-primary' : ''
+                        }`}
+                        onClick={() => handleImageClick(index)}
                     >
                         <div className="flex flex-col items-start gap-4">
-                            <div className="flex flex-row items-start gap-2">
-                                <input
-                                    type="radio"
-                                    name={`mcq-reader-${id}-${index}`}
-                                    checked={readerSelectedAnswer === index}
-                                    onChange={() => handleReaderSelectAnswer(index)}
-                                    className="h-5 w-5 radio radio-primary"
-                                    disabled={isSubmitted && attemptedAnswers.includes(index)}
-                                />
-                                <span className="text-base font-medium text-gray-700">
-                                    {answer.title}
-                                </span>
-                            </div>
+                            <span className="text-base font-medium text-gray-700">
+                                {answer.title}
+                            </span>
 
                             <img
                                 src="https://imagescdn.gettyimagesbank.com/500/202311/jv13117838.jpg"
                                 alt={`Answer ${index}`}
-                                className="w-50 h-auto rounded-md mb-2"
+                                className={`w-50 h-auto rounded-md mb-2 ${
+                                    selectedIndex === index ? 'ring-4 ring-primary' : ''
+                                }`}
                             />
                         </div>
 
