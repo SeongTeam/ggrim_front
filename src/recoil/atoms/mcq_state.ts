@@ -1,9 +1,9 @@
-import { MCQAttributes } from "@/types/mcq_types";
+import { MCQAttribute } from "@/types/mcq_types";
 import { atom } from "recoil";
 
-const defaultMCQAttributes: MCQAttributes = {
+const defaultMCQAttributes: MCQAttribute = {
   displayAnswers: [],
-  answer: "ggrim",
+  answer: [],
   id: "initMCQ",
   isFinalized: true,
   question: "question",
@@ -11,7 +11,7 @@ const defaultMCQAttributes: MCQAttributes = {
   showHintButton: false,
 };
 
-export const mcqListState = atom<MCQAttributes[]>({
+export const mcqListState = atom<MCQAttribute[]>({
   key: "mcqListState",
   default: [defaultMCQAttributes], // default 값 초기에 DB에서 받아 와야함
 });

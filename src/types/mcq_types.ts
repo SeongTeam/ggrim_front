@@ -1,6 +1,8 @@
 // extracted types from the MCQ conglomerate
 // the first two are for the API, the last 3 are from the frontend code
 
+import { Painting } from "@/mock/data/entity/mock_painting";
+
 export interface MCQSubmission {
   mcq_id: string;
   selected_answer: string;
@@ -13,10 +15,10 @@ export interface MCQHintRequest {
   remainingAnswers: string[];
 }
 
-export interface MCQAttributes {
+export interface MCQAttribute {
   question: string;
-  displayAnswers: string[];
-  answer: string;
+  displayAnswers: Painting[];
+  answer: Painting[];
   selectedAnswer: number | null;
   isFinalized: boolean;
   id: string;
@@ -24,10 +26,10 @@ export interface MCQAttributes {
 }
 
 export interface MCQInstructorViewProps {
-  attrs: MCQAttributes;
-  updateAttributes: (attrs: Partial<MCQAttributes>) => void;
+  attrs: MCQAttribute;
+  updateAttributes: (attrs: Partial<MCQAttribute>) => void;
 }
 
 export interface MCQReaderViewProps {
-  attrs: MCQAttributes;
+  attrs: MCQAttribute;
 }
