@@ -11,6 +11,7 @@ interface SubmissionFeedbackProps {
     handleSubmit: () => void;
     handleHintButtonClick: () => void;
     handleClearSubmission: () => void;
+    handleNextMCQ: () => void;
     showHintButton: boolean;
 }
 
@@ -21,6 +22,7 @@ const SubmissionFeedback: React.FC<SubmissionFeedbackProps> = ({
     handleSubmit,
     handleHintButtonClick,
     handleClearSubmission,
+    handleNextMCQ,
     showHintButton,
 }) => {
     return (
@@ -36,7 +38,7 @@ const SubmissionFeedback: React.FC<SubmissionFeedbackProps> = ({
                         {' '}
                         {/* 버튼 우측 정렬 */}
                         <button
-                            onClick={handleSubmit}
+                            onClick={handleNextMCQ}
                             className="btn btn-sm btn-primary text-ggrimBrown1"
                             disabled={readerSelectedAnswer === null}
                         >
@@ -70,13 +72,21 @@ const SubmissionFeedback: React.FC<SubmissionFeedbackProps> = ({
                     {' '}
                     {/* 버튼 우측 정렬 */}
                     <Button
+                        onClick={handleSubmit}
                         variant="filled"
                         className="py-2 px-4 flex items-center gap-3 text-gray-600 bg-green-200"
                     >
                         Submit
                         <Icons.CornerRightUp />
                     </Button>
-                    {showHintButton && !isCorrect && (
+                    <button
+                        onClick={handleNextMCQ}
+                        className="btn btn-sm btn-primary text-ggrimBrown1"
+                    >
+                        NEXT
+                    </button>
+                    {/* TODO 힌트 기능 필요하면 사용 */}
+                    {/* {showHintButton && !isCorrect && (
                         <button
                             onClick={handleHintButtonClick}
                             className="btn btn-sm btn-outline btn-secondary flex items-center text-ggrimBrown1"
@@ -84,7 +94,7 @@ const SubmissionFeedback: React.FC<SubmissionFeedbackProps> = ({
                             <Icons.Lightbulb className="w-4 h-4" />
                             <span className="pr-1">Smart Hint</span>
                         </button>
-                    )}
+                    )} */}
                 </div>
             )}
         </div>
