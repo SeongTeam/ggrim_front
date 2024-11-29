@@ -5,7 +5,7 @@ import { useState } from 'react';
 // import { submitMCQAnswer } from "@/services/mcqClientService";
 
 const useMCQReader = (attrs: MCQAttribute) => {
-    const { displayPaintings: answers, selectedAnswer, id } = attrs;
+    const { displayPaintings, selectedAnswer, id } = attrs;
 
     // State Initialization
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -27,7 +27,6 @@ const useMCQReader = (attrs: MCQAttribute) => {
     // Submit the selected answer
     const handleSubmit = async (): Promise<void> => {
         if (readerSelectedAnswer !== null) {
-            const selectedAnswerText = answers[readerSelectedAnswer];
             const isCorrectAnswer = readerSelectedAnswer === selectedAnswer;
             setIsSubmitted(true);
             setAttemptedAnswers((prev) => [...prev, readerSelectedAnswer]);
