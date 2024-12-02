@@ -7,22 +7,24 @@ import Button from '@material-tailwind/react/components/Button';
 interface SubmissionFeedbackProps {
     isCorrect: boolean;
     isSubmitted: boolean;
-    readerSelectedAnswer: number | null;
+
     handleSubmit: () => void;
     handleHintButtonClick: () => void;
     handleClearSubmission: () => void;
     handleNextMCQ: () => void;
+    handelTryAgain: () => void;
     showHintButton: boolean;
 }
 
 const SubmissionFeedback: React.FC<SubmissionFeedbackProps> = ({
     isCorrect,
     isSubmitted,
-    readerSelectedAnswer,
+
     handleSubmit,
     handleHintButtonClick,
     handleClearSubmission,
     handleNextMCQ,
+    handelTryAgain,
     showHintButton,
 }) => {
     return (
@@ -35,24 +37,12 @@ const SubmissionFeedback: React.FC<SubmissionFeedbackProps> = ({
                         Incorrect... Try again!
                     </div>
                     <div className="flex justify-end items-center space-x-4">
-                        {' '}
-                        {/* 버튼 우측 정렬 */}
                         <button
-                            onClick={handleNextMCQ}
+                            onClick={handelTryAgain}
                             className="btn btn-sm btn-primary text-ggrimBrown1"
-                            disabled={readerSelectedAnswer === null}
                         >
-                            Try Again
+                            Try again
                         </button>
-                        {showHintButton && !isCorrect && (
-                            <button
-                                onClick={handleHintButtonClick}
-                                className="btn btn-sm btn-outline btn-secondary flex items-center text-ggrimBrown1"
-                            >
-                                <Icons.Lightbulb className="w-4 h-4" />
-                                <span className="pr-1">Smart Hint</span>
-                            </button>
-                        )}
                     </div>
                 </div>
             ) : isCorrect ? (
@@ -61,10 +51,10 @@ const SubmissionFeedback: React.FC<SubmissionFeedbackProps> = ({
                         Correct!
                     </div>
                     <button
-                        onClick={handleClearSubmission}
+                        onClick={handelTryAgain}
                         className="btn btn-sm btn-secondary text-base text-black border-black"
                     >
-                        Clear
+                        Next Quiz
                     </button>
                 </div>
             ) : (
