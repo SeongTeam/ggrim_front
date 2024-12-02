@@ -20,25 +20,30 @@ export function ArtworkQuiz<C extends React.ElementType>(artworkQuizProps: Artwo
     const [currentIndex, setCurrentIndex] = React.useState(0);
 
     const handelNextMCQ = (): void => {
+        if (currentIndex === 2) {
+            setCurrentIndex(0);
+            return;
+        }
         setCurrentIndex((prevIndex) => Math.min(prevIndex + 1, mcqAttributes.length - 1));
     };
 
     return (
-        <section className="sm:px-16 md:px-40 lg:60 !py-20">
-            <div className="container mx-auto bg-ggrimGrey1">
-                <div className="w-lg bg-ggrimGrey1">
-                    <motion.div
-                        key={currentIndex}
-                        initial={{ opacity: 0, x: 50 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -50 }}
-                        transition={{ duration: 0.5 }}
-                    >
-                        <MCQView
-                            attribute={mcqAttributes[currentIndex]}
-                            handelNextMCQ={handelNextMCQ}
-                        />
-                    </motion.div>
+        <section className="sm:px-16 md:px-40 lg:60 !py-20 ">
+            <div className="container mx-auto  bg-ggrimGrey1">
+                <div className="flex max-w-md flex-col items-start">
+                    {/* 여기서 max-w-lg로 조정 */}
+                    <div className="pt-5 pl-20 mb-2 ">
+                        <Typography className="!text-ggrimBrown1 text-3xl font-bold relative after:content-[''] after:block after:w-full after:h-1 after:bg-ggrimBrown1 after:mt-2">
+                            Quiz of the Week
+                        </Typography>
+                    </div>
+                </div>
+                <div className=" bg-ggrimGrey1 ">
+                    <MCQView
+                        attribute={mcqAttributes[currentIndex]}
+                        currentAttributeIndex={currentIndex}
+                        handelNextMCQ={handelNextMCQ}
+                    />
                 </div>
             </div>
         </section>
