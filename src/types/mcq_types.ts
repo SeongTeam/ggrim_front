@@ -32,5 +32,6 @@ export interface MCQInstructorViewProps {
 
 export interface MCQReaderViewProps {
     attribute: MCQAttribute;
+    currentAttributeIndex: number;
     handelNextMCQ: () => void;
 }

@@ -70,7 +70,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <RecoilRootWrapper>
                     <Navbar />
                     {children}
-                    <FixedPlugin />
+                    {/* <FixedPlugin /> */}
                 </RecoilRootWrapper>
             </body>
         </html>

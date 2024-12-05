@@ -89,15 +89,6 @@ const MCQView = ({ attribute, currentAttributeIndex, handelNextMCQ }: MCQReaderV
                                         : ''
                                 }`}
                             />
-
-                            {/* {isSubmitted && isCorrect && index === selectedAnswer && (
-                            <Icons.CircleCheck className="w-6 h-6 text-success ml-2" fill="green" />
-                        )}
-                        {isSubmitted &&
-                            attemptedAnswers.includes(index) &&
-                            index !== selectedAnswer && (
-                                <Icons.CircleX className="w-6 h-6 text-error ml-2" fill="red" />
-                            )} */}
                         </div>
                     ))}
                 </div>

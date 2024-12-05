@@ -44,7 +44,7 @@ export default async function Campaign() {
 
     const attrs2: MCQAttribute = {
         displayPaintings: makeDisplayAnswer(data.slice(4, 7), data.slice(7, 8)),
-        answers: data.slice(8, 9),
+        answers: data.slice(4, 5),
         id: '1234',
         isFinalized: true,
         question:
