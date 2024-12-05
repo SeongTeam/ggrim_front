@@ -1,61 +1,55 @@
-"use client";
+'use client';
 
-import { ImageSlider } from "./imageSlider";
+import { ImageSlider } from './imageSlider';
 
 // import { Sidebar } from "./sidebar";
-import { useWindowWidth } from "@/hooks/useWindowWidth";
-import { useGalleryStore } from "./store";
+import { useWindowWidth } from '@/hooks/useWindowWidth';
+import { useGalleryStore } from './store';
 
-import { useParams } from "next/navigation";
+import { useParams } from 'next/navigation';
 // import { LocaleTypes } from '@/app/[locale]/i18n/settings'
 
 interface GalleryProps {
-  galleryData: any;
-  allSerie: string[];
-  allTags: string[];
+    galleryData: any;
+    allSerie: string[];
+    allTags: string[];
 }
 
 const Gallery = ({ galleryData, allSerie, allTags }: GalleryProps) => {
-  // const locale = useParams()?.locale as LocaleTypes
-  const {
-    isOpen,
-    setIsOpen,
-    selectedSerie,
-    selectSeries,
-    selectedTags,
-    selectTag,
-  } = useGalleryStore();
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
-  const windowWidth = useWindowWidth();
+    // const locale = useParams()?.locale as LocaleTypes
+    const { isOpen, setIsOpen, selectedSerie, selectSeries, selectedTags, selectTag } =
+        useGalleryStore();
+    const toggleMenu = () => {
+        setIsOpen(!isOpen);
+    };
+    const windowWidth = useWindowWidth();
 
-  const isNotMobile = 10000 > 568;
-  /** TODO     windowWidth > 568 사용시 에러 발생 제거 해야함 */
-  console.log("windowWidth:", windowWidth, isNotMobile);
-  const portraitDimensions = {
-    width: isNotMobile ? 350 : 225,
-    height: isNotMobile ? 450 : 300,
-  };
-  const landscapeDimensions = {
-    width: isNotMobile ? 583 : 400,
-    height: isNotMobile ? 450 : 300,
-  };
+    const isNotMobile = 10000 > 568;
+    /** TODO     windowWidth > 568 사용시 에러 발생 제거 해야함 */
+    console.log('windowWidth:', windowWidth, isNotMobile);
+    const portraitDimensions = {
+        width: isNotMobile ? 350 : 225,
+        height: isNotMobile ? 450 : 300,
+    };
+    const landscapeDimensions = {
+        width: isNotMobile ? 583 : 400,
+        height: isNotMobile ? 450 : 300,
+    };
 
-  return (
-    <>
-      <div className="mb-20 pt-10 w-screen ">
-        <ImageSlider
-          // params={{ locale: locale }}
-          imageData={galleryData}
-          portraitDimensions={portraitDimensions}
-          landscapeDimensions={landscapeDimensions}
-          selectedSerie={selectedSerie}
-          selectedTags={selectedTags}
-          selectTag={selectTag}
-        />
-      </div>
-      {/* <Sidebar
+    return (
+        <>
+            <div className="mb-20 pt-10 w-screen ">
+                <ImageSlider
+                    // params={{ locale: locale }}
+                    imageData={galleryData}
+                    portraitDimensions={portraitDimensions}
+                    landscapeDimensions={landscapeDimensions}
+                    selectedSerie={selectedSerie}
+                    selectedTags={selectedTags}
+                    selectTag={selectTag}
+                />
+            </div>
+            {/* <Sidebar
         isOpen={isOpen}
         toggleMenu={toggleMenu}
         allSerie={allSerie}
@@ -65,8 +59,8 @@ const Gallery = ({ galleryData, allSerie, allTags }: GalleryProps) => {
         selectedTags={selectedTags}
         selectTag={selectTag}
       /> */}
-    </>
-  );
+        </>
+    );
 };
 
 export default Gallery;
