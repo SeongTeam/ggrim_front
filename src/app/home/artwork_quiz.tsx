@@ -10,6 +10,8 @@ import { Typography } from '@material-tailwind/react';
 import React from 'react';
 import { useRecoilState } from 'recoil';
 import { Painting } from '@/mock/data/entity/mock_painting'; // Artwork 클래스를 정의한 파일 경로
+import { mockCldData } from '@/mock/data/mockCldData';
+import { CldImage } from '@/components/cld-groud';
 
 interface ArtworkQuizProps {
     mcqAttributes: MCQAttribute[];
@@ -38,6 +40,13 @@ export function ArtworkQuiz<C extends React.ElementType>(artworkQuizProps: Artwo
                         </Typography>
                     </div>
                 </div>
+                <article className="h-48 w-48 relative flex justify-center items-center">
+                    <CldImage
+                        alt=" Ower profile image"
+                        src={mockCldData.bochiImagePublicId}
+                        fill={true}
+                    />
+                </article>
                 <div className=" bg-ggrimGrey1 ">
                     <MCQView
                         attribute={mcqAttributes[currentIndex]}
