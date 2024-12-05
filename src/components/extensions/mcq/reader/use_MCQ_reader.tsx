@@ -1,78 +1,94 @@
 // custom hook for managing mcq logic in reader mode
 
-import { useState } from "react";
-import { MCQAttributes } from "@/types/mcq_types";
+import { MCQAttribute } from '@/types/mcq_types';
+import { useState } from 'react';
 // import { submitMCQAnswer } from "@/services/mcqClientService";
 
-const useMCQReader = (attrs: MCQAttributes) => {
-  const { displayAnswers: answers, selectedAnswer, id } = attrs;
+const useMCQReader = (attrs: MCQAttribute) => {
+    const { displayPaintings, answers, selectedAnswer, id } = attrs;
 
-  // State Initialization
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [readerSelectedAnswer, setReaderSelectedAnswer] = useState<
-    number | null
-  >(null);
-  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
-  const [attemptedAnswers, setAttemptedAnswers] = useState<number[]>([]);
-  const [isCorrect, setIsCorrect] = useState<boolean>(false);
-  const [showHint, setShowHint] = useState<boolean>(false);
+    // State Initialization
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [readerSelectedAnswer, setReaderSelectedAnswer] = useState<string | null>(null);
+    const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+    const [attemptedAnswers, setAttemptedAnswers] = useState<number[]>([]);
+    const [isCorrect, setIsCorrect] = useState<boolean>(false);
+    const [showHint, setShowHint] = useState<boolean>(false);
 
-  // Event Handlers
+    const answerID = answers[0].id;
 
-  // Handle selecting an answer
-  const handleReaderSelectAnswer = (index: number): void => {
-    if (!attemptedAnswers.includes(index)) {
-      setReaderSelectedAnswer(index);
-    }
-  };
+    // Event Handlers
 
-  // Submit the selected answer
-  const handleSubmit = async (): Promise<void> => {
-    if (readerSelectedAnswer !== null) {
-      const selectedAnswerText = answers[readerSelectedAnswer];
-      const isCorrectAnswer = readerSelectedAnswer === selectedAnswer;
-      setIsSubmitted(true);
-      setAttemptedAnswers((prev) => [...prev, readerSelectedAnswer]);
-      setIsCorrect(isCorrectAnswer);
+    // Handle selecting an answer
+    const handleReaderSelectAnswer = (paintingId: string): void => {
+        setReaderSelectedAnswer(paintingId);
+    };
 
-      try {
-        // await submitMCQAnswer(id, selectedAnswerText, isCorrectAnswer);
-        console.log("submitMCQAnswer(id, selectedAnswerText)");
-      } catch {
-        setErrorMessage("Failed to submit your answer. Please try again.");
-      }
-    }
-  };
+    // Submit the selected answer
+    const handleSubmit = async (): Promise<void> => {
+        if (readerSelectedAnswer !== null) {
+            const isCorrectAnswer = readerSelectedAnswer === answerID;
+            setIsSubmitted(true);
+            // setAttemptedAnswers((prev) => [...prev, readerSelectedAnswer]);
+            setIsCorrect(isCorrectAnswer);
+            console.log(
+                `isCorrectAnswer: ${isCorrectAnswer} / ${readerSelectedAnswer} == ${selectedAnswer}`,
+            );
 
-  // Toggle the hint pane
-  const handleHintButtonClick = (): void => {
-    setShowHint((prev) => !prev);
-  };
+            try {
+                // await submitMCQAnswer(id, selectedAnswerText, isCorrectAnswer);
+                console.log('submitMCQAnswer(id, selectedAnswerText)');
+            } catch {
+                setErrorMessage('Failed to submit your answer. Please try again.');
+            }
+        }
+    };
 
-  // Clear the submission state
-  const handleClearSubmission = (): void => {
-    setIsSubmitted(false);
-    setReaderSelectedAnswer(null);
-    setAttemptedAnswers([]);
-    setIsCorrect(false);
-    setErrorMessage(null);
-  };
+    const cleatSubmitState = async (): Promise<void> => {
+        if (readerSelectedAnswer !== null) {
+            setIsSubmitted(false);
+            setIsCorrect(false);
+            setReaderSelectedAnswer(null);
 
-  return {
-    // State
-    errorMessage,
-    readerSelectedAnswer,
-    isSubmitted,
-    attemptedAnswers,
-    isCorrect,
-    showHint,
-    // Handlers
-    handleReaderSelectAnswer,
-    handleSubmit,
-    handleHintButtonClick,
-    handleClearSubmission,
-    setErrorMessage,
-  };
+            try {
+                // await submitMCQAnswer(id, selectedAnswerText, isCorrectAnswer);
+                console.log('submitMCQAnswer(id, selectedAnswerText)');
+            } catch {
+                setErrorMessage('Failed to submit your answer. Please try again.');
+            }
+        }
+    };
+
+    // Toggle the hint pane
+    const handleHintButtonClick = (): void => {
+        setShowHint((prev) => !prev);
+    };
+
+    // Clear the submission state
+    const handleClearSubmission = (): void => {
+        setIsSubmitted(false);
+        setReaderSelectedAnswer(null);
+        setAttemptedAnswers([]);
+        setIsCorrect(false);
+        setErrorMessage(null);
+    };
+
+    return {
+        // State
+        errorMessage,
+        readerSelectedAnswer,
+        isSubmitted,
+        attemptedAnswers,
+        isCorrect,
+        showHint,
+        // Handlers
+        handleReaderSelectAnswer,
+        handleSubmit,
+        handleHintButtonClick,
+        handleClearSubmission,
+        cleatSubmitState,
+        setErrorMessage,
+    };
 };
 
 export default useMCQReader;
