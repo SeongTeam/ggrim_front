@@ -1,10 +1,9 @@
 'use client';
 
 import { FeaturedImageGallery } from '@/components/featured_image_gallery';
-
 import { Carousel, Typography, TypographyProps } from '@material-tailwind/react';
-
 import React from 'react';
+
 export function ArtworkCarousel<C extends React.ElementType>() {
     const imageData = [
         {

@@ -1,11 +1,13 @@
 import { Navbar, Footer } from '@/components';
-import { ArtworkCarousel } from './home/artwork_carousel';
+import { ArtworkCarousel } from './home/artworkCarousel';
 import Gallery from '@/components/coverflowGallery';
-import { ArtworkQuiz } from './home/artwork_quiz';
+import { ArtworkQuiz } from './home/artworkQuiz';
 import { MackRecoilUI } from '../mock/mock_recoil';
 import { Painting } from '@/mock/data/entity/mock_painting';
 import { MCQAttribute } from '@/types/mcq_types';
 
+// TODO page.tsx 최소화 예정 (데이터 처리 함수 옮길 예정)
+// TODO 함수 분리 예정
 function makeDisplayAnswer(answer: Painting[], wrongAnswer: Painting[]): Painting[] {
     // 두 배열을 합칩니다.
     const combined = [...answer, ...wrongAnswer];

@@ -40,13 +40,17 @@ export function ArtworkQuiz<C extends React.ElementType>(artworkQuizProps: Artwo
                         </Typography>
                     </div>
                 </div>
-                <article className="h-48 w-48 relative flex justify-center items-center">
-                    <CldImage
-                        alt=" Ower profile image"
-                        src={mockCldData.bochiImagePublicId}
-                        fill={true}
+                {/* <article>
+                    <CldVideoPlayer
+                        id="default"
+                        width="1620"
+                        height="1080"
+                        src="monet-haystack_glvvse"
                     />
-                </article>
+                </article> */}
+                {/* <article className="h-48 w-48 relative flex justify-center items-center">
+                    <CldImage alt=" Ower profile image" src="monet-haystack_glvvse" fill={true} />
+                </article> */}
                 <div className=" bg-ggrimGrey1 ">
                     <MCQView
                         attribute={mcqAttributes[currentIndex]}
