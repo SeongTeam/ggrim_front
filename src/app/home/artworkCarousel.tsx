@@ -1,10 +1,16 @@
 'use client';
 
 import { FeaturedImageGallery } from '@/components/featured_image_gallery';
+import { CuratedWorkAttribute } from '@/types/curatedArtwork-types';
 import { Carousel, Typography, TypographyProps } from '@material-tailwind/react';
 import React from 'react';
 
-export function ArtworkCarousel<C extends React.ElementType>() {
+interface ArtworkCarouselProps {
+    curatedWorkAttributes: CuratedWorkAttribute[];
+}
+
+export function ArtworkCarousel<C extends React.ElementType>(props: ArtworkCarouselProps) {
+    const { curatedWorkAttributes } = props;
     const imageData = [
         {
             imgelink:
@@ -48,7 +54,7 @@ export function ArtworkCarousel<C extends React.ElementType>() {
                     </div>
                 </div>
                 <div className="w-lg bg-ggrimGrey1">
-                    <FeaturedImageGallery imageData={imageData} />
+                    <FeaturedImageGallery imageData={curatedWorkAttributes} />
                 </div>
             </div>
         </section>
