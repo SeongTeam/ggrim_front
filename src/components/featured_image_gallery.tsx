@@ -1,21 +1,22 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import styles from '@/components/style/gallery.module.css';
+import { CuratedWorkAttribute, curatedContentType } from '@/types/curatedArtwork-types';
+import { CldImage } from 'next-cloudinary';
+import { div } from 'framer-motion/client';
 
 type FeaturedImageGalleryProps = {
-    imageData: { imgelink: string }[];
+    imageData: CuratedWorkAttribute[];
 };
 
 export const FeaturedImageGallery: React.FC<FeaturedImageGalleryProps> = ({ imageData }) => {
-    const [active, setActive] = React.useState(
-        'https://images.unsplash.com/photo-1499696010180-025ef6e1a8f9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80',
-    );
-
+    const [isOpen, setIsOpen] = useState(false);
+    const handleOpen = () => setIsOpen(true);
+    const handleClose = () => setIsOpen(false);
     const [currentIndex, setCurrentIndex] = useState(0);
 
-    const currentImage = imageData[currentIndex]?.imgelink;
+    const painting = imageData[currentIndex]?.painting;
+    const aspectRatio = imageData[currentIndex]?.aspectRatio;
 
     // 이전 이미지로 이동하는 함수
     const goToPrevious = () => {
@@ -29,14 +30,36 @@ export const FeaturedImageGallery: React.FC<FeaturedImageGalleryProps> = ({ imag
 
     // TODO 그림에 따라서 이미지 크기 조절
     return (
-        <div className="flex flex-col md:flex-row items-start gap-5 p-6 max-w-4xl mx-auto min-h-[600px]">
+        <div className="flex flex-col md:flex-row items-start gap-5 px-4 py-6 max-w-4xl mx-auto min-h-[600px]">
             {/* Main Image Carousel */}
-            <div className="w-full md:w-1/2 min-h-[450px] relative flex justify-center items-center bg-gray-200">
-                <img
+            <div className="w-full md:w-7/12 min-h-[450px] relative flex justify-center items-center bg-gray-200">
+                {/* <img
                     src={currentImage}
                     alt="Main Image"
                     className="object-contain max-h-[850px] max-w-full  p-1 "
-                />
+                /> */}
+                <section
+                    onClick={handleOpen}
+                    className="relative flex items-center justify-center  min-h-64 max-h-[850px] max-w-full p-1"
+                >
+                    {imageData[currentIndex].type === curatedContentType.NOTHING ? (
+                        <img src={painting.image} alt="Main Image" />
+                    ) : (
+                        // TODO 각각에 그림마다 크기를 알려주는 함수 필요
+                        <div
+                            style={{
+                                width: painting.width,
+                                height: painting.height > painting.width ? painting.height : 287,
+                            }}
+                        >
+                            <CldImage
+                                alt=" Ower profile image"
+                                src={imageData[currentIndex].cldId}
+                                fill={true}
+                            />
+                        </div>
+                    )}
+                </section>
                 {/* 왼쪽 버튼 */}
                 <button
                     onClick={goToPrevious}
@@ -55,12 +78,30 @@ export const FeaturedImageGallery: React.FC<FeaturedImageGalleryProps> = ({ imag
             {/* Thumbnail Navigation */}
             <div className="flex flex-col w-full md:w-1/2 bg-yellow-400">
                 <h2 className="text-xl font-bold text-gray-800 mb-2">PAINTING OF THE WEEK</h2>
-                <h3 className="text-2xl font-semibold text-gray-900"> artwork-title</h3>
-                <p className="text-blue-600 text-sm mb-2">
-                    "artwork-artist" &middot; "artwork-year"
-                </p>
+                <h3 className="text-2xl font-semibold text-gray-900"> {painting.title}</h3>
+                <p className="text-blue-600 text-sm mb-2">{painting.artistName}</p>
                 <p className="text-gray-700 text-sm mb-4">"artwork-description"</p>
             </div>
+
+            {/* Fullscreen Modal */}
+            {isOpen && (
+                <div
+                    className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50"
+                    onClick={handleClose}
+                >
+                    <img
+                        src={painting.image}
+                        alt="mock full"
+                        className="max-w-full max-h-full object-contain"
+                    />
+                    <button
+                        onClick={handleClose}
+                        className="absolute top-4 right-4 text-white text-3xl"
+                    >
+                        &times;
+                    </button>
+                </div>
+            )}
         </div>
     );
 };
