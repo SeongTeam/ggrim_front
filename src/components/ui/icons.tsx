@@ -21,6 +21,7 @@ import {
     RefreshCcw,
     Lightbulb,
     CornerRightUp,
+    Headphones,
 } from 'lucide-react';
 
 export {
@@ -44,4 +45,5 @@ export {
     RefreshCcw,
     Lightbulb,
     CornerRightUp,
+    Headphones,
 };
