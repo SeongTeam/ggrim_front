@@ -48,9 +48,6 @@ export function ArtworkQuiz<C extends React.ElementType>(artworkQuizProps: Artwo
                         src="monet-haystack_glvvse"
                     />
                 </article> */}
-                {/* <article className="h-48 w-48 relative flex justify-center items-center">
-                    <CldImage alt=" Ower profile image" src="monet-haystack_glvvse" fill={true} />
-                </article> */}
                 <div className=" bg-ggrimGrey1 ">
                     <MCQView
                         attribute={mcqAttributes[currentIndex]}
