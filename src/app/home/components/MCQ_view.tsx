@@ -2,10 +2,10 @@
 
 import React, { useState } from 'react';
 import * as Icons from '@/components/ui/icons';
-import useMCQReader from './use_MCQ_reader';
-import HintPane from '@/components/extensions/mcq/reader/parts/hint_pane';
-import { ErrorMessage } from '../shared';
-import SubmissionFeedback from './parts/submission_feedback';
+import useMCQReader from './mcq/reader/use_MCQ_reader';
+import HintPane from '@/app/home/components/mcq/reader/parts/hint_pane';
+import { ErrorMessage } from './mcq/shared';
+import SubmissionFeedback from './mcq/reader/parts/submission_feedback';
 import { MCQReaderViewProps } from '@/types/mcq_types';
 import { Painting } from '@/mock/data/entity/mock_painting';
 import { motion } from 'framer-motion';

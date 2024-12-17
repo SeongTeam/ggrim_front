@@ -1,6 +1,6 @@
 'use client';
 
-import { FeaturedImageGallery } from '@/components/featured_image_gallery';
+import { FeaturedImageGallery } from '@/app/home/components/featured_image_gallery';
 import { CuratedWorkAttribute } from '@/types/curatedArtwork-types';
 import { Carousel, Typography, TypographyProps } from '@material-tailwind/react';
 import React, { useState } from 'react';

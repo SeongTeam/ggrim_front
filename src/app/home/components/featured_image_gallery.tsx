@@ -4,8 +4,9 @@ import React, { useState } from 'react';
 import { CuratedWorkAttribute, curatedContentType } from '@/types/curatedArtwork-types';
 import { CldImage } from 'next-cloudinary';
 import { div } from 'framer-motion/client';
+import NavigatePlayerButton from './navigatePlayerButton';
 
-type FeaturedImageGalleryProps = {
+export type FeaturedImageGalleryProps = {
     imageData: CuratedWorkAttribute[];
 };
 
@@ -15,8 +16,10 @@ export const FeaturedImageGallery: React.FC<FeaturedImageGalleryProps> = ({ imag
     const handleClose = () => setIsOpen(false);
     const [currentIndex, setCurrentIndex] = useState(0);
 
+    // TODO 아래 변수 3개 함수로 변화시켜야 한다.
     const painting = imageData[currentIndex]?.painting;
     const aspectRatio = imageData[currentIndex]?.aspectRatio;
+    const currentType = imageData[currentIndex].type;
 
     // 이전 이미지로 이동하는 함수
     const goToPrevious = () => {
@@ -29,6 +32,7 @@ export const FeaturedImageGallery: React.FC<FeaturedImageGalleryProps> = ({ imag
     };
 
     // TODO 그림에 따라서 이미지 크기 조절
+    //TOTO play MP3 audio content
     return (
         <div className="flex flex-col md:flex-row items-start gap-5 px-4 py-6 max-w-4xl mx-auto min-h-[600px]">
             {/* Main Image Carousel */}
@@ -42,9 +46,7 @@ export const FeaturedImageGallery: React.FC<FeaturedImageGalleryProps> = ({ imag
                     onClick={handleOpen}
                     className="relative flex items-center justify-center  min-h-64 max-h-[850px] max-w-full p-1"
                 >
-                    {imageData[currentIndex].type === curatedContentType.NOTHING ? (
-                        <img src={painting.image} alt="Main Image" />
-                    ) : (
+                    {currentType === curatedContentType.GIF ? (
                         // TODO 각각에 그림마다 크기를 알려주는 함수 필요
                         <div
                             style={{
@@ -58,9 +60,20 @@ export const FeaturedImageGallery: React.FC<FeaturedImageGalleryProps> = ({ imag
                                 fill={true}
                             />
                         </div>
+                    ) : (
+                        <img src={painting.image} alt="Main Image" />
                     )}
                 </section>
+                {/* // TODO 
+                    1. curatedContentType.NOTHING 말고 MP3 추가 
+                    2. src 하드코팅 X */}
+                <NavigatePlayerButton
+                    isDisplay={currentType === curatedContentType.NOTHING}
+                    src="On_a_throne_of_velvet_he_sits_all_alone_dwvwtl"
+                />
+
                 {/* 왼쪽 버튼 */}
+
                 <button
                     onClick={goToPrevious}
                     className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full"
@@ -105,5 +118,3 @@ export const FeaturedImageGallery: React.FC<FeaturedImageGalleryProps> = ({ imag
         </div>
     );
 };
-
-export default FeaturedImageGalleryProps;

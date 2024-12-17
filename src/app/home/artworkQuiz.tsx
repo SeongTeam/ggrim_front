@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import MCQView from '@/components/extensions/mcq/reader/MCQ_view';
+import MCQView from '@/app/home/components/MCQ_view';
 import SubmissionPane from '@/components/ui/sudmission_pane';
 import { MCQSelectionProvider } from '@/context/MCQ_selection_context';
 import { mcqListState } from '@/recoil/atoms/mcq_state';
