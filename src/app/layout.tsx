@@ -68,7 +68,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </head>
             <body className={roboto.className}>
                 <RecoilRootWrapper>
-                    <Navbar />
                     {children}
                     {/* <FixedPlugin /> */}
                 </RecoilRootWrapper>

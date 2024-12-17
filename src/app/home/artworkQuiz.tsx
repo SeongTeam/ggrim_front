@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import MCQView from '@/components/extensions/mcq/reader/MCQ_view';
+import MCQView from '@/app/home/components/MCQ_view';
 import SubmissionPane from '@/components/ui/sudmission_pane';
 import { MCQSelectionProvider } from '@/context/MCQ_selection_context';
 import { mcqListState } from '@/recoil/atoms/mcq_state';
@@ -47,9 +47,6 @@ export function ArtworkQuiz<C extends React.ElementType>(artworkQuizProps: Artwo
                         height="1080"
                         src="monet-haystack_glvvse"
                     />
-                </article> */}
-                {/* <article className="h-48 w-48 relative flex justify-center items-center">
-                    <CldImage alt=" Ower profile image" src="monet-haystack_glvvse" fill={true} />
                 </article> */}
                 <div className=" bg-ggrimGrey1 ">
                     <MCQView

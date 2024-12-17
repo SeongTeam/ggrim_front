@@ -38,9 +38,30 @@ const getMCQData = async (): Promise<Painting[]> => {
     return res.data;
 };
 
+// TODO 추후에 옯길 예정
+function getAspectRatio(width: number, height: number): [string, number, number] {
+    if (height === 0) {
+        throw new Error('Height cannot be zero.');
+    }
+
+    const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b));
+
+    const divisor = gcd(width, height);
+    const aspectWidth = width / divisor;
+    const aspectHeight = height / divisor;
+
+    return [`${aspectWidth}/${aspectHeight}`, aspectWidth, aspectHeight];
+}
+
 function getCuratedArtworks(paintings: Painting[]): CuratedWorkAttribute[] {
     const result: CuratedWorkAttribute[] = [];
-    const clds: string[] = ['monet-haystack_glvvse', '202412070152_vsfc5k', '', '', ''];
+    const clds: string[] = [
+        'monet-haystack_glvvse',
+        '202412070152_vsfc5k',
+        'fotor-ai-20241209135526_xjnobp',
+        '',
+        '',
+    ];
 
     for (let i: number = 0; i < 5; i++) {
         const temp: CuratedWorkAttribute = {
@@ -49,6 +70,7 @@ function getCuratedArtworks(paintings: Painting[]): CuratedWorkAttribute[] {
             type: i > 2 ? 'NOTHING' : 'GIF',
             cldId: clds[i],
             operatorDescription: `temp [${i}]`,
+            aspectRatio: getAspectRatio(paintings[i].width, paintings[i].height),
         };
         result.push(temp);
     }
@@ -97,6 +119,7 @@ export default async function Campaign() {
 
     return (
         <>
+            <Navbar />
             <h1>{data[0].artistName}</h1>
             <ArtworkCarousel curatedWorkAttributes={mockData} />
             <ArtworkQuiz mcqAttributes={[attrs1, attrs2, attrs3]} />
