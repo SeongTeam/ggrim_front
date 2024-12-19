@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { CuratedWorkAttribute, curatedContentType } from '@/types/curatedArtwork-types';
 import { CldImage } from 'next-cloudinary';
 import { div } from 'framer-motion/client';
@@ -12,14 +12,23 @@ export type FeaturedImageGalleryProps = {
 
 export const FeaturedImageGallery: React.FC<FeaturedImageGalleryProps> = ({ imageData }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const handleOpen = () => setIsOpen(true);
-    const handleClose = () => setIsOpen(false);
     const [currentIndex, setCurrentIndex] = useState(0);
 
-    // TODO 아래 변수 3개 함수로 변화시켜야 한다.
-    const painting = imageData[currentIndex]?.painting;
-    const aspectRatio = imageData[currentIndex]?.aspectRatio;
-    const currentType = imageData[currentIndex].type;
+    const handleOpen = () => setIsOpen(true);
+    const handleClose = () => setIsOpen(false);
+
+    // 현재 데이터 관련 정보를 useMemo로 계산
+    const currentImageDetails = useMemo(() => {
+        const currentImage = imageData[currentIndex];
+        return {
+            painting: currentImage?.painting || null,
+            aspectRatio: currentImage?.aspectRatio || null,
+            currentData: currentImage || null,
+            currentType: currentImage?.type || null,
+        };
+    }, [imageData, currentIndex]);
+
+    const { painting, aspectRatio, currentData, currentType } = currentImageDetails;
 
     // 이전 이미지로 이동하는 함수
     const goToPrevious = () => {
@@ -31,8 +40,6 @@ export const FeaturedImageGallery: React.FC<FeaturedImageGalleryProps> = ({ imag
         setCurrentIndex((prevIndex) => (prevIndex === imageData.length - 1 ? 0 : prevIndex + 1));
     };
 
-    // TODO 그림에 따라서 이미지 크기 조절
-    //TOTO play MP3 audio content
     return (
         <div className="flex flex-col md:flex-row items-start gap-5 px-4 py-6 max-w-4xl mx-auto min-h-[600px]">
             {/* Main Image Carousel */}
@@ -54,26 +61,17 @@ export const FeaturedImageGallery: React.FC<FeaturedImageGalleryProps> = ({ imag
                                 height: painting.height > painting.width ? painting.height : 287,
                             }}
                         >
-                            <CldImage
-                                alt=" Ower profile image"
-                                src={imageData[currentIndex].cldId}
-                                fill={true}
-                            />
+                            <CldImage alt={painting.title} src={currentData.cldId} fill={true} />
                         </div>
                     ) : (
                         <img src={painting.image} alt="Main Image" />
                     )}
                 </section>
-                {/* // TODO 
-                    1. curatedContentType.NOTHING 말고 MP3 추가 
-                    2. src 하드코팅 X */}
                 <NavigatePlayerButton
-                    isDisplay={currentType === curatedContentType.NOTHING}
-                    src="On_a_throne_of_velvet_he_sits_all_alone_dwvwtl"
+                    isDisplay={currentType === curatedContentType.MP4}
+                    src={currentData.cldId}
                 />
-
                 {/* 왼쪽 버튼 */}
-
                 <button
                     onClick={goToPrevious}
                     className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full"

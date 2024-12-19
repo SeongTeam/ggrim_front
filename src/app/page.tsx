@@ -59,7 +59,7 @@ function getCuratedArtworks(paintings: Painting[]): CuratedWorkAttribute[] {
         'monet-haystack_glvvse',
         '202412070152_vsfc5k',
         'fotor-ai-20241209135526_xjnobp',
-        '',
+        'Rq_d_wkurqh_ri_yhoyhw_kh_vlwv_doo_dorqh_gzyzwo',
         '',
     ];
 
@@ -67,7 +67,7 @@ function getCuratedArtworks(paintings: Painting[]): CuratedWorkAttribute[] {
         const temp: CuratedWorkAttribute = {
             id: `mock_${i}`,
             painting: paintings[i],
-            type: i > 2 ? 'NOTHING' : 'GIF',
+            type: i > 2 ? 'MP4' : 'GIF',
             cldId: clds[i],
             operatorDescription: `temp [${i}]`,
             aspectRatio: getAspectRatio(paintings[i].width, paintings[i].height),
