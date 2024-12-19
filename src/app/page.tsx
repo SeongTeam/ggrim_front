@@ -1,6 +1,6 @@
 // import { Navbar } from '@/components';
-import { ArtworkCarousel } from './home/artworkCarousel';
-import { ArtworkQuiz } from './home/artworkQuiz';
+import { ArtworkCarousel } from '../components/home/artworkCarousel';
+import { ArtworkQuiz } from '../components/home/artworkQuiz';
 import { Painting } from '@/mock/data/entity/mock_painting';
 import { MCQAttribute } from '@/types/mcq_types';
 import { CuratedWorkAttribute } from '@/types/curatedArtwork-types';
@@ -21,7 +21,7 @@ function makeDisplayAnswer(answer: Painting[], wrongAnswer: Painting[]): Paintin
 }
 
 const getWeekArtWorkData = async (): Promise<Painting[]> => {
-    const response = await fetch('http://localhost:3000/api/artwork_week', {
+    const response = await fetch('http://localhost:4000/api/artwork_week', {
         cache: 'no-cache',
     });
     const res = await response.json();
@@ -29,7 +29,7 @@ const getWeekArtWorkData = async (): Promise<Painting[]> => {
 };
 
 const getMCQData = async (): Promise<Painting[]> => {
-    const response = await fetch('http://localhost:3000/api/mcq', {
+    const response = await fetch('http://localhost:4000/api/mcq', {
         cache: 'no-cache',
     });
     const res = await response.json();
