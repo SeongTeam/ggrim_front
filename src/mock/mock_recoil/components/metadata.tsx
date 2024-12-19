@@ -5,8 +5,8 @@ import { selectedImageState, imageState } from '../store';
 const Metadata = () => {
     const selectedImageId: number = useRecoilValue(selectedImageState);
     const [image, setImage] = useRecoilState(imageState(selectedImageId));
-    const onChange = (e: any) => {
-        const value = e.target.value;
+    const onChange = (element: React.ChangeEvent<HTMLInputElement>) => {
+        const value = element.target.value;
         setImage({
             ...image,
             name: value,

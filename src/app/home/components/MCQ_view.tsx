@@ -1,26 +1,21 @@
 // main component for the reader's mcq interface
 
-import React, { useState } from 'react';
-import * as Icons from '@/components/ui/icons';
+import React from 'react';
 import useMCQReader from './mcq/reader/use_MCQ_reader';
-import HintPane from '@/app/home/components/mcq/reader/parts/hint_pane';
 import { ErrorMessage } from './mcq/shared';
 import SubmissionFeedback from './mcq/reader/parts/submission_feedback';
 import { MCQReaderViewProps } from '@/types/mcq_types';
-import { Painting } from '@/mock/data/entity/mock_painting';
 import { motion } from 'framer-motion';
 
 // TODO displayAnswers 필드 값 변경
 const MCQView = ({ attribute, currentAttributeIndex, handelNextMCQ }: MCQReaderViewProps) => {
-    const { question, answers, displayPaintings, selectedAnswer, id } = attribute;
+    const { question, answers, displayPaintings } = attribute;
 
     const {
         errorMessage,
         readerSelectedAnswer,
         isSubmitted,
-        attemptedAnswers,
         isCorrect,
-        showHint,
         handleReaderSelectAnswer,
         handleSubmit,
         handleHintButtonClick,
@@ -28,7 +23,6 @@ const MCQView = ({ attribute, currentAttributeIndex, handelNextMCQ }: MCQReaderV
         handleClearSubmission,
     } = useMCQReader(attribute);
 
-    const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
     const answerKey = answers[0].id;
 
     const handleImageClick = (answerId: string) => {
@@ -80,6 +74,7 @@ const MCQView = ({ attribute, currentAttributeIndex, handelNextMCQ }: MCQReaderV
                             }`}
                             onClick={() => handleImageClick(painting.id)}
                         >
+                            {/* // TODO change Next.js <Image>   */}
                             <img
                                 src={painting.image}
                                 alt={`Answer ${index}`}

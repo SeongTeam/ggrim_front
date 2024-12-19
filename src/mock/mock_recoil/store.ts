@@ -12,7 +12,7 @@ interface ImageData {
     metadata: ImageMetadata;
 }
 
-const getImage = async (id: number) => {
+const getImage = async (id: number): Promise<ImageData> => {
     if (typeof window === 'undefined') {
         // 서버에서 안전한 기본값 반환
         return {
@@ -45,7 +45,7 @@ const getImage = async (id: number) => {
     });
 };
 
-export const imageState = atomFamily<any, number>({
+export const imageState = atomFamily<ImageData, number>({
     key: 'imageState',
     default: (id: number) =>
         typeof window !== 'undefined'

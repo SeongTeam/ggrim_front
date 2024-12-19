@@ -8,7 +8,7 @@ import Metadata from './components/metadata';
 
 import './styles.css';
 
-export function MackRecoilUI<C extends React.ElementType>() {
+export function MackRecoilUI() {
     const [imageList, setImageList] = useRecoilState(imageListState);
     const counter = imageList.length + 1;
     const addImage = () => {

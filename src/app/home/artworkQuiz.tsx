@@ -1,23 +1,13 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import MCQView from '@/app/home/components/MCQ_view';
-import SubmissionPane from '@/components/ui/sudmission_pane';
-import { MCQSelectionProvider } from '@/context/MCQ_selection_context';
-import { mcqListState } from '@/recoil/atoms/mcq_state';
-import { MCQAttribute, MCQReaderViewProps } from '@/types/mcq_types';
-import { Typography } from '@material-tailwind/react';
+import { MCQAttribute } from '@/types/mcq_types';
 import React from 'react';
-import { useRecoilState } from 'recoil';
-import { Painting } from '@/mock/data/entity/mock_painting'; // Artwork 클래스를 정의한 파일 경로
-import { mockCldData } from '@/mock/data/mockCldData';
-import { CldImage } from '@/components/cld-groud';
-
 interface ArtworkQuizProps {
     mcqAttributes: MCQAttribute[];
 }
 
-export function ArtworkQuiz<C extends React.ElementType>(artworkQuizProps: ArtworkQuizProps) {
+export function ArtworkQuiz(artworkQuizProps: ArtworkQuizProps) {
     const { mcqAttributes } = artworkQuizProps;
     const [currentIndex, setCurrentIndex] = React.useState(0);
 
@@ -35,19 +25,11 @@ export function ArtworkQuiz<C extends React.ElementType>(artworkQuizProps: Artwo
                 <div className="flex max-w-md flex-col items-start">
                     {/* 여기서 max-w-lg로 조정 */}
                     <div className="pt-5 pl-20 mb-2 ">
-                        <Typography className="!text-ggrimBrown1 text-3xl font-bold relative after:content-[''] after:block after:w-full after:h-1 after:bg-ggrimBrown1 after:mt-2">
+                        <p className="!text-ggrimBrown1 text-3xl font-bold relative after:content-[''] after:block after:w-full after:h-1 after:bg-ggrimBrown1 after:mt-2">
                             Quiz of the Week
-                        </Typography>
+                        </p>
                     </div>
                 </div>
-                {/* <article>
-                    <CldVideoPlayer
-                        id="default"
-                        width="1620"
-                        height="1080"
-                        src="monet-haystack_glvvse"
-                    />
-                </article> */}
                 <div className=" bg-ggrimGrey1 ">
                     <MCQView
                         attribute={mcqAttributes[currentIndex]}
