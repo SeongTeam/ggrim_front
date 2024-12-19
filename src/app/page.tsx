@@ -1,8 +1,6 @@
-import { Navbar, Footer } from '@/components';
+import { Navbar } from '@/components';
 import { ArtworkCarousel } from './home/artworkCarousel';
-import Gallery from '@/components/coverflowGallery';
 import { ArtworkQuiz } from './home/artworkQuiz';
-import { MackRecoilUI } from '../mock/mock_recoil';
 import { Painting } from '@/mock/data/entity/mock_painting';
 import { MCQAttribute } from '@/types/mcq_types';
 import { CuratedWorkAttribute } from '@/types/curatedArtwork-types';
