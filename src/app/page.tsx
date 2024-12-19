@@ -1,4 +1,4 @@
-import { Navbar } from '@/components';
+// import { Navbar } from '@/components';
 import { ArtworkCarousel } from './home/artworkCarousel';
 import { ArtworkQuiz } from './home/artworkQuiz';
 import { Painting } from '@/mock/data/entity/mock_painting';
@@ -117,7 +117,7 @@ export default async function Campaign() {
 
     return (
         <>
-            <Navbar />
+            {/* <Navbar /> */}
             <h1>{data[0].artistName}</h1>
             <ArtworkCarousel curatedWorkAttributes={mockData} />
             <ArtworkQuiz mcqAttributes={[attrs1, attrs2, attrs3]} />
