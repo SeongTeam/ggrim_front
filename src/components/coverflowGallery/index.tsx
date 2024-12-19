@@ -3,7 +3,6 @@
 import { ImageSlider } from './imageSlider';
 
 // import { Sidebar } from "./sidebar";
-import { useWindowWidth } from '@/hooks/useWindowWidth';
 import { useGalleryStore } from './store';
 
 import { useParams } from 'next/navigation';
@@ -22,11 +21,9 @@ const Gallery = ({ galleryData, allSerie, allTags }: GalleryProps) => {
     const toggleMenu = () => {
         setIsOpen(!isOpen);
     };
-    const windowWidth = useWindowWidth();
 
     const isNotMobile = 10000 > 568;
     /** TODO     windowWidth > 568 사용시 에러 발생 제거 해야함 */
-    console.log('windowWidth:', windowWidth, isNotMobile);
     const portraitDimensions = {
         width: isNotMobile ? 350 : 225,
         height: isNotMobile ? 450 : 300,

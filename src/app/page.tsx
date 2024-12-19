@@ -1,11 +1,14 @@
 import { Navbar, Footer } from '@/components';
-import { ArtworkCarousel } from './home/artwork_carousel';
+import { ArtworkCarousel } from './home/artworkCarousel';
 import Gallery from '@/components/coverflowGallery';
-import { ArtworkQuiz } from './home/artwork_quiz';
+import { ArtworkQuiz } from './home/artworkQuiz';
 import { MackRecoilUI } from '../mock/mock_recoil';
 import { Painting } from '@/mock/data/entity/mock_painting';
 import { MCQAttribute } from '@/types/mcq_types';
+import { CuratedWorkAttribute } from '@/types/curatedArtwork-types';
 
+// TODO page.tsx 최소화 예정 (데이터 처리 함수 옮길 예정)
+// TODO 함수 분리 예정
 function makeDisplayAnswer(answer: Painting[], wrongAnswer: Painting[]): Painting[] {
     // 두 배열을 합칩니다.
     const combined = [...answer, ...wrongAnswer];
@@ -19,16 +22,66 @@ function makeDisplayAnswer(answer: Painting[], wrongAnswer: Painting[]): Paintin
     return combined;
 }
 
-const getData = async (): Promise<Painting[]> => {
-    const response = await fetch('http://localhost:3000/api/json', {
+const getWeekArtWorkData = async (): Promise<Painting[]> => {
+    const response = await fetch('http://localhost:3000/api/artwork_week', {
         cache: 'no-cache',
     });
     const res = await response.json();
     return res.data;
 };
 
+const getMCQData = async (): Promise<Painting[]> => {
+    const response = await fetch('http://localhost:3000/api/mcq', {
+        cache: 'no-cache',
+    });
+    const res = await response.json();
+    return res.data;
+};
+
+// TODO 추후에 옯길 예정
+function getAspectRatio(width: number, height: number): [string, number, number] {
+    if (height === 0) {
+        throw new Error('Height cannot be zero.');
+    }
+
+    const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b));
+
+    const divisor = gcd(width, height);
+    const aspectWidth = width / divisor;
+    const aspectHeight = height / divisor;
+
+    return [`${aspectWidth}/${aspectHeight}`, aspectWidth, aspectHeight];
+}
+
+function getCuratedArtworks(paintings: Painting[]): CuratedWorkAttribute[] {
+    const result: CuratedWorkAttribute[] = [];
+    const clds: string[] = [
+        'monet-haystack_glvvse',
+        '202412070152_vsfc5k',
+        'fotor-ai-20241209135526_xjnobp',
+        'Rq_d_wkurqh_ri_yhoyhw_kh_vlwv_doo_dorqh_gzyzwo',
+        '',
+    ];
+
+    for (let i: number = 0; i < 5; i++) {
+        const temp: CuratedWorkAttribute = {
+            id: `mock_${i}`,
+            painting: paintings[i],
+            type: i > 2 ? 'MP4' : 'GIF',
+            cldId: clds[i],
+            operatorDescription: `temp [${i}]`,
+            aspectRatio: getAspectRatio(paintings[i].width, paintings[i].height),
+        };
+        result.push(temp);
+    }
+    return result;
+}
+
+// TODO 함수 이름 변경 예정
 export default async function Campaign() {
-    const data: Painting[] = await getData();
+    const data: Painting[] = await getMCQData();
+    const weekOfArtworkData: Painting[] = await getWeekArtWorkData();
+    const mockData = getCuratedArtworks(weekOfArtworkData);
 
     // TODO quiz 데이터 변경 추가
     const attrs1: MCQAttribute = {
@@ -66,8 +119,9 @@ export default async function Campaign() {
 
     return (
         <>
+            <Navbar />
             <h1>{data[0].artistName}</h1>
-            <ArtworkCarousel />
+            <ArtworkCarousel curatedWorkAttributes={mockData} />
             <ArtworkQuiz mcqAttributes={[attrs1, attrs2, attrs3]} />
             {/* <MackRecoilUI></MackRecoilUI> */}
             {/* <Footer /> */}

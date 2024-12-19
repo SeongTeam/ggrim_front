@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import MCQView from '@/components/extensions/mcq/reader/MCQ_view';
+import MCQView from '@/app/home/components/MCQ_view';
 import SubmissionPane from '@/components/ui/sudmission_pane';
 import { MCQSelectionProvider } from '@/context/MCQ_selection_context';
 import { mcqListState } from '@/recoil/atoms/mcq_state';
@@ -10,6 +10,8 @@ import { Typography } from '@material-tailwind/react';
 import React from 'react';
 import { useRecoilState } from 'recoil';
 import { Painting } from '@/mock/data/entity/mock_painting'; // Artwork 클래스를 정의한 파일 경로
+import { mockCldData } from '@/mock/data/mockCldData';
+import { CldImage } from '@/components/cld-groud';
 
 interface ArtworkQuizProps {
     mcqAttributes: MCQAttribute[];
@@ -38,6 +40,14 @@ export function ArtworkQuiz<C extends React.ElementType>(artworkQuizProps: Artwo
                         </Typography>
                     </div>
                 </div>
+                {/* <article>
+                    <CldVideoPlayer
+                        id="default"
+                        width="1620"
+                        height="1080"
+                        src="monet-haystack_glvvse"
+                    />
+                </article> */}
                 <div className=" bg-ggrimGrey1 ">
                     <MCQView
                         attribute={mcqAttributes[currentIndex]}
