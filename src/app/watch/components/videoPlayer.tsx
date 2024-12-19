@@ -12,23 +12,7 @@ const VideoPlayer = () => {
     const searchParams = useSearchParams();
     const search = searchParams.get('message');
 
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-    // 에러 처리 함수
-
-    // let src = caesar.decode(search ?? '');
-    let src = '12324';
-
-    // const VideoMessage = () => {
-    //     useEffect(() => {
-    //         const element = document.querySelector('.vjs-modal-dialog-content');
-    //         if (element) {
-    //             element.textContent = 'Updated message from DOM manipulation';
-    //         }
-    //     }, []);
-
-    //     return null; // React 방식이 아닌 경우 렌더링 요소가 필요 없습니다.
-    // };
+    let src = caesar.decode(search ?? '');
 
     const VideoMessage = () => {
         const element = document.querySelector('.vjs-modal-dialog-content');
