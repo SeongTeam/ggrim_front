@@ -1,63 +1,46 @@
-'use client';
+// 'use client';
 
-import { ImageSlider } from './imageSlider';
+// import { ImageSlider } from './imageSlider';
+// import { useGalleryStore } from './store';
 
-// import { Sidebar } from "./sidebar";
-import { useGalleryStore } from './store';
+// interface GalleryProps {
+//     galleryData: any;
+//     allSerie: string[];
+//     allTags: string[];
+// }
 
-import { useParams } from 'next/navigation';
-// import { LocaleTypes } from '@/app/[locale]/i18n/settings'
+// const Gallery = ({ galleryData }: GalleryProps) => {
+//     // const locale = useParams()?.locale as LocaleTypes
+//     const { isOpen, setIsOpen, selectedSerie, selectedTags, selectTag } = useGalleryStore();
+//     const toggleMenu = () => {
+//         setIsOpen(!isOpen);
+//     };
 
-interface GalleryProps {
-    galleryData: any;
-    allSerie: string[];
-    allTags: string[];
-}
+//     const isNotMobile = 10000 > 568;
+//     /** TODO     windowWidth > 568 사용시 에러 발생 제거 해야함 */
+//     const portraitDimensions = {
+//         width: isNotMobile ? 350 : 225,
+//         height: isNotMobile ? 450 : 300,
+//     };
+//     const landscapeDimensions = {
+//         width: isNotMobile ? 583 : 400,
+//         height: isNotMobile ? 450 : 300,
+//     };
 
-const Gallery = ({ galleryData, allSerie, allTags }: GalleryProps) => {
-    // const locale = useParams()?.locale as LocaleTypes
-    const { isOpen, setIsOpen, selectedSerie, selectSeries, selectedTags, selectTag } =
-        useGalleryStore();
-    const toggleMenu = () => {
-        setIsOpen(!isOpen);
-    };
+//     return (
+//         <>
+//             <div className="mb-20 pt-10 w-screen ">
+//                 <ImageSlider
+//                     imageData={galleryData}
+//                     portraitDimensions={portraitDimensions}
+//                     landscapeDimensions={landscapeDimensions}
+//                     selectedSerie={selectedSerie}
+//                     selectedTags={selectedTags}
+//                     selectTag={selectTag}
+//                 />
+//             </div>
+//         </>
+//     );
+// };
 
-    const isNotMobile = 10000 > 568;
-    /** TODO     windowWidth > 568 사용시 에러 발생 제거 해야함 */
-    const portraitDimensions = {
-        width: isNotMobile ? 350 : 225,
-        height: isNotMobile ? 450 : 300,
-    };
-    const landscapeDimensions = {
-        width: isNotMobile ? 583 : 400,
-        height: isNotMobile ? 450 : 300,
-    };
-
-    return (
-        <>
-            <div className="mb-20 pt-10 w-screen ">
-                <ImageSlider
-                    // params={{ locale: locale }}
-                    imageData={galleryData}
-                    portraitDimensions={portraitDimensions}
-                    landscapeDimensions={landscapeDimensions}
-                    selectedSerie={selectedSerie}
-                    selectedTags={selectedTags}
-                    selectTag={selectTag}
-                />
-            </div>
-            {/* <Sidebar
-        isOpen={isOpen}
-        toggleMenu={toggleMenu}
-        allSerie={allSerie}
-        selectedSerie={selectedSerie}
-        selectSeries={selectSeries}
-        allTags={allTags}
-        selectedTags={selectedTags}
-        selectTag={selectTag}
-      /> */}
-        </>
-    );
-};
-
-export default Gallery;
+// export default Gallery;
