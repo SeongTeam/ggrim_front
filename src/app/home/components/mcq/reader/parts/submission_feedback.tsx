@@ -19,13 +19,9 @@ interface SubmissionFeedbackProps {
 const SubmissionFeedback: React.FC<SubmissionFeedbackProps> = ({
     isCorrect,
     isSubmitted,
-
     handleSubmit,
-    handleHintButtonClick,
-    handleClearSubmission,
     handleNextMCQ,
     handelTryAgain,
-    showHintButton,
 }) => {
     return (
         <div className="mt-6 text-right">
