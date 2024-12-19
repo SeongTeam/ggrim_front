@@ -2,14 +2,14 @@
 
 import { FeaturedImageGallery } from '@/app/home/components/featured_image_gallery';
 import { CuratedWorkAttribute } from '@/types/curatedArtwork-types';
-import { Carousel, Typography, TypographyProps } from '@material-tailwind/react';
-import React, { useState } from 'react';
+import { Typography } from '@material-tailwind/react';
+import React from 'react';
 
 interface ArtworkCarouselProps {
     curatedWorkAttributes: CuratedWorkAttribute[];
 }
 
-export function ArtworkCarousel<C extends React.ElementType>(props: ArtworkCarouselProps) {
+export function ArtworkCarousel(props: ArtworkCarouselProps) {
     const { curatedWorkAttributes } = props;
 
     return (

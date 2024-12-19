@@ -3,7 +3,6 @@
 import React, { useState, useMemo } from 'react';
 import { CuratedWorkAttribute, curatedContentType } from '@/types/curatedArtwork-types';
 import { CldImage } from 'next-cloudinary';
-import { div } from 'framer-motion/client';
 import NavigatePlayerButton from './navigatePlayerButton';
 
 export type FeaturedImageGalleryProps = {
@@ -28,7 +27,7 @@ export const FeaturedImageGallery: React.FC<FeaturedImageGalleryProps> = ({ imag
         };
     }, [imageData, currentIndex]);
 
-    const { painting, aspectRatio, currentData, currentType } = currentImageDetails;
+    const { painting, currentData, currentType } = currentImageDetails;
 
     // 이전 이미지로 이동하는 함수
     const goToPrevious = () => {
@@ -91,7 +90,7 @@ export const FeaturedImageGallery: React.FC<FeaturedImageGalleryProps> = ({ imag
                 <h2 className="text-xl font-bold text-gray-800 mb-2">PAINTING OF THE WEEK</h2>
                 <h3 className="text-2xl font-semibold text-gray-900"> {painting.title}</h3>
                 <p className="text-blue-600 text-sm mb-2">{painting.artistName}</p>
-                <p className="text-gray-700 text-sm mb-4">"artwork-description"</p>
+                <p className="text-gray-700 text-sm mb-4">artwork-description</p>
             </div>
 
             {/* Fullscreen Modal */}
