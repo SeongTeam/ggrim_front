@@ -2,7 +2,6 @@
 
 import React from 'react';
 import * as Icons from '@/components/ui/icons';
-import Button from '@material-tailwind/react/components/Button';
 
 interface SubmissionFeedbackProps {
     isCorrect: boolean;
@@ -57,14 +56,13 @@ const SubmissionFeedback: React.FC<SubmissionFeedbackProps> = ({
                 <div className="flex justify-end items-center space-x-4">
                     {' '}
                     {/* 버튼 우측 정렬 */}
-                    <Button
+                    <button
                         onClick={handleSubmit}
-                        variant="filled"
                         className="py-2 px-4 flex items-center gap-3 text-gray-600 bg-green-200"
                     >
                         Submit
                         <Icons.CornerRightUp />
-                    </Button>
+                    </button>
                     <button
                         onClick={handleNextMCQ}
                         className="btn btn-sm btn-primary text-ggrimBrown1"
