@@ -6,7 +6,6 @@ import {
     IconButton,
     Typography,
     Button,
-    Input,
 } from '@material-tailwind/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 
