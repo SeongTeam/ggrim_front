@@ -5,6 +5,8 @@ import { Painting } from '@/mock/data/entity/mock_painting';
 import { MCQAttribute } from '@/types/mcq_types';
 import { CuratedWorkAttribute } from '@/types/curatedArtwork-types';
 
+const BACKEND_URL = process.env.BACKEND_URL;
+
 // TODO page.tsx 최소화 예정 (데이터 처리 함수 옮길 예정)
 // TODO 함수 분리 예정
 function makeDisplayAnswer(answer: Painting[], wrongAnswer: Painting[]): Painting[] {
@@ -21,17 +23,27 @@ function makeDisplayAnswer(answer: Painting[], wrongAnswer: Painting[]): Paintin
 }
 
 const getWeekArtWorkData = async (): Promise<Painting[]> => {
-    const response = await fetch('http://localhost:4000/api/artwork_week', {
+    // const response = await fetch('http://localhost:4000/api/artwork_week', {
+    //     cache: 'no-cache',
+    // });  // src/data에 파일을 읽어 올 때 사용
+
+    const url: string = 'http://localhost:3000' + '/artwork_of_week';
+    const response = await fetch(url, {
         cache: 'no-cache',
-    });
+    }); // 서버에 있는 데이터 읽어 올때 사용
     const res = await response.json();
     return res.data;
 };
 
 const getMCQData = async (): Promise<Painting[]> => {
-    const response = await fetch('http://localhost:4000/api/mcq', {
+    // const response = await fetch('http://localhost:4000/api/mcq', {
+    //     cache: 'no-cache',
+    // });  // src/data에 파일을 읽어 올 때 사용
+
+    const url: string = 'http://localhost:3000' + '/quiz_of_week';
+    const response = await fetch(url, {
         cache: 'no-cache',
-    });
+    }); // 서버에 있는 데이터 읽어 올때 사용
     const res = await response.json();
     return res.data;
 };
