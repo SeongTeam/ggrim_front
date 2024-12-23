@@ -1,6 +1,6 @@
 'use client';
 
-import MCQView from '@/app/home/components/MCQ_view';
+import MCQView from '@/components/home/components/MCQ_view';
 import { MCQAttribute } from '@/types/mcq_types';
 import React from 'react';
 interface ArtworkQuizProps {

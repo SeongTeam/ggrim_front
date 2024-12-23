@@ -1,6 +1,6 @@
 'use client';
 
-import { FeaturedImageGallery } from '@/app/home/components/featured_image_gallery';
+import { FeaturedImageGallery } from '@/components/home/components/featured_image_gallery';
 import { CuratedWorkAttribute } from '@/types/curatedArtwork-types';
 import React from 'react';
 
