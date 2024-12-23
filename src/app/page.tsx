@@ -5,8 +5,6 @@ import { Painting } from '@/mock/data/entity/mock_painting';
 import { MCQAttribute } from '@/types/mcq_types';
 import { CuratedWorkAttribute } from '@/types/curatedArtwork-types';
 
-const BACKEND_URL = process.env.BACKEND_URL;
-
 // TODO page.tsx 최소화 예정 (데이터 처리 함수 옮길 예정)
 // TODO 함수 분리 예정
 function makeDisplayAnswer(answer: Painting[], wrongAnswer: Painting[]): Painting[] {
