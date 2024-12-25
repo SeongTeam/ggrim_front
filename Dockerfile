@@ -5,8 +5,6 @@ LABEL mainainer="ggrim@front"
 LABEL version="0.1.0"
 LABEL description="test"
 
-
-
 # 작업 디렉토리 설정
 WORKDIR ./front
 
@@ -36,7 +34,9 @@ COPY --from=builder /front/public ./public
 EXPOSE 4000
 
 ENV PORT 4000
-ENV BACKEND_URL http://backend:3000
+ENV BACKEND_URL ${BACKEND_URL}
+# ENV BACKEND_URL http://host.docker.internal:3000
+
 
 CMD ["node", "server.js"]
 
