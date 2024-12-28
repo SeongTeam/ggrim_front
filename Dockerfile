@@ -5,6 +5,14 @@ LABEL mainainer="ggrim@front"
 LABEL version="0.1.0"
 LABEL description="test"
 
+# -------- 배포에서만 사용-----
+ARG HOSTNAME 
+ARG BACKEND_URL 
+ARG NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME 
+ARG NEXT_PUBLIC_CLOUDINARY_API_KEY 
+ARG CLOUDINARY_API_SECRET 
+# -----------
+
 # 작업 디렉토리 설정
 WORKDIR ./front
 
