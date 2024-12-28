@@ -5,7 +5,7 @@ import { useState } from 'react';
 // import { submitMCQAnswer } from "@/services/mcqClientService";
 
 const useMCQReader = (attrs: MCQAttribute) => {
-    const { displayPaintings, answers, selectedAnswer, id } = attrs;
+    const { answers, selectedAnswer } = attrs;
 
     // State Initialization
     const [errorMessage, setErrorMessage] = useState<string | null>(null);

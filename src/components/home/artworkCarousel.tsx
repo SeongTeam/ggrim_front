@@ -1,15 +1,14 @@
 'use client';
 
-import { FeaturedImageGallery } from '@/app/home/components/featured_image_gallery';
+import { FeaturedImageGallery } from '@/components/home/components/featured_image_gallery';
 import { CuratedWorkAttribute } from '@/types/curatedArtwork-types';
-import { Carousel, Typography, TypographyProps } from '@material-tailwind/react';
-import React, { useState } from 'react';
+import React from 'react';
 
 interface ArtworkCarouselProps {
     curatedWorkAttributes: CuratedWorkAttribute[];
 }
 
-export function ArtworkCarousel<C extends React.ElementType>(props: ArtworkCarouselProps) {
+export function ArtworkCarousel(props: ArtworkCarouselProps) {
     const { curatedWorkAttributes } = props;
 
     return (
@@ -18,9 +17,9 @@ export function ArtworkCarousel<C extends React.ElementType>(props: ArtworkCarou
                 <div className="flex max-w-md flex-col items-start">
                     {/* 여기서 max-w-lg로 조정 */}
                     <div className="pt-5 pl-20 mb-2 ">
-                        <Typography className="!text-ggrimBrown1 text-3xl font-bold relative after:content-[''] after:block after:w-full after:h-1 after:bg-ggrimBrown1 after:mt-2">
+                        <p className="!text-ggrimBrown1 text-3xl font-bold relative after:content-[''] after:block after:w-full after:h-1 after:bg-ggrimBrown1 after:mt-2">
                             Painting of the Week
-                        </Typography>
+                        </p>
                     </div>
                 </div>
                 <div className="w-lg bg-ggrimGrey1">
