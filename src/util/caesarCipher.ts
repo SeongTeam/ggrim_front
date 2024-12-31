@@ -3,12 +3,15 @@
  * ex) cld content ID에서 사용
  *      DB에서 인코딩한 문자를 저장, 프런트로 보내진 인토딩 문자 디코딩해서 사용
  */
+
+const SHIFT: string = process.env.CAESAR_SHIFT ?? '';
+
 class CaesarCipher {
     private shift: number;
-    private SHIFT: number = 3; //TODO 추후 DB에서 정의해서 변경 예정 => 고장된 값은 보안에 안 좋음
+    //TODO 추후 DB에서 정의해서 변경 예정 => 고장된 값은 보안에 안 좋음
 
     constructor() {
-        this.shift = this.SHIFT % 26; // 알파벳 개수(26)로 나눈 나머지로 shift 값 제한
+        this.shift = parseInt(SHIFT, 10) % 26; // 알파벳 개수(26)로 나눈 나머지로 shift 값 제한
     }
 
     // 카이사르 암호 인코딩 메서드

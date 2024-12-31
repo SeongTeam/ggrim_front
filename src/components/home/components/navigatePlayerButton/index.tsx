@@ -8,10 +8,10 @@ interface DisplayMusicPlayerButtonProps {
 
 const NavigatePlayerButton = ({ isDisplay, src }: DisplayMusicPlayerButtonProps) => {
     const openSmallWindow = useCallback(() => {
-        // TODO change domain URL not use localhost
+        const domainUrl = window.location.origin;
         const windowFeatures = 'width=412,height=732,top=100,left=100'; // 412 × 732
         const encodedMessage = encodeURIComponent(src); // 쿼리 파라미터로 안전하게 전달
-        const url = `http://localhost:4000/watch?message=${encodedMessage}`;
+        const url = `${domainUrl}/watch?message=${encodedMessage}`;
 
         window.open(url, '_blank', windowFeatures);
     }, [src]); // `src`를 의존성 배열에 추가

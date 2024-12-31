@@ -4,11 +4,9 @@ import { ArtworkQuiz } from '../components/home/artworkQuiz';
 import { Painting } from '@/mock/data/entity/mock_painting';
 import { MCQAttribute } from '@/types/mcq_types';
 import { CuratedWorkAttribute } from '@/types/curatedArtwork-types';
+import CaesarCipher from '@/util/caesarCipher';
 
-// TODO 배포할때 더 좋은 방법이 있을지 생각해보기
-const BACKEND_URL =
-    process.env.BACKEND_URL ||
-    'https://port-0-grim-dev-nest-server-m4i5o7t86f50fb45.sel4.cloudtype.app';
+const SERVER_URL: string = process.env.NEXT_PUBLIC_BACKEND_URL!;
 
 // TODO page.tsx 최소화 예정 (데이터 처리 함수 옮길 예정)
 // TODO 함수 분리 예정
@@ -30,7 +28,7 @@ const getWeekArtWorkData = async (): Promise<Painting[]> => {
     //     cache: 'no-cache',
     // });  // src/data에 파일을 읽어 올 때 사용
 
-    const url: string = BACKEND_URL + '/artwork_of_week';
+    const url: string = SERVER_URL + '/artwork_of_week';
     const response = await fetch(url, {
         cache: 'no-cache',
     }); // 서버에 있는 데이터 읽어 올때 사용
@@ -43,7 +41,7 @@ const getMCQData = async (): Promise<Painting[]> => {
     //     cache: 'no-cache',
     // });  // src/data에 파일을 읽어 올 때 사용
 
-    const url: string = BACKEND_URL + '/quiz_of_week';
+    const url: string = SERVER_URL + '/quiz_of_week';
     const response = await fetch(url, {
         cache: 'no-cache',
     }); // 서버에 있는 데이터 읽어 올때 사용
@@ -67,12 +65,14 @@ function getAspectRatio(width: number, height: number): [string, number, number]
 }
 
 function getCuratedArtworks(paintings: Painting[]): CuratedWorkAttribute[] {
+    const caesar = new CaesarCipher();
+    const mp4_1: string = caesar.encode('On_a_throne_of_velvet_he_sits_all_alone_dwvwtl');
     const result: CuratedWorkAttribute[] = [];
     const clds: string[] = [
         'monet-haystack_glvvse',
         '202412070152_vsfc5k',
         'fotor-ai-20241209135526_xjnobp',
-        'Rq_d_wkurqh_ri_yhoyhw_kh_vlwv_doo_dorqh_gzyzwo',
+        mp4_1,
         '',
     ];
 
