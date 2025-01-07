@@ -5,7 +5,7 @@ import { MCQAttribute } from '@/model/interface/MCQ';
 import { CuratedWorkAttribute } from '@/types/curatedArtwork-types';
 
 // TODO 배포할때 더 좋은 방법이 있을지 생각해보기
-const SERVER_URL = process.env.BACKEND_URL;
+const SERVER_URL = process.env.BACKEND_URL || 'grim-dev-nest-server:3000';
 
 // TODO page.tsx 최소화 예정 (데이터 처리 함수 옮길 예정)
 const getWeekArtWorkData = async (): Promise<CuratedWorkAttribute[]> => {
