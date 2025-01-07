@@ -3,7 +3,6 @@ import { ArtworkCarousel } from '../components/home/artworkCarousel';
 import { ArtworkQuiz } from '../components/home/artworkQuiz';
 import { MCQAttribute } from '@/model/interface/MCQ';
 import { CuratedWorkAttribute } from '@/types/curatedArtwork-types';
-import CaesarCipher from '@/util/caesarCipher';
 
 // TODO 배포할때 더 좋은 방법이 있을지 생각해보기
 const SERVER_URL = process.env.BACKEND_URL;
