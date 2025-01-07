@@ -3,7 +3,7 @@
 import VideoPlayer from '@/components/videoPlayer';
 import { Suspense } from 'react';
 
-// TODO 함수 이름 변경 예정 //412 × 732
+// 화면 크기 고정 (412 × 732)
 function WatchPage() {
     return (
         <div className="flex justify-start min-w-[412px] min-h-[732px] bg-gray-900">
