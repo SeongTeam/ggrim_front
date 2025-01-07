@@ -9,7 +9,7 @@ import { MCQReaderViewProps } from '@/model/interface/MCQ';
 
 // TODO displayAnswers 필드 값 변경
 const MCQView = ({ attribute, currentAttributeIndex, handelNextMCQ }: MCQReaderViewProps) => {
-    const { distractorPaintings, answerPaintings } = attribute;
+    const { answerPaintings } = attribute;
 
     const {
         errorMessage,
@@ -26,7 +26,6 @@ const MCQView = ({ attribute, currentAttributeIndex, handelNextMCQ }: MCQReaderV
 
     const answerKey = answerPaintings[0].id;
 
-    // const displayPaintings = shuffleMerge(distractorPaintings, answerPaintings);
     const handleImageClick = (answerId: string) => {
         if (!isSubmitted) {
             // setSelectedIndex(index);
