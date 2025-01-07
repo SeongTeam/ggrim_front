@@ -21,7 +21,6 @@ export const FeaturedImageGallery: React.FC<FeaturedImageGalleryProps> = ({ imag
         const currentImage = imageData[currentIndex];
         return {
             painting: currentImage?.painting || null,
-            aspectRatio: currentImage?.aspectRatio || null,
             currentData: currentImage || null,
             currentType: currentImage?.type || null,
         };
@@ -63,7 +62,7 @@ export const FeaturedImageGallery: React.FC<FeaturedImageGalleryProps> = ({ imag
                             <CldImage alt={painting.title} src={currentData.cldId} fill={true} />
                         </div>
                     ) : (
-                        <img src={painting.image} alt="Main Image" />
+                        <img src={painting.image_url} alt="Main Image" />
                     )}
                 </section>
                 <NavigatePlayerButton
@@ -89,8 +88,12 @@ export const FeaturedImageGallery: React.FC<FeaturedImageGalleryProps> = ({ imag
             <div className="flex flex-col w-full md:w-1/2 bg-yellow-400">
                 <h2 className="text-xl font-bold text-gray-800 mb-2">PAINTING OF THE WEEK</h2>
                 <h3 className="text-2xl font-semibold text-gray-900"> {painting.title}</h3>
-                <p className="text-blue-600 text-sm mb-2">{painting.artistName}</p>
-                <p className="text-gray-700 text-sm mb-4">artwork-description</p>
+                <p className="text-blue-600 text-sm mb-2">{painting.artist.name}</p>
+                <p className="text-gray-700 text-sm mb-4">
+                    {painting.description !== ''
+                        ? painting.description
+                        : painting.ggrim_description}
+                </p>
             </div>
 
             {/* Fullscreen Modal */}
@@ -100,7 +103,7 @@ export const FeaturedImageGallery: React.FC<FeaturedImageGalleryProps> = ({ imag
                     onClick={handleClose}
                 >
                     <img
-                        src={painting.image}
+                        src={painting.image_url}
                         alt="mock full"
                         className="max-w-full max-h-full object-contain"
                     />
