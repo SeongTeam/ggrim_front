@@ -1,11 +1,12 @@
 // custom hook for managing mcq logic in reader mode
 
-import { MCQAttribute } from '@/types/mcq_types';
+import { MCQAttribute } from '@/model/interface/MCQ';
+import { shuffleMerge } from '@/util/shuffleMerge';
 import { useState } from 'react';
 // import { submitMCQAnswer } from "@/services/mcqClientService";
 
-const useMCQReader = (attrs: MCQAttribute) => {
-    const { answers, selectedAnswer } = attrs;
+const useMCQReader = (attrs: MCQAttribute, selectedAnswer: number) => {
+    const { answerPaintings, distractorPaintings } = attrs;
 
     // State Initialization
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -14,8 +15,10 @@ const useMCQReader = (attrs: MCQAttribute) => {
     const [attemptedAnswers, setAttemptedAnswers] = useState<number[]>([]);
     const [isCorrect, setIsCorrect] = useState<boolean>(false);
     const [showHint, setShowHint] = useState<boolean>(false);
+    // TODO 현재 클릭이 될때 마다 계속 동작한다. 메모리 낭비라고 생각함 추후 효율적이게 수정 요구
+    const displayPaintings = shuffleMerge(distractorPaintings, answerPaintings);
 
-    const answerID = answers[0].id;
+    const answerID = answerPaintings[0].id;
 
     // Event Handlers
 
@@ -81,6 +84,7 @@ const useMCQReader = (attrs: MCQAttribute) => {
         attemptedAnswers,
         isCorrect,
         showHint,
+        displayPaintings,
         // Handlers
         handleReaderSelectAnswer,
         handleSubmit,
