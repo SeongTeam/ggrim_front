@@ -5,7 +5,9 @@ import { MCQAttribute } from '@/model/interface/MCQ';
 import { CuratedWorkAttribute } from '@/types/curatedArtwork-types';
 
 // TODO 배포할때 더 좋은 방법이 있을지 생각해보기
-// const SERVER_URL = process.env.BACKEND_URL || 'grim-dev-nest-server:3000';
+const SERVER_URL =
+    process.env.BACKEND_URL ||
+    'https://port-0-grim-dev-nest-server-m4i5o7t86f50fb45.sel4.cloudtype.ap';
 
 // TODO page.tsx 최소화 예정 (데이터 처리 함수 옮길 예정)
 const getWeekArtWorkData = async (): Promise<CuratedWorkAttribute[]> => {
@@ -13,7 +15,7 @@ const getWeekArtWorkData = async (): Promise<CuratedWorkAttribute[]> => {
     //     cache: 'no-cache',
     // });  // src/data에 파일을 읽어 올 때 사용
 
-    const url: string = process.env.BACKEND_URL + '/artwork_of_week';
+    const url: string = SERVER_URL + '/artwork_of_week';
     const response = await fetch(url, {
         cache: 'no-cache',
     }); // 서버에 있는 데이터 읽어 올때 사용
@@ -26,7 +28,7 @@ const getMCQData = async (): Promise<MCQAttribute[]> => {
     //     cache: 'no-cache',
     // });  // src/data에 파일을 읽어 올 때 사용
 
-    const url: string = process.env.BACKEND_URL + '/quiz_of_week';
+    const url: string = SERVER_URL + '/quiz_of_week';
     const response = await fetch(url, {
         cache: 'no-cache',
     }); // 서버에 있는 데이터 읽어 올때 사용
