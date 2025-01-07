@@ -4,26 +4,27 @@ import React from 'react';
 import useMCQReader from './mcq/reader/use_MCQ_reader';
 import { ErrorMessage } from './mcq/shared';
 import SubmissionFeedback from './mcq/reader/parts/submission_feedback';
-import { MCQReaderViewProps } from '@/types/mcq_types';
 import { motion } from 'framer-motion';
+import { MCQReaderViewProps } from '@/model/interface/MCQ';
 
 // TODO displayAnswers 필드 값 변경
 const MCQView = ({ attribute, currentAttributeIndex, handelNextMCQ }: MCQReaderViewProps) => {
-    const { question, answers, displayPaintings } = attribute;
+    const { answerPaintings } = attribute;
 
     const {
         errorMessage,
         readerSelectedAnswer,
         isSubmitted,
         isCorrect,
+        displayPaintings,
         handleReaderSelectAnswer,
         handleSubmit,
         handleHintButtonClick,
         cleatSubmitState,
         handleClearSubmission,
-    } = useMCQReader(attribute);
+    } = useMCQReader(attribute, 0);
 
-    const answerKey = answers[0].id;
+    const answerKey = answerPaintings[0].id;
 
     const handleImageClick = (answerId: string) => {
         if (!isSubmitted) {
@@ -43,7 +44,12 @@ const MCQView = ({ attribute, currentAttributeIndex, handelNextMCQ }: MCQReaderV
     return (
         // TODO display size 마다 minHeight을 정하여 깜빡임 형상 방지 (모바일 크기만 신경쓰면 됨)
         <div className="p-4 rounded-md shadow bg-ggrimBeige2" style={{ minHeight: '744px' }}>
-            <h3 className="text-xl font-bold text-gray-800 mb-6">{question}</h3>
+            <h3 className="text-xl font-bold text-gray-800 mb-6">{'TODO write quiz question'}</h3>
+            {/* <div>
+                <h1>API Data</h1>
+                <pre className="text-black">{JSON.stringify(attribute, null, 2)}</pre>
+            </div> */}
+
             <motion.div
                 key={currentAttributeIndex}
                 initial={{ opacity: 0, x: 50 }}
@@ -75,7 +81,7 @@ const MCQView = ({ attribute, currentAttributeIndex, handelNextMCQ }: MCQReaderV
                             onClick={() => handleImageClick(painting.id)}
                         >
                             <img
-                                src={painting.image}
+                                src={painting.image_url}
                                 alt={`Answer ${index}`}
                                 className={`w-50 h-auto max-h-[250px] max-w-full  mb-2 ${
                                     readerSelectedAnswer === painting.id

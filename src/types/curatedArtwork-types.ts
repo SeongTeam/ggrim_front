@@ -1,4 +1,4 @@
-import { Painting } from '@/mock/data/entity/mock_painting';
+import { Painting } from '@/model/interface/painting';
 
 export const curatedContentType = {
     GIF: 'GIF',
