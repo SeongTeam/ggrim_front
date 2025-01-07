@@ -10,7 +10,6 @@ const BACKEND_URL =
     'https://port-0-grim-dev-nest-server-m4i5o7t86f50fb45.sel4.cloudtype.app';
 
 // TODO page.tsx 최소화 예정 (데이터 처리 함수 옮길 예정)
-
 const getWeekArtWorkData = async (): Promise<CuratedWorkAttribute[]> => {
     // const response = await fetch('http://localhost:4000/api/artwork_week', {
     //     cache: 'no-cache',
@@ -36,21 +35,6 @@ const getMCQData = async (): Promise<MCQAttribute[]> => {
     const res = await response.json();
     return res.data;
 };
-
-// TODO 추후에 옯길 예정
-function getAspectRatio(width: number, height: number): [string, number, number] {
-    if (height === 0) {
-        throw new Error('Height cannot be zero.');
-    }
-
-    const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b));
-
-    const divisor = gcd(width, height);
-    const aspectWidth = width / divisor;
-    const aspectHeight = height / divisor;
-
-    return [`${aspectWidth}/${aspectHeight}`, aspectWidth, aspectHeight];
-}
 
 // TODO 함수 이름 변경 예정
 export default async function Campaign() {
