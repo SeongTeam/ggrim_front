@@ -3,10 +3,8 @@
 import { CldVideoPlayer } from 'next-cloudinary';
 import 'next-cloudinary/dist/cld-video-player.css';
 import { useSearchParams } from 'next/navigation';
-import CaesarCipher from '@/util/caesarCipher';
 
 const VideoPlayer = () => {
-    const caesar = new CaesarCipher();
     const searchParams = useSearchParams();
 
     const src = searchParams.get('message');
