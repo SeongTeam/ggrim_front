@@ -80,7 +80,6 @@ const MCQView = ({ attribute, currentAttributeIndex, handelNextMCQ }: MCQReaderV
                             }`}
                             onClick={() => handleImageClick(painting.id)}
                         >
-                            {/* // TODO change Next.js <Image>   */}
                             <img
                                 src={painting.image_url}
                                 alt={`Answer ${index}`}
