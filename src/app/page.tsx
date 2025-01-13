@@ -42,7 +42,6 @@ export default async function Campaign() {
     return (
         <>
             {/* <Navbar /> */}
-            <h1>{quizOfWeekData[0].similarity}</h1>
             <ArtworkCarousel curatedWorkAttributes={artworkOfWeekData} />
             <ArtworkQuiz mcqAttributes={quizOfWeekData} />
             {/* <MackRecoilUI></MackRecoilUI> */}
