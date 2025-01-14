@@ -15,5 +15,5 @@ export interface CuratedWorkAttribute {
     cldId: string;
     operatorDescription: string;
     painting: Painting;
-    aspectRatio: [string, number, number];
+    aspectRatio: [string, number, number]; // 추후 필요할 수 있음
 }

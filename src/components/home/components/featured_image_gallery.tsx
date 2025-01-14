@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { CuratedWorkAttribute, curatedContentType } from '@/types/curatedArtwork-types';
+import { CuratedWorkAttribute, curatedContentType } from '@/model/interface/curatedArtwork-types';
 import { CldImage } from 'next-cloudinary';
 import NavigatePlayerButton from './navigatePlayerButton';
 

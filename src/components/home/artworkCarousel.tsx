@@ -1,7 +1,7 @@
 'use client';
 
 import { FeaturedImageGallery } from '@/components/home/components/featured_image_gallery';
-import { CuratedWorkAttribute } from '@/types/curatedArtwork-types';
+import { CuratedWorkAttribute } from '@/model/interface/curatedArtwork-types';
 import React from 'react';
 
 interface ArtworkCarouselProps {
