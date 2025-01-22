@@ -39,3 +39,29 @@ export interface Artist {
     death_date: string | null;
     info_url: string | null;
 }
+
+export function getEmptyPaintingObject(): Painting {
+    const result: Painting = {
+        version: 0,
+        id: '',
+        title: '',
+        image_url: '',
+        description: '',
+        completition_year: 0,
+        width: 0,
+        height: 0,
+        tags: [],
+        styles: [],
+        artist: {
+            id: '',
+            name: '',
+            version: 0,
+            image_url: '',
+            birth_date: '',
+            death_date: '',
+            info_url: '',
+        },
+    };
+
+    return result;
+}
