@@ -1,4 +1,3 @@
-import { _CuratedContentType } from '@/model/interface/curatedArtwork-types';
 import { useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { FormState } from './states';

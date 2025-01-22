@@ -1,5 +1,4 @@
-import { _CuratedContentType } from '@/model/interface/curatedArtwork-types';
-import { Painting, getEmptyPaintingObject } from '@/model/interface/painting';
+import { _CuratedContentType } from '@/types/curatedArtwork-types';
 import React, { useReducer } from 'react';
 import CustomInput from '../../CustomInput';
 import DropdownMenu from '../../DropdownMenu';
