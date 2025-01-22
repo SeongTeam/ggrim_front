@@ -6,7 +6,7 @@ export const curatedContentType = {
     NOTHING: 'NOTHING',
 };
 
-type _CuratedContentType = keyof typeof curatedContentType;
+export type _CuratedContentType = keyof typeof curatedContentType;
 
 export interface CuratedWorkAttribute {
     id: string; // TODO ID는 Painting ID를 따라갈지 고민
