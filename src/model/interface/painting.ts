@@ -1,9 +1,6 @@
 import { Tag } from './tag';
 
 export interface Painting {
-    created_date: string;
-    updated_date: string;
-    deleted_date: string | null;
     version: number;
     id: string;
     title: string;
@@ -18,9 +15,6 @@ export interface Painting {
 }
 
 export interface Style {
-    created_date: string;
-    updated_date: string;
-    deleted_date: string | null;
     version: number | null;
     id: string;
     name: string;
@@ -28,9 +22,6 @@ export interface Style {
 }
 
 export interface Artist {
-    created_date: string;
-    updated_date: string;
-    deleted_date: string | null;
     version: number | null;
     id: string;
     name: string;
