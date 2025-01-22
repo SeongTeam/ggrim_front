@@ -9,8 +9,6 @@ export interface Painting {
     title: string;
     image_url: string;
     description: string;
-    ggrim_description: string;
-    ggrim_description_data_source: string;
     completition_year: number;
     width: number;
     height: number;
