@@ -4,7 +4,5 @@
   "printWidth": 100,
   "tabWidth": 4,
   "trailingComma": "all",
-  "noMultipleEmptyLines": true,
-  "editor.formatOnSave": false,
-  "parser": "typescript"
+  "editor.formatOnSave": false
 }
