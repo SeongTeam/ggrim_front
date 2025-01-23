@@ -1,7 +1,7 @@
 import { PaintingModel } from '@/model/PaintingModel';
 import CuratedArtworkCard from './CuratedArtworkCard';
 import { FormState } from './states';
-import { CuratedWorkAttribute } from '@/model/interface/curatedArtwork-types';
+import { CuratedArtWorkAttribute } from '@/model/interface/curatedArtwork-types';
 import { getUrlImageSize } from '@/util/imageUtiles';
 
 interface CuratedArtworkListProps {
@@ -10,7 +10,7 @@ interface CuratedArtworkListProps {
 
 const transformCuratedArtWorkAttribute = async (
     curatedArtworks: FormState[],
-): Promise<CuratedWorkAttribute[]> => {
+): Promise<CuratedArtWorkAttribute[]> => {
     const transformed = await Promise.all(
         curatedArtworks.map(async (formState) => {
             const { width, height } = await getUrlImageSize(formState.imageUrl);
