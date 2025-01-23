@@ -44,7 +44,9 @@ const MCQView = ({ attribute, currentAttributeIndex, handelNextMCQ }: MCQReaderV
     return (
         // TODO display size 마다 minHeight을 정하여 깜빡임 형상 방지 (모바일 크기만 신경쓰면 됨)
         <div className="p-4 rounded-md shadow bg-ggrimBeige2" style={{ minHeight: '744px' }}>
-            <h3 className="text-xl font-bold text-gray-800 mb-6">{'TODO write quiz question'}</h3>
+            <h3 className="text-xl font-bold text-gray-800 mb-6">
+                {'Which of the following is not a work by the same author?'}
+            </h3>
             {/* <div>
                 <h1>API Data</h1>
                 <pre className="text-black">{JSON.stringify(attribute, null, 2)}</pre>
