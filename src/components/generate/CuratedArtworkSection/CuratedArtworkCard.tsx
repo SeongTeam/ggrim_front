@@ -48,11 +48,10 @@ export default function CuratedArtworkCard({
             },
         ];
 
-        return fields.map(({ label, value, field }) => (
-            <div className="edit-input ">
+        return fields.map(({ label, value, field }, index) => (
+            <div key={`${field}+${index}`} className="edit-input ">
                 <label className="block text-gray-600 mb-2">{label}</label>
                 <input
-                    key={field}
                     type="text"
                     value={value}
                     onChange={handleInputChange(field)}
