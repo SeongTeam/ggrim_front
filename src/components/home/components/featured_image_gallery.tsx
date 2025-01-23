@@ -1,12 +1,15 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { CuratedWorkAttribute, curatedContentType } from '@/types/curatedArtwork-types';
+import {
+    CuratedArtWorkAttribute,
+    curatedContentType,
+} from '@/model/interface/curatedArtwork-types';
 import { CldImage } from 'next-cloudinary';
 import NavigatePlayerButton from './navigatePlayerButton';
 
 export type FeaturedImageGalleryProps = {
-    imageData: CuratedWorkAttribute[];
+    imageData: CuratedArtWorkAttribute[];
 };
 
 export const FeaturedImageGallery: React.FC<FeaturedImageGalleryProps> = ({ imageData }) => {
@@ -92,7 +95,7 @@ export const FeaturedImageGallery: React.FC<FeaturedImageGalleryProps> = ({ imag
                 <p className="text-gray-700 text-sm mb-4">
                     {painting.description !== ''
                         ? painting.description
-                        : painting.ggrim_description}
+                        : currentData.operatorDescription}
                 </p>
             </div>
 

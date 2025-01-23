@@ -6,13 +6,14 @@ export const curatedContentType = {
     NOTHING: 'NOTHING',
 };
 
-type _CuratedContentType = keyof typeof curatedContentType;
+export type _CuratedContentType = keyof typeof curatedContentType;
 
-export interface CuratedWorkAttribute {
+// TODO CuratedWorkAttribute이름 변경 CuratedArtWorkAttribute이름
+export interface CuratedArtWorkAttribute {
     id: string; // TODO ID는 Painting ID를 따라갈지 고민
     type: _CuratedContentType;
     cldId: string;
     operatorDescription: string;
     painting: Painting;
-    aspectRatio: [string, number, number];
+    aspectRatio: [string, number, number]; // 추후 필요할 수 있음
 }
