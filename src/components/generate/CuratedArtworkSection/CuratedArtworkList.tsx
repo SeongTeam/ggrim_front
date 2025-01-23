@@ -1,13 +1,39 @@
+import { PaintingModel } from '@/model/PaintingModel';
 import CuratedArtworkCard from './CuratedArtworkCard';
 import { FormState } from './states';
+import { CuratedWorkAttribute } from '@/types/curatedArtwork-types';
 
 interface CuratedArtworkListProps {
     curatedArtworks: FormState[];
 }
 
+const transformCuratedArtWorkAttribute = (curatedArtworks: FormState[]): CuratedWorkAttribute[] => {
+    return curatedArtworks.map((formState) => {
+        const painting = {
+            ...PaintingModel.getEmptyObject(),
+            artist: {
+                ...PaintingModel.getEmptyObject().artist,
+                name: formState.artistName,
+            },
+            image_url: formState.imageUrl,
+            title: formState.id,
+        };
+
+        return {
+            id: formState.id,
+            type: formState.type == '' ? 'NOTHING' : formState.type, // UI에서 빈값을 표현하기 위해서 타입이 달라졌음
+            cldId: formState.cldId,
+            operatorDescription: formState.operatorDescription,
+            painting,
+            aspectRatio: formState.aspectRatio,
+        };
+    });
+};
+
 export default function CuratedArtworkList({ curatedArtworks }: CuratedArtworkListProps) {
     const handleDownloadJson = () => {
-        const jsonData = { dataName: 'artwork of week', data: curatedArtworks };
+        const data = transformCuratedArtWorkAttribute(curatedArtworks);
+        const jsonData = { dataName: 'artwork of week', data };
 
         const jsonBlob = new Blob([JSON.stringify(jsonData, null, 2)], {
             type: 'application/json',
