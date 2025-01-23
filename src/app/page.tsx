@@ -2,7 +2,7 @@
 import { ArtworkCarousel } from '../components/home/artworkCarousel';
 import { ArtworkQuiz } from '../components/home/artworkQuiz';
 import { MCQAttribute } from '@/model/interface/MCQ';
-import { CuratedWorkAttribute } from '@/model/interface/curatedArtwork-types';
+import { CuratedArtWorkAttribute } from '@/model/interface/curatedArtwork-types';
 
 // TODO 배포할때 더 좋은 방법이 있을지 생각해보기
 const SERVER_URL =
@@ -10,7 +10,7 @@ const SERVER_URL =
     'https://port-0-grim-dev-nest-server-m4i5o7t86f50fb45.sel4.cloudtype.app';
 
 // TODO page.tsx 최소화 예정 (데이터 처리 함수 옮길 예정)
-const getWeekArtWorkData = async (): Promise<CuratedWorkAttribute[]> => {
+const getWeekArtWorkData = async (): Promise<CuratedArtWorkAttribute[]> => {
     // const response = await fetch('http://localhost:4000/api/artwork_week', {
     //     cache: 'no-cache',
     // });  // src/data에 파일을 읽어 올 때 사용
@@ -39,7 +39,7 @@ const getMCQData = async (): Promise<MCQAttribute[]> => {
 // TODO 함수 이름 변경 예정
 export default async function Campaign() {
     const quizOfWeekData: MCQAttribute[] = await getMCQData();
-    const artworkOfWeekData: CuratedWorkAttribute[] = await getWeekArtWorkData();
+    const artworkOfWeekData: CuratedArtWorkAttribute[] = await getWeekArtWorkData();
 
     return (
         <>
