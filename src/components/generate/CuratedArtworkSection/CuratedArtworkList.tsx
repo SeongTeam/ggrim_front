@@ -64,7 +64,7 @@ export default function CuratedArtworkList({ curatedArtworks }: CuratedArtworkLi
             ) : (
                 <ul className="space-y-4">
                     {curatedArtworks.map((curatedArtwork, index) => (
-                        <CuratedArtworkCard formState={curatedArtwork} index={index} />
+                        <CuratedArtworkCard key={index} formState={curatedArtwork} index={index} />
                     ))}
                 </ul>
             )}
