@@ -1,38 +1,48 @@
 import { PaintingModel } from '@/model/PaintingModel';
 import CuratedArtworkCard from './CuratedArtworkCard';
 import { FormState } from './states';
-import { CuratedWorkAttribute } from '@/types/curatedArtwork-types';
+import { CuratedWorkAttribute } from '@/model/interface/curatedArtwork-types';
+import { getUrlImageSize } from '@/util/imageUtiles';
 
 interface CuratedArtworkListProps {
     curatedArtworks: FormState[];
 }
 
-const transformCuratedArtWorkAttribute = (curatedArtworks: FormState[]): CuratedWorkAttribute[] => {
-    return curatedArtworks.map((formState) => {
-        const painting = {
-            ...PaintingModel.getEmptyObject(),
-            artist: {
-                ...PaintingModel.getEmptyObject().artist,
-                name: formState.artistName,
-            },
-            image_url: formState.imageUrl,
-            title: formState.id,
-        };
+const transformCuratedArtWorkAttribute = async (
+    curatedArtworks: FormState[],
+): Promise<CuratedWorkAttribute[]> => {
+    const transformed = await Promise.all(
+        curatedArtworks.map(async (formState) => {
+            const { width, height } = await getUrlImageSize(formState.imageUrl);
 
-        return {
-            id: formState.id,
-            type: formState.type == '' ? 'NOTHING' : formState.type, // UI에서 빈값을 표현하기 위해서 타입이 달라졌음
-            cldId: formState.cldId,
-            operatorDescription: formState.operatorDescription,
-            painting,
-            aspectRatio: formState.aspectRatio,
-        };
-    });
+            const painting = {
+                ...PaintingModel.getEmptyObject(),
+                artist: {
+                    ...PaintingModel.getEmptyObject().artist,
+                    name: formState.artistName,
+                },
+                image_url: formState.imageUrl,
+                title: formState.id,
+                width,
+                height,
+            };
+
+            return {
+                id: formState.id,
+                type: formState.type === '' ? 'NOTHING' : formState.type,
+                cldId: formState.cldId,
+                operatorDescription: formState.operatorDescription,
+                painting,
+                aspectRatio: formState.aspectRatio,
+            };
+        }),
+    );
+    return transformed;
 };
 
 export default function CuratedArtworkList({ curatedArtworks }: CuratedArtworkListProps) {
-    const handleDownloadJson = () => {
-        const data = transformCuratedArtWorkAttribute(curatedArtworks);
+    const handleDownloadJson = async () => {
+        const data = await transformCuratedArtWorkAttribute(curatedArtworks);
         const jsonData = { dataName: 'artwork of week', data };
 
         const jsonBlob = new Blob([JSON.stringify(jsonData, null, 2)], {
@@ -41,7 +51,7 @@ export default function CuratedArtworkList({ curatedArtworks }: CuratedArtworkLi
         const url = URL.createObjectURL(jsonBlob);
         const link = document.createElement('a');
         link.href = url;
-        link.download = 'memos.json';
+        link.download = 'yyyy_mm_dd_artwork_of_week.json';
         link.click();
         URL.revokeObjectURL(url); // URL 해제
     };
