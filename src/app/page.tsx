@@ -15,7 +15,7 @@ const getWeekArtWorkData = async (): Promise<CuratedArtWorkAttribute[]> => {
     //     cache: 'no-cache',
     // });  // src/data에 파일을 읽어 올 때 사용
 
-    const url: string = SERVER_URL + '/artwork_of_week';
+    const url: string = SERVER_URL + '/painting/artwork_of_week';
     const response = await fetch(url, {
         cache: 'no-cache',
     }); // 서버에 있는 데이터 읽어 올때 사용
@@ -28,7 +28,7 @@ const getMCQData = async (): Promise<MCQAttribute[]> => {
     //     cache: 'no-cache',
     // });  // src/data에 파일을 읽어 올 때 사용
 
-    const url: string = SERVER_URL + '/quiz_of_week';
+    const url: string = SERVER_URL + '/quiz/quiz_of_week';
     const response = await fetch(url, {
         cache: 'no-cache',
     }); // 서버에 있는 데이터 읽어 올때 사용
