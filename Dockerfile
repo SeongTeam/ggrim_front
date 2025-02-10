@@ -21,9 +21,6 @@ WORKDIR ./front
 # 패키지 파일 복사
 COPY . .
 RUN pwd && ls
-ARG GPG_TOKEN
-RUN apk add --no-cache gnupg
-RUN gpg --batch --verbose --yes --passphrase ${GPG_TOKEN} .env.production.gpg > .env.production
 # COPY shared/. ./shared/.
 
 # WORKDIR ./front/
