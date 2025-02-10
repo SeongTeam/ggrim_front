@@ -7,7 +7,7 @@ LABEL description="test"
 
 # -------- 배포에서만 사용-----
 ARG HOSTNAME 
-ARG NEXT_PUBLIC_BACKEND_URL 
+ARG BACKEND_URL 
 ARG NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME 
 ARG NEXT_PUBLIC_CLOUDINARY_API_KEY 
 ARG CLOUDINARY_API_SECRET 
@@ -21,6 +21,9 @@ WORKDIR ./front
 # 패키지 파일 복사
 COPY . .
 RUN pwd && ls
+ARG GPG_TOKEN
+RUN apk add --no-cache gnupg
+RUN gpg --batch --verbose --yes --passphrase ${GPG_TOKEN} .env.production.gpg > .env.production
 # COPY shared/. ./shared/.
 
 # WORKDIR ./front/
