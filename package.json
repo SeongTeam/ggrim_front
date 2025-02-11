@@ -10,8 +10,8 @@
     },
     "dependencies": {
         "@heroicons/react": "^2.1.5",
-        "@nextui-org/theme": "^2.4.5",
         "@nextui-org/spacer": "^2.2.6",
+        "@nextui-org/theme": "^2.4.5",
         "class-variance-authority": "^0.7.1",
         "cloudinary": "^2.5.1",
         "clsx": "^2.1.1",
@@ -25,7 +25,9 @@
         "react-dom": "18",
         "recoil": "0.7.7",
         "styled-components": "^6.1.13",
-        "swiper": "^11.1.14"
+        "swiper": "^11.1.14",
+        "winston": "^3.17.0",
+        "winston-daily-rotate-file": "^5.0.0"
     },
     "devDependencies": {
         "@types/node": "^20",
