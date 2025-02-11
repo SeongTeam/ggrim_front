@@ -2,10 +2,11 @@
 
 import { MCQAttribute } from '@/model/interface/MCQ';
 import { CuratedArtWorkAttribute } from '@/model/interface/curatedArtwork-types';
+import { serverLogger } from '@/util/logger';
 
 function getServerUrl(): string {
     const url = process.env.BACKEND_URL;
-    console.log(`$$$$ getServerUrl() ==>  ${url} $$$$`);
+    serverLogger.info(`BACKEND_URL=${url} `);
 
     if (url == undefined) {
         console.error(` 'process.env.BACKEND_URL' not read`);
