@@ -1,40 +1,11 @@
 'use client'
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { motion } from "framer-motion";
-import { Search } from "lucide-react";
 import { Painting } from "../../model/interface/painting";
 import { findPainting } from "../lib/apis";
+import { SearchBar } from "@/components/search/searchBar";
+import { Card } from "../../components/card";
 
-
-interface SearchBarProps {
-  onSearch: (query: string) => void;
-}
-
-function SearchBar({ onSearch }: SearchBarProps) {
-
-  const [inputValue, setInputValue] = useState("");
-
-  const DELAY_MS = 500;
-  useEffect(()=>{
-    const delayDebounce = setTimeout(()=>{
-        onSearch(inputValue);
-  },  DELAY_MS);
-
-    return () => clearTimeout(delayDebounce);
-},[inputValue,onSearch]);
-
-  return (
-    <div className="relative">
-      <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
-      <input
-        type="text"
-        placeholder="Search Title..."
-        onChange={(e) => setInputValue(e.target.value)}
-        className="w-full pl-10 pr-4 py-2 text-white bg-gray-800 rounded-lg outline-none focus:ring-2 focus:ring-red-500"
-      />
-    </div>
-  );
-}
 
 interface SearchResultsProps {
     results: Painting[];
@@ -44,12 +15,7 @@ function SearchResults({ results }: SearchResultsProps) {
     return (
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-4">
         {results.map((item) => (
-          <div key={item.id} className="bg-gray-900 rounded-lg overflow-hidden">
-            <img src={item.image_url} alt={item.title} className="w-full h-40 object-cover" />
-            <div className="p-2">
-              <p className="text-white text-sm">{item.title}</p>
-            </div>
-          </div>
+          <Card key={item.id} imageSrc={item.image_url} alt={item.title} title={item.title} />
         ))}
       </div>
     );
@@ -61,6 +27,7 @@ function SearchResults({ results }: SearchResultsProps) {
     - 검색 키워드가 빈칸이면, '/' page로 이동
     - 넷플릭스 기능 참조
   [ ]검색 결과 출력시,모든 그림이 개별적으로 보이는 것보단, 한꺼번에 보이는게 좋지 않은가?
+      => No. 사용자 입장에서는 검색 로직이 동작하는 것처럼 보여야하므로, 모든 그림의 로딩 완료 후 결과가 보이는 것은 사용자를 답답하게 만들 것이다.
   [ ] '/' 디자인과 컨셉 맞추기
   [ ] backend 검색 로직 수정
       - title 검색시, 대문자 소문자 구별 없이 진행 필요.
