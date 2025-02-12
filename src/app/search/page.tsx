@@ -1,25 +1,9 @@
-'use client'
-import React, { useCallback, useState } from "react";
-import { motion } from "framer-motion";
-import { Painting } from "../../model/interface/painting";
+import React from "react";
 import { findPainting } from "../lib/apis";
-import { SearchBar } from "@/components/search/searchBar";
-import { Card } from "../../components/card";
+import { SearchPainting } from "../../components/search/SearchPainting";
+import { redirect } from "next/navigation";
 
 
-interface SearchResultsProps {
-    results: Painting[];
-  }
-  
-function SearchResults({ results }: SearchResultsProps) {
-    return (
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-4">
-        {results.map((item) => (
-          <Card key={item.id} imageSrc={item.image_url} alt={item.title} title={item.title} />
-        ))}
-      </div>
-    );
-  }
 
   /*TODO
   [ ]'/'page에 search bar 추가
@@ -32,27 +16,26 @@ function SearchResults({ results }: SearchResultsProps) {
   [ ] backend 검색 로직 수정
       - title 검색시, 대문자 소문자 구별 없이 진행 필요.
   */
-  export default function Page() {
-    const [title, setTitle] = useState("");
-    const [results, setResults] = useState<Painting[]>([]);
-  
-    const handleSearch = useCallback( async (searchTitle: string) => {
 
-        if(searchTitle.trim() === ""){
-          return;
-        }
+  interface SearchPageProps {
+    searchParams : Promise<{ [key: string] : string | string[] | undefined }>
+  }
+  export default async function SearchPage( {searchParams  } : SearchPageProps
+  ) {
 
-        setTitle(searchTitle);
-        const data = await findPainting(searchTitle);
-        setResults(data);
+    const title = (await searchParams).title || "";
+    
+    if(title==""){
+      redirect('/');
+    }
+    const searchTitle = typeof title === 'string' ? title : JSON.stringify(title)
 
-  },[]);
+    const paintings = await findPainting(searchTitle);
   
     return (
       <div className="min-h-screen bg-white text-white p-4">
         <h1 className="text-3xl font-bold text-black mb-4">Search Painting</h1>
-        <SearchBar onSearch={handleSearch} />
-        <SearchResults results={results} />
+        <SearchPainting paintings={paintings} searchTitle={searchTitle} />
       </div>
     );
   }
