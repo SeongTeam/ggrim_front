@@ -30,10 +30,8 @@ import { PaintingCardGrid } from "../../components/search/PaintingCardGrid";
     const paintings = await findPainting(searchTitle);
   
     return (
-      <div className="min-h-screen bg-white text-white p-4">
-        <h1 className="text-3xl font-bold text-black mb-4">Search Painting</h1>
-        <SearchPaintingBar searchTitle={searchTitle} />
+      <>
         <PaintingCardGrid paintings={paintings} />
-      </div>
+      </>
     );
   }
