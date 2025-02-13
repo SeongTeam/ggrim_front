@@ -31,7 +31,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <RecoilRootWrapper>
                     <div className="bg-white text-white p-4">
                         <h1 className="text-3xl font-bold text-black mb-4">Navbar Area</h1>
-                        <SearchPaintingBar searchTitle="" />
+                        <SearchPaintingBar />
                     </div>
                     {children}
                 </RecoilRootWrapper>

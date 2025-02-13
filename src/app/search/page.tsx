@@ -21,13 +21,23 @@ import { PaintingCardGrid } from "../../components/search/PaintingCardGrid";
   interface SearchPageProps {
     searchParams : Promise<{ [key: string] : string | string[] | undefined }>
   }
+
   export default async function SearchPage( {searchParams  } : SearchPageProps
   ) {
 
     const title = (await searchParams).title || "";
-    const searchTitle = typeof title === 'string' ? title : JSON.stringify(title)
+    const artist = (await searchParams).artist || "";
+    const tags = (await searchParams).tags || [];
+    const styles = ( await searchParams).styles || [];
 
-    const paintings = await findPainting(searchTitle);
+
+    
+    const searchTitle = typeof title === 'string' ? title : JSON.stringify(title);
+    const searchArtist = typeof artist === 'string' ? artist : JSON.stringify(artist);
+    const searchTags = typeof tags === 'string' ? [tags] : tags;
+    const searchStyles = typeof styles ==='string' ? [styles] : styles;
+
+    const paintings = await findPainting(searchTitle,searchArtist,searchTags,searchStyles);
   
     return (
       <>
