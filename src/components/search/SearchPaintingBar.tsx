@@ -1,13 +1,13 @@
 'use client'
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useState } from "react";
-import { SearchBar } from "./searchBar";
+import { SearchBar } from "../SearchBar";
 
 interface SearchPaintingProps  {
     searchTitle : string;
 }
 
-export function SearchPainting({  searchTitle } : SearchPaintingProps ): React.JSX.Element {
+export function SearchPaintingBar({  searchTitle } : SearchPaintingProps ): React.JSX.Element {
 
     const router = useRouter();
     const [title, setTitle] = useState(searchTitle);

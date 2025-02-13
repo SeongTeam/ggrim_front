@@ -1,6 +1,6 @@
 import React from "react";
 import { findPainting } from "../lib/apis";
-import { SearchPainting } from "../../components/search/SearchPainting";
+import { SearchPaintingBar } from "../../components/search/SearchPaintingBar";
 import { redirect } from "next/navigation";
 import { PaintingCardGrid } from "../../components/search/PaintingCardGrid";
 
@@ -36,7 +36,7 @@ import { PaintingCardGrid } from "../../components/search/PaintingCardGrid";
     return (
       <div className="min-h-screen bg-white text-white p-4">
         <h1 className="text-3xl font-bold text-black mb-4">Search Painting</h1>
-        <SearchPainting searchTitle={searchTitle} />
+        <SearchPaintingBar searchTitle={searchTitle} />
         <PaintingCardGrid paintings={paintings} />
       </div>
     );
