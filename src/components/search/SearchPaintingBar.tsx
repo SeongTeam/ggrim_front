@@ -1,5 +1,5 @@
 'use client'
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useState } from "react";
 import { SearchBar } from "../SearchBar";
 
@@ -10,9 +10,16 @@ interface SearchPaintingProps  {
 export function SearchPaintingBar({  searchTitle } : SearchPaintingProps ): React.JSX.Element {
 
     const router = useRouter();
+    const pathName = usePathname();
     const [title, setTitle] = useState(searchTitle);
     // const [results, setResults] = useState<Painting[]>([]);
-    const handleSearch = useCallback(async (searchTitle: string) => {     
+    const handleSearch = useCallback(async (searchTitle: string) => {
+        if(searchTitle.trim() === ""){
+            if(pathName !== '/'){
+                router.push('/');
+            }
+            return;
+        }
         router.push(`/search?title=${searchTitle}`);
         setTitle(searchTitle);
         return;

@@ -25,10 +25,6 @@ import { PaintingCardGrid } from "../../components/search/PaintingCardGrid";
   ) {
 
     const title = (await searchParams).title || "";
-    
-    if(title==""){
-      redirect('/');
-    }
     const searchTitle = typeof title === 'string' ? title : JSON.stringify(title)
 
     const paintings = await findPainting(searchTitle);
