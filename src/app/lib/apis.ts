@@ -51,11 +51,10 @@ export const findPainting = async (
     styles: string[] = [],
 ): Promise<Painting[]> => {
     const backendUrl = getServerUrl();
-    const response = await fetch(
-        `${backendUrl}/painting?title=${title}&artistName=${artist}&tags=${JSON.stringify(
-            tags,
-        )}&styles=${JSON.stringify(styles)}`,
-    );
+    const url = `${backendUrl}/painting?title=${title}&artistName=${artist}&tags=${JSON.stringify(
+        tags,
+    )}&styles=${JSON.stringify(styles)}`;
+    const response = await fetch(url);
     const result = await response.json();
     const paintings: Painting[] = result.data as Painting[];
     return paintings;
