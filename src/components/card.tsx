@@ -1,5 +1,5 @@
 
-interface CardProps {
+export interface CardProps {
     key : string,
     imageSrc : string,
     alt : string,
