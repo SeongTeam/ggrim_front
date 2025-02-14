@@ -22,7 +22,7 @@ export default function HoverCard({ cardProps, children }: HoverCardProps) {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
-            <Card { ... cardProps} />
+            <Card { ...cardProps} />
             {isHovered && (
                 <>
                 {children}
