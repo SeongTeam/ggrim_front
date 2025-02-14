@@ -59,3 +59,16 @@ export const findPainting = async (
     const paintings: Painting[] = result.data as Painting[];
     return paintings;
 };
+
+export const getPainting = async (id: string): Promise<Painting | undefined> => {
+    const backendUrl = getServerUrl();
+    const url = `${backendUrl}/painting/by-ids?ids[]=${id}`;
+    const response = await fetch(url);
+    const paintings: Painting[] = await response.json();
+
+    if (paintings.length === 0) {
+        return undefined;
+    }
+
+    return paintings.at(0);
+};
