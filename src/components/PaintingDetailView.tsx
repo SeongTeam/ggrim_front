@@ -40,6 +40,9 @@ export const PaintingDetailView = ( {painting } : PaintingDetailViewProps) => {
                 <p className="text-sm text-gray-500 mt-2">
                     Styles: {painting.styles.map( style => style.name).join(', ')}
                 </p>
+                <p className="text-sm text-gray-500 mt-2">
+                    painting: {painting.id}
+                </p>
                 <p className="text-base text-gray-500 mt-2">
                     Description: {painting.description}
                 </p>
