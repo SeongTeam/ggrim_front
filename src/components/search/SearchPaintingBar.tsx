@@ -1,5 +1,5 @@
 'use client'
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useState } from "react";
 import { SearchBar } from "../SearchBar";
 
@@ -38,8 +38,7 @@ function parseInput(input: string): ParsedInput {
     return { title, tags, styles, artist };
   }
 
-function transformSearchParamsToInput() {
-    const searchParams = useSearchParams();
+function getInput(searchParams : ReadonlyURLSearchParams) {
     const title : string  = searchParams.get('title')||"";
     const artist : string = searchParams.get('artist')||"";
     const tags : string[] = searchParams.getAll('tags');
@@ -60,7 +59,7 @@ function transformSearchParamsToInput() {
 
 }
 
-function transformInputToURL(input : string ) : string{
+function getURL(input : string ) : string{
     const parsed : ParsedInput = parseInput(input);
 
     let url = `/search?title=${parsed.title}`;
@@ -83,7 +82,8 @@ export function SearchPaintingBar(): React.JSX.Element {
 
     const router = useRouter();
     const pathName = usePathname();
-    const [input, setInput] = useState(transformSearchParamsToInput());
+    const searchParams = useSearchParams();
+    const [input, setInput] = useState(getInput(searchParams));
     // const [results, setResults] = useState<Painting[]>([]);
     const handleSearch = useCallback(async (searchTarget: string) => {
         if(searchTarget.trim() === ""){
@@ -94,7 +94,7 @@ export function SearchPaintingBar(): React.JSX.Element {
         }
 
 
-        router.push(transformInputToURL(searchTarget));
+        router.push(getURL(searchTarget));
         setInput(searchTarget);
         return;
     }, []);
