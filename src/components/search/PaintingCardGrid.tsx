@@ -84,20 +84,23 @@ export function PaintingCardGrid( props: PaintingCardGridProps ): React.JSX.Elem
 
 
     return (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-4">
-                {paintings.map((item) => (
-                    <HoverCard key={`${item.id}+HoverCardItem`} 
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-4 mt-4">
+                {searchPaintings.map((item) => (
+                    <div key={`${item.id}+searchPaintingHoverCard`} className="max-w-xs">
+                    <HoverCard  
                         cardProps ={{imageSrc : item.image_url, alt : item.title, title : item.title}}
                         onClick={()=>openModal(item.id)}
                         >
                         <PreviewPainting painting={item} />
                     </HoverCard>
+                    </div>
                 ))}
                 {selectedPainting &&
                 <Modal onClose={closeModal}>
                     <PaintingDetailView painting={selectedPainting}/>
                 </Modal>
                 }
+                {isLoadingRef.current && <p className="text-center mt-4">Loading...</p>}
         </div>
     );
 }

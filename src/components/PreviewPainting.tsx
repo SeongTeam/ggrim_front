@@ -10,7 +10,7 @@ export const PreviewPainting = ({ painting }: PreviewPaintingProps) => {
 
     return (
         <div className="absolute bottom-0 right-0 mt-8 bg-gray-900 shadow-lg border-0 rounded-lg  z-10">
-            <div className="max-w-xs max-h-64 rounded">
+            <div className="max-h-64 rounded">
                 <img src={painting.image_url} alt="Preview" className="w-full object-cover rounded" />
             </div>
             <div className='p-2'>
