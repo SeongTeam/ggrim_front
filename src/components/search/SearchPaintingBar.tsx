@@ -41,19 +41,19 @@ function parseInput(input: string): ParsedInput {
 function getInput(searchParams : ReadonlyURLSearchParams) {
     const title : string  = searchParams.get('title')||"";
     const artist : string = searchParams.get('artist')||"";
-    const tags : string[] = searchParams.getAll('tags');
-    const styles : string[] = searchParams.getAll('styles');
+    const tags : string[] = searchParams.getAll('tags')||[];
+    const styles : string[] = searchParams.getAll('styles')||[];
 
 
-    let input = `${title}`;
+    let input = `${title} `;
 
     if(artist.trim() !== ""){
-        input +=`${regexPrefix}${artist}`;
+        input +=`${regexPrefix}artist:${artist} `;
     }
 
-    tags.forEach(tag=>input+=`${regexPrefix}${tag}`);
+    tags.forEach(tag=>input+=`${regexPrefix}tags:${tag} `);
 
-    styles.forEach(style=>input+=`${regexPrefix}${style}`);
+    styles.forEach(style=>input+=`${regexPrefix}styles:${style} `);
 
     return input;
 
