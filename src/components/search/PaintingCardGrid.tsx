@@ -54,13 +54,25 @@ export function PaintingCardGrid( props: PaintingCardGridProps ): React.JSX.Elem
 
         const handleScroll = () => {
             console.log(`[handleScroll]`);
-        if (
-            window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 &&
-            !isLoadingRef.current
-        ) {
-            console.log(`[loadMorePainting]`);
-            loadMorePainting();
-        }
+            if (
+                /*TODO
+                - 성능저하 방지 필요
+                - 기대치 않은 동작 예방 필요
+                - 대응 방법
+                    1. throttle 구현
+                        - innerHeight,scrollY,offsetHeight 참조는 리플로우를 발생시킬 수 있다.
+                        - throttle을 통해서, 스크롤 핸들러가 특정 주기마다만 호출할 수 있게 하면, 리플로우 발생 횟수가 감소
+                    2. Intersection Observer API 사용
+                        - throttle에 의해 리플로우 발생 횟수를 줄이더라도, 스크롤 이벤트에 특정 주기마다 리플로우가 발생할 수 있다.
+                        - 브라우저가 직접 요소의 가시성을 감지하므로, 리플로우가 발생할 때만 처리된다.
+                    - ref: https://tech.kakaoenterprise.com/149
+                */
+                window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 &&
+                !isLoadingRef.current
+            ) {
+                console.log(`[loadMorePainting]`);
+                loadMorePainting();
+            }
         };
 
         console.log('[useEffect] : for config scroll event');
