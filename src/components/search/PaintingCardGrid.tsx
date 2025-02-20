@@ -37,6 +37,8 @@ export function PaintingCardGrid( props: PaintingCardGridProps ): React.JSX.Elem
         const loadMorePainting = async ()  => {
         
             if(!findResultRef.current.isMore || isLoadingRef.current){
+                console.log('not load painting')
+                console.log(findResultRef,isLoadingRef);
                 return;
             }
             isLoadingRef.current = true;
@@ -44,7 +46,7 @@ export function PaintingCardGrid( props: PaintingCardGridProps ): React.JSX.Elem
             const searchArtist : string = searchParam.get('artist') || "";
             const searchTags : string[]= searchParam.getAll('tags') || [];
             const searchStyles : string[] = searchParam.getAll('styles') || [];
-        
+            console.log(`load ${findResultRef.current.pagination +1} page`);
             const result : FindPaintingResult = await findPainting(searchTitle,searchArtist,searchTags,searchStyles,findResultRef.current.pagination+1);
             findResultRef.current = result;
             setSearchPaintings(prev=> [...prev, ...result.data]);
@@ -83,6 +85,7 @@ export function PaintingCardGrid( props: PaintingCardGridProps ): React.JSX.Elem
     useEffect(()=>{
         setSearchPaintings(props.findResult.data);
         console.log('[useEffect] : for init  SearchPainting');
+        findResultRef.current = props.findResult;
         return ()=>{
             setSearchPaintings(prev=>prev);
         }
