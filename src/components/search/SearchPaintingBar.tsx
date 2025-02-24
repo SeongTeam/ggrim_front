@@ -1,7 +1,8 @@
 'use client'
 import { ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useState } from "react";
+import {  useRef, useState } from "react";
 import { SearchBar } from "../SearchBar";
+import { debounce } from "../../util/optimization";
 
 interface ParsedInput {
     title : string;
@@ -85,7 +86,8 @@ export function SearchPaintingBar(): React.JSX.Element {
     const searchParams = useSearchParams();
     const [input, setInput] = useState(getInput(searchParams));
     // const [results, setResults] = useState<Painting[]>([]);
-    const handleSearch = useCallback(async (searchTarget: string) => {
+    const handleSearch = async (searchTarget: string) => {
+        console.log('handleSearch');
         if(searchTarget.trim() === ""){
             if(pathName !== '/'){
                 router.push('/');
@@ -97,10 +99,12 @@ export function SearchPaintingBar(): React.JSX.Element {
         router.push(getURL(searchTarget));
         setInput(searchTarget);
         return;
-    }, []);
+    };
+
+    const handleSearchDebounceRef = useRef(debounce(handleSearch,500));
 
     return (
-            <SearchBar onSearch={handleSearch} defaultValue={input} />
+            <SearchBar onSearch={handleSearchDebounceRef.current} defaultValue={input} />
 
     );
 }
