@@ -1,3 +1,8 @@
+/* Usage Warning 
+- If you use these functions on react component, you should consider returned wrapper function is not kept.
+  because render or Re-render call these functions again and get new returned wrapper.
+  in result, your expectation from these wrapper is from actual result.
+*/
 export function throttle<T extends (...args: any[]) => void>(
     func: T,
     ms: number,
