@@ -6,9 +6,10 @@ import { Card, CardProps } from './card';
 interface HoverCardProps {
     cardProps : CardProps
     children : React.ReactNode
+    onClick? : ()=> void
 }
 
-export default function HoverCard({ cardProps, children }: HoverCardProps) {
+export default function HoverCard({ cardProps, children, onClick }: HoverCardProps) {
     const [isHovered, setIsHovered] = useState(false);
     const [imageSize, setImageSize] = useState<{ width: number; height: number } | null>(null);
 
@@ -21,6 +22,7 @@ export default function HoverCard({ cardProps, children }: HoverCardProps) {
             className="relative"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
+            onClick={onClick}
         >
             <Card { ...cardProps} />
             {isHovered && (

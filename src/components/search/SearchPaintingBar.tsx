@@ -1,7 +1,8 @@
 'use client'
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useState } from "react";
+import { ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from "next/navigation";
+import {  useRef, useState } from "react";
 import { SearchBar } from "../SearchBar";
+import { debounce } from "../../util/optimization";
 
 interface ParsedInput {
     title : string;
@@ -38,29 +39,28 @@ function parseInput(input: string): ParsedInput {
     return { title, tags, styles, artist };
   }
 
-function transformSearchParamsToInput() {
-    const searchParams = useSearchParams();
+function getInput(searchParams : ReadonlyURLSearchParams) {
     const title : string  = searchParams.get('title')||"";
     const artist : string = searchParams.get('artist')||"";
-    const tags : string[] = searchParams.getAll('tags');
-    const styles : string[] = searchParams.getAll('styles');
+    const tags : string[] = searchParams.getAll('tags')||[];
+    const styles : string[] = searchParams.getAll('styles')||[];
 
 
-    let input = `${title}`;
+    let input = `${title} `;
 
     if(artist.trim() !== ""){
-        input +=`${regexPrefix}${artist}`;
+        input +=`${regexPrefix}artist:${artist} `;
     }
 
-    tags.forEach(tag=>input+=`${regexPrefix}${tag}`);
+    tags.forEach(tag=>input+=`${regexPrefix}tags:${tag} `);
 
-    styles.forEach(style=>input+=`${regexPrefix}${style}`);
+    styles.forEach(style=>input+=`${regexPrefix}styles:${style} `);
 
     return input;
 
 }
 
-function transformInputToURL(input : string ) : string{
+function getURL(input : string ) : string{
     const parsed : ParsedInput = parseInput(input);
 
     let url = `/search?title=${parsed.title}`;
@@ -83,9 +83,11 @@ export function SearchPaintingBar(): React.JSX.Element {
 
     const router = useRouter();
     const pathName = usePathname();
-    const [input, setInput] = useState(transformSearchParamsToInput());
+    const searchParams = useSearchParams();
+    const [input, setInput] = useState(getInput(searchParams));
     // const [results, setResults] = useState<Painting[]>([]);
-    const handleSearch = useCallback(async (searchTarget: string) => {
+    const handleSearch = async (searchTarget: string) => {
+        console.log('handleSearch');
         if(searchTarget.trim() === ""){
             if(pathName !== '/'){
                 router.push('/');
@@ -94,13 +96,15 @@ export function SearchPaintingBar(): React.JSX.Element {
         }
 
 
-        router.push(transformInputToURL(searchTarget));
+        router.push(getURL(searchTarget));
         setInput(searchTarget);
         return;
-    }, []);
+    };
+
+    const handleSearchDebounceRef = useRef(debounce(handleSearch,500));
 
     return (
-            <SearchBar onSearch={handleSearch} defaultValue={input} />
+            <SearchBar onSearch={handleSearchDebounceRef.current} defaultValue={input} />
 
     );
 }

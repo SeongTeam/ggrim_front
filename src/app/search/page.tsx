@@ -1,8 +1,8 @@
 import React from "react";
 import { findPainting } from "../lib/apis";
-import { SearchPaintingBar } from "../../components/search/SearchPaintingBar";
-import { redirect } from "next/navigation";
+import { FindPaintingResult } from '../lib/dto';
 import { PaintingCardGrid } from "../../components/search/PaintingCardGrid";
+import { serverLogger } from "../../util/logger";
 
 
 
@@ -37,11 +37,11 @@ import { PaintingCardGrid } from "../../components/search/PaintingCardGrid";
     const searchTags = typeof tags === 'string' ? [tags] : tags;
     const searchStyles = typeof styles ==='string' ? [styles] : styles;
 
-    const paintings = await findPainting(searchTitle,searchArtist,searchTags,searchStyles);
-  
+    const result : FindPaintingResult = await findPainting(searchTitle,searchArtist,searchTags,searchStyles);
+    serverLogger.info(`{path : /search}current param : $${JSON.stringify({title,artist,tags,styles})}`);
     return (
       <>
-        <PaintingCardGrid paintings={paintings} />
+        <PaintingCardGrid findResult={result}  />
       </>
     );
   }

@@ -4,6 +4,7 @@ import { MCQAttribute } from '@/model/interface/MCQ';
 import { CuratedArtWorkAttribute } from '@/model/interface/curatedArtwork-types';
 import { serverLogger } from '@/util/logger';
 import { Painting } from '../../model/interface/painting';
+import { FindPaintingResult } from './dto';
 
 function getServerUrl(): string {
     const url = process.env.BACKEND_URL;
@@ -49,13 +50,27 @@ export const findPainting = async (
     artist: string = '',
     tags: string[] = [],
     styles: string[] = [],
-): Promise<Painting[]> => {
+    page: number = 0,
+): Promise<FindPaintingResult> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/painting?title=${title}&artistName=${artist}&tags=${JSON.stringify(
         tags,
-    )}&styles=${JSON.stringify(styles)}`;
+    )}&styles=${JSON.stringify(styles)}&page=${page}`;
+    serverLogger.info(`[findPaintings] url=${url}`);
     const response = await fetch(url);
-    const result = await response.json();
-    const paintings: Painting[] = result.data as Painting[];
-    return paintings;
+    const result: FindPaintingResult = await response.json();
+    return result;
+};
+
+export const getPainting = async (id: string): Promise<Painting | undefined> => {
+    const backendUrl = getServerUrl();
+    const url = `${backendUrl}/painting/by-ids?ids[]=${id}`;
+    const response = await fetch(url);
+    const paintings: Painting[] = await response.json();
+
+    if (paintings.length === 0) {
+        return undefined;
+    }
+
+    return paintings.at(0);
 };
