@@ -35,11 +35,14 @@ RUN  npm ci  &&  npm run build
 # 2단계: 실행 이미지
 FROM node:22-alpine
 
+# WORK Directory 설정
+WORKDIR ./app
 # 빌드 단계에서 생성된 필수 파일만 복사
 COPY --from=builder /front/.next/standalone ./
 COPY --from=builder /front/.next/static ./.next/static
 COPY --from=builder /front/public ./public
-RUN mkdir ./logs && mkdir ./logs/app
+# RUN mkdir ./logs && mkdir ./logs/app
+RUN chown -R node:node /app
 
 EXPOSE 4000
 
@@ -51,9 +54,10 @@ ENV NEXT_PUBLIC_CLOUDINARY_API_KEY ${NEXT_PUBLIC_CLOUDINARY_API_KEY}
 ENV CLOUDINARY_API_SECRET ${CLOUDINARY_API_SECRET}
 ENV CAESAR_SHIFT=${CAESAR_SHIFT}
 
+USER node
 
 
-CMD ["node", "server.js"]
+CMD ["node", "/app/server.js"]
 
 
 
