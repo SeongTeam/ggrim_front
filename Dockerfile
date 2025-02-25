@@ -40,7 +40,7 @@ FROM node:22-alpine
 COPY --from=builder /front/.next/standalone ./
 COPY --from=builder /front/.next/static ./.next/static
 COPY --from=builder /front/public ./public
-
+RUN mkdir logs && logs/app
 
 EXPOSE 4000
 
