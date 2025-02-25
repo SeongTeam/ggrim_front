@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { findPainting } from "../lib/apis";
 import { FindPaintingResult } from '../lib/dto';
 import { PaintingCardGrid } from "../../components/search/PaintingCardGrid";
@@ -40,8 +40,8 @@ import { serverLogger } from "../../util/logger";
     const result : FindPaintingResult = await findPainting(searchTitle,searchArtist,searchTags,searchStyles);
     serverLogger.info(`{path : /search}current param : $${JSON.stringify({title,artist,tags,styles})}`);
     return (
-      <>
+      <Suspense>
         <PaintingCardGrid findResult={result}  />
-      </>
+      </Suspense>
     );
   }
