@@ -35,12 +35,11 @@ RUN  npm ci  &&  npm run build
 # 2단계: 실행 이미지
 FROM node:22-alpine
 
-
 # 빌드 단계에서 생성된 필수 파일만 복사
 COPY --from=builder /front/.next/standalone ./
 COPY --from=builder /front/.next/static ./.next/static
 COPY --from=builder /front/public ./public
-RUN mkdir logs && logs/app
+RUN mkdir ./logs && mkdir ./logs/app
 
 EXPOSE 4000
 
