@@ -12,7 +12,9 @@ interface PaintingDetailViewProps {
 - painting = undefined 인 경우 어떻게 할것인지 생각하기
 */
 export const PaintingDetailView = ( {painting } : PaintingDetailViewProps) => {
-
+    
+    const [showFullDescription, setShowFullDescription] = useState(false);
+    
     if(!painting){
         return (
             <div className="bottom-0 right-0 mt-8 bg-gray-900 shadow-lg border-0 rounded-lg">
@@ -21,7 +23,6 @@ export const PaintingDetailView = ( {painting } : PaintingDetailViewProps) => {
         )
     }
 
-    const [showFullDescription, setShowFullDescription] = useState(false);
 
 
     const handleToggleDescription = () => {
