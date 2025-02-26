@@ -4,7 +4,7 @@ import { MCQAttribute } from '@/model/interface/MCQ';
 import { CuratedArtWorkAttribute } from '@/model/interface/curatedArtwork-types';
 import { serverLogger } from '@/util/logger';
 import { Painting } from '../../model/interface/painting';
-import { FindPaintingResult } from './dto';
+import { FindPaintingResult, FindQuizResult } from './dto';
 
 function getServerUrl(): string {
     const url = process.env.BACKEND_URL;
@@ -73,4 +73,20 @@ export const getPainting = async (id: string): Promise<Painting | undefined> => 
     }
 
     return paintings.at(0);
+};
+
+export const findQuiz = async (
+    artists: string[] = [],
+    tags: string[] = [],
+    styles: string[] = [],
+    page: number = 0,
+): Promise<FindQuizResult> => {
+    const backendUrl = getServerUrl();
+    const url = `${backendUrl}/quiz?artist=${JSON.stringify(artists)}&tags=${JSON.stringify(
+        tags,
+    )}&styles=${JSON.stringify(styles)}&page=${page}`;
+    serverLogger.info(`[findPaintings] url=${url}`);
+    const response = await fetch(url);
+    const result: FindQuizResult = await response.json();
+    return result;
 };
