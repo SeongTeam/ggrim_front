@@ -6,4 +6,5 @@ export interface Tag {
     id: string;
     name: string;
     info_url: string | null;
+    //paintings : Painting[];
 }
