@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import { findPainting } from "../lib/apis";
+import { findPainting } from "../lib/api.backend";
 import { FindPaintingResult } from '../lib/dto';
 import { PaintingCardGrid } from "../../components/search/PaintingCardGrid";
 import { serverLogger } from "../../util/logger";
