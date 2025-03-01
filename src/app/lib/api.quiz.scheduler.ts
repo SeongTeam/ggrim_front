@@ -25,8 +25,6 @@ interface ContextHashNode {
 type ContextHashMap = Map<QuizContextID, ContextHashNode>;
 
 /*TODO
-- 앱 실행시 즉시 실행 로직구현
-- 싱글톤으로 구현
 - Q.pubic 함수는 static으로 사용해야하는가?
 */
 
@@ -51,6 +49,7 @@ class QuizContextScheduler {
     /*TODO
     - 추가 요청이 버려지는 것을 방지하기 위해 사용 필요
         - 사용자가 많아지고 메모리가 충분하면 사용.
+        - add,delete 등의 내부 공통 로직에서 race-condition이 발생할 수 있으면 적용
      */
     private syncQueue: TaskSyncQueue;
 
@@ -154,9 +153,6 @@ class QuizContextScheduler {
     }
 
     async requestUpdateFixedQuiz(newContexts: QuizContext[]): Promise<boolean> {
-        /*TODO
-        - 리팩토링을 통해 mutex.release() 관리
-        */
         if (newContexts.length === 0) {
             serverLogger.warn(`[${QuizContextScheduler.name}] can't update empty array`);
             return false;
@@ -254,11 +250,6 @@ class QuizContextScheduler {
     }
 
     async requestDeleteLowPriority(): Promise<boolean> {
-        /*TODO
-        - delete 선별 도중에, 비동기적으로 일어나는 작업을 막아야하지 않는가?
-        - race condition 혹은 멀티스레딩에서 일어날 문제가 있는가?
-        */
-
         return this.mutex.runExclusive(() => {
             const hashNodes: ContextHashNode[] = [...this._contextHashMap.values()].filter(
                 (node) => node.isFixed,
@@ -395,11 +386,6 @@ class QuizContextScheduler {
     }
 
     private async report(): Promise<void> {
-        /*TODO
-    - Reflect.deleteProperty 사용하는 방법과, 객체 불변성을 사용하여 재할당 하는 방법 중에서 선택 필요.
-    - this.mutex 중첩 사용 예방 고민하기
-        - add or delete 에서 mutex를 사용하는데, 해당 함수들을 호출자에서도 mutex를 사용하면 this.mutex timeout이 발생..
-    */
         await this.mutex.acquire();
         serverLogger.info(
             `[${QuizContextScheduler.name}] report schedule status : ${
@@ -428,9 +414,6 @@ class QuizContextScheduler {
         return `${temp.artist}-${temp.tag}-${temp.style}-${temp.page}`;
     }
 
-    /*TODO
-- 주기적으로 호출하여 scheduling
-*/
     private async optimize(): Promise<void> {
         const count = await this.getScheduleCount();
         if (count === this.SCHEDULER_SIZE) {
@@ -442,8 +425,7 @@ class QuizContextScheduler {
 
         /*TODO
         - 추후 스케줄링 로직 추가 가능.
-        
-    */
+        */
         serverLogger.info(`[${QuizContextScheduler.name}] optimize complete`);
         return;
     }
