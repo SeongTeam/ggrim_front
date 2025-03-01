@@ -68,14 +68,11 @@ class QuizContextScheduler {
                     `${JSON.stringify(fixedContext, null, 2)}`,
             );
         }
+        await this.mutex.runExclusive(() => {
+            this.addContexts(fixedContext, true);
 
-        await this.addContext(fixedContext, true);
-
-        assertOrLog(this._scheduler.length !== 0);
-
-        while (this._scheduler.length < this.SCHEDULER_SIZE) {
-            this._scheduler.push(this.SCHEDULER_EMPTY);
-        }
+            assertOrLog(this._scheduler.length !== 0);
+        });
     }
 
     async scheduleContext(): Promise<QuizContext> {
@@ -138,110 +135,100 @@ class QuizContextScheduler {
         }
     }
 
-    async requestAddContext(contexts: QuizContext[]): Promise<void> {
-        const targets: QuizContext[] = [];
-
-        if (contexts.length === this.SCHEDULER_SIZE) {
-            //throttling 사용하여 schedule() 호출 고려
-            return;
-        }
-
-        const emptyIndexes = await this.getEmptyIndex();
-
-        targets.push(...contexts.slice(0, emptyIndexes.length));
-
-        /*TODO
-        - Q.race condition 예방이 필요한가?
-        - Q.addContext() 함수도 비동기여야 하는가?
-        */
-
-        return this.addContext(targets, false).then(() => {
+    async requestAddContext(contexts: QuizContext[]): Promise<boolean> {
+        return this.mutex.runExclusive(() => {
+            const result = this.addContexts(contexts, false);
             serverLogger.info(
                 `[${QuizContextScheduler.name}] requestAddContext() completes request`,
             );
-            return new Promise((res) => res());
+            return result;
         });
     }
 
-    async requestUpdateFixedContexts(newContexts: QuizContext[]) {
+    async requestUpdateFixedQuiz(newContexts: QuizContext[]): Promise<boolean> {
         /*TODO
         - 리팩토링을 통해 mutex.release() 관리
         */
         if (newContexts.length === 0) {
-            serverLogger.error(`[${QuizContextScheduler.name}] can't update empty array`);
-            return;
+            serverLogger.warn(`[${QuizContextScheduler.name}] can't update empty array`);
+            return false;
         }
-        if (newContexts.length > this.SCHEDULER_SIZE) {
-            serverLogger.error(
-                `[${QuizContextScheduler.name}] ${JSON.stringify(newContexts)} ` +
-                    `this._schedulerIdx : ${this._schedulerIdx}` +
-                    `${JSON.stringify(this._contextHashMap, null, 2)}` +
-                    `${JSON.stringify(this._scheduler, null, 2)}` +
-                    `${JSON.stringify(this._scheduler)}`,
-            );
-            serverLogger.error(
+
+        const hashMap = new Map<QuizContextID, QuizContext>();
+        newContexts.forEach((ctx) => hashMap.set(this.transformHashKey(ctx), ctx));
+
+        if (hashMap.size > this.SCHEDULER_SIZE) {
+            serverLogger.warn(
                 `[${QuizContextScheduler.name}] updateFixedContexts() failed. Not Enough Size.` +
-                    `${JSON.stringify(newContexts, null, 2)}`,
+                    `${JSON.stringify(hashMap, null, 2)}`,
+                `${JSON.stringify(newContexts, null, 2)}`,
             );
             // throw new Error(`updateFixedContexts() failed. Not Enough Size`);
-            return;
+            return false;
         }
-        const ids = newContexts.map((ctx) => this.transformHashKey(ctx));
-
+        // main
         await this.mutex.acquire();
-        const newIDs = ids.filter((id) => !this._contextHashMap.has(id));
-        const existIDs = ids.filter((id) => this._contextHashMap.has(id));
 
-        let loop = 0;
-        const max_loop = 20;
+        //백업
+        const _contextHashMapBackup: ContextHashMap = structuredClone(this._contextHashMap);
+        const _schedulerBackup: QuizContextID[] = structuredClone(this._scheduler);
 
-        //resize with backup
+        try {
+            //resize with backup
 
-        this._scheduler.forEach((id) => {
-            if (this._contextHashMap.has(id)) {
-                this._contextHashMap.get(id)!.isFixed = false;
-            } else {
-                serverLogger.error(
-                    `[${QuizContextScheduler.name}] Scheduled ID should save Hash Node. please check add & delete logic. \n` +
-                        `id : ${id}` +
-                        `this._schedulerIdx : ${this._schedulerIdx}}`,
-                );
+            this._scheduler.forEach((id) => {
+                if (this._contextHashMap.has(id)) {
+                    this._contextHashMap.get(id)!.isFixed = false;
+                } else {
+                    //혹시모를 에러 방지용.
+                    serverLogger.error(
+                        `[${QuizContextScheduler.name}] Scheduled ID should save Hash Node. please check add & delete logic. \n` +
+                            `id : ${id}` +
+                            `this._schedulerIdx : ${this._schedulerIdx}}`,
+                    );
+                    throw new Error('System state is wrong. need to check');
+                }
+            });
+
+            let existCount = 0;
+            hashMap.forEach((ctx, id) => {
+                if (this._contextHashMap.has(id)) {
+                    this._contextHashMap.get(id)!.isFixed = true;
+                    existCount++;
+                }
+            });
+
+            const emptyCount = this.getEmptyIndex()!.length;
+            const tryCount = emptyCount - existCount;
+            const nodes: ContextHashNode[] = [...this._contextHashMap.values()];
+            this.sortByLowPriority(nodes);
+
+            for (let i = 0; i < tryCount; i++) {
+                const deleteID = this.transformHashKey(nodes[0].context);
+                if (this.deleteContext(deleteID)) {
+                    throw new Error(
+                        `Can't delete Context during updating fixed Context. ID : ${deleteID}`,
+                    );
+                }
             }
-        });
+            //re-arrange
 
-        existIDs.forEach((id) => {
-            if (this._contextHashMap.has(id)) {
-                this._contextHashMap.get(id)!.isFixed = true;
-            }
-        });
-        await this.mutex.release();
-
-        const emptyIndexes: number[] = await this.getEmptyIndex();
-
-        while (emptyIndexes.length < newIDs.length) {
-            await this.deleteMostViewQuiz();
-            loop++;
-
-            if (loop > max_loop) {
-                serverLogger.error(
-                    `[${QuizContextScheduler.name}] ${JSON.stringify(newContexts, null, 2)} ` +
-                        `this._schedulerIdx : ${this._schedulerIdx}` +
-                        `${JSON.stringify(this._contextHashMap, null, 2)}` +
-                        `${JSON.stringify(this._scheduler, null, 2)}` +
-                        `${JSON.stringify(this._scheduler)}`,
-                );
-                throw new Error(`updateFixedContexts() failed. Can't resize. please restart app`);
-            }
+            const targets: QuizContext[] = [];
+            hashMap.forEach((ctx, id) => {
+                if (!this._contextHashMap.has(id)) {
+                    targets.push(ctx);
+                }
+            });
+            return this.addContexts(targets, true);
+        } catch (e: unknown) {
+            serverLogger.error(`fail requestAddContext().error : ${JSON.stringify(e)}\n`);
+            this._contextHashMap = _contextHashMapBackup;
+            this._scheduler = _schedulerBackup;
+            return false;
+        } finally {
+            serverLogger.info(`requestAddContext().finish\n`);
+            await this.mutex.release();
         }
-        //re-arrange
-
-        await this.mutex.acquire();
-        const targets: QuizContext[] = newContexts.filter(
-            (ctx) => !this._contextHashMap.has(this.transformHashKey(ctx)),
-        );
-        await this.mutex.release();
-
-        await this.addContext(targets, true);
     }
 
     startOptimization(interval = this.OPTIMIZE_INTERVAL_MS) {
@@ -258,25 +245,60 @@ class QuizContextScheduler {
         }
     }
 
-    private async addContext(contexts: QuizContext[], isFixed: boolean = false): Promise<void> {
-        const emptyIndexes: number[] = await this.getEmptyIndex();
+    async requestDeleteLowPriority(): Promise<boolean> {
+        /*TODO
+        - delete 선별 도중에, 비동기적으로 일어나는 작업을 막아야하지 않는가?
+        - race condition 혹은 멀티스레딩에서 일어날 문제가 있는가?
+        */
 
-        if (emptyIndexes.length < contexts.length) {
-            serverLogger.error(`[${QuizContextScheduler.name}] Need to optimize. `);
-            return;
+        return this.mutex.runExclusive(() => {
+            const hashNodes: ContextHashNode[] = [...this._contextHashMap.values()].filter(
+                (node) => node.isFixed,
+            );
+
+            this.sortByLowPriority(hashNodes);
+
+            const contextID: QuizContextID = hashNodes.map((ctx) =>
+                this.transformHashKey(ctx.context),
+            )[0];
+
+            return this.deleteContext(contextID);
+        });
+    }
+
+    private addContexts(contexts: QuizContext[], isFixed: boolean = false): boolean {
+        if (!this.mutex.isLocked()) {
+            return false;
         }
 
-        await this.mutex.acquire();
+        const tempMap: ContextHashMap = new Map();
+        contexts.forEach((context) =>
+            tempMap.set(this.transformHashKey(context), {
+                context,
+                scheduleCount: 0,
+                schedulerIndex: -1,
+                isFixed,
+            }),
+        );
 
-        const tasks = contexts.map((ctx) => ({
-            ctx,
+        const emptyIndexes: number[] = this.getEmptyIndex()!;
+
+        if (emptyIndexes.length < tempMap.size) {
+            serverLogger.error(`[${QuizContextScheduler.name}] Need to optimize. `);
+            return false;
+        }
+
+        const tasks = tempMap.values().map((node) => ({
+            node,
             status: 'FAILED' as 'ADDED' | 'EXISTED' | 'FAILED',
         }));
+
+        const backupHashMap: ContextHashMap = new Map(this._contextHashMap);
 
         try {
             tasks.forEach((task, idx) => {
                 const schedulerIndex = emptyIndexes[idx];
-                const id: QuizContextID = this.transformHashKey(task.ctx);
+                const id: QuizContextID = this.transformHashKey(task.node.context);
 
                 if (this._contextHashMap.has(id)) {
                     //중복 삽입 예방.
@@ -288,14 +310,13 @@ class QuizContextScheduler {
                 }
 
                 this._scheduler[schedulerIndex] = id;
-                this._contextHashMap.set(this.transformHashKey(task.ctx), {
-                    context: task.ctx,
+                this._contextHashMap.set(this.transformHashKey(task.node.context), {
+                    ...task.node,
                     schedulerIndex: schedulerIndex,
-                    scheduleCount: 0,
-                    isFixed,
                 });
                 task.status = 'ADDED';
             });
+            return true;
         } catch {
             const statistic = tasks.reduce(
                 (acc, { status }) => ({ ...acc, [status]: acc[status] + 1 }),
@@ -308,59 +329,61 @@ class QuizContextScheduler {
                 `[${QuizContextScheduler.name}] fail addContext.` +
                     `${JSON.stringify(statistic, null, 2)}`,
             );
+            this._contextHashMap = backupHashMap;
+            return false;
         } finally {
             serverLogger.info(
                 `[${QuizContextScheduler.name}] addContext finish` +
                     `${JSON.stringify(tasks, null, 2)}`,
             );
-            await this.mutex.release();
         }
     }
 
-    private async getEmptyIndex() {
-        await this.mutex.acquire();
-        try {
-            const emptyIndexes: number[] = [];
-            this._scheduler.forEach((value, index) => {
-                if (value === this.SCHEDULER_EMPTY) {
-                    emptyIndexes.push(index);
-                }
-            });
-            return emptyIndexes;
-        } finally {
-            await this.mutex.release();
+    private getEmptyIndex(): number[] | undefined {
+        if (!this.mutex.isLocked()) {
+            return undefined;
         }
+
+        const emptyIndexes: number[] = [];
+        this._scheduler.forEach((value, index) => {
+            if (value === this.SCHEDULER_EMPTY) {
+                emptyIndexes.push(index);
+            }
+        });
+        return emptyIndexes;
     }
 
-    private async getScheduleCount(): Promise<number> {
+    private getScheduleCount(): number | undefined {
+        if (!this.mutex.isLocked()) {
+            return undefined;
+        }
         let count = 0;
-        await this.mutex.acquire();
         this._scheduler.forEach((value) => {
             if (value !== this.SCHEDULER_EMPTY) {
                 count++;
             }
         });
 
-        await this.mutex.release();
         return count;
     }
 
-    private async deleteContext(contextID: QuizContextID): Promise<boolean> {
-        await this.mutex.acquire();
-        try {
-            if (!this._contextHashMap.has(contextID)) {
-                assertOrLog(false, `can't delete not-existed ID. ${contextID}`);
-                return false;
-            }
-
-            const deletedNode: ContextHashNode = this._contextHashMap.get(contextID)!;
-
-            this._contextHashMap.delete(contextID);
-            this._scheduler[deletedNode.schedulerIndex] = this.SCHEDULER_EMPTY;
-            return true;
-        } finally {
-            await this.mutex.release();
+    //Should acquire mutex before call it
+    private deleteContext(contextID: QuizContextID): boolean {
+        if (!this.mutex.isLocked()) {
+            serverLogger.warn(`can't execute without acquiring mutex `);
+            return false;
         }
+
+        if (!this._contextHashMap.has(contextID)) {
+            assertOrLog(false, `can't delete not-existed ID. ${contextID}`);
+            return false;
+        }
+
+        const deletedNode: ContextHashNode = this._contextHashMap.get(contextID)!;
+
+        this._contextHashMap.delete(contextID);
+        this._scheduler[deletedNode.schedulerIndex] = this.SCHEDULER_EMPTY;
+        return true;
     }
 
     private async report(): Promise<void> {
@@ -376,6 +399,7 @@ class QuizContextScheduler {
                     _scheduler: this._scheduler,
                     _contextHashMap: this._contextHashMap,
                     _schedulerIdx: this._schedulerIdx,
+                    fixedCtxCount: this.getFixedContextCounts()!,
                 }),
                 null,
                 2)
@@ -402,8 +426,8 @@ class QuizContextScheduler {
     private async optimize(): Promise<void> {
         const count = await this.getScheduleCount();
         if (count === this.SCHEDULER_SIZE) {
-            serverLogger.info(`[${QuizContextScheduler.name}] call deleteMostViewQuiz()`);
-            await this.deleteMostViewQuiz();
+            serverLogger.info(`[${QuizContextScheduler.name}] delete low priority context`);
+            await this.requestDeleteLowPriority();
         }
 
         await this.report();
@@ -412,26 +436,12 @@ class QuizContextScheduler {
         - 추후 스케줄링 로직 추가 가능.
         
     */
-        serverLogger.info(`[${QuizContextScheduler.name}] complete optimize()`);
+        serverLogger.info(`[${QuizContextScheduler.name}] optimize complete`);
         return;
     }
 
-    private async deleteMostViewQuiz(): Promise<void> {
-        /*TODO
-        - delete 선별 도중에, 비동기적으로 일어나는 작업을 막아야하지 않는가?
-        - race condition 혹은 멀티스레딩에서 일어날 문제가 있는가?
-    */
-        const count = await this.getScheduleCount();
-
-        if (count < this.SCHEDULER_SIZE) {
-            return;
-        }
-
-        const hashNodes: ContextHashNode[] = Object.values(this._contextHashMap)
-            .filter((value) => value !== undefined)
-            .filter((value) => !value.isFixed);
-
-        hashNodes.sort((a, b) => {
+    private sortByLowPriority(hashNodes: ContextHashNode[]): ContextHashNode[] {
+        return hashNodes.sort((a, b) => {
             if (b.scheduleCount === a.scheduleCount) {
                 //나중에 선택될 Context 제거
                 return (
@@ -442,29 +452,24 @@ class QuizContextScheduler {
             // 가장 많이 선택된 Context 제거
             return b.scheduleCount - a.scheduleCount;
         });
-
-        const target: QuizContextID = hashNodes.map((ctx) => this.transformHashKey(ctx.context))[0];
-
-        await this.deleteContext(target);
     }
 
-    private async getFixedContextCounts(): Promise<number> {
-        let count = 0;
-        await this.mutex.acquire();
-        try {
-            this._scheduler.forEach((id) => {
-                assertOrLog(
-                    this._contextHashMap.has(id),
-                    'scheduled context ID should has context node',
-                );
-                if (this._contextHashMap.get(id)!.isFixed) {
-                    count++;
-                }
-            });
-            return count;
-        } finally {
-            await this.mutex.release();
+    private getFixedContextCounts(): number | undefined {
+        if (this.mutex.isLocked()) {
+            return undefined;
         }
+        let count = 0;
+
+        this._scheduler.forEach((id) => {
+            assertOrLog(
+                this._contextHashMap.has(id),
+                'scheduled context ID should has context node',
+            );
+            if (this._contextHashMap.get(id)!.isFixed) {
+                count++;
+            }
+        });
+        return count;
     }
 
     private getSchedulingOffset(index: number) {
