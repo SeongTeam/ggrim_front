@@ -26,6 +26,8 @@ type ContextHashMap = Map<QuizContextID, ContextHashNode>;
 
 /*TODO
 - Q.pubic 함수는 static으로 사용해야하는가?
+- 추후 스케줄링 기능 백엔드로 옮기기
+    - 프론트 서버는 렌더링 때문에 메모리와 CPU 리소스가 부족할 수 있기 때문 
 */
 
 class QuizContextScheduler {
