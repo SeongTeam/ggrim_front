@@ -56,7 +56,7 @@ class QuizContextScheduler {
     constructor() {
         //Q. Map() 과 object는 어떤 차이가 있는가? 둘다 해시 처럼 사용가능한데.
         this._contextHashMap = new Map<string, ContextHashNode>();
-        this._scheduler = ([] as string[]).fill(this.SCHEDULER_EMPTY, 0, this.SCHEDULER_SIZE);
+        this._scheduler = new Array(this.SCHEDULER_SIZE).fill(this.SCHEDULER_EMPTY);
         this._schedulerIdx = 0;
         this.mutex = withTimeout(
             new Mutex(),
@@ -69,10 +69,10 @@ class QuizContextScheduler {
 
     async init(fixedContext: QuizContext[]) {
         if (fixedContext.length > this.SCHEDULER_SIZE) {
+            serverLogger.error(`init fail. ` + `${JSON.stringify(fixedContext, null, 2)}`);
             throw new Error(
                 `fixedContext length is over max this._scheduler size` +
-                    `this.SCHEDULER_SIZE : ${this.SCHEDULER_SIZE} ` +
-                    `${JSON.stringify(fixedContext, null, 2)}`,
+                    `this.SCHEDULER_SIZE : ${this.SCHEDULER_SIZE} `,
             );
         }
         await this.mutex.runExclusive(() => {
@@ -102,14 +102,9 @@ class QuizContextScheduler {
                 serverLogger.error(
                     `[${QuizContextScheduler.name}] this._schedulerIdx : ${this._schedulerIdx}` +
                         `${JSON.stringify(this._contextHashMap, null, 2)}` +
-                        `${JSON.stringify(this._scheduler, null, 2)}` +
-                        `${JSON.stringify(this._scheduler)}`,
+                        `${JSON.stringify(this._scheduler, null, 2)}`,
                 );
-                throw new Error(
-                    `No Context exist` +
-                        `current Scheduler Idx : ${this._schedulerIdx}` +
-                        `${JSON.stringify(this._scheduler)}`,
-                );
+                throw new Error(`No Context exist`);
             }
 
             const id: QuizContextID = this._scheduler[idx];
