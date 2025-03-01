@@ -4,6 +4,7 @@ import { assertOrLog } from '../../util/debug';
 import { serverLogger } from '../../util/logger';
 import { Mutex, MutexInterface, withTimeout } from 'async-mutex';
 import { getWeekArtWorkData } from './api.backend';
+import { TaskSyncQueue } from '../../util/taskSyncQueue';
 
 export interface QuizContext {
     artist?: string;
@@ -47,10 +48,16 @@ class QuizContextScheduler {
 
     private optimizerTimer: NodeJS.Timeout | null;
 
+    /*TODO
+    - 추가 요청이 버려지는 것을 방지하기 위해 사용 필요
+        - 사용자가 많아지고 메모리가 충분하면 사용.
+     */
+    private syncQueue: TaskSyncQueue;
+
     constructor() {
         //Q. Map() 과 object는 어떤 차이가 있는가? 둘다 해시 처럼 사용가능한데.
         this._contextHashMap = new Map<string, ContextHashNode>();
-        this._scheduler = [];
+        this._scheduler = ([] as string[]).fill(this.SCHEDULER_EMPTY, 0, this.SCHEDULER_SIZE);
         this._schedulerIdx = 0;
         this.mutex = withTimeout(
             new Mutex(),
@@ -58,6 +65,7 @@ class QuizContextScheduler {
             new Error(`Timeout Mutex  Release ${this.MUTEX_TIMEOUT_MS}`),
         );
         this.optimizerTimer = null;
+        this.syncQueue = new TaskSyncQueue();
     }
 
     async init(fixedContext: QuizContext[]) {
