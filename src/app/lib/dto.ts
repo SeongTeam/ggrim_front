@@ -9,7 +9,7 @@ export interface FindPaintingResult {
 }
 
 export interface FindQuizResult {
-    data: Quiz;
+    data: Quiz[];
     isMore: boolean;
     pagination: number;
     count: number;
