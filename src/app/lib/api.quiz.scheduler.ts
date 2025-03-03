@@ -475,9 +475,9 @@ class SingleTonQuizContextScheduler {
     }
 }
 
-const _contextScheduler = SingleTonQuizContextScheduler.contextScheduler;
-Object.freeze(_contextScheduler);
-export default _contextScheduler;
+const quizContextScheduler = SingleTonQuizContextScheduler.contextScheduler;
+Object.freeze(quizContextScheduler);
+export default quizContextScheduler;
 
 (async () => {
     const weeklyArtworks = await getWeekArtWorkData();
@@ -496,7 +496,7 @@ export default _contextScheduler;
         )}`,
     );
 
-    await _contextScheduler.init(contexts);
-    _contextScheduler.startOptimization();
+    await quizContextScheduler.init(contexts);
+    quizContextScheduler.startOptimization();
     serverLogger.info(`[${QuizContextScheduler.name}] complete init quiz scheduler`);
 })();
