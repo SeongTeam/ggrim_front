@@ -5,6 +5,7 @@ import { CuratedArtWorkAttribute } from '@/model/interface/curatedArtwork-types'
 import { serverLogger } from '@/util/logger';
 import { Painting } from '../../model/interface/painting';
 import { FindPaintingResult, FindQuizResult } from './dto';
+import { Quiz } from '../../model/interface/quiz';
 
 function getServerUrl(): string {
     const url = process.env.BACKEND_URL;
@@ -88,5 +89,14 @@ export const findQuiz = async (
     serverLogger.info(`[findPaintings] url=${url}`);
     const response = await fetch(url);
     const result: FindQuizResult = await response.json();
+    return result;
+};
+
+export const getQuiz = async (id: string): Promise<Quiz> => {
+    const backendUrl = getServerUrl();
+    const url = `${backendUrl}/quiz?id=${id}`;
+    serverLogger.info(`[${getQuiz.name}] url=${url}`);
+    const response = await fetch(url);
+    const result: Quiz = await response.json();
     return result;
 };
