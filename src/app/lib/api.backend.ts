@@ -86,7 +86,7 @@ export const findQuiz = async (
     const url = `${backendUrl}/quiz?artist=${JSON.stringify(artists)}&tags=${JSON.stringify(
         tags,
     )}&styles=${JSON.stringify(styles)}&page=${page}`;
-    serverLogger.info(`[findPaintings] url=${url}`);
+    serverLogger.info(`[${findQuiz.name}] url=${url}`);
     const response = await fetch(url);
     const result: FindQuizResult = await response.json();
     return result;
