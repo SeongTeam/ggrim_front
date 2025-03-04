@@ -12,7 +12,6 @@ const useMCQReader = (attrs: MCQ, selectedAnswer: number) => {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [readerSelectedAnswer, setReaderSelectedAnswer] = useState<string | null>(null);
     const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
-    const [attemptedAnswers, setAttemptedAnswers] = useState<number[]>([]);
     const [isCorrect, setIsCorrect] = useState<boolean>(false);
     const [showHint, setShowHint] = useState<boolean>(false);
     // TODO 현재 클릭이 될때 마다 계속 동작한다. 메모리 낭비라고 생각함 추후 효율적이게 수정 요구
@@ -47,7 +46,7 @@ const useMCQReader = (attrs: MCQ, selectedAnswer: number) => {
         }
     };
 
-    const cleatSubmitState = async (): Promise<void> => {
+    const clearSubmitState = async (): Promise<void> => {
         if (readerSelectedAnswer !== null) {
             setIsSubmitted(false);
             setIsCorrect(false);
@@ -71,7 +70,6 @@ const useMCQReader = (attrs: MCQ, selectedAnswer: number) => {
     const handleClearSubmission = (): void => {
         setIsSubmitted(false);
         setReaderSelectedAnswer(null);
-        setAttemptedAnswers([]);
         setIsCorrect(false);
         setErrorMessage(null);
     };
@@ -81,7 +79,6 @@ const useMCQReader = (attrs: MCQ, selectedAnswer: number) => {
         errorMessage,
         readerSelectedAnswer,
         isSubmitted,
-        attemptedAnswers,
         isCorrect,
         showHint,
         displayPaintings,
@@ -90,7 +87,7 @@ const useMCQReader = (attrs: MCQ, selectedAnswer: number) => {
         handleSubmit,
         handleHintButtonClick,
         handleClearSubmission,
-        cleatSubmitState,
+        clearSubmitState,
         setErrorMessage,
     };
 };

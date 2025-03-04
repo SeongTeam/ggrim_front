@@ -20,9 +20,9 @@ const MCQView = ({ mcq, handelNextMCQ }: MCQReaderViewProps) => {
         handleReaderSelectAnswer,
         handleSubmit,
         handleHintButtonClick,
-        cleatSubmitState,
+        clearSubmitState,
         handleClearSubmission,
-    } = useMCQReader(attribute, 0);
+    } = useMCQReader(mcq, 0);
 
     const answerKey = answerPaintings[0].id;
 
@@ -33,11 +33,10 @@ const MCQView = ({ mcq, handelNextMCQ }: MCQReaderViewProps) => {
         }
     };
 
-    // TODO 틀렸을 경우 어떻게 할지 의논 필요
     const handleTryAgain = () => {
         console.log(`isSubmitted: ${isSubmitted}`);
 
-        cleatSubmitState();
+        clearSubmitState();
         handelNextMCQ();
     };
 
