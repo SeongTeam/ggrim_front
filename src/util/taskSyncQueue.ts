@@ -1,4 +1,4 @@
-'use server';
+'server-only';
 
 import { Mutex } from 'async-mutex';
 import { serverLogger } from './logger';
