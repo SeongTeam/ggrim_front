@@ -9,6 +9,19 @@ import { MCQReaderViewProps } from '@/model/interface/MCQ';
 
 // TODO displayAnswers 필드 값 변경
 const MCQView = ({ mcq, handelNextMCQ }: MCQReaderViewProps) => {
+
+    /*TODO
+    - [x]mcq 타입 이름 리팩 토링
+    - [x]useMCQReader 훅 점검 및 리팩토링
+    - [ ]퀴즈 틀렸을 경우와 맞았을 경우 동작 설계하기
+    - [ ] MCQView 가독성 높이기
+        - 모듈로 쪼개기
+        - 로직 간단하게 리팩토링
+    - [ ]display size 마다 minHeight을 정하여 깜빡임 형상 방지 (모바일 크기만 신경쓰면 됨)
+    - [ ] component 와 custom hook 폴더 구조 정리하기
+    - [ ] 시간 제한 추가하기
+    - [ ] backend에서 맞힌 횟수와 틀린 횟수 카운팅하기
+    */
     const { answerPaintings } = mcq;
 
     const {
@@ -40,11 +53,29 @@ const MCQView = ({ mcq, handelNextMCQ }: MCQReaderViewProps) => {
         handelNextMCQ();
     };
 
+    const getCardClasses = (paintingId : string) => {
+        if (isSubmitted) {
+            return paintingId === answerKey ? 'bg-green-300' : 'bg-red-300';
+        }
+        return 'bg-white';
+    };
+    
+    const getBorderClasses = (paintingId : string) => (
+        readerSelectedAnswer === paintingId ? 'border-4 border-primary' : ''
+    );
+    
+    const getImageClasses = (paintingId : string) => (
+        readerSelectedAnswer === paintingId ? 'ring-4 ring-primary' : ''
+    );
+    
+
     return (
-        // TODO display size 마다 minHeight을 정하여 깜빡임 형상 방지 (모바일 크기만 신경쓰면 됨)
+
         <div className="p-4 rounded-md shadow bg-ggrimBeige2" style={{ minHeight: '744px' }}>
             <h3 className="text-xl font-bold text-gray-800 mb-6">
-                {'Which of the following is not a work by the same author?'}
+                {/*TODO 
+                - 제목은 퀴즈마다 다르게 할까?*/}
+                {`${mcq.title}`}
             </h3>
             {/* <div>
                 <h1>API Data</h1>
@@ -64,35 +95,21 @@ const MCQView = ({ mcq, handelNextMCQ }: MCQReaderViewProps) => {
                 }}
             >
                 {errorMessage && <ErrorMessage message={errorMessage} />}
-                <div className="grid md:grid-cols-2 gap-4 sm:grid-cols-1">
-                    {displayPaintings.map((painting, index) => (
+                <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-4">
+                    {displayPaintings.map(({ id, image_url }, index) => (
                         <div
-                            key={painting.id}
-                            className={`flex flex-col items-center p-4 rounded-md ${
-                                isSubmitted
-                                    ? painting.id === answerKey
-                                        ? 'bg-green-300'
-                                        : 'bg-red-300'
-                                    : 'bg-white'
-                            } shadow-md ${
-                                readerSelectedAnswer === painting.id
-                                    ? 'border-4 border-primary'
-                                    : ''
-                            }`}
-                            onClick={() => handleImageClick(painting.id)}
+                            key={id}
+                            className={`flex flex-col items-center p-4 rounded-md shadow-md ${getCardClasses(id)} ${getBorderClasses(id)}`}
+                            onClick={() => handleImageClick(id)}
                         >
                             <img
-                                src={painting.image_url}
+                                src={image_url}
                                 alt={`Answer ${index}`}
-                                className={`w-50 h-auto max-h-[250px] max-w-full  mb-2 ${
-                                    readerSelectedAnswer === painting.id
-                                        ? 'ring-4 ring-primary'
-                                        : ''
-                                }`}
+                                className={`w-50 h-auto max-h-[250px] max-w-full mb-2 ${getImageClasses(id)}`}
                             />
-                        </div>
-                    ))}
-                </div>
+            </div>
+        ))}
+    </div>
             </motion.div>
             <div className="flex justify-end items-center">
                 <SubmissionFeedback
