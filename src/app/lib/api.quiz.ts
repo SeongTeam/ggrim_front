@@ -65,7 +65,7 @@ export async function getQuizIDByContext(status?: QuizStatus): Promise<ResponseQ
     }
 }
 
-export function addQuizContextByPainting(painting: Painting): Promise<boolean> {
+export async function addQuizContextByPainting(painting: Painting): Promise<boolean> {
     const artistName: string = painting.artist.name;
     const context: QuizContext = {
         artist: artistName,
@@ -75,6 +75,6 @@ export function addQuizContextByPainting(painting: Painting): Promise<boolean> {
     return quizContextScheduler.requestAddContext([context]);
 }
 
-export function updateFixedContexts(quizContexts: QuizContext[]): Promise<boolean> {
+export async function updateFixedContexts(quizContexts: QuizContext[]): Promise<boolean> {
     return quizContextScheduler.requestUpdateFixedQuiz(quizContexts);
 }
