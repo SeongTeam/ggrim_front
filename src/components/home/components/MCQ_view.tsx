@@ -119,7 +119,7 @@ const MCQView = ({ mcq, handelNextMCQ }: MCQReaderViewProps) => {
                     handleHintButtonClick={handleHintButtonClick}
                     handleClearSubmission={handleClearSubmission}
                     handleNextMCQ={handelNextMCQ}
-                    handelTryAgain={handleTryAgain}
+                    handleTryAgain={handleTryAgain}
                     showHintButton={false}
                 />
             </div>
