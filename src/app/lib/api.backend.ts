@@ -1,6 +1,6 @@
 'use server';
 
-import { MCQAttribute } from '@/model/interface/MCQ';
+import { MCQ } from '@/model/interface/MCQ';
 import { CuratedArtWorkAttribute } from '@/model/interface/curatedArtwork-types';
 import { serverLogger } from '@/util/logger';
 import { Painting } from '../../model/interface/painting';
@@ -32,7 +32,7 @@ export const getWeekArtWorkData = async (): Promise<CuratedArtWorkAttribute[]> =
     return res.data;
 };
 
-export const getMCQData = async (): Promise<MCQAttribute[]> => {
+export const getMCQData = async (): Promise<MCQ[]> => {
     // const response = await fetch('http://localhost:4000/api/mcq', {
     //     cache: 'no-cache',
     // });  // src/data에 파일을 읽어 올 때 사용
