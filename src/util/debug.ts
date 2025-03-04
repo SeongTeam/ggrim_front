@@ -1,4 +1,3 @@
-'use server';
 import assert from 'node:assert';
 import { serverLogger } from './logger';
 const isDebugMode = process.env.NODE_ENV === 'development';
