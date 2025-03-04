@@ -1,17 +1,17 @@
 'use client';
 
 import MCQView from '@/components/home/components/MCQ_view';
-import { MCQAttribute } from '@/model/interface/MCQ';
+import { MCQ } from '@/model/interface/MCQ';
 import React from 'react';
 interface ArtworkQuizProps {
-    mcqAttributes: MCQAttribute[];
+    mcqAttributes: MCQ[];
 }
 
 export function ArtworkQuiz(artworkQuizProps: ArtworkQuizProps) {
     const { mcqAttributes } = artworkQuizProps;
     const [currentIndex, setCurrentIndex] = React.useState(0);
 
-    const handelNextMCQ = (): void => {
+    const handelNextMCQ = async (): Promise<void> => {
         if (currentIndex === 2) {
             setCurrentIndex(0);
             return;
@@ -32,8 +32,8 @@ export function ArtworkQuiz(artworkQuizProps: ArtworkQuizProps) {
                 </div>
                 <div className=" bg-ggrimGrey1 ">
                     <MCQView
-                        attribute={mcqAttributes[currentIndex]}
-                        currentAttributeIndex={currentIndex}
+                        mcq={mcqAttributes[currentIndex]}
+                        // currentAttributeIndex={currentIndex}
                         handelNextMCQ={handelNextMCQ}
                     />
                 </div>

@@ -1,11 +1,11 @@
 // custom hook for managing mcq logic in reader mode
 
-import { MCQAttribute } from '@/model/interface/MCQ';
+import { MCQ } from '@/model/interface/MCQ';
 import { shuffleMerge } from '@/util/shuffleMerge';
 import { useState } from 'react';
 // import { submitMCQAnswer } from "@/services/mcqClientService";
 
-const useMCQReader = (attrs: MCQAttribute, selectedAnswer: number) => {
+const useMCQReader = (attrs: MCQ, selectedAnswer: number) => {
     const { answerPaintings, distractorPaintings } = attrs;
 
     // State Initialization

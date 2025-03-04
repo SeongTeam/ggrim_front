@@ -8,8 +8,8 @@ import { motion } from 'framer-motion';
 import { MCQReaderViewProps } from '@/model/interface/MCQ';
 
 // TODO displayAnswers 필드 값 변경
-const MCQView = ({ attribute, currentAttributeIndex, handelNextMCQ }: MCQReaderViewProps) => {
-    const { answerPaintings } = attribute;
+const MCQView = ({ mcq, handelNextMCQ }: MCQReaderViewProps) => {
+    const { answerPaintings } = mcq;
 
     const {
         errorMessage,
@@ -49,11 +49,11 @@ const MCQView = ({ attribute, currentAttributeIndex, handelNextMCQ }: MCQReaderV
             </h3>
             {/* <div>
                 <h1>API Data</h1>
-                <pre className="text-black">{JSON.stringify(attribute, null, 2)}</pre>
+                <pre className="text-black">{JSON.stringify(mcq, null, 2)}</pre>
             </div> */}
 
             <motion.div
-                key={currentAttributeIndex}
+                key={mcq.id}
                 initial={{ opacity: 0, x: 50 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -50 }}
