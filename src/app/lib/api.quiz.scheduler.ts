@@ -1,4 +1,4 @@
-'use server';
+'server-only';
 
 import { assertOrLog } from '../../util/debug';
 import { serverLogger } from '../../util/logger';
