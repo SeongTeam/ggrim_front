@@ -284,7 +284,7 @@ class QuizContextScheduler {
             return false;
         }
 
-        const tasks = tempMap.values().map((node) => ({
+        const tasks = [...tempMap.values()].map((node) => ({
             node,
             status: 'FAILED' as 'ADDED' | 'EXISTED' | 'FAILED',
         }));
