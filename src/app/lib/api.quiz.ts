@@ -36,11 +36,13 @@ export async function getQuizIDByContext(status?: QuizStatus): Promise<ResponseQ
     }
 
     try {
+        const { artist, tag, style, page } = status.context;
+
         const result: FindQuizResult = await findQuiz(
-            [status.context.artist || ''],
-            [status.context.tag || ''],
-            [status.context.style || ''],
-            status.context.page,
+            artist ? [artist] : undefined,
+            tag ? [tag] : undefined,
+            style ? [style] : undefined,
+            page,
         );
         const quizList: Quiz[] = result.data;
 
