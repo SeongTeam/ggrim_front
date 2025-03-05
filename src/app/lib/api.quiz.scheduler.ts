@@ -306,9 +306,9 @@ class QuizContextScheduler {
                 }
 
                 this._scheduler[schedulerIndex] = id;
+                task.node.schedulerIndex = schedulerIndex;
                 this._contextHashMap.set(this.transformHashKey(task.node.context), {
                     ...task.node,
-                    schedulerIndex: schedulerIndex,
                 });
                 task.status = 'ADDED';
             });
