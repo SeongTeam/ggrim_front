@@ -490,7 +490,7 @@ export default quizContextScheduler;
     });
 
     serverLogger.info(
-        `[${QuizContextScheduler.name}] init quiz context scheduler ${JSON.stringify(
+        `[${SingleTonQuizContextScheduler.name}] init quiz context scheduler ${JSON.stringify(
             contexts,
             null,
             2,
