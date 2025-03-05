@@ -428,7 +428,8 @@ class QuizContextScheduler {
     }
 
     private sortByLowPriority(hashNodes: ContextHashNode[]): ContextHashNode[] {
-        return hashNodes.sort((a, b) => {
+        const temp: ContextHashNode[] = [...hashNodes];
+        return temp.sort((a, b) => {
             if (b.scheduleCount === a.scheduleCount) {
                 //나중에 선택될 Context 제거
                 return (
