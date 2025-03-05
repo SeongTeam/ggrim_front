@@ -477,7 +477,7 @@ class SingleTonQuizContextScheduler {
 }
 new SingleTonQuizContextScheduler();
 const quizContextScheduler = SingleTonQuizContextScheduler.contextScheduler;
-Object.freeze(quizContextScheduler);
+
 export default quizContextScheduler;
 
 (async () => {
