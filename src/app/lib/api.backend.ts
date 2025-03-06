@@ -94,7 +94,7 @@ export const findQuiz = async (
 
 export const getQuiz = async (id: string): Promise<Quiz> => {
     const backendUrl = getServerUrl();
-    const url = `${backendUrl}/quiz?id=${id}`;
+    const url = `${backendUrl}/quiz/${id}`;
     serverLogger.info(`[getQuiz] url=${url}`);
     const response = await fetch(url);
     const result: Quiz = await response.json();
