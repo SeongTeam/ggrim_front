@@ -496,7 +496,4 @@ export default quizContextScheduler;
         )}`,
     );
 
-    await quizContextScheduler.init(contexts);
-    quizContextScheduler.startOptimization();
-    serverLogger.info(`[${QuizContextScheduler.name}] complete init quiz scheduler`);
-})();
+serverLogger.info(`[SingleTonQuizContextScheduler] root file execute`);
