@@ -86,7 +86,7 @@ export const findQuiz = async (
     const url = `${backendUrl}/quiz?artist=${JSON.stringify(artists)}&tags=${JSON.stringify(
         tags,
     )}&styles=${JSON.stringify(styles)}&page=${page}`;
-    serverLogger.info(`[${findQuiz.name}] url=${url}`);
+    serverLogger.info(`[findQuiz] url=${url}`);
     const response = await fetch(url);
     const result: FindQuizResult = await response.json();
     return result;
@@ -95,8 +95,9 @@ export const findQuiz = async (
 export const getQuiz = async (id: string): Promise<Quiz> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/quiz?id=${id}`;
-    serverLogger.info(`[${getQuiz.name}] url=${url}`);
+    serverLogger.info(`[getQuiz] url=${url}`);
     const response = await fetch(url);
     const result: Quiz = await response.json();
+    serverLogger.debug(`[getQuiz] ${JSON.stringify(result, null, 2)}`);
     return result;
 };
