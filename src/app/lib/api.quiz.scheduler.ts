@@ -116,8 +116,7 @@ class QuizContextScheduler {
                 serverLogger.error(
                     `[${QuizContextScheduler.name}] this._schedulerIdx : ${this._schedulerIdx}` +
                         `${JSON.stringify(this._contextHashMap, null, 2)}` +
-                        `${JSON.stringify(this._scheduler, null, 2)}` +
-                        `${JSON.stringify(this._scheduler)}`,
+                        `${JSON.stringify(this._scheduler, null, 2)}`,
                 );
                 throw new Error(`${id} is not in hashMap`);
             }
