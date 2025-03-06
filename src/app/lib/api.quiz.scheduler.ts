@@ -464,36 +464,58 @@ class QuizContextScheduler {
     }
 }
 
-class SingleTonQuizContextScheduler {
-    static contextScheduler: QuizContextScheduler;
-    constructor() {
-        if (!SingleTonQuizContextScheduler.contextScheduler) {
-            SingleTonQuizContextScheduler.contextScheduler = new QuizContextScheduler();
+export class SingletonQuizContextScheduler {
+    private static contextScheduler: QuizContextScheduler | undefined = undefined;
+    private static mutex: Mutex = new Mutex();
+    static async getContextScheduler(): Promise<QuizContextScheduler> {
+        await this.mutex.acquire();
+        if (!this.contextScheduler) {
+            const instance = new QuizContextScheduler();
+            await this.initialize(instance);
+            this.contextScheduler = instance;
         }
+        await this.mutex.release();
+        return this.contextScheduler!;
+    }
 
-        return SingleTonQuizContextScheduler.contextScheduler;
+    static async scheduleContext(): Promise<QuizContext> {
+        serverLogger.info(`[${SingletonQuizContextScheduler.name}]scheduleContext called`);
+        const instance: QuizContextScheduler =
+            await SingletonQuizContextScheduler.getContextScheduler();
+        return instance.scheduleContext();
+    }
+
+    static async requestAddContext(contexts: QuizContext[]) {
+        const instance: QuizContextScheduler =
+            await SingletonQuizContextScheduler.getContextScheduler();
+        return instance.requestAddContext(contexts);
+    }
+    static async requestUpdateFixedQuiz(contexts: QuizContext[]) {
+        const instance: QuizContextScheduler =
+            await SingletonQuizContextScheduler.getContextScheduler();
+        return instance.requestUpdateFixedQuiz(contexts);
+    }
+
+    private static async initialize(scheduler: QuizContextScheduler) {
+        const weeklyArtworks = await getWeekArtWorkData();
+        const contexts: QuizContext[] = weeklyArtworks.map((artwork) => {
+            return {
+                artist: artwork.painting.artist.name,
+                page: 0,
+            };
+        });
+
+        serverLogger.info(
+            `[${SingletonQuizContextScheduler.name}] init quiz context scheduler ${JSON.stringify(
+                contexts,
+                null,
+                2,
+            )}`,
+        );
+
+        await scheduler.init(contexts);
+        scheduler.startOptimization();
+        serverLogger.info(`[${QuizContextScheduler.name}] complete init quiz scheduler`);
     }
 }
-new SingleTonQuizContextScheduler();
-const quizContextScheduler = SingleTonQuizContextScheduler.contextScheduler;
-
-export default quizContextScheduler;
-
-(async () => {
-    const weeklyArtworks = await getWeekArtWorkData();
-    const contexts: QuizContext[] = weeklyArtworks.map((artwork) => {
-        return {
-            artist: artwork.painting.artist.name,
-            page: 0,
-        };
-    });
-
-    serverLogger.info(
-        `[${SingleTonQuizContextScheduler.name}] init quiz context scheduler ${JSON.stringify(
-            contexts,
-            null,
-            2,
-        )}`,
-    );
-
-serverLogger.info(`[SingleTonQuizContextScheduler] root file execute`);
+serverLogger.info(`[SingletonQuizContextScheduler] root file execute`);

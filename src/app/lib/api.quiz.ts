@@ -3,7 +3,7 @@
 import { randomInt } from 'crypto';
 import { Quiz } from '../../model/interface/quiz';
 import { findQuiz } from './api.backend';
-import quizContextScheduler, { QuizContext } from './api.quiz.scheduler';
+import { QuizContext, SingletonQuizContextScheduler } from './api.quiz.scheduler';
 import { FindQuizResult } from './dto';
 import { serverLogger } from '../../util/logger';
 import { Painting } from '../../model/interface/painting';
@@ -27,7 +27,7 @@ export async function getQuizIDByContext(status?: QuizStatus): Promise<ResponseQ
     */
     const INIT_IDX = -1;
     if (!status || (status && status.currentIdx == status.endIdx)) {
-        const context = await quizContextScheduler.scheduleContext();
+        const context = await SingletonQuizContextScheduler.scheduleContext();
         status = {
             context,
             currentIdx: INIT_IDX,
@@ -74,9 +74,9 @@ export async function addQuizContextByPainting(painting: Painting): Promise<bool
         page: 0,
     };
 
-    return quizContextScheduler.requestAddContext([context]);
+    return SingletonQuizContextScheduler.requestAddContext([context]);
 }
 
 export async function updateFixedContexts(quizContexts: QuizContext[]): Promise<boolean> {
-    return quizContextScheduler.requestUpdateFixedQuiz(quizContexts);
+    return SingletonQuizContextScheduler.requestUpdateFixedQuiz(quizContexts);
 }
