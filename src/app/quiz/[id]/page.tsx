@@ -3,11 +3,11 @@ import { Quiz } from '../../../model/interface/quiz';
 import { getQuiz } from '../../lib/api.backend';
 
 interface QuizDetailPageProps {
-    dynamicParams: { slug: string };
+    params: { id: string };
 }
 
-export default async function QuizDetailPage({ dynamicParams }: QuizDetailPageProps) {
-    const quizID = dynamicParams.slug;
+export default async function QuizDetailPage({ params }: QuizDetailPageProps) {
+    const quizID = params.id;
 
     const quiz: Quiz = await getQuiz(quizID);
 
