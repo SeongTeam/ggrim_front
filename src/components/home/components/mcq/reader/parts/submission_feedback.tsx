@@ -36,7 +36,7 @@ const SubmissionFeedback: React.FC<SubmissionFeedbackProps> = ({
                             onClick={handleNextMCQ}
                             className="btn btn-sm btn-primary text-ggrimBrown1"
                         >
-                            Try again
+                            Next Quiz
                         </button>
                     </div>
                 </div>
