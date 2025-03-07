@@ -2,9 +2,10 @@
 import { Quiz } from '../../model/interface/quiz';
 import MCQView from '@/components/home/components/MCQ_view';
 import { MCQ } from '../../model/interface/MCQ';
-import { getQuizIDByContext, QuizStatus, ResponseQuizDTO } from '../../app/lib/api.quiz';
+import {  getQuizIDByContext, QuizStatus, ResponseQuizDTO } from '../../app/lib/api.quiz';
 
 import { useRouter } from 'next/navigation';
+import { Painting } from '../../model/interface/painting';
 interface DetailQuizProps {
     quiz: Quiz;
 }
@@ -44,9 +45,24 @@ export function DetailQuiz({ quiz }: DetailQuizProps): React.JSX.Element {
         
     };
 
+    // TODO: 그림 제출 로직 개선하기
+    // - [ ] 백엔드에 제출된 그림 정보 전달하기
+    //  -> 백엔드에서 정답 여부 토보
+    //  -> 백엔드에서 제출된 그림정보로 스케줄링 업데이트
+    //  -> 백엔드에서 퀴즈 관련 정보 업데이트 
+    // - [ ] <추가 작업>
+    // ! 주의: <경고할 사항>
+    // ? 질문: <의문점 또는 개선 방향>
+    // * 참고: <관련 정보나 링크>
+    const handleImageSelected = async (selectedPainting : Painting) => {
+
+        //const result = await addQuizContextByPainting(selectedPainting);
+        console.info(`[handleImageSelected]`,selectedPainting);
+    }
+
     if(quiz.type === 'ONE_CHOICE'){
 
-        return <MCQView mcq={mcq} handelNextMCQ={handelNextMCQ} />;
+        return <MCQView mcq={mcq} handelNextMCQ={handelNextMCQ} handleImageSelected={handleImageSelected} />;
     }
 
     return <p> not implemented</p>
