@@ -18,4 +18,5 @@ export interface MCQReaderViewProps {
     mcq: MCQ;
     // currentAttributeIndex: number;
     handelNextMCQ: () => Promise<void>;
+    handleImageSelected?: (selectedPainting: Painting) => Promise<void>;
 }

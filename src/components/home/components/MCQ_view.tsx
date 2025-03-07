@@ -8,7 +8,7 @@ import { motion } from 'framer-motion';
 import { MCQReaderViewProps } from '@/model/interface/MCQ';
 
 
-const MCQView = ({ mcq, handelNextMCQ }: MCQReaderViewProps) => {
+const MCQView = ({ mcq, handelNextMCQ, handleImageSelected }: MCQReaderViewProps) => {
 
 
     // TODO: <MCQView /> 개선
@@ -47,6 +47,16 @@ const MCQView = ({ mcq, handelNextMCQ }: MCQReaderViewProps) => {
             handleReaderSelectAnswer(answerId);
         }
     };
+
+    const handleSubmitImage = ()=>{
+        const selectedPainting = displayPaintings.find(p=>
+            p.id === readerSelectedAnswer
+        );
+        if(handleImageSelected && selectedPainting){
+            handleImageSelected(selectedPainting);
+        }
+        handleSubmit();
+    }
 
     const handleTryAgain = () => {
         console.log(`isSubmitted: ${isSubmitted}`);
@@ -116,7 +126,7 @@ const MCQView = ({ mcq, handelNextMCQ }: MCQReaderViewProps) => {
                 <SubmissionFeedback
                     isCorrect={isCorrect}
                     isSubmitted={isSubmitted}
-                    handleSubmit={handleSubmit}
+                    handleSubmit={handleSubmitImage}
                     handleHintButtonClick={handleHintButtonClick}
                     handleClearSubmission={handleClearSubmission}
                     handleNextMCQ={handelNextMCQ}
