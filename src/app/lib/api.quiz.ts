@@ -19,12 +19,15 @@ export interface ResponseQuizDTO {
     status: QuizStatus;
 }
 
+// TODO: Quiz Loading 성능 향상
+// - [ ] 프론트 또는 백엔드에 cache 로직 적용하기.
+//  -> quizContextScheduler 모듈에 기능을 추가하거나, nextjs cache 기능을 활용한다.
+// - [ ] <추가 작업>
+// ! 주의: <경고할 사항>
+// ? 질문: 인덱스 방식은 DB에서 반환된 Quiz[]가 변형되면, 이전 응답 결과와 동일한 결과를 제공할 수 있지 않은가?
+// * 참고: <관련 정보나 링크>
+
 export async function getQuizIDByContext(status?: QuizStatus): Promise<ResponseQuizDTO> {
-    /*TODO
-    - cache 로직 적용하기.
-        - 매번 backend에서 Quiz[]를 가져오는 건, 변형된 Quiz[]를 가져올 수 있다.
-        - quizContextScheduler 모듈에 기능을 추가하거나, nextjs cache 기능을 활용한다.
-    */
     const INIT_IDX = -1;
     if (!status || (status && status.currentIdx == status.endIdx)) {
         const context = await SingletonQuizContextScheduler.scheduleContext();
@@ -60,9 +63,7 @@ export async function getQuizIDByContext(status?: QuizStatus): Promise<ResponseQ
         };
     } catch (e: unknown) {
         serverLogger.error(`fail getQuizIDByContext(). ${JSON.stringify(e)}`);
-        /*TODO
-        - Q. next js에서 server action이 던진 익셉션을 클라이언트에서 어떻게 처리되는가?
-        */
+
         throw e;
     }
 }

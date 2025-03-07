@@ -24,11 +24,14 @@ interface ContextHashNode {
 
 type ContextHashMap = Map<QuizContextID, ContextHashNode>;
 
-/*TODO
-- Q.pubic 함수는 static으로 사용해야하는가?
-- 추후 스케줄링 기능 백엔드로 옮기기
-    - 프론트 서버는 렌더링 때문에 메모리와 CPU 리소스가 부족할 수 있기 때문 
-*/
+// TODO: QuizContextScheduler 로직 성능 개선하기
+// - [ ] 스케줄링 기능 백엔드로 옮기기
+//  -> 프론트는 렌더링 작업을 진행하므로, 부하를 백엔드로 옮기는게 좋다고 판단
+// - [ ] syncQueue 필드 사용하여 대기 상태 요청도 처리하도로직 수정
+//   -> 사용자가 많아지고 메모리가 충분하면 사용할 예정
+// ! 주의: <경고할 사항>
+// ? 질문: pubic 함수는 static으로 사용해야하는가?
+// * 참고: <관련 정보나 링크>
 
 class QuizContextScheduler {
     private SCHEDULER_SIZE = 10;
@@ -48,11 +51,6 @@ class QuizContextScheduler {
 
     private optimizerTimer: NodeJS.Timeout | null;
 
-    /*TODO
-    - 추가 요청이 버려지는 것을 방지하기 위해 사용 필요
-        - 사용자가 많아지고 메모리가 충분하면 사용.
-        - add,delete 등의 내부 공통 로직에서 race-condition이 발생할 수 있으면 적용
-     */
     private syncQueue: TaskSyncQueue;
 
     constructor() {
@@ -84,11 +82,15 @@ class QuizContextScheduler {
         });
     }
 
+    // TODO: 스케줄링 균형성 향상
+    // - [ ] 사용자가 중복하여 Context를 전달받지 않도록 로직 향상 필요
+    //  -> 단, 사용자가 충분히 존재하거나 데이터가 충분히 많으면 고려 할것.
+    // - [ ] <추가 작업>
+    // ! 주의: <경고할 사항>
+    // ? 질문: <의문점 또는 개선 방향>
+    // * 참고: <관련 정보나 링크>
+
     async scheduleContext(): Promise<QuizContext> {
-        /*TODO
-        - 일정 확률로, 이미 전달받은 context를 전달받을 수 있으므로, 중복 context 제공 예방필요.
-        - 단, 사용자가 충분히 존재하거나 데이터가 충분히 많으면 고려 할것.
-        */
         let idx = this._schedulerIdx;
         let loop = 0;
         const size = this.SCHEDULER_SIZE;
@@ -419,9 +421,13 @@ class QuizContextScheduler {
 
         await this.report();
 
-        /*TODO
-        - 추후 스케줄링 로직 추가 가능.
-        */
+        // TODO: 스케줄러 최적화 기능 향상
+        // - [ ] 추가된 기능에 맞는 최적화 또는 GC 로직 추가하기
+        //  -> <할 일 > 설명 ( 생략가능 )
+        // - [ ] <추가 작업>
+        // ! 주의: <경고할 사항>
+        // ? 질문: <의문점 또는 개선 방향>
+        // * 참고: <관련 정보나 링크>
         serverLogger.info(`[${QuizContextScheduler.name}] optimize complete`);
         return;
     }

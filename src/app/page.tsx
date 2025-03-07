@@ -6,9 +6,13 @@ import ScrollTriggerNavigator from '../components/quiz/ScrollTriggerNavigator';
 import { getQuizIDByContext } from './lib/api.quiz';
 import { Quiz } from '../model/interface/quiz';
 
-// TODO 배포할때 더 좋은 방법이 있을지 생각해보기
+// TODO: Main Page 리팩토링하기
+// - [ ] 컴포넌트 함수 이름 변경하여 기능 명확성 향상시키기
+// - [ ] 프로젝트 구조 리팩토링하기
+// ! 주의: <경고할 사항>
+// ? 질문: UX를 향상시키는 더 좋은 점이 있는가?
+// * 참고: <관련 정보나 링크>
 
-// TODO 함수 이름 변경 예정
 export default async function Campaign() {
     const artworkOfWeekData: CuratedArtWorkAttribute[] = await getWeekArtWorkData();
     const domID = `main`;

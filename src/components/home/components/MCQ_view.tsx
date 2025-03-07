@@ -7,21 +7,23 @@ import SubmissionFeedback from './mcq/reader/parts/submission_feedback';
 import { motion } from 'framer-motion';
 import { MCQReaderViewProps } from '@/model/interface/MCQ';
 
-// TODO displayAnswers 필드 값 변경
+
 const MCQView = ({ mcq, handelNextMCQ }: MCQReaderViewProps) => {
 
-    /*TODO
-    - [x]mcq 타입 이름 리팩 토링
-    - [x]useMCQReader 훅 점검 및 리팩토링
-    - [ ]퀴즈 틀렸을 경우와 맞았을 경우 동작 설계하기
-    - [ ] MCQView 가독성 높이기
-        - 모듈로 쪼개기
-        - 로직 간단하게 리팩토링
-    - [ ]display size 마다 minHeight을 정하여 깜빡임 형상 방지 (모바일 크기만 신경쓰면 됨)
-    - [ ] component 와 custom hook 폴더 구조 정리하기
-    - [ ] 시간 제한 추가하기
-    - [ ] backend에서 맞힌 횟수와 틀린 횟수 카운팅하기
-    */
+
+    // TODO: <MCQView /> 개선
+    // - [x] mcq 타입 이름 리팩 토링
+    // - [x]useMCQReader 훅 점검 및 리팩토링
+    // - [ ]퀴즈 틀렸을 경우와 맞았을 경우 동작 설계하기
+    // - [ ] <MCQView /> 모듈로 나누기
+    // - [ ] <MCQView /> 리팩토링하여 가독성 높이기
+    // - [ ] display size 마다 minHeight을 정하여 깜빡임 형상 방지 (모바일 크기만 신경쓰면 됨)
+    // - [ ] component 와 custom hook 폴더 구조 정리하기
+    // - [ ] 시간 제한 추가하기
+    // - [ ] backend에서 맞힌 횟수와 틀린 횟수 카운팅하기
+    // ! 주의: <경고할 사항>
+    // ? 질문: 각각의 mcq 데이터의 title 필드를 사용해야하는가?
+    // * 참고: <관련 정보나 링크>
     const { answerPaintings } = mcq;
 
     const {
@@ -73,8 +75,7 @@ const MCQView = ({ mcq, handelNextMCQ }: MCQReaderViewProps) => {
 
         <div className="p-4 rounded-md shadow bg-ggrimBeige2" style={{ minHeight: '744px' }}>
             <h3 className="text-xl font-bold text-gray-800 mb-6">
-                {/*TODO 
-                - 제목은 퀴즈마다 다르게 할까?*/}
+
                 {`${mcq.title}`}
             </h3>
             {/* <div>

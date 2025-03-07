@@ -14,7 +14,14 @@ const useMCQReader = (attrs: MCQ, selectedAnswer: number) => {
     const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
     const [isCorrect, setIsCorrect] = useState<boolean>(false);
     const [showHint, setShowHint] = useState<boolean>(false);
-    // TODO 현재 클릭이 될때 마다 계속 동작한다. 메모리 낭비라고 생각함 추후 효율적이게 수정 요구
+
+    // TODO: <useMCQReader /> 개선
+    // - [ ] 클릭시 마다 그림 재배치 되는 버그 수정
+    //  -> shuffleMerge()가 여러번 호출되는 것이 문제의 원인으로 추정됨
+    // - [ ] <추가 작업>
+    // ! 주의: <경고할 사항>
+    // ? 질문: <의문점 또는 개선 방향>
+    // * 참고: <관련 정보나 링크>
     const displayPaintings = shuffleMerge(distractorPaintings, answerPaintings);
 
     const answerID = answerPaintings[0].id;

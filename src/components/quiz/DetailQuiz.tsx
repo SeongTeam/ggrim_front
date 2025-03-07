@@ -9,6 +9,14 @@ interface DetailQuizProps {
     quiz: Quiz;
 }
 
+// TODO: <DetailQuiz/> 성능 개선
+// - [x] localStorage 사용하여 quizContext 상태 저장하기
+// - [x] localStorage 사용하여 quizContext 업데이트 로직 훅에 반영하기
+// - [ ] <추가 작업>
+// ! 주의: <경고할 사항>
+// ? 질문: <의문점 또는 개선 방향>
+// * 참고: <관련 정보나 링크>
+
 export function DetailQuiz({ quiz }: DetailQuizProps): React.JSX.Element {
     const mcq : MCQ= {
         id : quiz.id,
@@ -19,10 +27,7 @@ export function DetailQuiz({ quiz }: DetailQuizProps): React.JSX.Element {
         timeLimit : quiz.time_limit,
         type : quiz.type
     } 
-    /*TODO
-    - [x] localStorage 사용하여 quizContext 상태 저장하기
-    - [x] localStorage 사용하여 quizContext 업데이트 로직 훅에 반영하기
-    */
+
    const router = useRouter();
 
 

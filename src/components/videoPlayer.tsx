@@ -9,7 +9,8 @@ const VideoPlayer = () => {
 
     const src = searchParams.get('message');
 
-    // TODO  Casesar를 사용할 때 필요
+
+    // Casesar를 사용할 때 필요
     // const search = searchParams.get('message');
     // const src = caesar.decode(search ?? '');
 

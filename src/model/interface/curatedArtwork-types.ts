@@ -8,9 +8,8 @@ export const curatedContentType = {
 
 export type _CuratedContentType = keyof typeof curatedContentType;
 
-// TODO CuratedWorkAttribute이름 변경 CuratedArtWorkAttribute이름
 export interface CuratedArtWorkAttribute {
-    id: string; // TODO ID는 Painting ID를 따라갈지 고민
+    id: string;
     type: _CuratedContentType;
     cldId: string;
     operatorDescription: string;
