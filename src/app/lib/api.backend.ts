@@ -64,16 +64,31 @@ export const findPainting = async (
 };
 
 export const getPainting = async (id: string): Promise<Painting | undefined> => {
-    const backendUrl = getServerUrl();
-    const url = `${backendUrl}/painting/by-ids?ids[]=${id}`;
-    const response = await fetch(url);
-    const paintings: Painting[] = await response.json();
+    try {
+        const backendUrl = getServerUrl();
+        const url = `${backendUrl}/painting/by-ids?ids[]=${id}`;
+        const response = await fetch(url);
+        const paintings: Painting[] = await response.json();
 
-    if (paintings.length === 0) {
-        return undefined;
+        if (response.ok) {
+            if (paintings.length === 0) {
+                return undefined;
+            }
+
+            return paintings.at(0);
+        }
+
+        if (response.status === 400) {
+            return undefined;
+        }
+
+        throw Error(
+            `error from backend. status : ${response.status}, statusText : ${response.statusText}`,
+        );
+    } catch (e: unknown) {
+        serverLogger.error(`[getPainting] error : ${JSON.stringify(e)}`);
+        throw e;
     }
-
-    return paintings.at(0);
 };
 
 export const findQuiz = async (
