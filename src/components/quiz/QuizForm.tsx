@@ -68,6 +68,7 @@ export default function QuizForm() : JSX.Element {
 
       if(quizPaintings.length < 4){
         setError('please fill four paintings');
+        return;
       }
 
 
