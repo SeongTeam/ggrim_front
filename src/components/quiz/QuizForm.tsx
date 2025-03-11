@@ -210,7 +210,7 @@ export default function QuizForm() : JSX.Element {
         {error.trim().length > 0 &&<AlertModal message={error} onClose={async ()=>setError('')}/>}
         <form
           onSubmit={(e)=>handleSubmit(e)}
-          className="bg-gray-900 p-8 rounded-lg shadow-lg w-4/5 text-white"
+          className="bg-gray-900 p-8 rounded-lg shadow-lg text-white max-w-5xl"
         >
           <h2 className="text-2xl font-bold mb-6 text-center text-white">
             Create Quiz
@@ -227,7 +227,7 @@ export default function QuizForm() : JSX.Element {
           </div>
 
           <div key="painting selection" className="mb-4">
-            <div className="grid sm:grid-cols-1 md:grid-cols-2">
+            <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-2">
 
               {
                 quizPaintingKeys.map(key=>            
@@ -312,13 +312,13 @@ export default function QuizForm() : JSX.Element {
 
     return (
       <div className="flex items-center mb-4 space-x-2 rounded-lg">
-            <div className="w-96 border-2">
+            <div className="w-96">
                 <input
                     type="text"
                     placeholder={placeholder||'input value'}
                     value={value}
                     onChange={(e)=>setValue(e.target.value)}
-                    className="w-full p-3 bg-gray-800 border border-gray-700 rounded focus:outline-none focus:border-red-600 transition disabled:bg-gray-400"
+                    className="w-full p-3 bg-gray-800 border border-gray-700 rounded focus:outline-none focus:border-white transition disabled:bg-gray-400"
                     disabled={isInserted}
                     required
                 />
@@ -328,7 +328,7 @@ export default function QuizForm() : JSX.Element {
                 onClick={handleClickAdd} 
                 disabled={value.trim().length === 0 || isInserted}
                 className="p-2 bg-blue-500 text-white rounded-full disabled:bg-gray-400 transition hover:bg-blue-600">
-                    <Plus size={20} />
+                    <Plus size={15} />
                 </button>
 
                 <button
@@ -337,7 +337,7 @@ export default function QuizForm() : JSX.Element {
                 disabled={!isInserted}
                 className="p-2 bg-red-500 text-white rounded-full disabled:bg-gray-400 transition hover:bg-red-600"
             >
-                <Minus size={20} />
+                <Minus size={15} />
             </button>
         </div>
     );
