@@ -4,7 +4,7 @@ import { MCQ } from '@/model/interface/MCQ';
 import { CuratedArtWorkAttribute } from '@/model/interface/curatedArtwork-types';
 import { serverLogger } from '@/util/logger';
 import { Painting } from '../../model/interface/painting';
-import { FindPaintingResult, FindQuizResult } from './dto';
+import { CreateQuizDTO, FindPaintingResult, FindQuizResult } from './dto';
 import { Quiz } from '../../model/interface/quiz';
 
 function getServerUrl(): string {
@@ -99,5 +99,18 @@ export const getQuiz = async (id: string): Promise<Quiz> => {
     const response = await fetch(url);
     const result: Quiz = await response.json();
     serverLogger.debug(`[getQuiz] ${JSON.stringify(result, null, 2)}`);
+    return result;
+};
+
+export const addQuiz = async (dto: CreateQuizDTO): Promise<Quiz> => {
+    const backendUrl = getServerUrl();
+    const url = `${backendUrl}/quiz`;
+    const response = await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(dto),
+    });
+
+    const result: Quiz = await response.json();
+
     return result;
 };
