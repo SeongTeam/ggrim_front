@@ -10,6 +10,7 @@ interface PaintingDetailViewProps {
 
 // TODO: <PaintingDetailView /> 성능 개선
 // - [ ] painting = undefined 인 경우 상황 예외처리 로직 추가
+// - [ ] painting id 복사 기능 추가
 //  -> <할 일 > 설명 ( 생략가능 )
 // - [ ] <추가 작업>
 // ! 주의: <경고할 사항>
