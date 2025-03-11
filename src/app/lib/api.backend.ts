@@ -117,7 +117,7 @@ export const getQuiz = async (id: string): Promise<Quiz> => {
     return result;
 };
 
-export const addQuiz = async (dto: CreateQuizDTO): Promise<Quiz> => {
+export const addQuiz = async (dto: CreateQuizDTO): Promise<Quiz | undefined> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/quiz`;
     const response = await fetch(url, {
@@ -125,6 +125,11 @@ export const addQuiz = async (dto: CreateQuizDTO): Promise<Quiz> => {
         body: JSON.stringify(dto),
     });
 
+    if (!response.ok) {
+        const result = await response.json();
+        serverLogger.error(`add Quiz fail. ${JSON.stringify(result, null, 2)}`);
+        return undefined;
+    }
     const result: Quiz = await response.json();
 
     return result;
