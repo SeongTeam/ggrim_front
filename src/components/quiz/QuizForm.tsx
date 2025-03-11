@@ -27,8 +27,7 @@ interface NewQuiz{
 // - [ ] : detail Painting Modal에서 Painting ID 바로 볼수 있게 명시하기
 // - [x] : 브라우저 캐시에 form context 저장하는 로직 추가
 // - [x] : 브라우저 캐시에서 form context 가져오는 로직 추가
-// - [ ] : 브라우저 캐시에 form context 저장하는 로직 추가
-// - [ ] : 브라우저 캐시에서 form context 가져오는 로직 추가
+// - [ ] : title,description, input 크기 제한하기
 //  -> 사용자가 painting id를 검색하러 페이지를 옮길 수 있으므로, 현재 컨텍스트를 따로 보관해야함
 // - [ ] <추가 작업>
 // ! 주의: <경고할 사항>
