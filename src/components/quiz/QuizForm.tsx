@@ -232,7 +232,7 @@ export default function QuizForm() : JSX.Element {
               {
                 quizPaintingKeys.map(key=>            
                 
-                <InsertInput 
+                <InsertToggleInput 
                   key={key}
                   handleAdd={(value : string)=>handleAddQuizPainting(key,value)}
                   handleDelete={(value: string)=>handleDeleteQuizPainting(key,value)}
@@ -281,14 +281,14 @@ export default function QuizForm() : JSX.Element {
   }
 
 
-  interface InsertInputProps{
+  interface InsertToggleInputProps{
     handleAdd : (value : string)=>Promise<boolean>;
     handleDelete : (value : string)=>Promise<boolean>;
     placeholder? : string;
     defaultValue ? : string;
     defaultIsInserted ? : boolean;
   }
-  function InsertInput({handleAdd,handleDelete,placeholder, defaultValue,defaultIsInserted} : InsertInputProps) : JSX.Element {
+  function InsertToggleInput({handleAdd,handleDelete,placeholder, defaultValue,defaultIsInserted} : InsertToggleInputProps) : JSX.Element {
     const [isInserted, setIsInserted] = useState(defaultIsInserted||false);
     const [value ,setValue] = useState(defaultValue||'');
 
