@@ -244,7 +244,7 @@ export default function QuizForm() : JSX.Element {
               }
             </div>
             <div>
-              <h1 className="text-2xl font-bold mb-2"> Quiz Painting </h1>
+              <h1 className="text-2xl font-bold mb-2"> Quiz Paintings </h1>
               <div className="bg-gray-500 grid min-h-56 sm:grid-cols-2 md:grid-cols-4 items-center p-2 rounded-lg border-gray-200 border-2 gap-4">
                   {quizPaintingKeys.map((key,idx)=>{
                       const painting : Painting | undefined = quizPaintingMap.get(key);
