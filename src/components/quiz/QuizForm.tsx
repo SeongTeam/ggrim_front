@@ -7,7 +7,6 @@ import { CreateQuizDTO } from "../../app/lib/dto";
 import { Quiz } from "../../model/interface/quiz";
 import { useRouter } from "next/navigation";
 import AlertModal from "../home/components/AlertModal";
-import { Plus, Minus, } from "lucide-react"
 import { debounce } from "../../util/optimization";
 import { InsertToggleInput } from "../InsertToggleInput";
 
