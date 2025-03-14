@@ -28,7 +28,7 @@ interface NewQuiz{
 // - [x] : 브라우저 캐시에 form context 저장하는 로직 추가
 // - [x] : 브라우저 캐시에서 form context 가져오는 로직 추가
 //  -> 사용자가 painting id를 검색하러 페이지를 옮길 수 있으므로, 현재 컨텍스트를 따로 보관해야함
-// - [ ] : title,description, input 크기 제한하기
+// - [x] : title,description, input 크기 제한하기
 // - [ ] <추가 작업>
 // ! 주의: <경고할 사항>
 // ? 질문: <의문점 또는 개선 방향>
@@ -87,6 +87,11 @@ export default function QuizForm() : JSX.Element {
     };
 
     const handleAddQuizPainting = async (key : string,id : string) : Promise<boolean> =>{
+          const UUID_SIZE = 36;
+          if(id.length != UUID_SIZE){
+            setError(`Input ${key} is out of ID format`);
+            return false;
+          }
           const painting = await getPainting(id);
 
           if(!painting){
@@ -141,6 +146,27 @@ export default function QuizForm() : JSX.Element {
         }
         return true;
 
+    }
+
+    const handleChangeTitle = async (title : string ) =>{
+      const MAX_LENGTH = 150;
+      if(title.length > MAX_LENGTH){
+        setError(`title can't be over ${MAX_LENGTH} characters`);
+        return;
+      }
+
+      setNewQuiz(prev=>({...prev!, title }));
+
+    }
+
+    const handleChangeDescription = async (description : string) => {
+      const MAX_LENGTH = 2000;
+
+      if(description.length > MAX_LENGTH){
+        setError(`description can't be over ${MAX_LENGTH} characters`);
+        return;
+      }
+      setNewQuiz(prev=>({...prev!, description}));
     }
     
     //TODO debounce 체크 필요
@@ -220,7 +246,7 @@ export default function QuizForm() : JSX.Element {
               type="text"
               placeholder="Title"
               value={newQuiz.title}
-              onChange={(e) => setNewQuiz(prev=>({...prev!, title : e.target.value}))}
+              onChange={(e) => handleChangeTitle(e.target.value)}
               className="w-full p-3 bg-gray-800 border border-gray-700 rounded focus:outline-none focus:border-red-600 transition"
               required
             />
@@ -267,7 +293,7 @@ export default function QuizForm() : JSX.Element {
             <textarea
               placeholder="Description"
               value={newQuiz.description}
-              onChange={(e) => setNewQuiz(prev=>({...prev!, description : e.target.value}))}
+              onChange={(e) => handleChangeDescription(e.target.value)}
               className="w-full p-3 bg-gray-800 border border-gray-700 rounded focus:outline-none focus:border-red-600 transition"
               required
             />
