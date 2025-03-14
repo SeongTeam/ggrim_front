@@ -133,6 +133,9 @@ export const addQuiz = async (dto: CreateQuizDTO): Promise<Quiz | undefined> => 
     const url = `${backendUrl}/quiz`;
     const response = await fetch(url, {
         method: 'POST',
+        headers : {
+            "Content-Type" : "application/json"
+        },
         body: JSON.stringify(dto),
     });
 
