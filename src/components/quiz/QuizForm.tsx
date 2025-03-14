@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import AlertModal from "../home/components/AlertModal";
 import { debounce } from "../../util/optimization";
 import { InsertToggleInput } from "../InsertToggleInput";
+import Loading from "../Loading";
 
 interface NewQuiz{
     answerPaintingID :string;
@@ -243,8 +244,8 @@ export default function QuizForm() : JSX.Element {
 
   
     if(!newQuiz || !quizPaintingMap){
-      //TODO loading page 만들기
-      return <p> Loading...</p>;
+
+      return <Loading />
     }
   
     return (
