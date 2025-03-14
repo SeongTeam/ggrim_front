@@ -10,6 +10,7 @@ import AlertModal from "../home/components/AlertModal";
 import { debounce } from "../../util/optimization";
 import { InsertToggleInput } from "../InsertToggleInput";
 import Loading from "../Loading";
+import { localStorageUtils } from "../../util/browser";
 
 interface NewQuiz{
     answerPaintingID :string;
@@ -44,6 +45,7 @@ export default function QuizForm() : JSX.Element {
     const [error,setError] = useState("");
     const router = useRouter();
     const quizPaintingKeys : string[] = ['Answer painting','Distractor1','Distractor2','Distractor3'];
+    const STORAGE_TTL_MS = 1800;
   
     const handleSubmit = async  (e : FormEvent<HTMLFormElement>   ) => {
         //server action 추가하기.
@@ -184,13 +186,14 @@ export default function QuizForm() : JSX.Element {
     // ? 질문: <의문점 또는 개선 방향>
     // * 참고: <관련 정보나 링크>
 
+
     const saveNewQuiz = useRef(debounce( (value : NewQuiz|null) => {
       console.log(`call saveNewQuiz`);
-      localStorage.setItem(QUIZ_FORM_KEY,JSON.stringify(value));
+      localStorageUtils.setItemWithExpiry(QUIZ_FORM_KEY,JSON.stringify(value),STORAGE_TTL_MS);
     },500));
 
     const loadNewQuiz = useRef(()=>{
-      const rawPrevNewQuiz : string|null = localStorage.getItem(QUIZ_FORM_KEY);
+      const rawPrevNewQuiz : string|null = localStorageUtils.getItemWithExpiry(QUIZ_FORM_KEY);
       const prevNewQuiz : NewQuiz = rawPrevNewQuiz && JSON.parse(rawPrevNewQuiz)  ? JSON.parse(rawPrevNewQuiz) : {
         answerPaintingID : "",
         distractorPaintingIDs :[] as string[],
@@ -209,11 +212,11 @@ export default function QuizForm() : JSX.Element {
 
             console.log(`call saveQuizPainting`);
       const jsonObject = Object.fromEntries(value);
-      localStorage.setItem(QUIZ_PAINTING_KEY,JSON.stringify(jsonObject));
+      localStorageUtils.setItemWithExpiry(QUIZ_PAINTING_KEY,JSON.stringify(jsonObject),STORAGE_TTL_MS);
     },500));
 
     const loadQuizPaintingMap = useRef(()=>{
-      const rawPrevQuizPaintings : string |null = localStorage.getItem(QUIZ_PAINTING_KEY);
+      const rawPrevQuizPaintings : string |null = localStorageUtils.getItemWithExpiry(QUIZ_PAINTING_KEY);
       if(rawPrevQuizPaintings){
         try{
           const parsed = JSON.parse(rawPrevQuizPaintings);
