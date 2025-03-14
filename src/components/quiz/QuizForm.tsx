@@ -22,8 +22,8 @@ interface NewQuiz{
 
 
 // TODO: QuizForm() 개선
-// - [ ] : 그림 보여주기 영역 디버깅
-// - [ ] : 폼 디자인 꾸미기
+// - [x] : 그림 보여주기 영역 디버깅
+// - [x] : 폼 디자인 꾸미기
 // - [ ] : detail Painting Modal에서 Painting ID 바로 볼수 있게 명시하기
 // - [x] : 브라우저 캐시에 form context 저장하는 로직 추가
 // - [x] : 브라우저 캐시에서 form context 가져오는 로직 추가
