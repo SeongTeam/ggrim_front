@@ -175,8 +175,16 @@ export default function QuizForm() : JSX.Element {
       setNewQuiz(prev=>({...prev!, description}));
     }
     
-    //TODO debounce 체크 필요
+    // TODO: 훅 로직 점검하기 
+    // - [x] debounce wrapper 훅 체크하기
+    //  -> <할 일 > 설명 ( 생략가능 )
+    // - [ ] <추가 작업>
+    // ! 주의: <경고할 사항>
+    // ? 질문: <의문점 또는 개선 방향>
+    // * 참고: <관련 정보나 링크>
+
     const saveNewQuiz = useRef(debounce( (value : NewQuiz|null) => {
+      console.log(`call saveNewQuiz`);
       localStorage.setItem(QUIZ_FORM_KEY,JSON.stringify(value));
     },500));
 
@@ -197,6 +205,8 @@ export default function QuizForm() : JSX.Element {
 
     const saveQuizPainting = useRef(debounce( (value : Map<string,Painting>) => {
       //Q.왜 map은 저장시에 Object.fromEntries()를 사용하지?
+
+            console.log(`call saveQuizPainting`);
       const jsonObject = Object.fromEntries(value);
       localStorage.setItem(QUIZ_PAINTING_KEY,JSON.stringify(jsonObject));
     },500));
