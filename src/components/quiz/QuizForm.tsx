@@ -87,6 +87,12 @@ export default function QuizForm() : JSX.Element {
     };
 
     const handleAddQuizPainting = async (key : string,id : string) : Promise<boolean> =>{
+        
+          if(id.trim().length != id.length){
+            setError(`Input ${key} has space or tab. please check start and end of string`);
+            return false;
+          }
+      
           const UUID_SIZE = 36;
           if(id.length != UUID_SIZE){
             setError(`Input ${key} is out of ID format`);
