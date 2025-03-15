@@ -31,8 +31,8 @@ export function InsertToggleInput({handleAdd,handleDelete,placeholder, defaultVa
 
 
     return (
-      <div className="flex items-center mb-4 space-x-2 rounded-lg">
-            <div className="w-96">
+      <div className="flex w-full items-center space-x-2 rounded-lg">
+            <div className="w-full">
                 <input
                     type="text"
                     placeholder={placeholder||'input value'}
