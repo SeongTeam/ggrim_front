@@ -252,7 +252,7 @@ export default function QuizForm() : JSX.Element {
     }
   
     return (
-      <div className="flex items-center justify-center h-screen bg-black">
+      <div className="flex items-center justify-center h-full bg-black">
         {error.trim().length > 0 &&<AlertModal message={error} onClose={async ()=>setError('')}/>}
         <form
           onSubmit={(e)=>handleSubmit(e)}
