@@ -11,6 +11,7 @@ import { debounce } from "../../util/optimization";
 import { InsertToggleInput } from "../InsertToggleInput";
 import Loading from "../Loading";
 import { localStorageUtils } from "../../util/browser";
+import { CheckCircle, XCircle } from "lucide-react";
 
 interface NewQuiz{
     answerPaintingID :string;
@@ -229,6 +230,8 @@ export default function QuizForm() : JSX.Element {
       }
     });
 
+    const getAnswerIcon = (isAnswer : boolean) => isAnswer ? <CheckCircle className=" hidden md:block text-green-500" /> : <XCircle className=" hidden md:block text-red-500" />;
+
 
     useEffect( ()=>{
       // 1.렌더링 된 후에 useEffect가 실행되므로, 저장된 값을 불러오는 동안에 깜빡이는 현상이 발생함.
@@ -252,11 +255,11 @@ export default function QuizForm() : JSX.Element {
     }
   
     return (
-      <div className="flex items-center justify-center h-full bg-black">
+      <div className="flex items-center justify-center h-full  bg-black">
         {error.trim().length > 0 &&<AlertModal message={error} onClose={async ()=>setError('')}/>}
         <form
           onSubmit={(e)=>handleSubmit(e)}
-          className="bg-gray-900 p-8 rounded-lg shadow-lg text-white max-w-5xl"
+          className="bg-gray-900 p-8 rounded-lg shadow-lg text-white max-w-5xl md:min-w-[600px]"
         >
           <h2 className="text-2xl font-bold mb-6 text-center text-white">
             Create Quiz
@@ -273,24 +276,30 @@ export default function QuizForm() : JSX.Element {
           </div>
 
           <div key="painting selection" className="mb-4">
-            <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 gap-2 mb-2">
 
               {
-                quizPaintingKeys.map(key=>            
+                quizPaintingKeys.map((key,index)=>{
+                  const isAnswer = index === 0;
+                  const borderColor =  isAnswer ? `border-green-500` : `border-red-800`;
                 
-                <InsertToggleInput 
-                  key={key}
-                  handleAdd={(value : string)=>handleAddQuizPainting(key,value)}
-                  handleDelete={(value: string)=>handleDeleteQuizPainting(key,value)}
-                  defaultIsInserted={quizPaintingMap.has(key)}
-                  defaultValue={quizPaintingMap.get(key)?.id}
-                  placeholder={key}
-              />)
+                  // const bgColor = isAnswer ? `bg-green-300` : `bg-red-500`;            
+                  return (<div key={key} className={`p-2 flex rounded-lg border-2 items-center gap-3 ${borderColor}`} >
+                  {getAnswerIcon(isAnswer)}
+                  <InsertToggleInput 
+                    handleAdd={(value : string)=>handleAddQuizPainting(key,value)}
+                    handleDelete={(value: string)=>handleDeleteQuizPainting(key,value)}
+                    defaultIsInserted={quizPaintingMap.has(key)}
+                    defaultValue={quizPaintingMap.get(key)?.id}
+                    placeholder={key}
+                />
+                </div>);
+                })
               }
             </div>
             <div>
               <h1 className="text-2xl font-bold mb-2"> Quiz Paintings </h1>
-              <div className="bg-gray-500 grid min-h-56 sm:grid-cols-2 md:grid-cols-4 items-center p-2 rounded-lg border-gray-200 border-2 gap-4">
+              <div className="bg-gray-500 grid min-h-56 sm:grid-cols-1 md:grid-cols-2 items-center p-2 rounded-lg border-gray-200 border-2 gap-4">
                   {quizPaintingKeys.map((key,idx)=>{
                       const painting : Painting | undefined = quizPaintingMap.get(key);
                       if(!painting){
