@@ -6,9 +6,15 @@
 
 const SHIFT: string = process.env.CAESAR_SHIFT ?? '';
 
+// TODO: 보안성 강화
+// - [ ]  추후 DB에서 정의해서 변경 예정
+//  -> 고장된 값은 보안에 안 좋음
+// - [ ] <추가 작업>
+// ! 주의: <경고할 사항>
+// ? 질문: <의문점 또는 개선 방향>
+// * 참고: <관련 정보나 링크>
 class CaesarCipher {
     private shift: number;
-    //TODO 추후 DB에서 정의해서 변경 예정 => 고장된 값은 보안에 안 좋음
 
     constructor() {
         this.shift = parseInt(SHIFT, 10) % 26; // 알파벳 개수(26)로 나눈 나머지로 shift 값 제한

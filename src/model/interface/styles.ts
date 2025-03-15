@@ -1,4 +1,4 @@
-export interface Tag {
+export interface Style {
     created_date: string;
     updated_date: string;
     deleted_date: string | null;

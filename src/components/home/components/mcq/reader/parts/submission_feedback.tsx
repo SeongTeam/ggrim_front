@@ -11,7 +11,7 @@ interface SubmissionFeedbackProps {
     handleHintButtonClick: () => void;
     handleClearSubmission: () => void;
     handleNextMCQ: () => void;
-    handelTryAgain: () => void;
+    handleTryAgain: () => void;
     showHintButton: boolean;
 }
 
@@ -20,7 +20,7 @@ const SubmissionFeedback: React.FC<SubmissionFeedbackProps> = ({
     isSubmitted,
     handleSubmit,
     handleNextMCQ,
-    handelTryAgain,
+    handleTryAgain,
 }) => {
     return (
         <div className="mt-6 text-right">
@@ -29,14 +29,14 @@ const SubmissionFeedback: React.FC<SubmissionFeedbackProps> = ({
             {isSubmitted && !isCorrect ? (
                 <div>
                     <div className="text-lg font-semibold text-error mb-2 text-red-500">
-                        Incorrect... Try again!
+                        Incorrect...
                     </div>
                     <div className="flex justify-end items-center space-x-4">
                         <button
-                            onClick={handelTryAgain}
+                            onClick={handleNextMCQ}
                             className="btn btn-sm btn-primary text-ggrimBrown1"
                         >
-                            Try again
+                            Next Quiz
                         </button>
                     </div>
                 </div>
@@ -46,7 +46,7 @@ const SubmissionFeedback: React.FC<SubmissionFeedbackProps> = ({
                         Correct!
                     </div>
                     <button
-                        onClick={handelTryAgain}
+                        onClick={handleTryAgain}
                         className="btn btn-sm btn-secondary text-base text-black border-black"
                     >
                         Next Quiz
@@ -69,16 +69,6 @@ const SubmissionFeedback: React.FC<SubmissionFeedbackProps> = ({
                     >
                         NEXT
                     </button>
-                    {/* TODO 힌트 기능 필요하면 사용 */}
-                    {/* {showHintButton && !isCorrect && (
-                        <button
-                            onClick={handleHintButtonClick}
-                            className="btn btn-sm btn-outline btn-secondary flex items-center text-ggrimBrown1"
-                        >
-                            <Icons.Lightbulb className="w-4 h-4" />
-                            <span className="pr-1">Smart Hint</span>
-                        </button>
-                    )} */}
                 </div>
             )}
         </div>

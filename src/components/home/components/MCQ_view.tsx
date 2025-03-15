@@ -7,9 +7,24 @@ import SubmissionFeedback from './mcq/reader/parts/submission_feedback';
 import { motion } from 'framer-motion';
 import { MCQReaderViewProps } from '@/model/interface/MCQ';
 
-// TODO displayAnswers 필드 값 변경
-const MCQView = ({ attribute, currentAttributeIndex, handelNextMCQ }: MCQReaderViewProps) => {
-    const { answerPaintings } = attribute;
+
+const MCQView = ({ mcq, handelNextMCQ, handleImageSelected }: MCQReaderViewProps) => {
+
+
+    // TODO: <MCQView /> 개선
+    // - [x] mcq 타입 이름 리팩 토링
+    // - [x]useMCQReader 훅 점검 및 리팩토링
+    // - [ ]퀴즈 틀렸을 경우와 맞았을 경우 동작 설계하기
+    // - [ ] <MCQView /> 모듈로 나누기
+    // - [ ] <MCQView /> 리팩토링하여 가독성 높이기
+    // - [ ] display size 마다 minHeight을 정하여 깜빡임 형상 방지 (모바일 크기만 신경쓰면 됨)
+    // - [ ] component 와 custom hook 폴더 구조 정리하기
+    // - [ ] 시간 제한 추가하기
+    // - [ ] backend에서 맞힌 횟수와 틀린 횟수 카운팅하기
+    // ! 주의: <경고할 사항>
+    // ? 질문: 각각의 mcq 데이터의 title 필드를 사용해야하는가?
+    // * 참고: <관련 정보나 링크>
+    const { answerPaintings } = mcq;
 
     const {
         errorMessage,
@@ -20,9 +35,9 @@ const MCQView = ({ attribute, currentAttributeIndex, handelNextMCQ }: MCQReaderV
         handleReaderSelectAnswer,
         handleSubmit,
         handleHintButtonClick,
-        cleatSubmitState,
+        clearSubmitState,
         handleClearSubmission,
-    } = useMCQReader(attribute, 0);
+    } = useMCQReader(mcq, 0);
 
     const answerKey = answerPaintings[0].id;
 
@@ -33,27 +48,53 @@ const MCQView = ({ attribute, currentAttributeIndex, handelNextMCQ }: MCQReaderV
         }
     };
 
-    // TODO 틀렸을 경우 어떻게 할지 의논 필요
+    const handleSubmitImage = ()=>{
+        const selectedPainting = displayPaintings.find(p=>
+            p.id === readerSelectedAnswer
+        );
+        if(handleImageSelected && selectedPainting){
+            handleImageSelected(selectedPainting);
+        }
+        handleSubmit();
+    }
+
     const handleTryAgain = () => {
         console.log(`isSubmitted: ${isSubmitted}`);
 
-        cleatSubmitState();
+        clearSubmitState();
         handelNextMCQ();
     };
 
+    const getCardClasses = (paintingId : string) => {
+        if (isSubmitted) {
+            return paintingId === answerKey ? 'bg-green-300' : 'bg-red-300';
+        }
+        return 'bg-white';
+    };
+    
+    const getBorderClasses = (paintingId : string) => (
+        readerSelectedAnswer === paintingId ? 'border-4 border-primary' : ''
+    );
+    
+    const getImageClasses = (paintingId : string) => (
+        readerSelectedAnswer === paintingId ? 'ring-4 ring-primary' : ''
+    );
+    
+
     return (
-        // TODO display size 마다 minHeight을 정하여 깜빡임 형상 방지 (모바일 크기만 신경쓰면 됨)
+
         <div className="p-4 rounded-md shadow bg-ggrimBeige2" style={{ minHeight: '744px' }}>
             <h3 className="text-xl font-bold text-gray-800 mb-6">
-                {'Which of the following is not a work by the same author?'}
+
+                {`${mcq.title}`}
             </h3>
             {/* <div>
                 <h1>API Data</h1>
-                <pre className="text-black">{JSON.stringify(attribute, null, 2)}</pre>
+                <pre className="text-black">{JSON.stringify(mcq, null, 2)}</pre>
             </div> */}
 
             <motion.div
-                key={currentAttributeIndex}
+                key={mcq.id}
                 initial={{ opacity: 0, x: 50 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -50 }}
@@ -65,45 +106,31 @@ const MCQView = ({ attribute, currentAttributeIndex, handelNextMCQ }: MCQReaderV
                 }}
             >
                 {errorMessage && <ErrorMessage message={errorMessage} />}
-                <div className="grid md:grid-cols-2 gap-4 sm:grid-cols-1">
-                    {displayPaintings.map((painting, index) => (
+                <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-4">
+                    {displayPaintings.map(({ id, image_url }, index) => (
                         <div
-                            key={painting.id}
-                            className={`flex flex-col items-center p-4 rounded-md ${
-                                isSubmitted
-                                    ? painting.id === answerKey
-                                        ? 'bg-green-300'
-                                        : 'bg-red-300'
-                                    : 'bg-white'
-                            } shadow-md ${
-                                readerSelectedAnswer === painting.id
-                                    ? 'border-4 border-primary'
-                                    : ''
-                            }`}
-                            onClick={() => handleImageClick(painting.id)}
+                            key={id}
+                            className={`flex flex-col items-center p-4 rounded-md shadow-md ${getCardClasses(id)} ${getBorderClasses(id)}`}
+                            onClick={() => handleImageClick(id)}
                         >
                             <img
-                                src={painting.image_url}
+                                src={image_url}
                                 alt={`Answer ${index}`}
-                                className={`w-50 h-auto max-h-[250px] max-w-full  mb-2 ${
-                                    readerSelectedAnswer === painting.id
-                                        ? 'ring-4 ring-primary'
-                                        : ''
-                                }`}
+                                className={`w-50 h-auto max-h-[250px] max-w-full mb-2 ${getImageClasses(id)}`}
                             />
-                        </div>
-                    ))}
-                </div>
+            </div>
+        ))}
+    </div>
             </motion.div>
             <div className="flex justify-end items-center">
                 <SubmissionFeedback
                     isCorrect={isCorrect}
                     isSubmitted={isSubmitted}
-                    handleSubmit={handleSubmit}
+                    handleSubmit={handleSubmitImage}
                     handleHintButtonClick={handleHintButtonClick}
                     handleClearSubmission={handleClearSubmission}
                     handleNextMCQ={handelNextMCQ}
-                    handelTryAgain={handleTryAgain}
+                    handleTryAgain={handleTryAgain}
                     showHintButton={false}
                 />
             </div>

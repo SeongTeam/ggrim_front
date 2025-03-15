@@ -1,22 +1,29 @@
 // custom hook for managing mcq logic in reader mode
 
-import { MCQAttribute } from '@/model/interface/MCQ';
+import { MCQ } from '@/model/interface/MCQ';
 import { shuffleMerge } from '@/util/shuffleMerge';
 import { useState } from 'react';
+import { Painting } from '../../../../../model/interface/painting';
 // import { submitMCQAnswer } from "@/services/mcqClientService";
 
-const useMCQReader = (attrs: MCQAttribute, selectedAnswer: number) => {
+const useMCQReader = (attrs: MCQ, selectedAnswer: number) => {
     const { answerPaintings, distractorPaintings } = attrs;
 
     // State Initialization
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [readerSelectedAnswer, setReaderSelectedAnswer] = useState<string | null>(null);
     const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
-    const [attemptedAnswers, setAttemptedAnswers] = useState<number[]>([]);
     const [isCorrect, setIsCorrect] = useState<boolean>(false);
     const [showHint, setShowHint] = useState<boolean>(false);
-    // TODO 현재 클릭이 될때 마다 계속 동작한다. 메모리 낭비라고 생각함 추후 효율적이게 수정 요구
-    const displayPaintings = shuffleMerge(distractorPaintings, answerPaintings);
+    const [displayPaintings ,] = useState<Painting[]>(shuffleMerge(distractorPaintings, answerPaintings));
+
+    // TODO: <useMCQReader /> 개선
+    // - [x] 클릭시 마다 그림 재배치 되는 버그 수정
+    //  -> shuffleMerge()가 여러번 호출되는 것이 문제의 원인으로 추정됨
+    // - [ ] <추가 작업>
+    // ! 주의: <경고할 사항>
+    // ? 질문: <의문점 또는 개선 방향>
+    // * 참고: <관련 정보나 링크>
 
     const answerID = answerPaintings[0].id;
 
@@ -47,7 +54,7 @@ const useMCQReader = (attrs: MCQAttribute, selectedAnswer: number) => {
         }
     };
 
-    const cleatSubmitState = async (): Promise<void> => {
+    const clearSubmitState = async (): Promise<void> => {
         if (readerSelectedAnswer !== null) {
             setIsSubmitted(false);
             setIsCorrect(false);
@@ -71,7 +78,6 @@ const useMCQReader = (attrs: MCQAttribute, selectedAnswer: number) => {
     const handleClearSubmission = (): void => {
         setIsSubmitted(false);
         setReaderSelectedAnswer(null);
-        setAttemptedAnswers([]);
         setIsCorrect(false);
         setErrorMessage(null);
     };
@@ -81,7 +87,6 @@ const useMCQReader = (attrs: MCQAttribute, selectedAnswer: number) => {
         errorMessage,
         readerSelectedAnswer,
         isSubmitted,
-        attemptedAnswers,
         isCorrect,
         showHint,
         displayPaintings,
@@ -90,7 +95,7 @@ const useMCQReader = (attrs: MCQAttribute, selectedAnswer: number) => {
         handleSubmit,
         handleHintButtonClick,
         handleClearSubmission,
-        cleatSubmitState,
+        clearSubmitState,
         setErrorMessage,
     };
 };

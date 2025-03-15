@@ -8,11 +8,16 @@ interface PaintingDetailViewProps {
     painting : Painting | undefined;
 }
 
-/*TODO
-- painting = undefined 인 경우 어떻게 할것인지 생각하기
-*/
+// TODO: <PaintingDetailView /> 성능 개선
+// - [ ] painting = undefined 인 경우 상황 예외처리 로직 추가
+// - [ ] painting id 복사 기능 추가
+//  -> <할 일 > 설명 ( 생략가능 )
+// - [ ] <추가 작업>
+// ! 주의: <경고할 사항>
+// ? 질문: <의문점 또는 개선 방향>
+// * 참고: <관련 정보나 링크>
+
 export const PaintingDetailView = ( {painting } : PaintingDetailViewProps) => {
-    
     const [showFullDescription, setShowFullDescription] = useState(false);
     
     if(!painting){

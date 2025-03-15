@@ -1,14 +1,22 @@
 import { Painting } from './painting';
+import { QUIZ_TYPE } from './quiz';
 
-export interface MCQAttribute {
+//Multiple-Choice-Question
+export interface MCQ {
+    id: string;
     distractorPaintings: Painting[];
     answerPaintings: Painting[];
-    category: string;
-    similarity: string;
+    title: string;
+    description: string;
+    timeLimit: number;
+    type: QUIZ_TYPE;
+    // category: string;
+    // similarity: string;
 }
 
 export interface MCQReaderViewProps {
-    attribute: MCQAttribute;
-    currentAttributeIndex: number;
-    handelNextMCQ: () => void;
+    mcq: MCQ;
+    // currentAttributeIndex: number;
+    handelNextMCQ: () => Promise<void>;
+    handleImageSelected?: (selectedPainting: Painting) => Promise<void>;
 }
