@@ -18,8 +18,8 @@ interface PaintingDetailViewProps {
 // * 참고: <관련 정보나 링크>
 
 export const PaintingDetailView = ( {painting } : PaintingDetailViewProps) => {
-
     const [showFullDescription, setShowFullDescription] = useState(false);
+    
     if(!painting){
         return (
             <div className="bottom-0 right-0 mt-8 bg-gray-900 shadow-lg border-0 rounded-lg">

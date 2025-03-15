@@ -11,7 +11,7 @@ interface HoverCardProps {
 
 export default function HoverCard({ cardProps, children, onClick }: HoverCardProps) {
     const [isHovered, setIsHovered] = useState(false);
-    const [, setImageSize] = useState<{ width: number; height: number } | null>(null);
+    const [,setImageSize] = useState<{ width: number; height: number } | null>(null);
 
     useEffect(() => {
         getUrlImageSize(cardProps.imageSrc).then(setImageSize);
