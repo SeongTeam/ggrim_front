@@ -45,7 +45,7 @@ export default function QuizForm() : JSX.Element {
     const [error,setError] = useState("");
     const router = useRouter();
     const quizPaintingKeys : string[] = ['Answer painting','Distractor1','Distractor2','Distractor3'];
-    const STORAGE_TTL_MS = 1800;
+    const STORAGE_TTL_MS = 1800000;
   
     const handleSubmit = async  (e : FormEvent<HTMLFormElement>   ) => {
         //server action 추가하기.
