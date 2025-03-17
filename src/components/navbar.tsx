@@ -1,140 +1,134 @@
-// import React from 'react';
+"use client";
 
-// import {
-//     Navbar as MTNavbar,
-//     Collapse,
-//     IconButton,
-//     Typography,
-//     Button,
-// } from '@material-tailwind/react';
-// import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Search, Bell, User } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { SearchPaintingBar } from "./search/SearchPaintingBar";
+import { useRouter } from "next/navigation";
 
-// interface NavItemProps {
-//     children: React.ReactNode;
-//     href?: string;
-// }
-// function NavItem({ children, href }: NavItemProps) {
-//     return (
-//         <li>
-//             <Typography
-//                 as="a"
-//                 href={href || '#'}
-//                 target={href ? '_blank' : '_self'}
-//                 variant="small"
-//                 className="font-medium"
-//             >
-//                 {children}
-//             </Typography>
-//         </li>
-//     );
-// }
 
-// export function Navbar() {
-//     const [open, setOpen] = React.useState(false);
-//     const [isScrolling, setIsScrolling] = React.useState(false);
+// TODO: NavBar UI 개선
+// - [ ] 검색창 생성시, NavBar 깜박이는 버그 수정
+// - [ ] 검색창 생성시, menu list 옆으로 밀리는 버그 수정
+// - [ ] 자식 컴포넌트 그룹지어서 분리하기
+//  -> <할 일 > 설명 ( 생략가능 )
+// - [ ] <추가 작업>
+// ! 주의: <경고할 사항>
+// ? 질문: <의문점 또는 개선 방향>
+// * 참고: <관련 정보나 링크>
 
-//     function handleOpen() {
-//         setOpen((cur) => !cur);
-//     }
+export default function Navbar() {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const router = useRouter();
 
-//     React.useEffect(() => {
-//         window.addEventListener('resize', () => window.innerWidth >= 960 && setOpen(false));
-//     }, []);
+  // 스크롤 시 네비바 스타일 변경
+  if (typeof window !== "undefined") {
+    window.onscroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+  }
 
-//     React.useEffect(() => {
-//         function handleScroll() {
-//             if (window.scrollY > 0) {
-//                 setIsScrolling(true);
-//             } else {
-//                 setIsScrolling(false);
-//             }
-//         }
 
-//         window.addEventListener('scroll', handleScroll);
+  const handleClickHome = ()=>{
+    router.push('/');
+  }
 
-//         return () => window.removeEventListener('scroll', handleScroll);
-//     }, []);
+  const handleClickQuiz = ()=>{
+    router.push('/quiz');
+  }
 
-//     return (
-//         <MTNavbar
-//             fullWidth
-//             shadow={false}
-//             blurred={false}
-//             color={isScrolling ? 'white' : 'transparent'}
-//             className="fixed  z-50 border-0 py-2"
-//         >
-//             <div className="container mx-auto flex items-center justify-between">
-//                 <Typography
-//                     as="a"
-//                     href="https://www.material-tailwind.com"
-//                     target="_blank"
-//                     variant="h6"
-//                     color={isScrolling ? 'gray' : 'white'}
-//                 >
-//                     Material Tailwind
-//                 </Typography>
-//                 <ul
-//                     className={`ml-10 hidden items-center gap-6 lg:flex ${
-//                         isScrolling ? 'text-gray-900' : 'text-white'
-//                     }`}
-//                 >
-//                     <NavItem>Home</NavItem>
-//                     <NavItem>About Us</NavItem>
-//                     <NavItem>Contact Us</NavItem>
+  const handleClickCreateQuiz = () =>{
+    router.push('/quiz/create');
+  }
 
-//                     <NavItem href="https://www.material-tailwind.com/docs/react/installation">
-//                         Docs
-//                     </NavItem>
-//                     {/* <SearchModalCompnent /> */}
-//                 </ul>
 
-//                 <IconButton
-//                     variant="text"
-//                     color={isScrolling ? 'gray' : 'white'}
-//                     onClick={handleOpen}
-//                     className="ml-auto inline-block lg:hidden"
-//                 >
-//                     {open ? (
-//                         <XMarkIcon strokeWidth={2} className="h-6 w-6" />
-//                     ) : (
-//                         <Bars3Icon strokeWidth={2} className="h-6 w-6" />
-//                     )}
-//                 </IconButton>
-//             </div>
-//             <Collapse open={open}>
-//                 <div className="container mx-auto mt-4 rounded-lg border-t border-blue-gray-50 bg-white px-6 py-5">
-//                     <ul className="flex flex-col gap-4 text-blue-gray-900">
-//                         <NavItem>Home</NavItem>
-//                         <NavItem>About Us</NavItem>
-//                         <NavItem>Contact Us</NavItem>
-//                         <NavItem>Contact1212 Us</NavItem>
 
-//                         {/* <SearchInput /> */}
 
-//                         <NavItem href="https://www.material-tailwind.com/docs/react/installation">
-//                             Docs
-//                         </NavItem>
-//                     </ul>
-//                     <div className="mt-4 flex items-center gap-2">
-//                         <IconButton variant="text" color="gray" size="sm">
-//                             <i className="fa-brands fa-twitter text-base" />
-//                         </IconButton>
-//                         <IconButton variant="text" color="gray" size="sm">
-//                             <i className="fa-brands fa-facebook text-base" />
-//                         </IconButton>
-//                         <IconButton variant="text" color="gray" size="sm">
-//                             <i className="fa-brands fa-instagram text-base" />
-//                         </IconButton>
-//                         <a href="https://www.material-tailwind.com/blocks" target="_blank">
-//                             <Button color="gray" size="sm" className="ml-auto">
-//                                 Blocks
-//                             </Button>
-//                         </a>
-//                     </div>
-//                 </div>
-//             </Collapse>
-//         </MTNavbar>
-//     );
-// }
+  const handleClickBellIcon = ()=>{
+    alert('not implement');
+  }
 
-// export default Navbar;
+  const handleClickUserIcon = () =>{
+    alert('not implement');
+  }
+
+  return (
+    <nav
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+        isScrolled ? "bg-black/90 shadow-md" : "bg-transparent"
+      }`}
+    >
+      <div className="flex items-center justify-between px-6 py-4">
+        {/* 로고 */}
+        <div className="text-yellow-300 text-2xl font-bold">Ggrim</div>
+
+        {/* 네비게이션 메뉴 */}
+        <ul className="hidden md:flex space-x-6 text-white text-sm">
+          <li className="hover:text-gray-300 cursor-pointer"
+            onClick={()=>handleClickHome()}  
+          >Home</li>
+          <li className="hover:text-gray-300 cursor-pointer"
+            onClick={()=>handleClickQuiz()}
+          >Quiz</li>
+          <li className="hover:text-gray-300 cursor-pointer"
+            onClick={()=>handleClickCreateQuiz()}
+          >Create Quiz</li>
+        </ul>
+
+        {/* 아이콘 메뉴 */}
+        <div className="flex items-center space-x-4">
+          <SearchPaintingMenu />
+          <Bell className="text-white w-5 h-5 cursor-pointer hover:opacity-80" 
+            onClick={()=>handleClickBellIcon()}
+          />
+          <User className="text-white w-6 h-6 cursor-pointer hover:opacity-80" 
+            onClick={()=>handleClickUserIcon()}
+          />
+        </div>
+      </div>
+    </nav>
+  );
+}
+
+export function SearchPaintingMenu(){
+  const [isSearching,setIsSearching] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleClickSearchIcon = ()=>{
+    setIsSearching(prev=>!prev);
+  }
+
+
+  useEffect(()=>{
+    if(isSearching && inputRef.current){
+        inputRef.current.focus();
+    }
+  },[isSearching]);
+
+  if(!isSearching){
+
+    return (
+      <Search 
+        className="text-white w-5 h-5 cursor-pointer hover:opacity-80" 
+        onClick={()=>handleClickSearchIcon()}
+     />
+  
+    );
+  }
+
+
+  return (
+    <div 
+    
+      onBlur={(e)=>{
+
+      if(!e.currentTarget.contains(e.relatedTarget)){
+          setIsSearching(false);
+      }
+    }}>
+      <SearchPaintingBar 
+          inputRef={inputRef}
+      />
+    </div>
+  );
+
+}

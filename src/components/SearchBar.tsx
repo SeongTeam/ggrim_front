@@ -1,13 +1,14 @@
 'use client'
 import { Search } from "lucide-react";
-import React, {  useState } from "react";
+import React, {  RefObject, useState } from "react";
 
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
   defaultValue? : string;
+  inputRef? : RefObject<HTMLInputElement>
 }
-export function SearchBar({ onSearch, defaultValue }: SearchBarProps) {
+export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
 
   const [inputValue, setInputValue] = useState(defaultValue||"");
 
@@ -24,6 +25,7 @@ export function SearchBar({ onSearch, defaultValue }: SearchBarProps) {
     <div className="relative">
       <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
       <input
+        ref={inputRef}
         value={inputValue}
         type="text"
         placeholder="Search Title..."
