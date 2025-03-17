@@ -2,8 +2,8 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
 import RecoilRootWrapper from '@/recoil/recoil_wrapper';
-import { SearchPaintingBar } from '../components/search/SearchPaintingBar';
 import { Suspense } from 'react';
+import Navbar from '../components/Navbar';
 
 const roboto = Roboto({
     subsets: ['latin'],
@@ -31,13 +31,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <head></head>
             <body className={roboto.className}>
                 <RecoilRootWrapper>
-                    <div className="bg-white text-white p-4">
-                        <h1 className="text-3xl font-bold text-black mb-4">Navbar Area</h1>
+                    <div className="mb-16">
                         <Suspense>
-                            <SearchPaintingBar />
+                            <Navbar />
                         </Suspense>
                     </div>
-                    {children}
+                    <Suspense>
+                        {children}
+                    </Suspense>
                 </RecoilRootWrapper>
             </body>
         </html>
