@@ -15,28 +15,11 @@ import { ProfileIconMenu } from "./ProfileIconMenu";
 // * 참고: <관련 정보나 링크>
 
 export default function Navbar() {
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  // 스크롤 시 네비바 스타일 변경
-  if (typeof window !== "undefined") {
-    window.onscroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-  }
-
-  const handleClickBellIcon = ()=>{
-    alert('not implement');
-  }
-
-  const handleClickUserIcon = () =>{
-    alert('not implement');
-  }
 
   return (
     <nav
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-        isScrolled ? "bg-black/90 shadow-md" : "bg-transparent"
-      }`}
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300
+      bg-black/90 shadow-md`}
     >
       <div>
         <div className="flex items-center md:justify-between px-6 py-4">
