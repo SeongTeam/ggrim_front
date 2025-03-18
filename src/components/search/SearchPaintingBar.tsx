@@ -1,6 +1,6 @@
 'use client'
 import { ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from "next/navigation";
-import {  useRef, useState } from "react";
+import {  RefObject, useRef, useState } from "react";
 import { SearchBar } from "../SearchBar";
 import { debounce } from "../../util/optimization";
 
@@ -78,6 +78,11 @@ function getURL(input : string ) : string{
 
     return url;
 }
+
+interface SearchPaintingBarProps {
+    inputRef? : RefObject<HTMLInputElement>;
+}
+
 // TODO: <SearchPaintingBar /> 기능 개선
 // - [ ] 여러번 검색 후, 뒤로가기 버튼 클릭시, URL searchParams은 변경되지만, 검색창의 값이 동기화되지않음.
 //  -> 사용자 편의성 개선을 위해 수정되어야하는 버그
@@ -85,7 +90,7 @@ function getURL(input : string ) : string{
 // ! 주의: <경고할 사항>
 // ? 질문: <의문점 또는 개선 방향>
 // * 참고: <관련 정보나 링크>
-export function SearchPaintingBar(): React.JSX.Element {
+export function SearchPaintingBar(props : SearchPaintingBarProps): React.JSX.Element {
 
     const router = useRouter();
     const pathName = usePathname();
@@ -98,6 +103,8 @@ export function SearchPaintingBar(): React.JSX.Element {
             if(pathName !== '/'){
                 router.push('/');
             }
+
+            
             return;
         }
 
@@ -110,7 +117,7 @@ export function SearchPaintingBar(): React.JSX.Element {
     const handleSearchDebounceRef = useRef(debounce(handleSearch,500));
 
     return (
-            <SearchBar onSearch={handleSearchDebounceRef.current} defaultValue={input} />
+            <SearchBar inputRef={props.inputRef} onSearch={handleSearchDebounceRef.current} defaultValue={input} />
 
     );
 }

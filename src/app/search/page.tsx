@@ -39,7 +39,9 @@ import { serverLogger } from "../../util/logger";
     serverLogger.info(`{path : /search}current param : $${JSON.stringify({title,artist,tags,styles})}`);
     return (
       <Suspense>
-        <PaintingCardGrid findResult={result}  />
+        <div className="mt-20">
+          <PaintingCardGrid findResult={result}  />
+        </div>
       </Suspense>
     );
   }
