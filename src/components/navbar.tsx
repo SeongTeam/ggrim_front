@@ -1,9 +1,7 @@
-"use client";
-
-import {  Bell, User } from "lucide-react";
-import {  useState } from "react";
 import NavbarMenu from "./NavbarMenu";
 import { SearchPaintingIconMenu } from "./SearchPaintingIconMenu";
+import { NotifyIconMenu } from "./NotificationIconMenu";
+import { ProfileIconMenu } from "./ProfileIconMenu";
 
 
 // TODO: NavBar UI 개선
@@ -52,12 +50,8 @@ export default function Navbar() {
             <div className="hidden sm:block">
               <SearchPaintingIconMenu />
             </div>
-            <Bell className="text-white w-6 h-6 cursor-pointer hover:opacity-80" 
-              onClick={()=>handleClickBellIcon()}
-            />
-            <User className="text-white w-7 h-7 cursor-pointer hover:opacity-80" 
-              onClick={()=>handleClickUserIcon()}
-            />
+            <NotifyIconMenu />
+            <ProfileIconMenu />
           </div>
         </div>
       </div>

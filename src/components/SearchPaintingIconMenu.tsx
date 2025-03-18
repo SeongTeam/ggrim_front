@@ -1,3 +1,4 @@
+"use client"
 import { Search } from "lucide-react";
 import { SearchPaintingBar } from "./search/SearchPaintingBar";
 import { useEffect, useRef, useState } from "react";
