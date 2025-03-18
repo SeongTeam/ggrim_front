@@ -2,11 +2,8 @@ import { findQuiz } from '../lib/api.backend';
 import { QuizCardGrid } from '../../components/quiz/QuizCardGrid';
 import { FindQuizResult } from '../lib/dto';
 
-interface QuizListPageProps {
-    page? : number
-}
 
-export default async function QuizListPage({ }: QuizListPageProps) {
+export default async function QuizListPage() {
 
 
     const findQuizResult : FindQuizResult = await findQuiz();
