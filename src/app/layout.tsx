@@ -4,6 +4,7 @@ import { Roboto } from 'next/font/google';
 import RecoilRootWrapper from '@/recoil/recoil_wrapper';
 import { Suspense } from 'react';
 import Navbar from '../components/Navbar';
+import Loading from '../components/Loading';
 
 const roboto = Roboto({
     subsets: ['latin'],
@@ -31,12 +32,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <head></head>
             <body className={roboto.className}>
                 <RecoilRootWrapper>
-                    <div className="mb-16">
-                        <Suspense>
+                    <Suspense fallback={<Loading />}>
+                        <div className="mb-16">
                             <Navbar />
-                        </Suspense>
-                    </div>
-                    <Suspense>
+                        </div>
+
                         {children}
                     </Suspense>
                 </RecoilRootWrapper>
