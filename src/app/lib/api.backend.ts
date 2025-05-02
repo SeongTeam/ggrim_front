@@ -65,9 +65,11 @@ export const findPainting = async (
     page: number = 0,
 ): Promise<FindPaintingResult> => {
     const backendUrl = getServerUrl();
-    const url = `${backendUrl}/painting?title=${title}&artistName=${artist}&tags=${JSON.stringify(
-        tags,
-    )}&styles=${JSON.stringify(styles)}&page=${page}`;
+    const titleParam = `title=${title}`;
+    const artistParam = `artistName=${artist}`;
+    const tagParam = tags.map((t) => `tags[]=${t}`).join('&');
+    const styleParam = styles.map((s) => `styles[]=${s}`).join('&');
+    const url = `${backendUrl}/painting?${titleParam}&${artistParam}&${tagParam}&${styleParam}&page=${page}`;
     serverLogger.info(`[findPaintings] url=${url}`);
     const response = await fetch(url);
     const result: FindPaintingResult = await response.json();
@@ -109,9 +111,10 @@ export const findQuiz = async (
     page: number = 0,
 ): Promise<FindQuizResult> => {
     const backendUrl = getServerUrl();
-    const url = `${backendUrl}/quiz?artist=${JSON.stringify(artists)}&tags=${JSON.stringify(
-        tags,
-    )}&styles=${JSON.stringify(styles)}&page=${page}`;
+    const artistsParam = artists.map((a) => `artists[]=${a}`).join('&');
+    const tagParam = tags.map((t) => `tags[]=${t}`).join('&');
+    const styleParam = styles.map((s) => `styles[]=${s}`).join('&');
+    const url = `${backendUrl}/quiz?${artistsParam}&${tagParam}&${styleParam}&page=${page}`;
     serverLogger.info(`[findQuiz] url=${url}`);
     const response = await fetch(url);
     const result: FindQuizResult = await response.json();
@@ -128,13 +131,14 @@ export const getQuiz = async (id: string): Promise<Quiz> => {
     return result;
 };
 
-export const addQuiz = async (dto: CreateQuizDTO): Promise<Quiz | undefined> => {
+export const addQuiz = async (jwt: string, dto: CreateQuizDTO): Promise<Quiz | undefined> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/quiz`;
     const response = await fetch(url, {
         method: 'POST',
-        headers : {
-            "Content-Type" : "application/json"
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${jwt}`,
         },
         body: JSON.stringify(dto),
     });
