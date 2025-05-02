@@ -3,7 +3,7 @@
 import { MCQ } from '@/model/interface/MCQ';
 import { CuratedArtWorkAttribute } from '@/model/interface/curatedArtwork-types';
 import { serverLogger } from '@/util/logger';
-import { Painting } from '../../model/interface/painting';
+import { Painting, Style } from '../../model/interface/painting';
 import {
     CreateQuizDTO,
     CreateUserDTO,
@@ -16,6 +16,7 @@ import { Quiz } from '../../model/interface/quiz';
 import { User } from '../../model/interface/user';
 import { ENUM_ONE_TIME_TOKEN_HEADER, ENUM_SECURITY_TOKEN_HEADER } from './api.backend.option';
 import { RequestQueryBuilder } from '@dataui/crud-request';
+import { Tag } from '../../model/interface/tag';
 
 // TODO: HTTP API 에러 핸들링 로직 추가
 // - [ ] : fetch()가 반환한 응답 상태 확인 및 에러 핸들링 로직 추가
@@ -314,4 +315,36 @@ export const recoverUser = async (email: string, securityJWT: string, securityJW
     }
 
     return true;
+};
+
+export const findTags = async (queryBuilder: RequestQueryBuilder): Promise<Tag[] | undefined> => {
+    const backendUrl = getServerUrl();
+    const url = `${backendUrl}/tag/`;
+    const response = await fetch(url + `?${queryBuilder.query()}`);
+
+    if (!response.ok) {
+        const result = await response.json();
+        serverLogger.error(`findTags fail. ${JSON.stringify(result, null, 2)}`);
+        return undefined;
+    }
+
+    const result: Tag[] = await response.json();
+    return result;
+};
+
+export const findStyles = async (
+    queryBuilder: RequestQueryBuilder,
+): Promise<Style[] | undefined> => {
+    const backendUrl = getServerUrl();
+    const url = `${backendUrl}/style/`;
+    const response = await fetch(url + `?${queryBuilder.query()}`);
+
+    if (!response.ok) {
+        const result = await response.json();
+        serverLogger.error(`findStyles fail. ${JSON.stringify(result, null, 2)}`);
+        return undefined;
+    }
+
+    const result: Style[] = await response.json();
+    return result;
 };
