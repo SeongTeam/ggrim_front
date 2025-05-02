@@ -9,12 +9,18 @@ import {
     CreateUserDTO,
     FindPaintingResult,
     FindQuizResult,
+    QuizReactionDTO,
     ReplacePassWordDTO,
     ReplaceUsernameDTO,
 } from './dto';
-import { Quiz } from '../../model/interface/quiz';
+import { Quiz, QuizDislike, QuizLike } from '../../model/interface/quiz';
 import { User } from '../../model/interface/user';
-import { ENUM_ONE_TIME_TOKEN_HEADER, ENUM_SECURITY_TOKEN_HEADER } from './api.backend.option';
+import {
+    ENUM_ONE_TIME_TOKEN_HEADER,
+    ENUM_SECURITY_TOKEN_HEADER,
+    QuizReactionType,
+    QuizSubmitDTO,
+} from './api.backend.option';
 import { RequestQueryBuilder } from '@dataui/crud-request';
 import { Tag } from '../../model/interface/tag';
 
@@ -162,6 +168,100 @@ export const addQuiz = async (jwt: string, dto: CreateQuizDTO): Promise<Quiz | u
     const result: Quiz = await response.json();
 
     return result;
+};
+
+export const submitQuiz = async (
+    quizID: string,
+    dto: QuizSubmitDTO,
+): Promise<boolean | undefined> => {
+    const backendUrl = getServerUrl();
+    const url = `${backendUrl}/quiz/submit/${quizID}`;
+
+    const response = await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(dto),
+    });
+
+    if (!response.ok) {
+        const result = await response.json();
+        serverLogger.error(`signUp fail. ${JSON.stringify(result, null, 2)}`);
+        return undefined;
+    }
+
+    const result: boolean = await response.json();
+    return result;
+};
+
+export const getQuizReactions = async (
+    quizID: string,
+    type: QuizReactionType,
+    page?: number,
+    findUserId?: string,
+): Promise<QuizDislike[] | QuizLike[] | undefined> => {
+    const backendUrl = getServerUrl();
+    const url = `${backendUrl}/quiz/${quizID}/reactions`;
+    const typeParam = `type=${type}`;
+    const pageParam = `page=${page}`;
+    const userIdParam = `user_id=${findUserId}`;
+    const response = await fetch(url + `?${typeParam}&${pageParam}&${userIdParam}`);
+
+    if (!response.ok) {
+        const result = await response.json();
+        serverLogger.error(`getQuizReactions fail. ${JSON.stringify(result, null, 2)}`);
+        return undefined;
+    }
+
+    const result: QuizDislike[] | QuizLike[] = await response.json();
+    return result;
+};
+
+export const addQuizReactions = async (
+    jwt: string,
+    quizID: string,
+    dto: QuizReactionDTO,
+): Promise<boolean | undefined> => {
+    const backendUrl = getServerUrl();
+    const url = `${backendUrl}/quiz/${quizID}/reactions`;
+    const headers = {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${jwt}`,
+    };
+    const response = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(dto),
+    });
+
+    if (!response.ok) {
+        const result = await response.json();
+        serverLogger.error(`getQuizReactions fail. ${JSON.stringify(result, null, 2)}`);
+        return undefined;
+    }
+
+    return true;
+};
+
+export const deleteQuizReaction = async (
+    jwt: string,
+    quizID: string,
+): Promise<boolean | undefined> => {
+    const backendUrl = getServerUrl();
+    const url = `${backendUrl}/quiz/${quizID}/reactions`;
+    const headers = {
+        Authorization: `Bearer ${jwt}`,
+    };
+    const response = await fetch(url, {
+        method: 'DELETE',
+        headers,
+    });
+
+    if (!response.ok) {
+        const result = await response.json();
+        serverLogger.error(`getQuizReactions fail. ${JSON.stringify(result, null, 2)}`);
+        return undefined;
+    }
+
+    return true;
 };
 
 export const signUp = async (

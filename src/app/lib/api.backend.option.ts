@@ -7,3 +7,14 @@ export const ENUM_ONE_TIME_TOKEN_HEADER = {
     X_ONE_TIME_TOKEN_ID: `x-one-time-token-identifier`,
     X_ONE_TIME_TOKEN: 'x-one-time-token-value',
 };
+
+export interface QuizSubmitDTO {
+    isCorrect: boolean;
+}
+
+export const QuizReactionTypeValues = {
+    LIKE: 'like',
+    DISLIKE: 'dislike',
+} as const;
+
+export type QuizReactionType = (typeof QuizReactionTypeValues)[keyof typeof QuizReactionTypeValues];

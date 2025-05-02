@@ -32,3 +32,27 @@ export interface ShortQuiz {
     updated_date: Date;
     owner: User;
 }
+
+export interface QuizLike {
+    id: string;
+
+    user: User;
+
+    user_id: string;
+
+    quiz: Quiz;
+
+    quiz_id: string;
+}
+
+export interface QuizDislike {
+    id: string;
+
+    user: User;
+
+    user_id: string;
+
+    quiz: Quiz;
+
+    quiz_id: string;
+}

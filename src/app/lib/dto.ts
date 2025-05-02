@@ -1,5 +1,6 @@
 import { ShortPainting } from '../../model/interface/painting';
 import { QUIZ_TYPE, ShortQuiz } from '../../model/interface/quiz';
+import { QuizReactionType } from './api.backend.option';
 
 export interface IPaginationResult<T> {
     data: T[];
@@ -25,6 +26,10 @@ export interface CreateQuizDTO {
     type: QUIZ_TYPE;
 
     description: string;
+}
+
+export class QuizReactionDTO {
+    type!: QuizReactionType;
 }
 
 export interface CreateUserDTO {
