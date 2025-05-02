@@ -1,5 +1,6 @@
 import { Artist, Painting, Style } from './painting';
 import { Tag } from './tag';
+import { User } from './user';
 
 export type QUIZ_TYPE = 'ONE_CHOICE' | 'MULTIPLE_CHOICE' | 'TRUE_FALSE';
 
@@ -20,4 +21,14 @@ export interface Quiz {
     tags: Tag;
     styles: Style;
     artist: Artist;
+}
+
+export interface ShortQuiz {
+    id: string;
+    title: string;
+
+    time_limit: number;
+    created_date: Date;
+    updated_date: Date;
+    owner: User;
 }
