@@ -1,20 +1,16 @@
-import { Painting } from '../../model/interface/painting';
-import { Quiz, QUIZ_TYPE } from '../../model/interface/quiz';
+import { ShortPainting } from '../../model/interface/painting';
+import { QUIZ_TYPE, ShortQuiz } from '../../model/interface/quiz';
 
-export interface FindPaintingResult {
-    data: Painting[];
-    isMore: boolean;
-    pagination: number;
+export interface IPaginationResult<T> {
+    data: T[];
     count: number;
+    pagination: number;
+    isMore?: boolean;
 }
 
-export interface FindQuizResult {
-    data: Quiz[];
-    isMore: boolean;
-    pagination: number;
-    count: number;
-}
+export type FindPaintingResult = IPaginationResult<ShortPainting>;
 
+export type FindQuizResult = IPaginationResult<ShortQuiz>;
 export interface CreateQuizDTO {
     answerPaintingIds: string[];
 
