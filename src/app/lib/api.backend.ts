@@ -164,7 +164,11 @@ export const addQuiz = async (jwt: string, dto: CreateQuizDTO): Promise<Quiz | u
     return result;
 };
 
-export const signUp = async (jwt: string, jwtID: string, dto: CreateUserDTO) => {
+export const signUp = async (
+    jwt: string,
+    jwtID: string,
+    dto: CreateUserDTO,
+): Promise<User | undefined> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/user`;
 
@@ -247,7 +251,11 @@ export const updateUserPW = async (
     return true;
 };
 
-export const updateUserUsername = async (user: User, jwt: string, dto: ReplaceUsernameDTO) => {
+export const updateUserUsername = async (
+    user: User,
+    jwt: string,
+    dto: ReplaceUsernameDTO,
+): Promise<boolean> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/user/${user.email}/username`;
     const headers: HeadersInit = {
