@@ -4,8 +4,17 @@ import { MCQ } from '@/model/interface/MCQ';
 import { CuratedArtWorkAttribute } from '@/model/interface/curatedArtwork-types';
 import { serverLogger } from '@/util/logger';
 import { Painting } from '../../model/interface/painting';
-import { CreateQuizDTO, FindPaintingResult, FindQuizResult } from './dto';
+import {
+    CreateQuizDTO,
+    CreateUserDTO,
+    FindPaintingResult,
+    FindQuizResult,
+    ReplacePassWordDTO,
+    ReplaceUsernameDTO,
+} from './dto';
 import { Quiz } from '../../model/interface/quiz';
+import { User } from '../../model/interface/user';
+import { ENUM_ONE_TIME_TOKEN_HEADER, ENUM_SECURITY_TOKEN_HEADER } from './api.backend.option';
 
 // TODO: HTTP API 에러 핸들링 로직 추가
 // - [ ] : fetch()가 반환한 응답 상태 확인 및 에러 핸들링 로직 추가
@@ -151,4 +160,131 @@ export const addQuiz = async (jwt: string, dto: CreateQuizDTO): Promise<Quiz | u
     const result: Quiz = await response.json();
 
     return result;
+};
+
+export const signUp = async (jwt: string, jwtID: string, dto: CreateUserDTO) => {
+    const backendUrl = getServerUrl();
+    const url = `${backendUrl}/user`;
+
+    const headers = {
+        'Content-Type': 'application/json',
+        [ENUM_ONE_TIME_TOKEN_HEADER.X_ONE_TIME_TOKEN]: jwt,
+        [ENUM_ONE_TIME_TOKEN_HEADER.X_ONE_TIME_TOKEN_ID]: jwtID,
+    };
+    const response = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(dto),
+    });
+
+    if (!response.ok) {
+        const result = await response.json();
+        serverLogger.error(`signUp fail. ${JSON.stringify(result, null, 2)}`);
+        return undefined;
+    }
+
+    const result: User = await response.json();
+    return result;
+};
+
+// export const findUser
+
+// export const findUsers
+
+export const updateUserPW = async (
+    user: User,
+    securityJWT: string,
+    securityJWTId: string,
+    dto: ReplacePassWordDTO,
+): Promise<boolean> => {
+    const backendUrl = getServerUrl();
+    const url = `${backendUrl}/user/${user.email}/password`;
+    const headers = {
+        'Content-Type': 'application/json',
+        [ENUM_SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN_ID]: securityJWT,
+        [ENUM_SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN]: securityJWTId,
+    };
+    const response = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(dto),
+    });
+
+    if (!response.ok) {
+        const result = await response.json();
+        serverLogger.error(`updateUserPW fail. ${JSON.stringify(result, null, 2)}`);
+        return false;
+    }
+
+    return true;
+};
+
+export const updateUserUsername = async (user: User, jwt: string, dto: ReplaceUsernameDTO) => {
+    const backendUrl = getServerUrl();
+    const url = `${backendUrl}/user/${user.email}/username`;
+    const headers: HeadersInit = {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${jwt}`,
+    };
+    const response = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(dto),
+    });
+
+    if (!response.ok) {
+        const result = await response.json();
+        serverLogger.error(`updateUserUsername fail. ${JSON.stringify(result, null, 2)}`);
+        return false;
+    }
+
+    return true;
+};
+
+export const deleteUser = async (
+    user: User,
+    securityJWT: string,
+    securityJWTId: string,
+): Promise<boolean> => {
+    const backendUrl = getServerUrl();
+    const url = `${backendUrl}/user/${user.email}`;
+    const headers = {
+        'Content-Type': 'application/json',
+        [ENUM_SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN_ID]: securityJWT,
+        [ENUM_SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN]: securityJWTId,
+    };
+    const response = await fetch(url, {
+        method: 'DELETE',
+        headers,
+    });
+
+    if (!response.ok) {
+        const result = await response.json();
+        serverLogger.error(`deleteUser fail. ${JSON.stringify(result, null, 2)}`);
+        return false;
+    }
+
+    return true;
+};
+
+export const recoverUser = async (email: string, securityJWT: string, securityJWTId: string) => {
+    const backendUrl = getServerUrl();
+    const url = `${backendUrl}/user/recover/${email}`;
+    const headers = {
+        'Content-Type': 'application/json',
+        [ENUM_SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN_ID]: securityJWT,
+        [ENUM_SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN]: securityJWTId,
+    };
+    const response = await fetch(url, {
+        method: 'PATCH',
+        headers,
+    });
+
+    if (!response.ok) {
+        const result = await response.json();
+        serverLogger.error(`updateUserPW fail. ${JSON.stringify(result, null, 2)}`);
+        return false;
+    }
+
+    return true;
 };
