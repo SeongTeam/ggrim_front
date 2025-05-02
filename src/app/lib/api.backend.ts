@@ -15,6 +15,7 @@ import {
 import { Quiz } from '../../model/interface/quiz';
 import { User } from '../../model/interface/user';
 import { ENUM_ONE_TIME_TOKEN_HEADER, ENUM_SECURITY_TOKEN_HEADER } from './api.backend.option';
+import { RequestQueryBuilder } from '@dataui/crud-request';
 
 // TODO: HTTP API 에러 핸들링 로직 추가
 // - [ ] : fetch()가 반환한 응답 상태 확인 및 에러 핸들링 로직 추가
@@ -187,9 +188,35 @@ export const signUp = async (jwt: string, jwtID: string, dto: CreateUserDTO) => 
     return result;
 };
 
-// export const findUser
+export const getUser = async (id: string): Promise<User | undefined> => {
+    const backendUrl = getServerUrl();
+    const url = `${backendUrl}/user/`;
+    const response = await fetch(url + `/${id}`);
 
-// export const findUsers
+    if (!response.ok) {
+        const result = await response.json();
+        serverLogger.error(`getUser fail. ${JSON.stringify(result, null, 2)}`);
+        return undefined;
+    }
+
+    const result: User = await response.json();
+    return result;
+};
+
+export const findUsers = async (queryBuilder: RequestQueryBuilder): Promise<User[] | undefined> => {
+    const backendUrl = getServerUrl();
+    const url = `${backendUrl}/user/`;
+    const response = await fetch(url + `?${queryBuilder.query()}`);
+
+    if (!response.ok) {
+        const result = await response.json();
+        serverLogger.error(`findUsers fail. ${JSON.stringify(result, null, 2)}`);
+        return undefined;
+    }
+
+    const result: User[] = await response.json();
+    return result;
+};
 
 export const updateUserPW = async (
     user: User,
