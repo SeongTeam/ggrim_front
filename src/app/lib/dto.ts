@@ -1,6 +1,8 @@
 import { ShortPainting } from '../../model/interface/painting';
 import { QUIZ_TYPE, ShortQuiz } from '../../model/interface/quiz';
 import { QuizReactionType } from './api.backend.option';
+import { QuizStatus } from './api.quiz';
+import { QuizContext } from './api.quiz.scheduler';
 
 export interface IPaginationResult<T> {
     data: T[];
@@ -50,4 +52,11 @@ export interface ReplacePassWordDTO {
 
 export interface ReplaceUsernameDTO {
     username: string;
+}
+
+export type QuizContextDTO = QuizContext;
+
+export interface ResponseQuizDTO {
+    shortQuiz: ShortQuiz;
+    status: QuizStatus;
 }

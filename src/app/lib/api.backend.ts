@@ -9,9 +9,11 @@ import {
     CreateUserDTO,
     FindPaintingResult,
     FindQuizResult,
+    QuizContextDTO,
     QuizReactionDTO,
     ReplacePassWordDTO,
     ReplaceUsernameDTO,
+    ResponseQuizDTO,
 } from './dto';
 import { Quiz, QuizDislike, QuizLike } from '../../model/interface/quiz';
 import { User } from '../../model/interface/user';
@@ -262,6 +264,44 @@ export const deleteQuizReaction = async (
     }
 
     return true;
+};
+
+export const scheduleQuiz = async (
+    context?: QuizContextDTO,
+    currentIndex?: number,
+    endIndex?: number,
+): Promise<ResponseQuizDTO | undefined> => {
+    const backendUrl = getServerUrl();
+    const url = `${backendUrl}/quiz/schedule`;
+    const currentIndexParam = `currentIndex=${currentIndex}`;
+    const endIndexParam = `endIndex=${endIndex}`;
+    const contextParam = `context=` + JSON.stringify(context);
+    const response = await fetch(url + `?${currentIndexParam}&${endIndexParam}&${contextParam}`);
+
+    if (!response.ok) {
+        const result = await response.json();
+        serverLogger.error(`getQuizReactions fail. ${JSON.stringify(result, null, 2)}`);
+        return undefined;
+    }
+    const result: ResponseQuizDTO = await response.json();
+    return result;
+};
+
+export const addQuizContext = async (dto: QuizContextDTO): Promise<boolean | undefined> => {
+    const backendUrl = getServerUrl();
+    const url = `${backendUrl}/quiz/schedule`;
+    const response = await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(dto),
+    });
+
+    if (!response.ok) {
+        const result = await response.json();
+        serverLogger.error(`getQuizReactions fail. ${JSON.stringify(result, null, 2)}`);
+        return undefined;
+    }
+    const result: boolean = await response.json();
+    return result;
 };
 
 export const signUp = async (
