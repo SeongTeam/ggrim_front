@@ -1,5 +1,6 @@
 import { ShortPainting } from '../../model/interface/painting';
 import { QUIZ_TYPE, ShortQuiz } from '../../model/interface/quiz';
+import { OneTimeTokenPurpose } from './api.backend';
 import { QuizReactionType } from './api.backend.option';
 import { QuizStatus } from './api.quiz';
 import { QuizContext } from './api.quiz.scheduler';
@@ -59,4 +60,29 @@ export type QuizContextDTO = QuizContext;
 export interface ResponseQuizDTO {
     shortQuiz: ShortQuiz;
     status: QuizStatus;
+}
+
+export interface SignInResponse {
+    accessToken: string;
+    refreshToken: string;
+    email: string;
+}
+
+export interface requestVerificationDTO {
+    email: string;
+}
+
+export interface VerifyDTO extends requestVerificationDTO {
+    pinCode: string;
+}
+
+export interface CreateOneTimeTokenDTO {
+    purpose: OneTimeTokenPurpose;
+}
+
+export class SendOneTimeTokenDTO {
+    email!: string;
+
+    // @IsInArray([OneTimeTokenPurposeValues.UPDATE_PASSWORD, OneTimeTokenPurposeValues.RECOVER_ACCOUNT])
+    purpose!: OneTimeTokenPurpose;
 }
