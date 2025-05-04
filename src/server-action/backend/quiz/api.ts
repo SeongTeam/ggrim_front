@@ -2,6 +2,7 @@ import { getServerUrl } from '..';
 import { MCQ } from '../../../model/interface/MCQ';
 import { Quiz, QuizDislike, QuizLike } from '../../../model/interface/quiz';
 import { serverLogger } from '../../../util/logger';
+import { getSignInResponseOrRedirect } from '../cookie';
 import {
     CreateQuizDTO,
     FindQuizResult,
@@ -53,14 +54,17 @@ export const getQuiz = async (id: string): Promise<Quiz> => {
     return result;
 };
 
-export const addQuiz = async (jwt: string, dto: CreateQuizDTO): Promise<Quiz | undefined> => {
+export const addQuiz = async (dto: CreateQuizDTO): Promise<Quiz | undefined> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/quiz`;
+
+    const signInResponse = getSignInResponseOrRedirect();
+
     const response = await fetch(url, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${jwt}`,
+            Authorization: `Bearer ${signInResponse.accessToken}`,
         },
         body: JSON.stringify(dto),
     });
@@ -121,15 +125,17 @@ export const getQuizReactions = async (
 };
 
 export const addQuizReactions = async (
-    jwt: string,
     quizID: string,
     dto: QuizReactionDTO,
 ): Promise<boolean | undefined> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/quiz/${quizID}/reactions`;
+
+    const signInResponse = getSignInResponseOrRedirect();
+
     const headers = {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${jwt}`,
+        Authorization: `Bearer ${signInResponse.accessToken}`,
     };
     const response = await fetch(url, {
         method: 'POST',
@@ -146,14 +152,14 @@ export const addQuizReactions = async (
     return true;
 };
 
-export const deleteQuizReaction = async (
-    jwt: string,
-    quizID: string,
-): Promise<boolean | undefined> => {
+export const deleteQuizReaction = async (quizID: string): Promise<boolean | undefined> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/quiz/${quizID}/reactions`;
+
+    const signInResponse = getSignInResponseOrRedirect();
+
     const headers = {
-        Authorization: `Bearer ${jwt}`,
+        Authorization: `Bearer ${signInResponse.accessToken}`,
     };
     const response = await fetch(url, {
         method: 'DELETE',

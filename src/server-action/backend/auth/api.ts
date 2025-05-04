@@ -4,12 +4,13 @@ import {
     CreateOneTimeTokenDTO,
     requestVerificationDTO,
     SendOneTimeTokenDTO,
-    SignInResponse,
     VerifyDTO,
 } from './dto';
-import { OneTimeToken } from './type';
+import { OneTimeToken, SignInResponse } from './type';
+import { setOneTimeToken, setSignInResponse } from '../cookie';
 
-export const signIn = async (id: string, password: string): Promise<SignInResponse | undefined> => {
+//TODO : 사용자 정보를 반환하도록 수정하기
+export const signIn = async (id: string, password: string): Promise<boolean | undefined> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/auth/sign-in`;
     const credentials = btoa(`${id}:${password}`);
@@ -30,7 +31,10 @@ export const signIn = async (id: string, password: string): Promise<SignInRespon
     }
 
     const result: SignInResponse = await response.json();
-    return result;
+
+    setSignInResponse(result);
+
+    return true;
 };
 
 export const requestVerification = async (
@@ -57,7 +61,7 @@ export const requestVerification = async (
     return true;
 };
 
-export const verifyEmail = async (dto: VerifyDTO): Promise<OneTimeToken | undefined> => {
+export const verifyEmail = async (dto: VerifyDTO): Promise<boolean | undefined> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/auth/verify`;
     const headers = {
@@ -77,7 +81,10 @@ export const verifyEmail = async (dto: VerifyDTO): Promise<OneTimeToken | undefi
     }
 
     const result: OneTimeToken = await response.json();
-    return result;
+
+    setOneTimeToken(result);
+
+    return true;
 };
 
 export const generateSecurityToken = async (
@@ -105,6 +112,9 @@ export const generateSecurityToken = async (
     }
 
     const result: OneTimeToken = await response.json();
+
+    setOneTimeToken(result);
+
     return result;
 };
 

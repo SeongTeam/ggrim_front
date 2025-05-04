@@ -1,11 +1,5 @@
 import { OneTimeTokenPurpose } from './type';
 
-export interface SignInResponse {
-    accessToken: string;
-    refreshToken: string;
-    email: string;
-}
-
 export interface requestVerificationDTO {
     email: string;
 }

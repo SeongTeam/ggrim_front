@@ -4,19 +4,18 @@ import { User } from '../../../model/interface/user';
 import { serverLogger } from '../../../util/logger';
 import { ENUM_ONE_TIME_TOKEN_HEADER, ENUM_SECURITY_TOKEN_HEADER } from '../auth/header';
 import { CreateUserDTO, ReplacePassWordDTO, ReplaceUsernameDTO } from './dto';
+import { getOneTimeTokenOrRedirect, getSignInResponseOrRedirect } from '../cookie';
 
-export const signUp = async (
-    jwt: string,
-    jwtID: string,
-    dto: CreateUserDTO,
-): Promise<User | undefined> => {
+export const signUp = async (dto: CreateUserDTO): Promise<User | undefined> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/user`;
 
+    const oneTimeToken = getOneTimeTokenOrRedirect();
+
     const headers = {
         'Content-Type': 'application/json',
-        [ENUM_ONE_TIME_TOKEN_HEADER.X_ONE_TIME_TOKEN]: jwt,
-        [ENUM_ONE_TIME_TOKEN_HEADER.X_ONE_TIME_TOKEN_ID]: jwtID,
+        [ENUM_ONE_TIME_TOKEN_HEADER.X_ONE_TIME_TOKEN]: oneTimeToken.token,
+        [ENUM_ONE_TIME_TOKEN_HEADER.X_ONE_TIME_TOKEN_ID]: oneTimeToken.id,
     };
     const response = await fetch(url, {
         method: 'POST',
@@ -64,18 +63,16 @@ export const findUsers = async (queryBuilder: RequestQueryBuilder): Promise<User
     return result;
 };
 
-export const updateUserPW = async (
-    user: User,
-    securityJWT: string,
-    securityJWTId: string,
-    dto: ReplacePassWordDTO,
-): Promise<boolean> => {
+export const updateUserPW = async (user: User, dto: ReplacePassWordDTO): Promise<boolean> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/user/${user.email}/password`;
+
+    const oneTimeToken = getOneTimeTokenOrRedirect();
+
     const headers = {
         'Content-Type': 'application/json',
-        [ENUM_SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN_ID]: securityJWT,
-        [ENUM_SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN]: securityJWTId,
+        [ENUM_SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN_ID]: oneTimeToken.token,
+        [ENUM_SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN]: oneTimeToken.id,
     };
     const response = await fetch(url, {
         method: 'POST',
@@ -92,16 +89,14 @@ export const updateUserPW = async (
     return true;
 };
 
-export const updateUserUsername = async (
-    user: User,
-    jwt: string,
-    dto: ReplaceUsernameDTO,
-): Promise<boolean> => {
+export const updateUserUsername = async (user: User, dto: ReplaceUsernameDTO): Promise<boolean> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/user/${user.email}/username`;
+
+    const signInResponse = getSignInResponseOrRedirect();
     const headers: HeadersInit = {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${jwt}`,
+        Authorization: `Bearer ${signInResponse.accessToken}`,
     };
     const response = await fetch(url, {
         method: 'POST',
@@ -118,17 +113,16 @@ export const updateUserUsername = async (
     return true;
 };
 
-export const deleteUser = async (
-    user: User,
-    securityJWT: string,
-    securityJWTId: string,
-): Promise<boolean> => {
+export const deleteUser = async (user: User): Promise<boolean> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/user/${user.email}`;
+
+    const oneTimeToken = getOneTimeTokenOrRedirect();
+
     const headers = {
         'Content-Type': 'application/json',
-        [ENUM_SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN_ID]: securityJWT,
-        [ENUM_SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN]: securityJWTId,
+        [ENUM_SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN_ID]: oneTimeToken.token,
+        [ENUM_SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN]: oneTimeToken.id,
     };
     const response = await fetch(url, {
         method: 'DELETE',
@@ -144,13 +138,16 @@ export const deleteUser = async (
     return true;
 };
 
-export const recoverUser = async (email: string, securityJWT: string, securityJWTId: string) => {
+export const recoverUser = async (email: string) => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/user/recover/${email}`;
+
+    const oneTimeToken = getOneTimeTokenOrRedirect();
+
     const headers = {
         'Content-Type': 'application/json',
-        [ENUM_SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN_ID]: securityJWT,
-        [ENUM_SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN]: securityJWTId,
+        [ENUM_SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN_ID]: oneTimeToken.token,
+        [ENUM_SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN]: oneTimeToken.id,
     };
     const response = await fetch(url, {
         method: 'PATCH',

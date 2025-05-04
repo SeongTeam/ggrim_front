@@ -18,3 +18,9 @@ export interface OneTimeToken {
     expired_date: Date;
     purpose: OneTimeTokenPurpose;
 }
+
+export interface SignInResponse {
+    accessToken: string;
+    refreshToken: string;
+    email: string;
+}
