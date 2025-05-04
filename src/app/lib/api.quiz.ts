@@ -2,9 +2,9 @@
 
 import { randomInt } from 'crypto';
 import { Quiz } from '../../model/interface/quiz';
-import { findQuiz } from './api.backend';
+import { findQuiz } from '../../api/api.backend';
 import { QuizContext, SingletonQuizContextScheduler } from './api.quiz.scheduler';
-import { FindQuizResult } from './dto';
+import { FindQuizResult } from '../../api/dto';
 import { serverLogger } from '../../util/logger';
 import { Painting } from '../../model/interface/painting';
 

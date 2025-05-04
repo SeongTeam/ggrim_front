@@ -1,9 +1,9 @@
-import { ShortPainting } from '../../model/interface/painting';
-import { QUIZ_TYPE, ShortQuiz } from '../../model/interface/quiz';
+import { ShortPainting } from '../model/interface/painting';
+import { QUIZ_TYPE, ShortQuiz } from '../model/interface/quiz';
 import { OneTimeTokenPurpose } from './api.backend';
 import { QuizReactionType } from './api.backend.option';
-import { QuizStatus } from './api.quiz';
-import { QuizContext } from './api.quiz.scheduler';
+import { QuizStatus } from '../app/lib/api.quiz';
+import { QuizContext } from '../app/lib/api.quiz.scheduler';
 
 export interface IPaginationResult<T> {
     data: T[];

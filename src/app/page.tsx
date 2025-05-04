@@ -1,7 +1,7 @@
 // import { Navbar } from '@/components';
 import { ArtworkCarousel } from '../components/home/artworkCarousel';
 import { CuratedArtWorkAttribute } from '@/model/interface/curatedArtwork-types';
-import { getWeekArtWorkData } from '@/app/lib/api.backend';
+import { getWeekArtWorkData } from '@/api/api.backend';
 import ScrollTriggerNavigator from '../components/quiz/ScrollTriggerNavigator';
 import { getQuizIDByContext } from './lib/api.quiz';
 import { Quiz } from '../model/interface/quiz';

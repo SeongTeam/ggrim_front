@@ -5,8 +5,8 @@ import HoverCard from "../HoverCard";
 import { PreviewPainting } from '../PreviewPainting';
 import { Modal } from "../Modal";
 import { PaintingDetailView } from "../PaintingDetailView";
-import { findPainting, getPainting } from "../../app/lib/api.backend";
-import { FindPaintingResult } from '@/app/lib/dto';
+import { findPainting, getPainting } from "../../api/api.backend";
+import { FindPaintingResult } from '@/api/dto';
 import { useSearchParams } from "next/navigation";
 import { throttle } from "../../util/optimization";
 

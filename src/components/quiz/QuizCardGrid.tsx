@@ -1,7 +1,7 @@
 'use client';
 import { MutableRefObject, useEffect, useRef, useState } from "react";
-import {  findQuiz } from "../../app/lib/api.backend";
-import { FindQuizResult } from '@/app/lib/dto';
+import {  findQuiz } from "../../api/api.backend";
+import { FindQuizResult } from '@/api/dto';
 import { throttle } from "../../util/optimization";
 import { Quiz } from "../../model/interface/quiz";
 import { QuizCard } from "../QuizCard";

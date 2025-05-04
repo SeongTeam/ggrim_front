@@ -3,7 +3,7 @@
 import { MCQ } from '@/model/interface/MCQ';
 import { CuratedArtWorkAttribute } from '@/model/interface/curatedArtwork-types';
 import { serverLogger } from '@/util/logger';
-import { Painting, Style } from '../../model/interface/painting';
+import { Painting, Style } from '../model/interface/painting';
 import {
     CreateOneTimeTokenDTO,
     CreateQuizDTO,
@@ -20,8 +20,8 @@ import {
     SignInResponse,
     VerifyDTO,
 } from './dto';
-import { Quiz, QuizDislike, QuizLike } from '../../model/interface/quiz';
-import { User } from '../../model/interface/user';
+import { Quiz, QuizDislike, QuizLike } from '../model/interface/quiz';
+import { User } from '../model/interface/user';
 import {
     ENUM_ONE_TIME_TOKEN_HEADER,
     ENUM_SECURITY_TOKEN_HEADER,
@@ -29,7 +29,7 @@ import {
     QuizSubmitDTO,
 } from './api.backend.option';
 import { RequestQueryBuilder } from '@dataui/crud-request';
-import { Tag } from '../../model/interface/tag';
+import { Tag } from '../model/interface/tag';
 
 // TODO: HTTP API 에러 핸들링 로직 추가
 // - [ ] : fetch()가 반환한 응답 상태 확인 및 에러 핸들링 로직 추가
