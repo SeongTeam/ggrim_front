@@ -1,8 +1,8 @@
 import React, { Suspense } from "react";
-import { findPainting } from "../../server-action/api.backend";
-import { FindPaintingResult } from '../../server-action/dto';
 import { PaintingCardGrid } from "../../components/search/PaintingCardGrid";
 import { serverLogger } from "../../util/logger";
+import { FindPaintingResult } from "../../server-action/backend/painting/dto";
+import { findPainting } from "../../server-action/backend/painting/api";
 
 
 // TODO: Search Page 개선
