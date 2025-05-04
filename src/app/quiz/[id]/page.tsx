@@ -1,6 +1,6 @@
 import { DetailQuiz } from '@/components/quiz/DetailQuiz'
 import { Quiz } from '../../../model/interface/quiz';
-import { getQuiz } from '../../../api/api.backend';
+import { getQuiz } from '../../../server-action/api.backend';
 
 interface QuizDetailPageProps {
     params: { id: string };

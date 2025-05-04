@@ -1,6 +1,6 @@
-import { findQuiz } from '../../api/api.backend';
+import { findQuiz } from '../../server-action/api.backend';
 import { QuizCardGrid } from '../../components/quiz/QuizCardGrid';
-import { FindQuizResult } from '../../api/dto';
+import { FindQuizResult } from '../../server-action/dto';
 
 
 export default async function QuizListPage() {

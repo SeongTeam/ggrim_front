@@ -3,7 +3,7 @@
 import { assertOrLog } from '../../util/debug';
 import { serverLogger } from '../../util/logger';
 import { Mutex, MutexInterface, withTimeout } from 'async-mutex';
-import { getWeekArtWorkData } from '../../api/api.backend';
+import { getWeekArtWorkData } from '../../server-action/api.backend';
 import { TaskSyncQueue } from '../../util/taskSyncQueue';
 
 export interface QuizContext {

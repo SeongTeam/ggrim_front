@@ -1,9 +1,9 @@
 'use client'
 import {  FormEvent,  useEffect, useRef, useState } from "react";
 import { Painting } from "../../model/interface/painting";
-import { addQuiz, getPainting } from "../../api/api.backend";
+import { addQuiz, getPainting } from "../../server-action/api.backend";
 import { Card } from "../card";
-import { CreateQuizDTO } from "../../api/dto";
+import { CreateQuizDTO } from "../../server-action/dto";
 import { Quiz } from "../../model/interface/quiz";
 import { useRouter } from "next/navigation";
 import AlertModal from "../home/components/AlertModal";
