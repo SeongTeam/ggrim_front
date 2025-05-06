@@ -7,7 +7,7 @@ import {
     VerifyDTO,
 } from './dto';
 import { OneTimeToken, SignInResponse } from './type';
-import { setOneTimeToken, setSignInResponse } from '../cookie';
+import { deleteSignInResponse, setOneTimeToken, setSignInResponse } from '../cookie';
 
 //TODO : 사용자 정보를 반환하도록 수정하기
 export const signIn = async (id: string, password: string): Promise<boolean | undefined> => {
@@ -139,4 +139,8 @@ export const sendSecurityTokenToEmail = async (
     }
 
     return true;
+};
+
+export const signOut = async () => {
+    deleteSignInResponse();
 };

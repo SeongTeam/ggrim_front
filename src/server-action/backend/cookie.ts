@@ -51,3 +51,9 @@ export function setSignInResponse(signInResponse: SignInResponse): void {
         sameSite: 'lax',
     });
 }
+
+export function deleteSignInResponse(): ResponseCookies {
+    const cookieStore = cookies();
+    const result = cookieStore.delete(ENUM_COOKIE_KEY.SIGN_IN_RESPONSE);
+    return result;
+}
