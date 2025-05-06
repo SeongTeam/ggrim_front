@@ -3,6 +3,7 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { OneTimeToken, SignInResponse } from './auth/type';
+import { ResponseCookies } from 'next/dist/compiled/@edge-runtime/cookies';
 
 export const ENUM_COOKIE_KEY = {
     SIGN_IN_RESPONSE: 'SignInResponse',
@@ -35,7 +36,7 @@ export function getSignInResponseOrRedirect(): SignInResponse {
 export function setOneTimeToken(oneTimeToken: OneTimeToken): void {
     const cookieStore = cookies();
     cookieStore.set(ENUM_COOKIE_KEY.ONE_TIME_TOKEN, JSON.stringify(oneTimeToken), {
-        maxAge: 10 * 60, // 확인필요
+        maxAge: 15 * 60, // 확인필요
         secure: Boolean(process.env.COOKIE_SECURE) ?? true,
         httpOnly: Boolean(process.env.COOKIE_HTTP_ONLY) ?? true,
         sameSite: 'lax',
