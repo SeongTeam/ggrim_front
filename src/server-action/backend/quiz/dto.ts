@@ -1,8 +1,6 @@
-import { IPaginationResult } from '..';
-import { QuizStatus } from '../../../app/lib/api.quiz';
-import { QuizContext } from '../../../app/lib/api.quiz.scheduler';
 import { QUIZ_TYPE, ShortQuiz } from '../../../model/interface/quiz';
-import { QuizReactionType } from './type';
+import { IPaginationResult } from '../common.dto';
+import { QuizContext, QuizReactionType, QuizStatus } from './type';
 export type FindQuizResult = IPaginationResult<ShortQuiz>;
 export interface CreateQuizDTO {
     answerPaintingIds: string[];

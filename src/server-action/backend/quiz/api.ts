@@ -1,4 +1,4 @@
-import { getServerUrl } from '..';
+import { getServerUrl, withErrorHandler } from '../util';
 import { MCQ } from '../../../model/interface/MCQ';
 import { Quiz, QuizDislike, QuizLike } from '../../../model/interface/quiz';
 import { serverLogger } from '../../../util/logger';
@@ -12,8 +12,9 @@ import {
     ResponseQuizDTO,
 } from './dto';
 import { QuizReactionType } from './type';
+import { HttpException } from '../common.dto';
 
-export const getMCQData = async (): Promise<MCQ[]> => {
+const getMCQData = async (): Promise<MCQ[] | HttpException> => {
     // const response = await fetch('http://localhost:4000/api/mcq', {
     //     cache: 'no-cache',
     // });  // src/data에 파일을 읽어 올 때 사용
@@ -24,15 +25,21 @@ export const getMCQData = async (): Promise<MCQ[]> => {
         cache: 'no-cache',
     }); // 서버에 있는 데이터 읽어 올때 사용
     const res = await response.json();
+
+    if (!res.ok) {
+        const error: HttpException = await response.json();
+        return error;
+    }
+
     return res.data;
 };
 
-export const findQuiz = async (
+const findQuiz = async (
     artists: string[] = [],
     tags: string[] = [],
     styles: string[] = [],
     page: number = 0,
-): Promise<FindQuizResult> => {
+): Promise<FindQuizResult | HttpException> => {
     const backendUrl = getServerUrl();
     const artistsParam = artists.map((a) => `artists[]=${a}`).join('&');
     const tagParam = tags.map((t) => `tags[]=${t}`).join('&');
@@ -40,11 +47,15 @@ export const findQuiz = async (
     const url = `${backendUrl}/quiz?${artistsParam}&${tagParam}&${styleParam}&page=${page}`;
     serverLogger.info(`[findQuiz] url=${url}`);
     const response = await fetch(url);
+    if (!response.ok) {
+        const error: HttpException = await response.json();
+        return error;
+    }
     const result: FindQuizResult = await response.json();
     return result;
 };
 
-export const getQuiz = async (id: string): Promise<Quiz> => {
+const getQuiz = async (id: string): Promise<Quiz> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/quiz/${id}`;
     serverLogger.info(`[getQuiz] url=${url}`);
@@ -54,7 +65,7 @@ export const getQuiz = async (id: string): Promise<Quiz> => {
     return result;
 };
 
-export const addQuiz = async (dto: CreateQuizDTO): Promise<Quiz | undefined> => {
+const addQuiz = async (dto: CreateQuizDTO): Promise<Quiz | HttpException> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/quiz`;
 
@@ -70,19 +81,15 @@ export const addQuiz = async (dto: CreateQuizDTO): Promise<Quiz | undefined> => 
     });
 
     if (!response.ok) {
-        const result = await response.json();
-        serverLogger.error(`add Quiz fail. ${JSON.stringify(result, null, 2)}`);
-        return undefined;
+        const error: HttpException = await response.json();
+        return error;
     }
     const result: Quiz = await response.json();
 
     return result;
 };
 
-export const submitQuiz = async (
-    quizID: string,
-    dto: QuizSubmitDTO,
-): Promise<boolean | undefined> => {
+const submitQuiz = async (quizID: string, dto: QuizSubmitDTO): Promise<boolean | HttpException> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/quiz/submit/${quizID}`;
 
@@ -92,16 +99,15 @@ export const submitQuiz = async (
     });
 
     if (!response.ok) {
-        const result = await response.json();
-        serverLogger.error(`signUp fail. ${JSON.stringify(result, null, 2)}`);
-        return undefined;
+        const error: HttpException = await response.json();
+        return error;
     }
 
     const result: boolean = await response.json();
     return result;
 };
 
-export const getQuizReactions = async (
+const getQuizReactions = async (
     quizID: string,
     type: QuizReactionType,
     page?: number,
@@ -124,10 +130,10 @@ export const getQuizReactions = async (
     return result;
 };
 
-export const addQuizReactions = async (
+const addQuizReactions = async (
     quizID: string,
     dto: QuizReactionDTO,
-): Promise<boolean | undefined> => {
+): Promise<boolean | HttpException> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/quiz/${quizID}/reactions`;
 
@@ -144,15 +150,14 @@ export const addQuizReactions = async (
     });
 
     if (!response.ok) {
-        const result = await response.json();
-        serverLogger.error(`getQuizReactions fail. ${JSON.stringify(result, null, 2)}`);
-        return undefined;
+        const error: HttpException = await response.json();
+        return error;
     }
 
     return true;
 };
 
-export const deleteQuizReaction = async (quizID: string): Promise<boolean | undefined> => {
+const deleteQuizReaction = async (quizID: string): Promise<boolean | HttpException> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/quiz/${quizID}/reactions`;
 
@@ -167,19 +172,18 @@ export const deleteQuizReaction = async (quizID: string): Promise<boolean | unde
     });
 
     if (!response.ok) {
-        const result = await response.json();
-        serverLogger.error(`getQuizReactions fail. ${JSON.stringify(result, null, 2)}`);
-        return undefined;
+        const error: HttpException = await response.json();
+        return error;
     }
 
     return true;
 };
 
-export const scheduleQuiz = async (
+const scheduleQuiz = async (
     context?: QuizContextDTO,
     currentIndex?: number,
     endIndex?: number,
-): Promise<ResponseQuizDTO | undefined> => {
+): Promise<ResponseQuizDTO | HttpException> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/quiz/schedule`;
     const currentIndexParam = `currentIndex=${currentIndex}`;
@@ -188,15 +192,14 @@ export const scheduleQuiz = async (
     const response = await fetch(url + `?${currentIndexParam}&${endIndexParam}&${contextParam}`);
 
     if (!response.ok) {
-        const result = await response.json();
-        serverLogger.error(`getQuizReactions fail. ${JSON.stringify(result, null, 2)}`);
-        return undefined;
+        const error: HttpException = await response.json();
+        return error;
     }
     const result: ResponseQuizDTO = await response.json();
     return result;
 };
 
-export const addQuizContext = async (dto: QuizContextDTO): Promise<boolean | undefined> => {
+const addQuizContext = async (dto: QuizContextDTO): Promise<boolean | HttpException> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/quiz/schedule`;
     const response = await fetch(url, {
@@ -205,10 +208,28 @@ export const addQuizContext = async (dto: QuizContextDTO): Promise<boolean | und
     });
 
     if (!response.ok) {
-        const result = await response.json();
-        serverLogger.error(`getQuizReactions fail. ${JSON.stringify(result, null, 2)}`);
-        return undefined;
+        const error: HttpException = await response.json();
+        return error;
     }
     const result: boolean = await response.json();
     return result;
 };
+
+export const getMCQDataAction = withErrorHandler(getMCQData);
+
+export const findQuizAction = withErrorHandler(findQuiz);
+export const getQuizAction = withErrorHandler(getQuiz);
+
+export const getQuizReactionsAction = withErrorHandler(getQuizReactions);
+
+export const addQuizAction = withErrorHandler(addQuiz);
+
+export const submitQuizAction = withErrorHandler(submitQuiz);
+
+export const addQuizReactionsAction = withErrorHandler(addQuizReactions);
+
+export const deleteQuizReactionAction = withErrorHandler(deleteQuizReaction);
+
+export const scheduleQuizAction = withErrorHandler(scheduleQuiz);
+
+export const addQuizContextAction = withErrorHandler(addQuizContext);

@@ -1,5 +1,4 @@
-import { getServerUrl } from '..';
-import { serverLogger } from '../../../util/logger';
+import { getServerUrl, withErrorHandler } from '../util';
 import {
     CreateOneTimeTokenDTO,
     requestVerificationDTO,
@@ -8,9 +7,10 @@ import {
 } from './dto';
 import { OneTimeToken, SignInResponse } from './type';
 import { deleteSignInResponse, setOneTimeToken, setSignInResponse } from '../cookie';
+import { HttpException } from '../common.dto';
 
 //TODO : 사용자 정보를 반환하도록 수정하기
-export const signIn = async (id: string, password: string): Promise<boolean | undefined> => {
+const signIn = async (id: string, password: string): Promise<boolean | HttpException> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/auth/sign-in`;
     const credentials = btoa(`${id}:${password}`);
@@ -25,9 +25,8 @@ export const signIn = async (id: string, password: string): Promise<boolean | un
     });
 
     if (!response.ok) {
-        const result = await response.json();
-        serverLogger.error(`signIn fail. ${JSON.stringify(result, null, 2)}`);
-        return undefined;
+        const error: HttpException = await response.json();
+        return error;
     }
 
     const result: SignInResponse = await response.json();
@@ -37,9 +36,9 @@ export const signIn = async (id: string, password: string): Promise<boolean | un
     return true;
 };
 
-export const requestVerification = async (
+const requestVerification = async (
     dto: requestVerificationDTO,
-): Promise<boolean | undefined> => {
+): Promise<boolean | HttpException> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/auth/request-verification`;
     const headers = {
@@ -53,15 +52,14 @@ export const requestVerification = async (
     });
 
     if (!response.ok) {
-        const result = await response.json();
-        serverLogger.error(`requestVerification fail. ${JSON.stringify(result, null, 2)}`);
-        return undefined;
+        const error: HttpException = await response.json();
+        return error;
     }
 
     return true;
 };
 
-export const verifyEmail = async (dto: VerifyDTO): Promise<boolean | undefined> => {
+const verifyEmail = async (dto: VerifyDTO): Promise<boolean | HttpException> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/auth/verify`;
     const headers = {
@@ -75,9 +73,8 @@ export const verifyEmail = async (dto: VerifyDTO): Promise<boolean | undefined> 
     });
 
     if (!response.ok) {
-        const result = await response.json();
-        serverLogger.error(`verifyEmail fail. ${JSON.stringify(result, null, 2)}`);
-        return undefined;
+        const error: HttpException = await response.json();
+        return error;
     }
 
     const result: OneTimeToken = await response.json();
@@ -87,11 +84,11 @@ export const verifyEmail = async (dto: VerifyDTO): Promise<boolean | undefined> 
     return true;
 };
 
-export const generateSecurityToken = async (
+const generateSecurityToken = async (
     id: string,
     password: string,
     dto: CreateOneTimeTokenDTO,
-): Promise<OneTimeToken | undefined> => {
+): Promise<OneTimeToken | HttpException> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/auth/security-token`;
     const credentials = btoa(`${id}:${password}`);
@@ -106,9 +103,8 @@ export const generateSecurityToken = async (
     });
 
     if (!response.ok) {
-        const result = await response.json();
-        serverLogger.error(`generateSecurityToken fail. ${JSON.stringify(result, null, 2)}`);
-        return undefined;
+        const error: HttpException = await response.json();
+        return error;
     }
 
     const result: OneTimeToken = await response.json();
@@ -118,9 +114,9 @@ export const generateSecurityToken = async (
     return result;
 };
 
-export const sendSecurityTokenToEmail = async (
+const sendSecurityTokenToEmail = async (
     dto: SendOneTimeTokenDTO,
-): Promise<boolean | undefined> => {
+): Promise<boolean | HttpException> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/auth/security-token/send`;
     const headers = {
@@ -133,14 +129,24 @@ export const sendSecurityTokenToEmail = async (
     });
 
     if (!response.ok) {
-        const result = await response.json();
-        serverLogger.error(`sendSecurityTokenToEmail fail. ${JSON.stringify(result, null, 2)}`);
-        return undefined;
+        const error: HttpException = await response.json();
+        return error;
     }
 
     return true;
 };
 
-export const signOut = async () => {
+const signOut = async () => {
     deleteSignInResponse();
 };
+
+export const signInAction = withErrorHandler(signIn);
+
+export const requestVerificationAction = withErrorHandler(requestVerification);
+export const verifyEmailAction = withErrorHandler(verifyEmail);
+
+export const generateSecurityTokenAction = withErrorHandler(generateSecurityToken);
+
+export const sendSecurityTokenToEmailAction = withErrorHandler(sendSecurityTokenToEmail);
+
+export const signOutAction = withErrorHandler(signOut);

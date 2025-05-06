@@ -1,12 +1,12 @@
 import { RequestQueryBuilder } from '@dataui/crud-request';
-import { getServerUrl } from '..';
+import { getServerUrl, withErrorHandler } from '../util';
 import { User } from '../../../model/interface/user';
-import { serverLogger } from '../../../util/logger';
 import { ENUM_ONE_TIME_TOKEN_HEADER, ENUM_SECURITY_TOKEN_HEADER } from '../auth/header';
 import { CreateUserDTO, ReplacePassWordDTO, ReplaceUsernameDTO } from './dto';
 import { getOneTimeTokenOrRedirect, getSignInResponseOrRedirect } from '../cookie';
+import { HttpException } from '../common.dto';
 
-export const signUp = async (dto: CreateUserDTO): Promise<User | undefined> => {
+const signUp = async (dto: CreateUserDTO): Promise<User | HttpException> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/user`;
 
@@ -24,46 +24,46 @@ export const signUp = async (dto: CreateUserDTO): Promise<User | undefined> => {
     });
 
     if (!response.ok) {
-        const result = await response.json();
-        serverLogger.error(`signUp fail. ${JSON.stringify(result, null, 2)}`);
-        return undefined;
+        const error: HttpException = await response.json();
+        return error;
     }
 
     const result: User = await response.json();
     return result;
 };
 
-export const getUser = async (id: string): Promise<User | undefined> => {
+const getUser = async (id: string): Promise<User | HttpException> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/user/`;
     const response = await fetch(url + `/${id}`);
 
     if (!response.ok) {
-        const result = await response.json();
-        serverLogger.error(`getUser fail. ${JSON.stringify(result, null, 2)}`);
-        return undefined;
+        const error: HttpException = await response.json();
+        return error;
     }
 
     const result: User = await response.json();
     return result;
 };
 
-export const findUsers = async (queryBuilder: RequestQueryBuilder): Promise<User[] | undefined> => {
+const findUsers = async (queryBuilder: RequestQueryBuilder): Promise<User[] | HttpException> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/user/`;
     const response = await fetch(url + `?${queryBuilder.query()}`);
 
     if (!response.ok) {
-        const result = await response.json();
-        serverLogger.error(`findUsers fail. ${JSON.stringify(result, null, 2)}`);
-        return undefined;
+        const error: HttpException = await response.json();
+        return error;
     }
 
     const result: User[] = await response.json();
     return result;
 };
 
-export const updateUserPW = async (user: User, dto: ReplacePassWordDTO): Promise<boolean> => {
+const updateUserPW = async (
+    user: User,
+    dto: ReplacePassWordDTO,
+): Promise<boolean | HttpException> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/user/${user.email}/password`;
 
@@ -81,15 +81,17 @@ export const updateUserPW = async (user: User, dto: ReplacePassWordDTO): Promise
     });
 
     if (!response.ok) {
-        const result = await response.json();
-        serverLogger.error(`updateUserPW fail. ${JSON.stringify(result, null, 2)}`);
-        return false;
+        const error: HttpException = await response.json();
+        return error;
     }
 
     return true;
 };
 
-export const updateUserUsername = async (user: User, dto: ReplaceUsernameDTO): Promise<boolean> => {
+const updateUserUsername = async (
+    user: User,
+    dto: ReplaceUsernameDTO,
+): Promise<boolean | HttpException> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/user/${user.email}/username`;
 
@@ -105,15 +107,14 @@ export const updateUserUsername = async (user: User, dto: ReplaceUsernameDTO): P
     });
 
     if (!response.ok) {
-        const result = await response.json();
-        serverLogger.error(`updateUserUsername fail. ${JSON.stringify(result, null, 2)}`);
-        return false;
+        const error: HttpException = await response.json();
+        return error;
     }
 
     return true;
 };
 
-export const deleteUser = async (user: User): Promise<boolean> => {
+const deleteUser = async (user: User): Promise<boolean | HttpException> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/user/${user.email}`;
 
@@ -130,15 +131,14 @@ export const deleteUser = async (user: User): Promise<boolean> => {
     });
 
     if (!response.ok) {
-        const result = await response.json();
-        serverLogger.error(`deleteUser fail. ${JSON.stringify(result, null, 2)}`);
-        return false;
+        const error: HttpException = await response.json();
+        return error;
     }
 
     return true;
 };
 
-export const recoverUser = async (email: string) => {
+const recoverUser = async (email: string): Promise<boolean | HttpException> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/user/recover/${email}`;
 
@@ -155,10 +155,22 @@ export const recoverUser = async (email: string) => {
     });
 
     if (!response.ok) {
-        const result = await response.json();
-        serverLogger.error(`updateUserPW fail. ${JSON.stringify(result, null, 2)}`);
-        return false;
+        const error: HttpException = await response.json();
+        return error;
     }
 
     return true;
 };
+
+export const signUpAction = withErrorHandler(signUp);
+
+export const getUserAction = withErrorHandler(getUser);
+
+export const findUsersAction = withErrorHandler(findUsers);
+
+export const updateUserPWAction = withErrorHandler(updateUserPW);
+
+export const updateUserUsernameAction = withErrorHandler(updateUserUsername);
+
+export const deleteUserAction = withErrorHandler(deleteUser);
+export const recoverUserAction = withErrorHandler(recoverUser);

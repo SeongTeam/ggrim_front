@@ -1,11 +1,12 @@
-import { getServerUrl } from '..';
+import { getServerUrl, withErrorHandler } from '../util';
 import { CuratedArtWorkAttribute } from '../../../model/interface/curatedArtwork-types';
 import { Painting } from '../../../model/interface/painting';
 import { serverLogger } from '../../../util/logger';
 import { FindPaintingResult } from './dto';
+import { HttpException } from '../common.dto';
 
 // TODO page.tsx 최소화 예정 (데이터 처리 함수 옮길 예정)
-export const getWeekArtWorkData = async (): Promise<CuratedArtWorkAttribute[]> => {
+const getWeekArtWorkData = async (): Promise<CuratedArtWorkAttribute[]> => {
     // const response = await fetch('http://localhost:4000/api/artwork_week', {
     //     cache: 'no-cache',
     // });  // src/data에 파일을 읽어 올 때 사용
@@ -19,13 +20,13 @@ export const getWeekArtWorkData = async (): Promise<CuratedArtWorkAttribute[]> =
     return res.data;
 };
 
-export const findPainting = async (
+const findPainting = async (
     title: string = '',
     artist: string = '',
     tags: string[] = [],
     styles: string[] = [],
     page: number = 0,
-): Promise<FindPaintingResult> => {
+): Promise<FindPaintingResult | HttpException> => {
     const backendUrl = getServerUrl();
     const titleParam = `title=${title}`;
     const artistParam = `artistName=${artist}`;
@@ -34,34 +35,37 @@ export const findPainting = async (
     const url = `${backendUrl}/painting?${titleParam}&${artistParam}&${tagParam}&${styleParam}&page=${page}`;
     serverLogger.info(`[findPaintings] url=${url}`);
     const response = await fetch(url);
+
+    if (!response.ok) {
+        const error: HttpException = await response.json();
+        return error;
+    }
+
     const result: FindPaintingResult = await response.json();
     return result;
 };
 
-export const getPainting = async (id: string): Promise<Painting | undefined> => {
+const getPainting = async (id: string): Promise<Painting | undefined | HttpException> => {
     try {
         const backendUrl = getServerUrl();
         const url = `${backendUrl}/painting/by-ids?ids[]=${id}`;
         const response = await fetch(url);
         const paintings: Painting[] = await response.json();
 
-        if (response.ok) {
-            if (paintings.length === 0) {
-                return undefined;
-            }
-
-            return paintings.at(0);
+        if (!response.ok) {
+            const error: HttpException = await response.json();
+            return error;
         }
 
-        if (response.status === 400) {
-            return undefined;
-        }
-
-        throw Error(
-            `error from backend. status : ${response.status}, statusText : ${response.statusText}`,
-        );
+        return paintings.length !== 0 ? paintings.at(0) : undefined;
     } catch (e: unknown) {
         serverLogger.error(`[getPainting] error : ${JSON.stringify(e)}`);
         throw e;
     }
 };
+
+export const getWeekArtWorkDataAction = withErrorHandler(getWeekArtWorkData);
+
+export const findPaintingAction = withErrorHandler(findPainting);
+
+export const getPaintingAction = withErrorHandler(getPainting);
