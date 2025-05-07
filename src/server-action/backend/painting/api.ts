@@ -46,22 +46,17 @@ const findPainting = async (
 };
 
 const getPainting = async (id: string): Promise<Painting | undefined | HttpException> => {
-    try {
-        const backendUrl = getServerUrl();
-        const url = `${backendUrl}/painting/by-ids?ids[]=${id}`;
-        const response = await fetch(url);
-        const paintings: Painting[] = await response.json();
+    const backendUrl = getServerUrl();
+    const url = `${backendUrl}/painting/by-ids?ids[]=${id}`;
+    const response = await fetch(url);
+    const paintings: Painting[] = await response.json();
 
-        if (!response.ok) {
-            const error: HttpException = await response.json();
-            return error;
-        }
-
-        return paintings.length !== 0 ? paintings.at(0) : undefined;
-    } catch (e: unknown) {
-        serverLogger.error(`[getPainting] error : ${JSON.stringify(e)}`);
-        throw e;
+    if (!response.ok) {
+        const error: HttpException = await response.json();
+        return error;
     }
+
+    return paintings.length !== 0 ? paintings.at(0) : undefined;
 };
 
 export const getWeekArtWorkDataAction = withErrorHandler(getWeekArtWorkData);
