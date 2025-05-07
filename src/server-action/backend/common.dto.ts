@@ -1,3 +1,5 @@
+import { HttpStatusValueType, ServiceExceptionValueType } from './status';
+
 export interface IPaginationResult<T> {
     data: T[];
     count: number;
@@ -6,14 +8,14 @@ export interface IPaginationResult<T> {
 }
 export interface HttpException {
     message: string | string[];
-    error: string;
-    statusCode: number;
+    error?: string;
+    statusCode: HttpStatusValueType;
 }
 
 export interface BackendHttpException extends HttpException {
     timeStamp?: Date;
     path?: string;
-    errorCode?: number;
+    errorCode?: ServiceExceptionValueType;
 }
 
 export interface ServerActionError {
