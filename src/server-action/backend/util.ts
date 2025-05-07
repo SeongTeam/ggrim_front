@@ -39,7 +39,7 @@ export function withErrorHandler<T extends (...args: any[]) => Promise<any>>(
             }
             return response;
         } catch (err: any) {
-            console.error(`[${action.name}] fail Error:`, err);
+            console.error(`[${action.name}] Unknown server error:`, err);
             return {
                 message: err?.message || 'Unknown server error',
                 stack: err.stack || 'withErrorHandler()',
