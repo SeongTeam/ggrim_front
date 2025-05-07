@@ -1,3 +1,5 @@
+import { QuizContextDTO } from './dto';
+
 export const QuizReactionTypeValues = {
     LIKE: 'like',
     DISLIKE: 'dislike',
@@ -5,14 +7,8 @@ export const QuizReactionTypeValues = {
 
 export type QuizReactionType = (typeof QuizReactionTypeValues)[keyof typeof QuizReactionTypeValues];
 
-export interface QuizContext {
-    artist?: string;
-    tag?: string;
-    style?: string;
-    page: number;
-}
 export interface QuizStatus {
-    context: QuizContext;
-    currentIdx: number;
-    endIdx: number;
+    context: QuizContextDTO;
+    currentIndex: number;
+    endIndex: number;
 }

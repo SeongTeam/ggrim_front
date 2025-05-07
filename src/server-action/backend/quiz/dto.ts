@@ -1,6 +1,6 @@
 import { QUIZ_TYPE, ShortQuiz } from '../../../model/interface/quiz';
 import { IPaginationResult } from '../common.dto';
-import { QuizContext, QuizReactionType, QuizStatus } from './type';
+import { QuizReactionType, QuizStatus } from './type';
 export type FindQuizResult = IPaginationResult<ShortQuiz>;
 export interface CreateQuizDTO {
     answerPaintingIds: string[];
@@ -22,7 +22,12 @@ export class QuizReactionDTO {
     type!: QuizReactionType;
 }
 
-export type QuizContextDTO = QuizContext;
+export interface QuizContextDTO {
+    artist?: string;
+    tag?: string;
+    style?: string;
+    page: number;
+}
 
 export interface ResponseQuizDTO {
     shortQuiz: ShortQuiz;

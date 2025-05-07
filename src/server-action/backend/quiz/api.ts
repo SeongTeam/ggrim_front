@@ -11,7 +11,7 @@ import {
     QuizSubmitDTO,
     ResponseQuizDTO,
 } from './dto';
-import { QuizReactionType } from './type';
+import { QuizReactionType, QuizStatus } from './type';
 import { HttpException } from '../common.dto';
 
 const getMCQData = async (): Promise<MCQ[] | HttpException> => {
@@ -179,16 +179,13 @@ const deleteQuizReaction = async (quizID: string): Promise<boolean | HttpExcepti
     return true;
 };
 
-const scheduleQuiz = async (
-    context?: QuizContextDTO,
-    currentIndex?: number,
-    endIndex?: number,
-): Promise<ResponseQuizDTO | HttpException> => {
+const scheduleQuiz = async (quizStatus?: QuizStatus): Promise<ResponseQuizDTO | HttpException> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/quiz/schedule`;
-    const currentIndexParam = `currentIndex=${currentIndex}`;
-    const endIndexParam = `endIndex=${endIndex}`;
-    const contextParam = `context=` + JSON.stringify(context);
+
+    const currentIndexParam = `currentIndex=${quizStatus?.currentIndex}`;
+    const endIndexParam = `endIndex=${quizStatus?.endIndex}`;
+    const contextParam = `context=` + JSON.stringify(quizStatus?.context);
     const response = await fetch(url + `?${currentIndexParam}&${endIndexParam}&${contextParam}`);
 
     if (!response.ok) {

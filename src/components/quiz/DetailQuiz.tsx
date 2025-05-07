@@ -2,10 +2,13 @@
 import { Quiz } from '../../model/interface/quiz';
 import MCQView from '@/components/home/components/MCQ_view';
 import { MCQ } from '../../model/interface/MCQ';
-import {  getQuizIDByContext, QuizStatus, ResponseQuizDTO } from '../../app/lib/api.quiz';
 
 import { useRouter } from 'next/navigation';
 import { Painting } from '../../model/interface/painting';
+import { addQuizContextAction, scheduleQuizAction } from '../../server-action/backend/quiz/api';
+import { QuizStatus } from '../../server-action/backend/quiz/type';
+import { isHttpException, isServerActionError } from '../../server-action/backend/util';
+import { QuizContextDTO } from '../../server-action/backend/quiz/dto';
 interface DetailQuizProps {
     quiz: Quiz;
 }
@@ -39,9 +42,19 @@ export function DetailQuiz({ quiz }: DetailQuizProps): React.JSX.Element {
             rawStatus = localStorage.getItem(key) || undefined;
         }
         const status : QuizStatus | undefined = rawStatus ? JSON.parse(rawStatus) : undefined;
-        const res : ResponseQuizDTO = await getQuizIDByContext(status);
-        localStorage.setItem(key,JSON.stringify(res.status));
-        router.push(`/quiz/${res.quiz.id}`);
+        const response = await scheduleQuizAction(status);
+
+        if(isHttpException(response)){
+            const errorMessage = Array.isArray(response.message) ? response.message.join('\n') : response.message;
+            throw new Error(errorMessage);
+        }
+        else if(isServerActionError(response)){
+            throw new Error(response.message);
+        }
+        else{
+            localStorage.setItem(key,JSON.stringify(response.status));
+            router.push(`/quiz/${response.shortQuiz.id}`);
+        }
         
     };
 
@@ -56,7 +69,21 @@ export function DetailQuiz({ quiz }: DetailQuizProps): React.JSX.Element {
     // * 참고: <관련 정보나 링크>
     const handleImageSelected = async (selectedPainting : Painting) => {
 
-        //const result = await addQuizContextByPainting(selectedPainting);
+
+        const response = await addQuizContextAction(generateQuizContextDTO(selectedPainting));
+        if(isHttpException(response)){
+            const errorMessage = Array.isArray(response.message) ? response.message.join('\n') : response.message;
+            if(response.statusCode < 500){
+                alert(errorMessage);
+            }
+            else {
+                throw new Error(errorMessage);
+            }
+
+        }
+        else if(isServerActionError(response)){
+            throw new Error(response.message);
+        }
         console.info(`[handleImageSelected]`,selectedPainting);
     }
 
@@ -67,4 +94,10 @@ export function DetailQuiz({ quiz }: DetailQuizProps): React.JSX.Element {
 
     return <p> not implemented</p>
 
+}
+
+const generateQuizContextDTO = (painting : Painting) : QuizContextDTO => {
+    
+    const contextDTO : QuizContextDTO= {artist : painting.artist.name, page : 0};
+    return contextDTO;
 }
