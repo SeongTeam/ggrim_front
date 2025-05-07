@@ -45,18 +45,18 @@ const findPainting = async (
     return result;
 };
 
-const getPainting = async (id: string): Promise<Painting | undefined | HttpException> => {
+const getPainting = async (id: string): Promise<Painting | HttpException> => {
     const backendUrl = getServerUrl();
-    const url = `${backendUrl}/painting/by-ids?ids[]=${id}`;
+    const url = `${backendUrl}/painting/${id}`;
     const response = await fetch(url);
-    const paintings: Painting[] = await response.json();
+    const painting: Painting = await response.json();
 
     if (!response.ok) {
         const error: HttpException = await response.json();
         return error;
     }
 
-    return paintings.length !== 0 ? paintings.at(0) : undefined;
+    return painting;
 };
 
 export const getWeekArtWorkDataAction = withErrorHandler(getWeekArtWorkData);
