@@ -1,6 +1,6 @@
 import { RequestQueryBuilder } from '@dataui/crud-request';
 import { Style } from 'util';
-import { getServerUrl, withErrorHandler } from '../util';
+import { getServerUrl, withErrorHandler } from '../lib';
 import { HttpException } from '../common.dto';
 
 const findStyles = async (queryBuilder: RequestQueryBuilder): Promise<Style[] | HttpException> => {

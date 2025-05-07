@@ -1,4 +1,4 @@
-import { getServerUrl, withErrorHandler } from '../util';
+import { getServerUrl, withErrorHandler } from '../lib';
 import { CuratedArtWorkAttribute } from '../../../model/interface/curatedArtwork-types';
 import { Painting } from '../../../model/interface/painting';
 import { serverLogger } from '../../../util/logger';

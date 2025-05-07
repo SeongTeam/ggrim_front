@@ -1,6 +1,6 @@
 import { RequestQueryBuilder } from '@dataui/crud-request';
 import { Tag } from '../../../model/interface/tag';
-import { getServerUrl, withErrorHandler } from '../util';
+import { getServerUrl, withErrorHandler } from '../lib';
 import { HttpException } from '../common.dto';
 
 export const findTags = async (

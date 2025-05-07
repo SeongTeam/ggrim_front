@@ -1,5 +1,5 @@
 import { RequestQueryBuilder } from '@dataui/crud-request';
-import { getServerUrl, withErrorHandler } from '../util';
+import { getServerUrl, withErrorHandler } from '../lib';
 import { User } from '../../../model/interface/user';
 import { ENUM_ONE_TIME_TOKEN_HEADER, ENUM_SECURITY_TOKEN_HEADER } from '../auth/header';
 import { CreateUserDTO, ReplacePassWordDTO, ReplaceUsernameDTO } from './dto';

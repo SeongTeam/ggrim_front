@@ -1,4 +1,4 @@
-import { getServerUrl, withErrorHandler } from '../util';
+import { getServerUrl, withErrorHandler } from '../lib';
 import {
     CreateOneTimeTokenDTO,
     requestVerificationDTO,
