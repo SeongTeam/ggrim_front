@@ -1,6 +1,8 @@
 import { DetailQuiz } from '@/components/quiz/DetailQuiz'
-import { Quiz } from '../../../model/interface/quiz'
-import { getQuiz } from '../../../server-action/backend/quiz/api';
+import { getQuizAction } from '../../../server-action/backend/quiz/api';
+import { isHttpException, isServerActionError } from '../../../server-action/backend/util';
+
+
 
 interface QuizDetailPageProps {
     params: { id: string };
@@ -9,11 +11,19 @@ interface QuizDetailPageProps {
 export default async function QuizDetailPage({ params }: QuizDetailPageProps) {
     const quizID = params.id;
 
-    const quiz: Quiz = await getQuiz(quizID);
+    const response = await getQuizAction(quizID);
+
+    if(isServerActionError(response)){
+        throw new Error(response.message);
+    }
+    else if(isHttpException(response)){
+        const errorMessage = Array.isArray(response.message) ? response.message.join('\n') : response.message;
+        throw new Error(errorMessage);
+    }
 
     return (
         <div>
-            <DetailQuiz quiz={quiz} />
+            <DetailQuiz quiz={response} />
         </div>
     );
 }

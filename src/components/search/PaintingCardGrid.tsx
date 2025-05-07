@@ -8,7 +8,8 @@ import { PaintingDetailView } from "../PaintingDetailView";
 import { useSearchParams } from "next/navigation";
 import { throttle } from "../../util/optimization";
 import { FindPaintingResult } from "../../server-action/backend/painting/dto";
-import { findPainting, getPainting } from "../../server-action/backend/painting/api";
+import { findPaintingAction, getPaintingAction } from "../../server-action/backend/painting/api";
+import { isHttpException, isServerActionError } from "../../server-action/backend/util";
 
 interface PaintingCardGridProps  {
     findResult : FindPaintingResult;
@@ -23,8 +24,18 @@ export function PaintingCardGrid( props: PaintingCardGridProps ): React.JSX.Elem
     const searchParam = useSearchParams();
 
     const openModal = async (paintingId : string) =>{
-        const painting = await getPainting(paintingId)
-        setSelectedPainting(painting);
+    const response = await getPaintingAction(paintingId)
+        if(isServerActionError(response)){
+            throw new Error(response.message);
+        }
+        else if(isHttpException(response)){
+            const errorMessage = Array.isArray(response.message) ? response.message.join('\n') : response.message;
+            console.log(`id(${paintingId} error.
+                ${errorMessage}`);
+            
+        }else{
+            setSelectedPainting(response);
+        }
     }
 
     const closeModal = () =>{
@@ -48,7 +59,7 @@ export function PaintingCardGrid( props: PaintingCardGridProps ): React.JSX.Elem
             const searchTags : string[]= searchParam.getAll('tags') || [];
             const searchStyles : string[] = searchParam.getAll('styles') || [];
             console.log(`load ${findResultRef.current.pagination +1} page`);
-            const result : FindPaintingResult = await findPainting(searchTitle,searchArtist,searchTags,searchStyles,findResultRef.current.pagination+1);
+            const result : FindPaintingResult = await findPaintingAction(searchTitle,searchArtist,searchTags,searchStyles,findResultRef.current.pagination+1);
             findResultRef.current = result;
             setSearchPaintings(prev=> [...prev, ...result.data]);
             
