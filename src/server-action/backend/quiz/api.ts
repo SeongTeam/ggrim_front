@@ -2,7 +2,6 @@
 import { getServerUrl, withErrorHandler } from '../lib';
 import { MCQ } from '../../../model/interface/MCQ';
 import { Quiz, QuizDislike, QuizLike } from '../../../model/interface/quiz';
-import { serverLogger } from '../../../util/logger';
 import { getSignInResponseOrRedirect } from '../cookie';
 import {
     CreateQuizDTO,
@@ -111,7 +110,7 @@ const getQuizReactions = async (
     type: QuizReactionType,
     page?: number,
     findUserId?: string,
-): Promise<QuizDislike[] | QuizLike[] | undefined> => {
+): Promise<QuizDislike[] | QuizLike[] | HttpException> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/quiz/${quizID}/reactions`;
     const typeParam = `type=${type}`;
@@ -121,8 +120,7 @@ const getQuizReactions = async (
 
     if (!response.ok) {
         const result = await response.json();
-        serverLogger.error(`getQuizReactions fail. ${JSON.stringify(result, null, 2)}`);
-        return undefined;
+        return result;
     }
 
     const result: QuizDislike[] | QuizLike[] = await response.json();
