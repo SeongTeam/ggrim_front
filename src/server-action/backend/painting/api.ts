@@ -1,24 +1,30 @@
 'use server';
 import { getServerUrl, withErrorHandler } from '../lib';
-import { CuratedArtWorkAttribute } from '../../../model/interface/curatedArtwork-types';
 import { Painting } from '../../../model/interface/painting';
 import { serverLogger } from '../../../util/logger';
 import { FindPaintingResult } from './dto';
 import { HttpException } from '../common.dto';
 
 // TODO page.tsx 최소화 예정 (데이터 처리 함수 옮길 예정)
-const getWeekArtWorkData = async (): Promise<CuratedArtWorkAttribute[]> => {
+const getWeekArtWorkData = async (): Promise<Painting[] | HttpException> => {
     // const response = await fetch('http://localhost:4000/api/artwork_week', {
     //     cache: 'no-cache',
     // });  // src/data에 파일을 읽어 올 때 사용
     const serverUrl = getServerUrl();
 
-    const url: string = serverUrl + '/painting/artwork_of_week';
+    const url: string = serverUrl + '/painting/artwork-of-week';
     const response = await fetch(url, {
         cache: 'no-cache',
     }); // 서버에 있는 데이터 읽어 올때 사용
-    const res = await response.json();
-    return res.data;
+
+    if (!response.ok) {
+        const error: HttpException = await response.json();
+        return error;
+    }
+
+    const result = await response.json();
+
+    return result;
 };
 
 const findPainting = async (
