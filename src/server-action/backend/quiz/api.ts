@@ -46,7 +46,7 @@ const findQuiz = async (
     const tagParam = tags.map((t) => `tags[]=${t}`).join('&');
     const styleParam = styles.map((s) => `styles[]=${s}`).join('&');
     const url = `${backendUrl}/quiz?${artistsParam}&${tagParam}&${styleParam}&page=${page}`;
-    serverLogger.info(`[findQuiz] url=${url}`);
+
     const response = await fetch(url);
     if (!response.ok) {
         const error: HttpException = await response.json();
@@ -59,10 +59,8 @@ const findQuiz = async (
 const getQuiz = async (id: string): Promise<Quiz> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/quiz/${id}`;
-    serverLogger.info(`[getQuiz] url=${url}`);
     const response = await fetch(url);
-    const result: Quiz = await response.json();
-    serverLogger.debug(`[getQuiz] ${JSON.stringify(result, null, 2)}`);
+    const result: DetailQuizDTO = await response.json();
     return result;
 };
 
