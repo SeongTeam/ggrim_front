@@ -70,7 +70,7 @@ const addQuiz = async (dto: CreateQuizDTO): Promise<Quiz | HttpException> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/quiz`;
 
-    const signInResponse = getSignInResponseOrRedirect();
+    const signInResponse = await getSignInResponseOrRedirect();
 
     const response = await fetch(url, {
         method: 'POST',
@@ -138,7 +138,7 @@ const addQuizReactions = async (
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/quiz/${quizID}/reactions`;
 
-    const signInResponse = getSignInResponseOrRedirect();
+    const signInResponse = await getSignInResponseOrRedirect();
 
     const headers = {
         'Content-Type': 'application/json',
@@ -162,7 +162,7 @@ const deleteQuizReaction = async (quizID: string): Promise<boolean | HttpExcepti
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/quiz/${quizID}/reactions`;
 
-    const signInResponse = getSignInResponseOrRedirect();
+    const signInResponse = await getSignInResponseOrRedirect();
 
     const headers = {
         Authorization: `Bearer ${signInResponse.accessToken}`,

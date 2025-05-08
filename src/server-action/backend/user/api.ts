@@ -11,7 +11,7 @@ const signUp = async (dto: CreateUserDTO): Promise<User | HttpException> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/user`;
 
-    const oneTimeToken = getOneTimeTokenOrRedirect();
+    const oneTimeToken = await getOneTimeTokenOrRedirect();
 
     const headers = {
         'Content-Type': 'application/json',
@@ -68,7 +68,7 @@ const updateUserPW = async (
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/user/${user.email}/password`;
 
-    const oneTimeToken = getOneTimeTokenOrRedirect();
+    const oneTimeToken = await getOneTimeTokenOrRedirect();
 
     const headers = {
         'Content-Type': 'application/json',
@@ -96,7 +96,7 @@ const updateUserUsername = async (
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/user/${user.email}/username`;
 
-    const signInResponse = getSignInResponseOrRedirect();
+    const signInResponse = await getSignInResponseOrRedirect();
     const headers: HeadersInit = {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${signInResponse.accessToken}`,
@@ -119,7 +119,7 @@ const deleteUser = async (user: User): Promise<boolean | HttpException> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/user/${user.email}`;
 
-    const oneTimeToken = getOneTimeTokenOrRedirect();
+    const oneTimeToken = await getOneTimeTokenOrRedirect();
 
     const headers = {
         'Content-Type': 'application/json',
@@ -143,7 +143,7 @@ const recoverUser = async (email: string): Promise<boolean | HttpException> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/user/recover/${email}`;
 
-    const oneTimeToken = getOneTimeTokenOrRedirect();
+    const oneTimeToken = await getOneTimeTokenOrRedirect();
 
     const headers = {
         'Content-Type': 'application/json',
