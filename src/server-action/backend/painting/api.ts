@@ -1,3 +1,4 @@
+'use server';
 import { getServerUrl, withErrorHandler } from '../lib';
 import { CuratedArtWorkAttribute } from '../../../model/interface/curatedArtwork-types';
 import { Painting } from '../../../model/interface/painting';

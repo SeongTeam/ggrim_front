@@ -1,3 +1,4 @@
+'use server';
 import { getServerUrl, withErrorHandler } from '../lib';
 import { MCQ } from '../../../model/interface/MCQ';
 import { Quiz, QuizDislike, QuizLike } from '../../../model/interface/quiz';

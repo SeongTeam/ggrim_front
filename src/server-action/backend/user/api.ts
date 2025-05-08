@@ -1,3 +1,4 @@
+'use server';
 import { RequestQueryBuilder } from '@dataui/crud-request';
 import { getServerUrl, withErrorHandler } from '../lib';
 import { User } from '../../../model/interface/user';
