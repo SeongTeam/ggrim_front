@@ -1,13 +1,16 @@
 'use client'
-import { Quiz } from '../../model/interface/quiz';
 import MCQView from '@/components/home/components/MCQ_view';
 import { MCQ } from '../../model/interface/MCQ';
-import {  getQuizIDByContext, QuizStatus, ResponseQuizDTO } from '../../app/lib/api.quiz';
 
 import { useRouter } from 'next/navigation';
 import { Painting } from '../../model/interface/painting';
+import { addQuizContextAction, scheduleQuizAction } from '../../server-action/backend/quiz/api';
+import { QuizStatus } from '../../server-action/backend/quiz/type';
+import { isHttpException, isServerActionError } from '../../server-action/backend/util';
+import { DetailQuizDTO, QuizContextDTO } from '../../server-action/backend/quiz/dto';
+import {  getPaintingAction } from '../../server-action/backend/painting/api';
 interface DetailQuizProps {
-    quiz: Quiz;
+    detailQuizDTO: DetailQuizDTO;
 }
 
 // TODO: <DetailQuiz/> 성능 개선
@@ -18,7 +21,8 @@ interface DetailQuizProps {
 // ? 질문: <의문점 또는 개선 방향>
 // * 참고: <관련 정보나 링크>
 
-export function DetailQuiz({ quiz }: DetailQuizProps): React.JSX.Element {
+export function DetailQuiz({ detailQuizDTO }: DetailQuizProps): React.JSX.Element {
+    const { quiz,  } = detailQuizDTO;
     const mcq : MCQ= {
         id : quiz.id,
         distractorPaintings : quiz.distractor_paintings,
@@ -39,9 +43,19 @@ export function DetailQuiz({ quiz }: DetailQuizProps): React.JSX.Element {
             rawStatus = localStorage.getItem(key) || undefined;
         }
         const status : QuizStatus | undefined = rawStatus ? JSON.parse(rawStatus) : undefined;
-        const res : ResponseQuizDTO = await getQuizIDByContext(status);
-        localStorage.setItem(key,JSON.stringify(res.status));
-        router.push(`/quiz/${res.quiz.id}`);
+        const response = await scheduleQuizAction(status);
+
+        if(isHttpException(response)){
+            const errorMessage = Array.isArray(response.message) ? response.message.join('\n') : response.message;
+            throw new Error(errorMessage);
+        }
+        else if(isServerActionError(response)){
+            throw new Error(response.message);
+        }
+        else{
+            localStorage.setItem(key,JSON.stringify(response.status));
+            router.push(`/quiz/${response.shortQuiz.id}`);
+        }
         
     };
 
@@ -56,7 +70,29 @@ export function DetailQuiz({ quiz }: DetailQuizProps): React.JSX.Element {
     // * 참고: <관련 정보나 링크>
     const handleImageSelected = async (selectedPainting : Painting) => {
 
-        //const result = await addQuizContextByPainting(selectedPainting);
+        const detailPainting = await getPaintingAction(selectedPainting.id);
+        if(isHttpException(detailPainting)){
+            const errorMessage = Array.isArray(detailPainting.message) ? detailPainting.message.join('\n') : detailPainting.message;
+            throw new Error(errorMessage);
+        }
+        else if(isServerActionError(detailPainting)){
+            throw new Error(detailPainting.message);
+        }
+
+        const response = await addQuizContextAction(generateQuizContextDTO(detailPainting));
+        if(isHttpException(response)){
+            const errorMessage = Array.isArray(response.message) ? response.message.join('\n') : response.message;
+            if(response.statusCode < 500){
+                alert(errorMessage);
+            }
+            else {
+                throw new Error(errorMessage);
+            }
+
+        }
+        else if(isServerActionError(response)){
+            throw new Error(response.message);
+        }
         console.info(`[handleImageSelected]`,selectedPainting);
     }
 
@@ -67,4 +103,9 @@ export function DetailQuiz({ quiz }: DetailQuizProps): React.JSX.Element {
 
     return <p> not implemented</p>
 
+}
+
+const generateQuizContextDTO = (painting : Painting) : QuizContextDTO => {
+    const contextDTO : QuizContextDTO= {artist : painting.artist.name, page : 0};
+    return contextDTO;
 }

@@ -1,44 +1,28 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
-import {
-    CuratedArtWorkAttribute,
-    curatedContentType,
-} from '@/model/interface/curatedArtwork-types';
-import { CldImage } from 'next-cloudinary';
-import NavigatePlayerButton from './navigatePlayerButton';
+import React, { useState} from 'react';
+import { Painting } from '../../../model/interface/painting';
 
 export type FeaturedImageGalleryProps = {
-    imageData: CuratedArtWorkAttribute[];
+    paintings: Painting[];
 };
 
-export const FeaturedImageGallery: React.FC<FeaturedImageGalleryProps> = ({ imageData }) => {
+export const FeaturedImageGallery: React.FC<FeaturedImageGalleryProps> = ({ paintings }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
 
     const handleOpen = () => setIsOpen(true);
     const handleClose = () => setIsOpen(false);
 
-    // 현재 데이터 관련 정보를 useMemo로 계산
-    const currentImageDetails = useMemo(() => {
-        const currentImage = imageData[currentIndex];
-        return {
-            painting: currentImage?.painting || null,
-            currentData: currentImage || null,
-            currentType: currentImage?.type || null,
-        };
-    }, [imageData, currentIndex]);
+    const painting = paintings[currentIndex];
 
-    const { painting, currentData, currentType } = currentImageDetails;
-
-    // 이전 이미지로 이동하는 함수
     const goToPrevious = () => {
-        setCurrentIndex((prevIndex) => (prevIndex === 0 ? imageData.length - 1 : prevIndex - 1));
+        setCurrentIndex((prevIndex) => ((prevIndex+paintings.length-1)%paintings.length));
     };
 
     // 다음 이미지로 이동하는 함수
     const goToNext = () => {
-        setCurrentIndex((prevIndex) => (prevIndex === imageData.length - 1 ? 0 : prevIndex + 1));
+        setCurrentIndex((prevIndex) => ((prevIndex+1)%paintings.length));
     };
 
     return (
@@ -54,24 +38,8 @@ export const FeaturedImageGallery: React.FC<FeaturedImageGalleryProps> = ({ imag
                     onClick={handleOpen}
                     className="relative flex items-center justify-center  min-h-64 max-h-[850px] max-w-full p-1"
                 >
-                    {currentType === curatedContentType.GIF ? (
-                        // TODO 각각에 그림마다 크기를 알려주는 함수 필요
-                        <div
-                            style={{
-                                width: painting.width,
-                                height: painting.height > painting.width ? painting.height : 287,
-                            }}
-                        >
-                            <CldImage alt={painting.title} src={currentData.cldId} fill={true} />
-                        </div>
-                    ) : (
-                        <img src={painting.image_url} alt="Main Image" />
-                    )}
+                    <img src={painting.image_url} alt="Main Image" />
                 </section>
-                <NavigatePlayerButton
-                    isDisplay={currentType === curatedContentType.MP4}
-                    src={currentData.cldId}
-                />
                 {/* 왼쪽 버튼 */}
                 <button
                     onClick={goToPrevious}
@@ -93,9 +61,7 @@ export const FeaturedImageGallery: React.FC<FeaturedImageGalleryProps> = ({ imag
                 <h3 className="text-2xl font-semibold text-gray-900"> {painting.title}</h3>
                 <p className="text-blue-600 text-sm mb-2">{painting.artist.name}</p>
                 <p className="text-gray-700 text-sm mb-4">
-                    {painting.description !== ''
-                        ? painting.description
-                        : currentData.operatorDescription}
+                    {painting.description}
                 </p>
             </div>
 

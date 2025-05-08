@@ -1,10 +1,7 @@
 'use client'
 import {  FormEvent,  useEffect, useRef, useState } from "react";
 import { Painting } from "../../model/interface/painting";
-import { addQuiz, getPainting } from "../../app/lib/api.backend";
 import { Card } from "../card";
-import { CreateQuizDTO } from "../../app/lib/dto";
-import { Quiz } from "../../model/interface/quiz";
 import { useRouter } from "next/navigation";
 import AlertModal from "../home/components/AlertModal";
 import { debounce } from "../../util/optimization";
@@ -12,6 +9,11 @@ import { InsertToggleInput } from "../InsertToggleInput";
 import Loading from "../Loading";
 import { localStorageUtils } from "../../util/browser";
 import { CheckCircle, XCircle } from "lucide-react";
+import { getPaintingAction } from "../../server-action/backend/painting/api";
+import { isHttpException, isServerActionError } from "../../server-action/backend/util";
+import { CreateQuizDTO } from "../../server-action/backend/quiz/dto";
+import { addQuizAction } from "../../server-action/backend/quiz/api";
+import { HttpStatus } from "../../server-action/backend/status";
 
 interface NewQuiz{
     answerPaintingID :string;
@@ -77,16 +79,22 @@ export default function QuizForm() : JSX.Element {
         type : newQuiz!.type,
         timeLimit : 30
       }
-      const quiz : Quiz|undefined = await addQuiz(dto);
+      const response  = await addQuizAction(dto);
 
-      if(quiz){
+      if(isServerActionError(response)){
+        throw new Error(response.message);
+      }
+      else if(isHttpException(response)){
+          const errorMessage = Array.isArray(response.message) ? response.message.join('\n') : response.message;
+          setError(errorMessage+'\n'+'please try later');
+      }
+      else{
         localStorage.removeItem(QUIZ_FORM_KEY);
         localStorage.removeItem(QUIZ_PAINTING_KEY);
-        console.log(`create new Quiz`,quiz);
-        router.push(`/quiz/${quiz.id}`);
+        console.log(`create new Quiz`,response);
+        router.push(`/quiz/${response.id}`);
         return;
       }
-      setError('please try later');
 
     };
 
@@ -102,41 +110,51 @@ export default function QuizForm() : JSX.Element {
             setError(`Input ${key} is out of ID format`);
             return false;
           }
-          const painting = await getPainting(id);
-
-          if(!painting){
-              setError(`Can't find painting. ${id} is invalid. `);
-              return false;
+          const painting = await getPaintingAction(id);
+          if(isServerActionError(painting)){
+              throw new Error(painting.message);
           }
-
-          if(quizPaintingMap.size === 4){
-            setError(`Can't add painting. Only 4 painting is added. `);
-            return false;
-          }
-
-          //id 중복 금지..
-
-          if(quizPaintingMap.values().find(p=>p.id === id)){
-              setError(`Can't Add painting. ${id} is already exist. `);
-              return false;
-          }
-
-          setQuizPaintingMap(prevMap=>{
-            const newMap = new Map(prevMap);
-            newMap.set(key,painting);
-            return newMap;
-          });
-
-          //어떻게 setNewQuiz를 사용할까/
-          if(quizPaintingKeys[0] === key){
-              setNewQuiz(prev=>({...prev!,answerPaintingID : id}));
+          else if(isHttpException(painting)){
+              const errorMessage = Array.isArray(painting.message) ? painting.message.join('\n') : painting.message;
+            
+            if(painting.statusCode >= HttpStatus.BAD_REQUEST && painting.statusCode < HttpStatus.INTERNAL_SERVER_ERROR){
+                setError(errorMessage);
+            }
+            else{
+                throw new Error(errorMessage);
+            }
           }
           else{
-              setNewQuiz(prev=>({...prev!,distractorPaintingIDs : [...prev!.distractorPaintingIDs,id]}));
-          }
 
-          return true;
+            if(quizPaintingMap.size === 4){
+              setError(`Can't add painting. Only 4 painting is added. `);
+              return false;
+            }
 
+            //id 중복 금지..
+
+            if(quizPaintingMap.values().find(p=>p.id === id)){
+                setError(`Can't Add painting. ${id} is already exist. `);
+                return false;
+            }
+
+            setQuizPaintingMap(prevMap=>{
+              const newMap = new Map(prevMap);
+              newMap.set(key,painting);
+              return newMap;
+            });
+
+            //어떻게 setNewQuiz를 사용할까/
+            if(quizPaintingKeys[0] === key){
+                setNewQuiz(prev=>({...prev!,answerPaintingID : id}));
+            }
+            else{
+                setNewQuiz(prev=>({...prev!,distractorPaintingIDs : [...prev!.distractorPaintingIDs,id]}));
+            }
+
+            return true;
+        }
+        return false;
         
     }
 

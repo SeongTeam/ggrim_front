@@ -56,3 +56,11 @@ export function getEmptyPaintingObject(): Painting {
 
     return result;
 }
+
+export interface ShortPainting {
+    id: string;
+    title: string;
+    image_url: string;
+    width: number;
+    height: number;
+}

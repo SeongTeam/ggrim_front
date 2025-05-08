@@ -1,11 +1,13 @@
 'use client';
 import { MutableRefObject, useEffect, useRef, useState } from "react";
-import {  findQuiz } from "../../app/lib/api.backend";
-import { FindQuizResult } from '@/app/lib/dto';
+
 import { throttle } from "../../util/optimization";
-import { Quiz } from "../../model/interface/quiz";
+import {  ShortQuiz } from "../../model/interface/quiz";
 import { QuizCard } from "../QuizCard";
 import { useRouter } from "next/navigation";
+import { FindQuizResult } from "../../server-action/backend/quiz/dto";
+import { findQuizAction } from "../../server-action/backend/quiz/api";
+import { isHttpException, isServerActionError } from "../../server-action/backend/util";
 
 interface QuizCardGridProps  {
     findResult : FindQuizResult;
@@ -13,7 +15,7 @@ interface QuizCardGridProps  {
 
 export function QuizCardGrid( props: QuizCardGridProps ): React.JSX.Element {
 
-    const [findQuizzes,setFindQuizzes] = useState<Quiz[]>(props.findResult.data); // Q. 초기값은 언제 반영되지? 만약 다른 state가 갱신되면, 현재 state는 기존값 유지 Or 초기값? 
+    const [findQuizzes,setFindQuizzes] = useState<ShortQuiz[]>(props.findResult.data); // Q. 초기값은 언제 반영되지? 만약 다른 state가 갱신되면, 현재 state는 기존값 유지 Or 초기값? 
     const isLoadingRef : MutableRefObject<boolean>= useRef(false);
     const findResultRef = useRef<FindQuizResult>(props.findResult);
     const router = useRouter();
@@ -21,7 +23,7 @@ export function QuizCardGrid( props: QuizCardGridProps ): React.JSX.Element {
 
 
 
-    const handleClickCard = (quiz : Quiz) =>{
+    const handleClickCard = (quiz : ShortQuiz) =>{
         const url : string = `/quiz/${quiz.id}`;
         router.push(url);
     }
@@ -38,11 +40,20 @@ export function QuizCardGrid( props: QuizCardGridProps ): React.JSX.Element {
             isLoadingRef.current = true;
 
             console.log(`load ${findResultRef.current.pagination +1} page`);
-            const result : FindQuizResult = await findQuiz([],[],[],findResultRef.current.pagination+1);
-            findResultRef.current = result;
-            setFindQuizzes(prev=> [...prev, ...result.data]);
-            
-            isLoadingRef.current = false;
+            const response  = await findQuizAction([],[],[],findResultRef.current.pagination+1);
+            if(isServerActionError(response)){
+                throw new Error(response.message);
+            }
+            else if(isHttpException(response)){
+                const errorMessage = Array.isArray(response.message) ? response.message.join('\n') : response.message;
+                
+                throw new Error(errorMessage);
+            }else{
+                findResultRef.current = response;
+                setFindQuizzes(prev=> [...prev, ...response.data]);
+                
+                isLoadingRef.current = false;
+            }
         }
 
 

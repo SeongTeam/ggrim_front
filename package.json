@@ -9,6 +9,7 @@
         "lint": "next lint"
     },
     "dependencies": {
+        "@dataui/crud-request": "^5.3.4",
         "@heroicons/react": "^2.1.5",
         "@nextui-org/spacer": "^2.2.6",
         "@nextui-org/theme": "^2.4.5",

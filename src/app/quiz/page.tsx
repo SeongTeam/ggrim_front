@@ -1,16 +1,27 @@
-import { findQuiz } from '../lib/api.backend';
 import { QuizCardGrid } from '../../components/quiz/QuizCardGrid';
-import { FindQuizResult } from '../lib/dto';
+import { findQuizAction } from '../../server-action/backend/quiz/api';
+import { isHttpException, isServerActionError } from '../../server-action/backend/util';
+
 
 
 export default async function QuizListPage() {
 
 
-    const findQuizResult : FindQuizResult = await findQuiz();
+    const response  = await findQuizAction();
+
+    if(isServerActionError(response)){
+        throw new Error(response.message);
+    }
+    else if(isHttpException(response)){
+        const errorMessage = Array.isArray(response.message) ? response.message.join('\n') : response.message;
+        //TODO GET Method HTTP Exception 처리방법
+        // 에러 팝업으로 에러메세지를 보여주고, Home으로 이동?
+        throw new Error(errorMessage);
+    }
 
     return (
         <div>
-            <QuizCardGrid findResult={findQuizResult} />
+            <QuizCardGrid findResult={response} />
         </div>
     );
 }

@@ -1,8 +1,8 @@
 import React, { Suspense } from "react";
-import { findPainting } from "../lib/api.backend";
-import { FindPaintingResult } from '../lib/dto';
 import { PaintingCardGrid } from "../../components/search/PaintingCardGrid";
 import { serverLogger } from "../../util/logger";
+import {  findPaintingAction } from "../../server-action/backend/painting/api";
+import { isHttpException, isServerActionError } from "../../server-action/backend/util";
 
 
 // TODO: Search Page 개선
@@ -35,12 +35,22 @@ import { serverLogger } from "../../util/logger";
     const searchTags = typeof tags === 'string' ? [tags] : tags;
     const searchStyles = typeof styles ==='string' ? [styles] : styles;
 
-    const result : FindPaintingResult = await findPainting(searchTitle,searchArtist,searchTags,searchStyles);
+    const response = await findPaintingAction(searchTitle,searchArtist,searchTags,searchStyles);
     serverLogger.info(`{path : /search}current param : $${JSON.stringify({title,artist,tags,styles})}`);
+
+      if(isServerActionError(response)){
+          throw new Error(response.message);
+      }
+      else if(isHttpException(response)){
+          const errorMessage = Array.isArray(response.message) ? response.message.join('\n') : response.message;
+          
+          throw new Error(errorMessage);
+      }
+
     return (
       <Suspense>
         <div className="mt-20">
-          <PaintingCardGrid findResult={result}  />
+          <PaintingCardGrid findResult={response}  />
         </div>
       </Suspense>
     );
