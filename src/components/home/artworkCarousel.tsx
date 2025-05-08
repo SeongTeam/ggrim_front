@@ -1,11 +1,11 @@
 'use client';
 
 import { FeaturedImageGallery } from '@/components/home/components/featured_image_gallery';
-import { CuratedArtWorkAttribute } from '@/model/interface/curatedArtwork-types';
 import React from 'react';
+import { Painting } from '../../model/interface/painting';
 
 interface ArtworkCarouselProps {
-    curatedWorkAttributes: CuratedArtWorkAttribute[];
+    curatedWorkAttributes: Painting[];
 }
 
 export function ArtworkCarousel(props: ArtworkCarouselProps) {
@@ -23,7 +23,7 @@ export function ArtworkCarousel(props: ArtworkCarouselProps) {
                     </div>
                 </div>
                 <div className="w-lg bg-ggrimGrey1">
-                    <FeaturedImageGallery imageData={curatedWorkAttributes} />
+                    <FeaturedImageGallery paintings={curatedWorkAttributes} />
                 </div>
             </div>
         </section>
