@@ -9,6 +9,7 @@ import { addQuizContextAction, scheduleQuizAction } from '../../server-action/ba
 import { QuizStatus } from '../../server-action/backend/quiz/type';
 import { isHttpException, isServerActionError } from '../../server-action/backend/util';
 import { QuizContextDTO } from '../../server-action/backend/quiz/dto';
+import {  getPaintingAction } from '../../server-action/backend/painting/api';
 interface DetailQuizProps {
     quiz: Quiz;
 }
@@ -69,8 +70,16 @@ export function DetailQuiz({ quiz }: DetailQuizProps): React.JSX.Element {
     // * 참고: <관련 정보나 링크>
     const handleImageSelected = async (selectedPainting : Painting) => {
 
+        const detailPainting = await getPaintingAction(selectedPainting.id);
+        if(isHttpException(detailPainting)){
+            const errorMessage = Array.isArray(detailPainting.message) ? detailPainting.message.join('\n') : detailPainting.message;
+            throw new Error(errorMessage);
+        }
+        else if(isServerActionError(detailPainting)){
+            throw new Error(detailPainting.message);
+        }
 
-        const response = await addQuizContextAction(generateQuizContextDTO(selectedPainting));
+        const response = await addQuizContextAction(generateQuizContextDTO(detailPainting));
         if(isHttpException(response)){
             const errorMessage = Array.isArray(response.message) ? response.message.join('\n') : response.message;
             if(response.statusCode < 500){
@@ -97,7 +106,6 @@ export function DetailQuiz({ quiz }: DetailQuizProps): React.JSX.Element {
 }
 
 const generateQuizContextDTO = (painting : Painting) : QuizContextDTO => {
-    
     const contextDTO : QuizContextDTO= {artist : painting.artist.name, page : 0};
     return contextDTO;
 }

@@ -179,11 +179,14 @@ const deleteQuizReaction = async (quizID: string): Promise<boolean | HttpExcepti
 const scheduleQuiz = async (quizStatus?: QuizStatus): Promise<ResponseQuizDTO | HttpException> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/quiz/schedule`;
-
-    const currentIndexParam = `currentIndex=${quizStatus?.currentIndex}`;
-    const endIndexParam = `endIndex=${quizStatus?.endIndex}`;
-    const contextParam = `context=` + JSON.stringify(quizStatus?.context);
-    const response = await fetch(url + `?${currentIndexParam}&${endIndexParam}&${contextParam}`);
+    let param = '';
+    if (quizStatus) {
+        const currentIndexParam = `currentIndex=${quizStatus?.currentIndex || ''}`;
+        const endIndexParam = `endIndex=${quizStatus?.endIndex || ''}`;
+        const contextParam = `context=` + JSON.stringify(quizStatus?.context) || '';
+        param += `?${currentIndexParam}&${endIndexParam}&${contextParam}`;
+    }
+    const response = await fetch(url + param);
 
     if (!response.ok) {
         const error: HttpException = await response.json();
@@ -196,8 +199,12 @@ const scheduleQuiz = async (quizStatus?: QuizStatus): Promise<ResponseQuizDTO | 
 const addQuizContext = async (dto: QuizContextDTO): Promise<boolean | HttpException> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/quiz/schedule`;
+    const headers = {
+        'Content-Type': 'application/json',
+    };
     const response = await fetch(url, {
         method: 'POST',
+        headers,
         body: JSON.stringify(dto),
     });
 
