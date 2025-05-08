@@ -1,6 +1,6 @@
 'use client';
 import { MutableRefObject, useEffect, useRef, useState } from "react";
-import { Painting } from "../../model/interface/painting";
+import { Painting, ShortPainting } from "../../model/interface/painting";
 import HoverCard from "../HoverCard";
 import { PreviewPainting } from '../PreviewPainting';
 import { Modal } from "../Modal";
@@ -18,7 +18,7 @@ interface PaintingCardGridProps  {
 export function PaintingCardGrid( props: PaintingCardGridProps ): React.JSX.Element {
 
     const [selectedPainting , setSelectedPainting] = useState<Painting|undefined>(undefined);
-    const [searchPaintings,setSearchPaintings] = useState<Painting[]>(props.findResult.data); // Q. 초기값은 언제 반영되지? 만약 다른 state가 갱신되면, 현재 state는 기존값 유지 Or 초기값? 
+    const [searchPaintings,setSearchPaintings] = useState<ShortPainting[]>(props.findResult.data); // Q. 초기값은 언제 반영되지? 만약 다른 state가 갱신되면, 현재 state는 기존값 유지 Or 초기값? 
     const isLoadingRef : MutableRefObject<boolean>= useRef(false);
     const findResultRef = useRef<FindPaintingResult>(props.findResult);
     const searchParam = useSearchParams();
@@ -59,9 +59,19 @@ export function PaintingCardGrid( props: PaintingCardGridProps ): React.JSX.Elem
             const searchTags : string[]= searchParam.getAll('tags') || [];
             const searchStyles : string[] = searchParam.getAll('styles') || [];
             console.log(`load ${findResultRef.current.pagination +1} page`);
-            const result : FindPaintingResult = await findPaintingAction(searchTitle,searchArtist,searchTags,searchStyles,findResultRef.current.pagination+1);
-            findResultRef.current = result;
-            setSearchPaintings(prev=> [...prev, ...result.data]);
+            const response = await findPaintingAction(searchTitle,searchArtist,searchTags,searchStyles,findResultRef.current.pagination+1);
+
+            if(isServerActionError(response)){
+                throw new Error(response.message);
+            }
+            else if(isHttpException(response)){
+                const errorMessage = Array.isArray(response.message) ? response.message.join('\n') : response.message;
+                
+                throw new Error(errorMessage);
+            }
+
+            findResultRef.current = response;
+            setSearchPaintings(prev=> [...prev, ...response.data]);
             
             isLoadingRef.current = false;
         }
@@ -121,7 +131,7 @@ export function PaintingCardGrid( props: PaintingCardGridProps ): React.JSX.Elem
                         cardProps ={{imageSrc : item.image_url, alt : item.title, title : item.title}}
                         onClick={()=>openModal(item.id)}
                         >
-                        <PreviewPainting painting={item} />
+                        <PreviewPainting shortPainting={item} />
                     </HoverCard>
                     </div>
                 ))}
