@@ -5,6 +5,7 @@ import RecoilRootWrapper from '@/recoil/recoil_wrapper';
 import { Suspense } from 'react';
 import Navbar from '../components/Navbar';
 import Loading from '../components/Loading';
+import { Toaster } from 'react-hot-toast';
 
 const roboto = Roboto({
     subsets: ['latin'],
@@ -32,6 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <head></head>
             <body className={roboto.className}>
                 <RecoilRootWrapper>
+                    <Toaster position="top-center" />
                     <Suspense fallback={<Loading />}>
                         <div className="mb-16">
                             <Navbar />
