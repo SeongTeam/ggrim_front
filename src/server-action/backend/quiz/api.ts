@@ -5,6 +5,7 @@ import { Quiz, QuizDislike, QuizLike } from '../../../model/interface/quiz';
 import { getSignInResponseOrRedirect } from '../cookie';
 import {
     CreateQuizDTO,
+    DetailQuizDTO,
     FindQuizResult,
     QuizContextDTO,
     QuizReactionDTO,
@@ -55,7 +56,7 @@ const findQuiz = async (
     return result;
 };
 
-const getQuiz = async (id: string): Promise<Quiz> => {
+const getQuiz = async (id: string): Promise<DetailQuizDTO> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/quiz/${id}`;
     const response = await fetch(url);

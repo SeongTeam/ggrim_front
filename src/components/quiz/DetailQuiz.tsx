@@ -1,5 +1,4 @@
 'use client'
-import { Quiz } from '../../model/interface/quiz';
 import MCQView from '@/components/home/components/MCQ_view';
 import { MCQ } from '../../model/interface/MCQ';
 
@@ -8,10 +7,10 @@ import { Painting } from '../../model/interface/painting';
 import { addQuizContextAction, scheduleQuizAction } from '../../server-action/backend/quiz/api';
 import { QuizStatus } from '../../server-action/backend/quiz/type';
 import { isHttpException, isServerActionError } from '../../server-action/backend/util';
-import { QuizContextDTO } from '../../server-action/backend/quiz/dto';
+import { DetailQuizDTO, QuizContextDTO } from '../../server-action/backend/quiz/dto';
 import {  getPaintingAction } from '../../server-action/backend/painting/api';
 interface DetailQuizProps {
-    quiz: Quiz;
+    detailQuizDTO: DetailQuizDTO;
 }
 
 // TODO: <DetailQuiz/> 성능 개선
@@ -22,7 +21,8 @@ interface DetailQuizProps {
 // ? 질문: <의문점 또는 개선 방향>
 // * 참고: <관련 정보나 링크>
 
-export function DetailQuiz({ quiz }: DetailQuizProps): React.JSX.Element {
+export function DetailQuiz({ detailQuizDTO }: DetailQuizProps): React.JSX.Element {
+    const { quiz, reactionCount, userReaction } = detailQuizDTO;
     const mcq : MCQ= {
         id : quiz.id,
         distractorPaintings : quiz.distractor_paintings,

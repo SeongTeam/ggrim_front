@@ -1,4 +1,4 @@
-import { QUIZ_TYPE, ShortQuiz } from '../../../model/interface/quiz';
+import { Quiz, QUIZ_TYPE, ShortQuiz } from '../../../model/interface/quiz';
 import { IPaginationResult } from '../common.dto';
 import { QuizReactionType, QuizStatus } from './type';
 export type FindQuizResult = IPaginationResult<ShortQuiz>;
@@ -36,4 +36,15 @@ export interface ResponseQuizDTO {
 
 export interface QuizSubmitDTO {
     isCorrect: boolean;
+}
+
+export interface QuizReactionCount {
+    likeCount: number;
+    dislikeCount: number;
+}
+
+export interface DetailQuizDTO {
+    quiz: Quiz;
+    reactionCount: QuizReactionCount;
+    userReaction: QuizReactionType;
 }

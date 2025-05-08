@@ -23,7 +23,7 @@ export default async function QuizDetailPage({ params }: QuizDetailPageProps) {
 
     return (
         <div>
-            <DetailQuiz quiz={response} />
+            <DetailQuiz detailQuizDTO={response} />
         </div>
     );
 }
