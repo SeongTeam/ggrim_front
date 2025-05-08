@@ -1,16 +1,15 @@
 'server-only';
-
+'use server';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { OneTimeToken, SignInResponse } from './auth/type';
 import { ResponseCookies } from 'next/dist/compiled/@edge-runtime/cookies';
-
-export const ENUM_COOKIE_KEY = {
+const ENUM_COOKIE_KEY = {
     SIGN_IN_RESPONSE: 'SignInResponse',
     ONE_TIME_TOKEN: 'OneTimeToken',
 };
 
-export function getOneTimeTokenOrRedirect(): OneTimeToken {
+export async function getOneTimeTokenOrRedirect(): Promise<OneTimeToken> {
     const cookieStore = cookies();
     const oneTimeToken = cookieStore.get(ENUM_COOKIE_KEY.ONE_TIME_TOKEN)?.value;
 
@@ -21,7 +20,7 @@ export function getOneTimeTokenOrRedirect(): OneTimeToken {
     return JSON.parse(oneTimeToken) as OneTimeToken;
 }
 
-export function getSignInResponseOrRedirect(): SignInResponse {
+export async function getSignInResponseOrRedirect(): Promise<SignInResponse> {
     const cookieStore = cookies();
     const signInResponse = cookieStore.get(ENUM_COOKIE_KEY.SIGN_IN_RESPONSE)?.value;
 
@@ -33,7 +32,7 @@ export function getSignInResponseOrRedirect(): SignInResponse {
     return JSON.parse(signInResponse) as SignInResponse;
 }
 
-export function setOneTimeToken(oneTimeToken: OneTimeToken): void {
+export async function setOneTimeToken(oneTimeToken: OneTimeToken): Promise<void> {
     const cookieStore = cookies();
     cookieStore.set(ENUM_COOKIE_KEY.ONE_TIME_TOKEN, JSON.stringify(oneTimeToken), {
         maxAge: 15 * 60, // 확인필요
@@ -43,7 +42,7 @@ export function setOneTimeToken(oneTimeToken: OneTimeToken): void {
     });
 }
 
-export function setSignInResponse(signInResponse: SignInResponse): void {
+export async function setSignInResponse(signInResponse: SignInResponse): Promise<void> {
     const cookieStore = cookies();
     cookieStore.set(ENUM_COOKIE_KEY.SIGN_IN_RESPONSE, JSON.stringify(signInResponse), {
         maxAge: 2 * 60 * 60, // 확인필요
@@ -53,7 +52,7 @@ export function setSignInResponse(signInResponse: SignInResponse): void {
     });
 }
 
-export function deleteSignInResponse(): ResponseCookies {
+export async function deleteSignInResponse(): Promise<ResponseCookies> {
     const cookieStore = cookies();
     const result = cookieStore.delete(ENUM_COOKIE_KEY.SIGN_IN_RESPONSE);
     return result;
