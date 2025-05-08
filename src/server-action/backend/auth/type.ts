@@ -1,3 +1,5 @@
+import { User } from '../../../model/interface/user';
+
 export const OneTimeTokenPurposeValues = {
     UPDATE_PASSWORD: 'update-password',
     DELETE_ACCOUNT: 'delete-account',
@@ -22,5 +24,5 @@ export interface OneTimeToken {
 export interface SignInResponse {
     accessToken: string;
     refreshToken: string;
-    email: string;
+    user: User;
 }
