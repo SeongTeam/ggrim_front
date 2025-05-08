@@ -22,7 +22,7 @@ interface DetailQuizProps {
 // * 참고: <관련 정보나 링크>
 
 export function DetailQuiz({ detailQuizDTO }: DetailQuizProps): React.JSX.Element {
-    const { quiz, reactionCount, userReaction } = detailQuizDTO;
+    const { quiz,  } = detailQuizDTO;
     const mcq : MCQ= {
         id : quiz.id,
         distractorPaintings : quiz.distractor_paintings,
