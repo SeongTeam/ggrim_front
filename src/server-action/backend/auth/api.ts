@@ -89,7 +89,7 @@ const generateSecurityToken = async (
     id: string,
     password: string,
     dto: CreateOneTimeTokenDTO,
-): Promise<OneTimeToken | HttpException> => {
+): Promise<boolean | HttpException> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/auth/security-token`;
     const credentials = btoa(`${id}:${password}`);
@@ -112,7 +112,7 @@ const generateSecurityToken = async (
 
     setOneTimeToken(result);
 
-    return result;
+    return true;
 };
 
 const sendSecurityTokenToEmail = async (
