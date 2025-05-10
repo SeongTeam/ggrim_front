@@ -80,7 +80,7 @@ const verifyEmail = async (dto: VerifyDTO): Promise<boolean | HttpException> => 
 
     const result: OneTimeToken = await response.json();
 
-    setOneTimeToken(result);
+    await setOneTimeToken(result);
 
     return true;
 };
@@ -110,7 +110,7 @@ const generateSecurityToken = async (
 
     const result: OneTimeToken = await response.json();
 
-    setOneTimeToken(result);
+    await setOneTimeToken(result);
 
     return true;
 };
