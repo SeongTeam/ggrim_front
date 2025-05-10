@@ -1,17 +1,19 @@
 'use server';
 import { RequestQueryBuilder } from '@dataui/crud-request';
-import { getServerUrl, withErrorHandler } from '../lib';
+import { cookieWithErrorHandler, getServerUrl, withErrorHandler } from '../lib';
 import { User } from '../../../model/interface/user';
 import { ENUM_ONE_TIME_TOKEN_HEADER, ENUM_SECURITY_TOKEN_HEADER } from '../auth/header';
 import { CreateUserDTO, ReplacePassWordDTO, ReplaceUsernameDTO } from './dto';
-import { getOneTimeTokenOrRedirect, getSignInResponseOrRedirect } from '../cookie';
 import { HttpException } from '../common.dto';
+import { OneTimeToken, SignInResponse } from '../auth/type';
+import { getOneTimeTokenOrRedirect, getSignInResponseOrRedirect } from '../cookie';
 
-const signUp = async (dto: CreateUserDTO): Promise<User | HttpException> => {
+const signUp = async (
+    oneTimeToken: OneTimeToken,
+    dto: CreateUserDTO,
+): Promise<User | HttpException> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/user`;
-
-    const oneTimeToken = await getOneTimeTokenOrRedirect();
 
     const headers = {
         'Content-Type': 'application/json',
@@ -62,13 +64,11 @@ const findUsers = async (queryBuilder: RequestQueryBuilder): Promise<User[] | Ht
 };
 
 const updateUserPW = async (
-    user: User,
+    oneTimeToken: OneTimeToken,
     dto: ReplacePassWordDTO,
 ): Promise<boolean | HttpException> => {
     const backendUrl = getServerUrl();
-    const url = `${backendUrl}/user/${user.email}/password`;
-
-    const oneTimeToken = await getOneTimeTokenOrRedirect();
+    const url = `${backendUrl}/user/${oneTimeToken.email}/password`;
 
     const headers = {
         'Content-Type': 'application/json',
@@ -90,13 +90,12 @@ const updateUserPW = async (
 };
 
 const updateUserUsername = async (
-    user: User,
+    signInResponse: SignInResponse,
     dto: ReplaceUsernameDTO,
 ): Promise<boolean | HttpException> => {
     const backendUrl = getServerUrl();
-    const url = `${backendUrl}/user/${user.email}/username`;
+    const url = `${backendUrl}/user/${signInResponse.user.email}/username`;
 
-    const signInResponse = await getSignInResponseOrRedirect();
     const headers: HeadersInit = {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${signInResponse.accessToken}`,
@@ -115,11 +114,12 @@ const updateUserUsername = async (
     return true;
 };
 
-const deleteUser = async (user: User): Promise<boolean | HttpException> => {
+const deleteUser = async (
+    oneTimeToken: OneTimeToken,
+    user: User,
+): Promise<boolean | HttpException> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/user/${user.email}`;
-
-    const oneTimeToken = await getOneTimeTokenOrRedirect();
 
     const headers = {
         'Content-Type': 'application/json',
@@ -139,12 +139,12 @@ const deleteUser = async (user: User): Promise<boolean | HttpException> => {
     return true;
 };
 
-const recoverUser = async (email: string): Promise<boolean | HttpException> => {
+const recoverUser = async (
+    oneTimeToken: OneTimeToken,
+    email: string,
+): Promise<boolean | HttpException> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/user/recover/${email}`;
-
-    const oneTimeToken = await getOneTimeTokenOrRedirect();
-
     const headers = {
         'Content-Type': 'application/json',
         [ENUM_SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN_ID]: oneTimeToken.token,
@@ -163,15 +163,18 @@ const recoverUser = async (email: string): Promise<boolean | HttpException> => {
     return true;
 };
 
-export const signUpAction = withErrorHandler(signUp);
+export const signUpAction = cookieWithErrorHandler(getOneTimeTokenOrRedirect, signUp);
 
 export const getUserAction = withErrorHandler(getUser);
 
 export const findUsersAction = withErrorHandler(findUsers);
 
-export const updateUserPWAction = withErrorHandler(updateUserPW);
+export const updateUserPWAction = cookieWithErrorHandler(getOneTimeTokenOrRedirect, updateUserPW);
 
-export const updateUserUsernameAction = withErrorHandler(updateUserUsername);
+export const updateUserUsernameAction = cookieWithErrorHandler(
+    getSignInResponseOrRedirect,
+    updateUserUsername,
+);
 
-export const deleteUserAction = withErrorHandler(deleteUser);
-export const recoverUserAction = withErrorHandler(recoverUser);
+export const deleteUserAction = cookieWithErrorHandler(getOneTimeTokenOrRedirect, deleteUser);
+export const recoverUserAction = cookieWithErrorHandler(getOneTimeTokenOrRedirect, recoverUser);

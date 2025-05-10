@@ -178,4 +178,8 @@ export const generateSecurityTokenAction = withErrorHandler(generateSecurityToke
 
 export const sendSecurityTokenToEmailAction = withErrorHandler(sendSecurityTokenToEmail);
 
+export const generateSecurityTokenByEmailVerificationAction = withErrorHandler(
+    generateSecurityTokenByEmailVerification,
+);
+
 export const signOutAction = withErrorHandler(signOut);

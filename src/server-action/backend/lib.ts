@@ -48,3 +48,15 @@ export function withErrorHandler<T extends (...args: any[]) => Promise<any>>(
         }
     };
 }
+
+type TailParameters<T> = T extends (cookie: any, ...args: infer R) => any ? R : never;
+
+export function cookieWithErrorHandler<C, T extends (cookie: C, ...args: any[]) => Promise<any>>(
+    getCookie: () => Promise<C>,
+    action: T,
+): (...args: TailParameters<T>) => Promise<Awaited<ReturnType<T>> | ServerActionError> {
+    return async (...args: TailParameters<T>) => {
+        const cookie = await getCookie();
+        return withErrorHandler(() => action(cookie, ...args))();
+    };
+}
