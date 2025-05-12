@@ -57,3 +57,9 @@ export async function deleteSignInResponse(): Promise<ResponseCookies> {
     const result = cookieStore.delete(ENUM_COOKIE_KEY.SIGN_IN_RESPONSE);
     return result;
 }
+
+export async function deleteOneTimeToken(): Promise<ResponseCookies> {
+    const cookieStore = cookies();
+    const result = cookieStore.delete(ENUM_COOKIE_KEY.ONE_TIME_TOKEN);
+    return result;
+}
