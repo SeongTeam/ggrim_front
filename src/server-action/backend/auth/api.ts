@@ -162,6 +162,10 @@ const generateSecurityTokenByEmailVerification = async (
         return error;
     }
 
+    const result: OneTimeToken = await response.json();
+
+    await setOneTimeToken(result);
+
     return true;
 };
 
