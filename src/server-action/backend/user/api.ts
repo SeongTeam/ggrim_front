@@ -120,8 +120,8 @@ const deleteUser = async (oneTimeToken: OneTimeToken): Promise<boolean | HttpExc
 
     const headers = {
         'Content-Type': 'application/json',
-        [ENUM_SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN_ID]: oneTimeToken.token,
-        [ENUM_SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN]: oneTimeToken.id,
+        [ENUM_SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN_ID]: oneTimeToken.id,
+        [ENUM_SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN]: oneTimeToken.token,
     };
     const response = await fetch(url, {
         method: 'DELETE',
