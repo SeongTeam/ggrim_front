@@ -114,12 +114,9 @@ const updateUserUsername = async (
     return true;
 };
 
-const deleteUser = async (
-    oneTimeToken: OneTimeToken,
-    user: User,
-): Promise<boolean | HttpException> => {
+const deleteUser = async (oneTimeToken: OneTimeToken): Promise<boolean | HttpException> => {
     const backendUrl = getServerUrl();
-    const url = `${backendUrl}/user/${user.email}`;
+    const url = `${backendUrl}/user/${oneTimeToken.email}`;
 
     const headers = {
         'Content-Type': 'application/json',
