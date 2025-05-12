@@ -43,9 +43,12 @@ export const EmailVerificationForm = ({nextRoute} : EmailVerificationForm) => {
         }
 
     }
-    else{
+    else if( response === true){
       setIsPinCodeSent(true);
-        toast.success('check your email');
+      toast.success('check your email');
+    }
+    else{
+      toast.error('invalid access');
     }
 
 

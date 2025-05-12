@@ -74,9 +74,12 @@ export default function SignUpForm() {
         }
 
     }
-    else{
+    else if(response){
         setForm({...initState, successMessage : 'Success Sign Up'});
     }
+    else{
+        toast.error('invalid access');
+      }
 
   }
 

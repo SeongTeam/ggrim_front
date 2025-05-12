@@ -6,7 +6,7 @@ import { isHttpException, isServerActionError } from '../../server-action/backen
 import { HttpStatus } from '../../server-action/backend/status'
 
 interface EmailForm {
-    emailFormAction : (email : string ) => Promise<any>
+    emailFormAction : (email : string ) => Promise<boolean>
 }
 
  const EmailForm = ({
@@ -40,8 +40,11 @@ interface EmailForm {
            }
    
        }
-       else{
+       else if(response === true) {
            toast.success('success');
+       }
+       else{
+        toast.error('invalid access');
        }
   }
 
