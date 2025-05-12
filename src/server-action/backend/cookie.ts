@@ -14,7 +14,7 @@ export async function getOneTimeTokenOrRedirect(): Promise<OneTimeToken> {
     const oneTimeToken = cookieStore.get(ENUM_COOKIE_KEY.ONE_TIME_TOKEN)?.value;
 
     if (!oneTimeToken) {
-        redirect('/home');
+        redirect('/');
     }
 
     return JSON.parse(oneTimeToken) as OneTimeToken;
@@ -25,7 +25,7 @@ export async function getSignInResponseOrRedirect(): Promise<SignInResponse> {
     const signInResponse = cookieStore.get(ENUM_COOKIE_KEY.SIGN_IN_RESPONSE)?.value;
 
     if (!signInResponse) {
-        redirect('/home');
+        redirect('/auth/sign-in');
         // return undefined;
     }
 
