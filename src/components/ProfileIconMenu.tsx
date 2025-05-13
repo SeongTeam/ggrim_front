@@ -8,6 +8,8 @@ import { useRouter } from "next/navigation";
 import { isServerActionError } from "../server-action/backend/util";
 import { syncUserToLocalStorage, getRunningUser, removeRunningUser } from "../storage/local/runningUser";
 import { PROFILE_LOGIC_ROUTE } from "../route/profile/route";
+import { AUTH_LOGIC_ROUTE } from "../route/auth/route";
+import toast from "react-hot-toast";
 
 interface ProfileIconMenuProps {
   user : User
@@ -50,18 +52,30 @@ export function ProfileIconMenu({ user }: ProfileIconMenuProps) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  //TODO 로그인 정보 유지 기능 개선하기
+  // - [ ] : 브라우저 메모리와 쿠키간의 정보 동기화 구현하기
+  // -> 현재 로직은 동기화가 예상대로 안됨. layout.tsx 파일이 언제 렌더링되는지 파악필요.
+
+
   useEffect(()=> {
+    const runningUser = getRunningUser();
+    // console.log('useEffect');
+    // console.log(runningUser,user);
     if(!user){
+      if(runningUser){
+        toast.error('Session Expired. please, sign in again');
+        router.push(AUTH_LOGIC_ROUTE.SIGN_IN);
+        return;
+      }
       return;
     }
 
-    const runningUser = getRunningUser();
     if(!runningUser || runningUser.id !== user.id){
       syncUserToLocalStorage(user);
       return;
     }
 
-  },[user]);
+  },[user,router]);
 
   return (
     <div className="relative" ref={menuRef}>
