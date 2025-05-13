@@ -38,7 +38,7 @@ interface verifyUserByEmailProps {
   return (
     <main className="min-h-screen flex items-center justify-center bg-black text-white">
       <div className="bg-neutral-900 p-8 rounded-md shadow-md w-full max-w-md space-y-6">
-      <h1 className="text-3xl font-bold mb-6">Verify By Email</h1>
+      <h1 className="text-3xl font-bold mb-6">Verify User By Email</h1>
         <EmailForm  
             emailFormAction={handleAction}
         />

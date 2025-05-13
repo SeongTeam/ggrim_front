@@ -22,7 +22,7 @@ export default async function UpdatePassword({
   return (
     <main className="flex items-center justify-center min-h-screen bg-cover bg-center">
       <div className="bg-black bg-opacity-75 p-8 rounded-md w-full max-w-md">
-        <h1 className="text-3xl font-bold mb-6">Sign In</h1>
+        <h1 className="text-3xl font-bold mb-6">Update Password</h1>
         <PasswordUpdateForm 
           formAction={handleAction}
           NextRoute={'/'} 
