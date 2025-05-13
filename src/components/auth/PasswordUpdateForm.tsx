@@ -46,12 +46,10 @@ export const PasswordUpdateForm = ({ formAction, NextRoute} : PasswordUpdateForm
       }
     }
     else if ( response == true){ 
-        console.log(response);
         toast.success('success');
         router.push(NextRoute);
     }
     else {
-      console.log(response);
       toast.error('invalid page');
     }
 

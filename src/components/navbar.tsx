@@ -20,8 +20,6 @@ import Link from "next/link";
 export default function Navbar() {
 
   const user :User|undefined = getSignInInfo();
-  console.log(user);
-
   return (
     <nav
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300
