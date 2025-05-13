@@ -2,6 +2,9 @@ import NavbarMenu from "./NavbarMenu";
 import { SearchPaintingIconMenu } from "./SearchPaintingIconMenu";
 import { NotifyIconMenu } from "./NotificationIconMenu";
 import { ProfileIconMenu } from "./ProfileIconMenu";
+import { getSignInInfo } from "../server-action/backend/cookie";
+import { User } from "../model/interface/user";
+import Link from "next/link";
 
 
 // TODO: NavBar UI 개선
@@ -16,6 +19,8 @@ import { ProfileIconMenu } from "./ProfileIconMenu";
 
 export default function Navbar() {
 
+  const user :User|undefined = getSignInInfo();
+  // console.log(user);
   return (
     <nav
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300
@@ -33,8 +38,20 @@ export default function Navbar() {
             <div className="hidden sm:block">
               <SearchPaintingIconMenu />
             </div>
-            <NotifyIconMenu />
-            <ProfileIconMenu />
+            {!user && 
+                <Link
+                  href="/auth/sign-in"
+                  className="inline-block px-6 py-2 bg-red-600 text-white font-semibold rounded hover:bg-red-700 transition duration-300 shadow-md"
+                >
+                  Sign In
+                </Link>
+            }
+            {user &&
+              <div className="flex space-x-4">
+                <NotifyIconMenu />
+                <ProfileIconMenu user={user} />
+              </div>
+            }
           </div>
         </div>
       </div>

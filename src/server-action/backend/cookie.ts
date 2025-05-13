@@ -1,9 +1,9 @@
 'server-only';
-'use server';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { OneTimeToken, SignInResponse } from './auth/type';
 import { ResponseCookies } from 'next/dist/compiled/@edge-runtime/cookies';
+import { AUTH_LOGIC_ROUTE } from '../../route/auth/route';
 const ENUM_COOKIE_KEY = {
     SIGN_IN_RESPONSE: 'SignInResponse',
     ONE_TIME_TOKEN: 'OneTimeToken',
@@ -14,7 +14,7 @@ export async function getOneTimeTokenOrRedirect(): Promise<OneTimeToken> {
     const oneTimeToken = cookieStore.get(ENUM_COOKIE_KEY.ONE_TIME_TOKEN)?.value;
 
     if (!oneTimeToken) {
-        redirect('/home');
+        redirect('/');
     }
 
     return JSON.parse(oneTimeToken) as OneTimeToken;
@@ -25,7 +25,7 @@ export async function getSignInResponseOrRedirect(): Promise<SignInResponse> {
     const signInResponse = cookieStore.get(ENUM_COOKIE_KEY.SIGN_IN_RESPONSE)?.value;
 
     if (!signInResponse) {
-        redirect('/home');
+        redirect(AUTH_LOGIC_ROUTE.SIGN_IN);
         // return undefined;
     }
 
@@ -56,4 +56,26 @@ export async function deleteSignInResponse(): Promise<ResponseCookies> {
     const cookieStore = cookies();
     const result = cookieStore.delete(ENUM_COOKIE_KEY.SIGN_IN_RESPONSE);
     return result;
+}
+
+export async function deleteOneTimeToken(): Promise<ResponseCookies> {
+    const cookieStore = cookies();
+    const result = cookieStore.delete(ENUM_COOKIE_KEY.ONE_TIME_TOKEN);
+    return result;
+}
+
+export function getSignInInfo() {
+    const cookieStore = cookies();
+    const rawSignInResponse = cookieStore.get(ENUM_COOKIE_KEY.SIGN_IN_RESPONSE)?.value;
+    if (rawSignInResponse) {
+        const signInResponse: SignInResponse = JSON.parse(rawSignInResponse);
+        const { user } = signInResponse;
+
+        return user;
+    }
+
+    return undefined;
+}
+export interface SignInInfo {
+    username: string;
 }

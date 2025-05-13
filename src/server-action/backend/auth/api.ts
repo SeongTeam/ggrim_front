@@ -9,6 +9,7 @@ import {
 import { OneTimeToken, SignInResponse } from './type';
 import { deleteSignInResponse, setOneTimeToken, setSignInResponse } from '../cookie';
 import { HttpException } from '../common.dto';
+import { ENUM_SECURITY_TOKEN_HEADER } from './header';
 
 //TODO : 사용자 정보를 반환하도록 수정하기
 const signIn = async (id: string, password: string): Promise<boolean | HttpException> => {
@@ -80,7 +81,7 @@ const verifyEmail = async (dto: VerifyDTO): Promise<boolean | HttpException> => 
 
     const result: OneTimeToken = await response.json();
 
-    setOneTimeToken(result);
+    await setOneTimeToken(result);
 
     return true;
 };
@@ -89,7 +90,7 @@ const generateSecurityToken = async (
     id: string,
     password: string,
     dto: CreateOneTimeTokenDTO,
-): Promise<OneTimeToken | HttpException> => {
+): Promise<boolean | HttpException> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/auth/security-token`;
     const credentials = btoa(`${id}:${password}`);
@@ -110,18 +111,45 @@ const generateSecurityToken = async (
 
     const result: OneTimeToken = await response.json();
 
-    setOneTimeToken(result);
+    await setOneTimeToken(result);
 
-    return result;
+    return true;
 };
 
 const sendSecurityTokenToEmail = async (
     dto: SendOneTimeTokenDTO,
 ): Promise<boolean | HttpException> => {
     const backendUrl = getServerUrl();
-    const url = `${backendUrl}/auth/security-token/send`;
+    const url = `${backendUrl}/auth/security-token/email-verification`;
     const headers = {
         'Content-Type': 'application/json',
+    };
+
+    const response = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(dto),
+    });
+
+    if (!response.ok) {
+        const error: HttpException = await response.json();
+        return error;
+    }
+
+    return true;
+};
+
+const generateSecurityTokenByEmailVerification = async (
+    dto: CreateOneTimeTokenDTO,
+    accessToken: string,
+    identifier: string,
+): Promise<boolean | HttpException> => {
+    const backendUrl = getServerUrl();
+    const url = `${backendUrl}/auth/security-token/from-email-verification`;
+    const headers = {
+        'Content-Type': 'application/json',
+        [ENUM_SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN]: accessToken,
+        [ENUM_SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN_ID]: identifier,
     };
     const response = await fetch(url, {
         method: 'POST',
@@ -133,6 +161,10 @@ const sendSecurityTokenToEmail = async (
         const error: HttpException = await response.json();
         return error;
     }
+
+    const result: OneTimeToken = await response.json();
+
+    await setOneTimeToken(result);
 
     return true;
 };
@@ -149,5 +181,9 @@ export const verifyEmailAction = withErrorHandler(verifyEmail);
 export const generateSecurityTokenAction = withErrorHandler(generateSecurityToken);
 
 export const sendSecurityTokenToEmailAction = withErrorHandler(sendSecurityTokenToEmail);
+
+export const generateSecurityTokenByEmailVerificationAction = withErrorHandler(
+    generateSecurityTokenByEmailVerification,
+);
 
 export const signOutAction = withErrorHandler(signOut);

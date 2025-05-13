@@ -38,7 +38,6 @@ export function throttle<T extends (...args: any[]) => void>(
 export function debounce<T extends (...args: any[]) => void>(func: T, ms: number) {
     let timeout: NodeJS.Timeout;
     return function (this: ThisParameterType<T>, ...args: Parameters<T>) {
-        console.log(`timeout : ${timeout}`);
         clearTimeout(timeout);
         timeout = setTimeout(() => func.apply(this, args), ms);
     };
