@@ -3,7 +3,7 @@ import { generateSecurityTokenAction } from "../../../server-action/backend/auth
 import { OneTimeTokenPurposeValues } from "../../../server-action/backend/auth/type";
 import ErrorModal from "../../../components/ErrorModal";
 import AuthFooter from "../../../components/auth/AuthFooter";
-import { AUTH_LOGIC_ROUTE } from "../route";
+import { AUTH_LOGIC_ROUTE } from "../../../route/auth/route";
 
 
 

@@ -9,7 +9,7 @@ import { HttpStatus } from '../../server-action/backend/status'
 import { useRouter } from 'next/navigation'
 import GuideModal from '../GuideModal'
 import ErrorModal from '../ErrorModal'
-import { AUTH_LOGIC_ROUTE } from '../../app/auth/route'
+import { AUTH_LOGIC_ROUTE } from '../../route/auth/route'
 
 interface SignUpState {
   username: string

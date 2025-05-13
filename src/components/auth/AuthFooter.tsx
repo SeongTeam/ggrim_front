@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { AUTH_LOGIC_ROUTE } from "../../app/auth/route";
+import { AUTH_LOGIC_ROUTE } from "../../route/auth/route";
 
 type FooterState = keyof typeof AUTH_LOGIC_ROUTE;
 export interface AuthFooterProps {
