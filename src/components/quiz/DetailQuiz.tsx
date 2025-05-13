@@ -9,6 +9,7 @@ import { QuizStatus } from '../../server-action/backend/quiz/type';
 import { isHttpException, isServerActionError } from '../../server-action/backend/util';
 import { DetailQuizDTO, QuizContextDTO } from '../../server-action/backend/quiz/dto';
 import {  getPaintingAction } from '../../server-action/backend/painting/api';
+import { getQuizStatus, saveQuizStatus } from '../../storage/local/quiz';
 interface DetailQuizProps {
     detailQuizDTO: DetailQuizDTO;
 }
@@ -37,12 +38,8 @@ export function DetailQuiz({ detailQuizDTO }: DetailQuizProps): React.JSX.Elemen
 
 
     const handelNextMCQ = async () => {
-        const key = `quiz-status`
-        let rawStatus : string | undefined = undefined;
-        if(localStorage){
-            rawStatus = localStorage.getItem(key) || undefined;
-        }
-        const status : QuizStatus | undefined = rawStatus ? JSON.parse(rawStatus) : undefined;
+
+        const status : QuizStatus | undefined = getQuizStatus();
         const response = await scheduleQuizAction(status);
 
         if(isHttpException(response)){
@@ -53,7 +50,7 @@ export function DetailQuiz({ detailQuizDTO }: DetailQuizProps): React.JSX.Elemen
             throw new Error(response.message);
         }
         else{
-            localStorage.setItem(key,JSON.stringify(response.status));
+            saveQuizStatus(response.status);
             router.push(`/quiz/${response.shortQuiz.id}`);
         }
         
