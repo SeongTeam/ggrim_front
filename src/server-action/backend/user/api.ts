@@ -81,7 +81,7 @@ const updateUserPW = async (
         [ENUM_SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN]: oneTimeToken.id,
     };
     const response = await fetch(url, {
-        method: 'POST',
+        method: 'PUT',
         headers,
         body: JSON.stringify(dto),
     });
@@ -106,7 +106,7 @@ const updateUserUsername = async (
         Authorization: `Bearer ${signInResponse.accessToken}`,
     };
     const response = await fetch(url, {
-        method: 'POST',
+        method: 'PUT',
         headers,
         body: JSON.stringify(dto),
     });
