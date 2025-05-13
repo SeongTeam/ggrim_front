@@ -2,6 +2,7 @@ import { SignInForm } from "../../../components/auth/SignInForm";
 import { generateSecurityTokenAction } from "../../../server-action/backend/auth/api";
 import { OneTimeTokenPurposeValues } from "../../../server-action/backend/auth/type";
 import ErrorModal from "../../../components/ErrorModal";
+import AuthFooter from "../../../components/auth/AuthFooter";
 import { AUTH_LOGIC_ROUTE } from "../route";
 
 
@@ -16,8 +17,6 @@ export default async function VerifyUser({
 } : VerifyUserProps) {
 
   const purpose = (await searchParams).purpose;
-  const createAccountRoute = '';
-  const forgotPasswordRoute = '';
   let nextRoute = '/auth';
 
   // TODO Modal??? 무엇을 사용해야지 Server component에서 에러 메세지를 출력할 수 있을까?
@@ -56,14 +55,7 @@ export default async function VerifyUser({
           formAction={handleFormAction}
           NextRoute={nextRoute} 
         />
-        <div className="flex justify-between">
-          <p className="mt-4 text-sm text-gray-400">
-            <a href={createAccountRoute} className="text-white hover:underline">Create Account</a>
-          </p>
-          <p className="mt-4 text-sm text-gray-400">
-            <a href={forgotPasswordRoute} className="text-white hover:underline">Forgot Password</a>
-          </p>
-        </div>
+        <AuthFooter state='VERIFY_EMAIL' />
       </div>
     </main>
   )

@@ -1,3 +1,4 @@
+import AuthFooter from "../../../components/auth/AuthFooter";
 import { SignInForm } from "../../../components/auth/SignInForm";
 import { signInAction } from "../../../server-action/backend/auth/api";
 
@@ -13,8 +14,6 @@ export default async function SignIn({
 } : SignInProps) {
 
   const prevRoute = (await searchParams).prev ?? '/';
-  const createAccountRoute = '';
-  const forgotPasswordRoute = '';
 
   return (
     <main className="flex items-center justify-center min-h-screen bg-cover bg-center">
@@ -24,14 +23,7 @@ export default async function SignIn({
           formAction={signInAction}
           NextRoute={Array.isArray(prevRoute) ? prevRoute[0] : prevRoute} 
         />
-        <div className="flex justify-between">
-          <p className="mt-4 text-sm text-gray-400">
-            <a href={createAccountRoute} className="text-white hover:underline">Create Account</a>
-          </p>
-          <p className="mt-4 text-sm text-gray-400">
-            <a href={forgotPasswordRoute} className="text-white hover:underline">Forgot Password</a>
-          </p>
-        </div>
+        <AuthFooter state='SIGN_IN' />
       </div>
     </main>
   )

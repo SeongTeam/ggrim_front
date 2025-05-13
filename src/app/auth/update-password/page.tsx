@@ -1,3 +1,4 @@
+import AuthFooter from "../../../components/auth/AuthFooter";
 import { PasswordUpdateForm } from "../../../components/auth/PasswordUpdateForm";
 import { updateUserPWAction } from "../../../server-action/backend/user/api";
 
@@ -11,8 +12,6 @@ interface ForgetPasswordProps {
 export default async function UpdatePassword({
 } : ForgetPasswordProps) {
 
-  const createAccountRoute = '';
-  const forgotPasswordRoute = '';
 
   const handleAction = async (password : string) => {
     'use server'
@@ -28,14 +27,7 @@ export default async function UpdatePassword({
           formAction={handleAction}
           NextRoute={'/'} 
         />
-        <div className="flex justify-between">
-          <p className="mt-4 text-sm text-gray-400">
-            <a href={createAccountRoute} className="text-white hover:underline">Create Account</a>
-          </p>
-          <p className="mt-4 text-sm text-gray-400">
-            <a href={forgotPasswordRoute} className="text-white hover:underline">Forgot Password</a>
-          </p>
-        </div>
+        <AuthFooter state='UPDATE_PASSWORD' />
       </div>
     </main>
   )

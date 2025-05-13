@@ -1,3 +1,4 @@
+import AuthFooter from '../../../components/auth/AuthFooter';
 import EmailForm from '../../../components/auth/EmailForm';
 import ErrorModal from '../../../components/ErrorModal';
 import { sendSecurityTokenToEmailAction } from '../../../server-action/backend/auth/api';
@@ -14,9 +15,6 @@ interface verifyUserByEmailProps {
   } : verifyUserByEmailProps) {
 
   const purpose = (await searchParams).purpose;
-  const createAccountRoute = '';
-  const signInRoute = '';
-
   
   if( !purpose || Array.isArray(purpose)
     ){
@@ -45,14 +43,7 @@ interface verifyUserByEmailProps {
             emailFormAction={handleAction}
         />
 
-        <div className="flex justify-between">
-          <p className="mt-4 text-sm text-gray-400">
-            <a href={createAccountRoute} className="text-white hover:underline">Create Account</a>
-          </p>
-          <p className="mt-4 text-sm text-gray-400">
-            <a href={signInRoute} className="text-white hover:underline">Sign In</a>
-          </p>
-        </div>
+        <AuthFooter state='VERIFY_USER_BY_EMAIL' />
       </div>
     </main>
   )

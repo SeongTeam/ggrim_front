@@ -1,21 +1,14 @@
+import AuthFooter from '../../../components/auth/AuthFooter';
 import { EmailVerificationForm } from '../../../components/auth/EmailVerificationForm'
 import { AUTH_LOGIC_ROUTE } from '../route';
 
 
 
-interface VerifyProps {
-    searchParams : Promise<{ [key: string] : string | string[] | undefined }>
-  }
+// interface VerifyProps {
+//     searchParams : Promise<{ [key: string] : string | string[] | undefined }>
+//   }
   
-  export default async function Verify({
-    searchParams
-  } : VerifyProps) {
-
-  const nextRoute = (await searchParams).next ?? '/';
-  const createAccountRoute = '';
-  const forgotPasswordRoute = '';
-
-
+  export default async function Verify() {
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-black text-white">
@@ -25,14 +18,7 @@ interface VerifyProps {
             nextRoute={AUTH_LOGIC_ROUTE.SIGN_UP}
         />
 
-        <div className="flex justify-between">
-          <p className="mt-4 text-sm text-gray-400">
-            <a href={createAccountRoute} className="text-white hover:underline">Create Account</a>
-          </p>
-          <p className="mt-4 text-sm text-gray-400">
-            <a href={forgotPasswordRoute} className="text-white hover:underline">Forgot Password</a>
-          </p>
-        </div>
+        <AuthFooter state='VERIFY_EMAIL' />
       </div>
     </main>
   )
