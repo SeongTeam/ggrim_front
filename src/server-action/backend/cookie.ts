@@ -1,5 +1,4 @@
 'server-only';
-'use server';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { OneTimeToken, SignInResponse } from './auth/type';

@@ -6,7 +6,12 @@ import { ENUM_ONE_TIME_TOKEN_HEADER, ENUM_SECURITY_TOKEN_HEADER } from '../auth/
 import { CreateUserDTO, ReplacePassWordDTO, ReplaceUsernameDTO } from './dto';
 import { HttpException } from '../common.dto';
 import { OneTimeToken, SignInResponse } from '../auth/type';
-import { getOneTimeTokenOrRedirect, getSignInResponseOrRedirect } from '../cookie';
+import {
+    deleteOneTimeToken,
+    deleteSignInResponse,
+    getOneTimeTokenOrRedirect,
+    getSignInResponseOrRedirect,
+} from '../cookie';
 
 const signUp = async (
     oneTimeToken: OneTimeToken,
@@ -132,6 +137,9 @@ const deleteUser = async (oneTimeToken: OneTimeToken): Promise<boolean | HttpExc
         const error: HttpException = await response.json();
         return error;
     }
+
+    await deleteSignInResponse();
+    await deleteOneTimeToken();
 
     return true;
 };

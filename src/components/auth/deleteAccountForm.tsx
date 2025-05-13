@@ -7,7 +7,6 @@ import { isHttpException, isServerActionError } from '../../server-action/backen
 import { HttpStatus } from '../../server-action/backend/status';
 import GuideModal from '../GuideModal';
 import { useRouter } from 'next/navigation';
-import { deleteOneTimeToken, deleteSignInResponse,} from '../../server-action/backend/cookie';
 import ErrorModal from '../ErrorModal';
 
 interface DeleteAccountState {
@@ -36,9 +35,7 @@ export default function DeleteAccountForm() {
 
   const expectedPhrase = `Delete Account`;
 
-  const handleSuccess = async ()=>{
-    await deleteSignInResponse();
-    await deleteOneTimeToken();
+  const handleSuccess = ()=>{
     router.push('/');
 
   }
