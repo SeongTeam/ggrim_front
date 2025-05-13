@@ -62,3 +62,19 @@ export async function deleteOneTimeToken(): Promise<ResponseCookies> {
     const result = cookieStore.delete(ENUM_COOKIE_KEY.ONE_TIME_TOKEN);
     return result;
 }
+
+export function getSignInInfo() {
+    const cookieStore = cookies();
+    const rawSignInResponse = cookieStore.get(ENUM_COOKIE_KEY.SIGN_IN_RESPONSE)?.value;
+    if (rawSignInResponse) {
+        const signInResponse: SignInResponse = JSON.parse(rawSignInResponse);
+        const { user } = signInResponse;
+
+        return user;
+    }
+
+    return undefined;
+}
+export interface SignInInfo {
+    username: string;
+}
