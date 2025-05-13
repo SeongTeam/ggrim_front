@@ -4,9 +4,10 @@ import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { isHttpException, isServerActionError } from '../../server-action/backend/util'
 import { HttpStatus } from '../../server-action/backend/status'
+import { HttpException, ServerActionError } from '../../server-action/backend/common.dto'
 
 interface EmailForm {
-    emailFormAction : (email : string ) => Promise<boolean>
+    emailFormAction : (email : string ) => Promise<boolean|ServerActionError|HttpException>
 }
 
  const EmailForm = ({
