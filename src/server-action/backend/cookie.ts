@@ -3,6 +3,7 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { OneTimeToken, SignInResponse } from './auth/type';
 import { ResponseCookies } from 'next/dist/compiled/@edge-runtime/cookies';
+import { AUTH_LOGIC_ROUTE } from '../../app/auth/route';
 const ENUM_COOKIE_KEY = {
     SIGN_IN_RESPONSE: 'SignInResponse',
     ONE_TIME_TOKEN: 'OneTimeToken',
@@ -24,7 +25,7 @@ export async function getSignInResponseOrRedirect(): Promise<SignInResponse> {
     const signInResponse = cookieStore.get(ENUM_COOKIE_KEY.SIGN_IN_RESPONSE)?.value;
 
     if (!signInResponse) {
-        redirect('/auth/sign-in');
+        redirect(AUTH_LOGIC_ROUTE.SIGN_IN);
         // return undefined;
     }
 

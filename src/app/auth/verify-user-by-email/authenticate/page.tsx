@@ -11,6 +11,7 @@ import { HttpStatus } from '../../../../server-action/backend/status';
 import { OneTimeTokenPurposeValues } from '../../../../server-action/backend/auth/type';
 import ErrorModal from '../../../../components/ErrorModal';
 import GuideModal from '../../../../components/GuideModal';
+import { AUTH_LOGIC_ROUTE } from '../../route';
 
 interface AuthenticateState {
   errorMessage : string;
@@ -66,7 +67,7 @@ export default function AuthCallbackPage() {
   const handleSuccess = () => {
     switch(state.purpose){
       case OneTimeTokenPurposeValues.UPDATE_PASSWORD : 
-          router.push('/auth/update-password');
+          router.push(AUTH_LOGIC_ROUTE.UPDATE_PASSWORD);
           break;
       case OneTimeTokenPurposeValues.RECOVER_ACCOUNT :
       default :

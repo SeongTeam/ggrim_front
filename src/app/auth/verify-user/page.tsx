@@ -2,6 +2,7 @@ import { SignInForm } from "../../../components/auth/SignInForm";
 import { generateSecurityTokenAction } from "../../../server-action/backend/auth/api";
 import { OneTimeTokenPurposeValues } from "../../../server-action/backend/auth/type";
 import ErrorModal from "../../../components/ErrorModal";
+import { AUTH_LOGIC_ROUTE } from "../route";
 
 
 
@@ -28,10 +29,10 @@ export default async function VerifyUser({
   switch(purpose){
 
     case OneTimeTokenPurposeValues.UPDATE_PASSWORD : 
-        nextRoute = '/auth/update-password';
+        nextRoute = AUTH_LOGIC_ROUTE.UPDATE_PASSWORD;
         break;
     case OneTimeTokenPurposeValues.DELETE_ACCOUNT :
-        nextRoute = '/auth/delete-account'
+        nextRoute = AUTH_LOGIC_ROUTE.DELETE_ACCOUNT
         break;
     default : 
       return <ErrorModal message="invalid query" />

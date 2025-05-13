@@ -9,6 +9,7 @@ import { HttpStatus } from '../../server-action/backend/status'
 import { useRouter } from 'next/navigation'
 import GuideModal from '../GuideModal'
 import ErrorModal from '../ErrorModal'
+import { AUTH_LOGIC_ROUTE } from '../../app/auth/route'
 
 interface SignUpState {
   username: string
@@ -32,7 +33,7 @@ export default function SignUpForm() {
   const router = useRouter();
 
   const handleAuthError = () => {
-    router.push('/auth/verify-email');
+    router.push(AUTH_LOGIC_ROUTE.VERIFY_EMAIL);
   }
 
   const handleSuccess = () => {
