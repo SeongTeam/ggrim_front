@@ -7,6 +7,7 @@ import { signOutAction } from "../server-action/backend/auth/api";
 import { useRouter } from "next/navigation";
 import { isServerActionError } from "../server-action/backend/util";
 import { syncUserToLocalStorage, getRunningUser, removeRunningUser } from "../storage/local/runningUser";
+import { PROFILE_LOGIC_ROUTE } from "../route/profile/route";
 
 interface ProfileIconMenuProps {
   user : User
@@ -34,7 +35,7 @@ export function ProfileIconMenu({ user }: ProfileIconMenuProps) {
   }
 
   const handleSetting = () => {
-    router.push('');
+    router.push(PROFILE_LOGIC_ROUTE.BASE);
   }
 
   // 외부 클릭 시 메뉴 닫기
