@@ -94,6 +94,9 @@ const submitQuiz = async (quizID: string, dto: QuizSubmitDTO): Promise<boolean |
 
     const response = await fetch(url, {
         method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
         body: JSON.stringify(dto),
     });
 
