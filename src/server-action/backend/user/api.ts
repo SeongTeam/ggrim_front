@@ -42,8 +42,8 @@ const signUp = async (
 
 const getUser = async (id: string): Promise<User | HttpException> => {
     const backendUrl = getServerUrl();
-    const url = `${backendUrl}/user/`;
-    const response = await fetch(url + `/${id}`);
+    const url = `${backendUrl}/user/${id}`;
+    const response = await fetch(url);
 
     if (!response.ok) {
         const error: HttpException = await response.json();
