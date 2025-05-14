@@ -299,12 +299,17 @@ export default function QuizForm({ quiz } : QuizFormProps) : JSX.Element {
       //=> 해결 방법 : newQuiz 상태의 초기값을 null로 지정. null인경우, loading 컴포넌트를 보여줌
       // 2. <InsertInput />요소의 값이 복원되지 않음.
       //=> 해결 방법 : <InsertInput /> prop에 전달될 값도 localStorage에 백업.
-      loadNewQuiz.current();
+
+      if(!quiz){
+        loadNewQuiz.current();
+      }
 
     },[]);
 
     useEffect(()=>{
-      saveNewQuiz.current(newQuiz);
+      if(!quiz){
+        saveNewQuiz.current(newQuiz);
+      }
     },[newQuiz]);
 
   
