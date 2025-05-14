@@ -1,0 +1,38 @@
+import ErrorModal from "../../../../components/ErrorModal";
+import QuizForm from "../../../../components/quiz/QuizForm";
+import { getSignInInfo } from "../../../../server-action/backend/cookie";
+import { getQuizAction } from "../../../../server-action/backend/quiz/api";
+import { isHttpException, isServerActionError } from "../../../../server-action/backend/util";
+
+
+interface QuizEditPageProps {
+    params: { id: string };
+}
+
+
+export default async function QuizEditPage({params} : QuizEditPageProps){
+
+    const [user,response] = await Promise.all([getSignInInfo(),getQuizAction(params.id)]);
+
+    if(!user){
+        return <ErrorModal message="Need to Sign In" />
+    }
+
+    if(isServerActionError(response)){
+        throw new Error('unstable Situation');
+    }
+    else if(isHttpException(response)){
+        return <ErrorModal message="Can't Find Quiz" /> 
+    }
+    const quiz = response.quiz;
+
+    if(quiz.owner_id !== user.id){
+        return <ErrorModal message="No Authorized to edit" /> 
+    }
+
+    return(
+    <div className="mt-10">
+        <QuizForm quiz={quiz}/>
+     </div>
+    );
+}
