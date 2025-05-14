@@ -1,5 +1,5 @@
 'use client'
-import {  FormEvent,  useEffect, useRef, useState } from "react";
+import {  FormEvent,  useEffect, useReducer, useRef, useState } from "react";
 import { Painting } from "../../model/interface/painting";
 import { Card } from "../card";
 import { useRouter } from "next/navigation";
@@ -13,15 +13,50 @@ import { getPaintingAction } from "../../server-action/backend/painting/api";
 import { isHttpException, isServerActionError } from "../../server-action/backend/util";
 import { CreateQuizDTO } from "../../server-action/backend/quiz/dto";
 import { addQuizAction } from "../../server-action/backend/quiz/api";
+import { Quiz } from "../../model/interface/quiz";
 
 interface NewQuiz{
-    answerPaintingID :string;
-    distractorPaintingIDs :string[];
-    title : string;
-    timeLimit: number;
-    description : string;
-    type: 'ONE_CHOICE';
+  answer :Painting|undefined;
+  distractor1 : Painting|undefined
+  distractor2 : Painting|undefined
+  distractor3 : Painting|undefined;
+  title : string;
+  timeLimit: number;
+  description : string;
+  type: 'ONE_CHOICE';
 
+}
+type StatePaintingKey = 'answer'|'distractor1'|'distractor2'|'distractor3';
+type PaintingActionType = 'SET_ANSWER'|'SET_DISTRACTOR1'|'SET_DISTRACTOR2'|'SET_DISTRACTOR3';
+type PaintingAction = { type: PaintingActionType; painting: Painting|undefined }
+
+
+type Action =
+| { type: 'SET_TITLE'; title : string}
+| { type: 'SET_DESCRIPTION'; description : string}
+| { type: 'SET_ALL', newQuiz : NewQuiz }
+| PaintingAction
+;
+
+function reducer(state : NewQuiz, action : Action) : NewQuiz {
+switch(action.type){
+  case 'SET_TITLE':
+    return {...state, title : action.title};
+  case 'SET_DESCRIPTION':
+    return {...state, description : action.description };
+  case 'SET_ANSWER':
+    return {...state, answer : action.painting };
+  case 'SET_DISTRACTOR1':
+    return {...state, distractor1 : action.painting };
+  case 'SET_DISTRACTOR2' :
+    return {...state, distractor2 : action.painting };
+  case 'SET_DISTRACTOR3' :
+    return {...state, distractor3 : action.painting };
+  case 'SET_ALL' : 
+    return { ... action.newQuiz };
+  default :
+    return state;
+}
 }
 
 
@@ -38,19 +73,87 @@ interface NewQuiz{
 // ? 질문: <의문점 또는 개선 방향>
 // * 참고: <관련 정보나 링크>
 
-const QUIZ_FORM_KEY = 'new-quiz';
-const QUIZ_PAINTING_KEY = 'quiz-painting'
-const TIME_LIMIT = 30;
-export default function QuizForm() : JSX.Element {
-    const [newQuiz,setNewQuiz] = useState<NewQuiz|null>(null);
-    const [quizPaintingMap, setQuizPaintingMap] = useState<Map<string,Painting>>(new Map());
+
+
+interface QuizFormProps {
+  quiz? : Quiz
+}
+
+const initState : NewQuiz = {
+    answer : undefined,
+    distractor1 : undefined,
+    distractor2 : undefined,
+    distractor3 : undefined,
+    title : '',
+    description : '',
+    type: 'ONE_CHOICE',
+    timeLimit : 30,
+    
+}
+
+const initializeState = (quiz? : Quiz) : NewQuiz =>{
+ 
+  if(!quiz){
+    return initState;
+  }
+
+  return {
+    answer : quiz.answer_paintings[0],
+    distractor1 : quiz.distractor_paintings[0],
+    distractor2 : quiz.distractor_paintings[1],
+    distractor3 : quiz.distractor_paintings[2],
+    title : quiz.title,
+    description : quiz.description,
+    type : 'ONE_CHOICE',
+    timeLimit : quiz.time_limit,
+
+  }
+
+}
+
+const isDuplicatedPaintingPainting = (state : NewQuiz, painting : Painting) => {
+  const keys : StatePaintingKey[] = ['answer','distractor1','distractor2','distractor3'];
+  const paintings :Painting[] = [];
+  keys.forEach(key=> state[key] ? paintings.push(state[key]) : key);
+
+  return paintings.some(p=>painting.id === p.id);
+}
+
+
+
+
+
+export default function QuizForm({ quiz } : QuizFormProps) : JSX.Element {
+    const [newQuiz,dispatch] = useReducer(reducer,quiz, initializeState);
     const [error,setError] = useState("");
     const router = useRouter();
-    const quizPaintingKeys : string[] = ['Answer painting','Distractor1','Distractor2','Distractor3'];
+    const distractorKeys : StatePaintingKey[] = ['distractor1','distractor2','distractor3'];
     const STORAGE_TTL_MS = 1800000;
+    const QUIZ_FORM_KEY = 'new-quiz';
+    const QUIZ_PAINTING_KEY = 'quiz-painting'
 
 
-  const validBeforeSubmit = ()=>{
+  function mapPaintingKeyToAction(key : StatePaintingKey,painting : Painting|undefined) {
+
+    switch(key){
+      case 'answer' :
+        return dispatch({type: 'SET_ANSWER', painting});
+      case "distractor1":
+        return dispatch({type: 'SET_DISTRACTOR1', painting});
+      case "distractor2":
+        return dispatch({type: 'SET_DISTRACTOR2', painting});
+      case "distractor3":
+        return dispatch({type: 'SET_DISTRACTOR3', painting});
+      default :
+        setError('wrong handler run');
+        return;
+
+    }
+
+  }
+
+
+  const validateBeforeSubmit = ()=>{
 
     if(newQuiz!.title.trim().length ===0){
       setError('please write title')
@@ -61,12 +164,6 @@ export default function QuizForm() : JSX.Element {
       setError('please write description');
       return;
     }
-
-    if(quizPaintingMap.size < 4){
-      setError('please fill four paintings');
-      return;
-    }
-
   }
   
     const handleSubmit = async  (e : FormEvent<HTMLFormElement>   ) => {
@@ -74,16 +171,23 @@ export default function QuizForm() : JSX.Element {
         // 그림 개수, 정답 그림 등 검증하기
       e.preventDefault();
 
-      validBeforeSubmit();
+      validateBeforeSubmit();
 
+      //TODO 4개중 하나라도 정의안되면 submit 금지하기
+      const { answer, distractor1, distractor2,distractor3 } = newQuiz;
+
+      if(!answer || !distractor1 || !distractor2 || !distractor3){
+        setError('please write description');
+        return;
+      }
 
       const dto : CreateQuizDTO = {
-        answerPaintingIds : [newQuiz!.answerPaintingID],
-        distractorPaintingIds : [...newQuiz!.distractorPaintingIDs],
+        answerPaintingIds : [answer?.id],
+        distractorPaintingIds : [distractor1?.id,distractor2?.id,distractor3?.id],
         title : newQuiz!.title,
         description : newQuiz!.description,
         type : newQuiz!.type,
-        timeLimit : 30
+        timeLimit : newQuiz.timeLimit
       }
       const response  = await addQuizAction(dto);
 
@@ -93,18 +197,18 @@ export default function QuizForm() : JSX.Element {
       else if(isHttpException(response)){
           const errorMessage = Array.isArray(response.message) ? response.message.join('\n') : response.message;
           setError(errorMessage+'\n'+'please try later');
+          return;
       }
       else{
         localStorage.removeItem(QUIZ_FORM_KEY);
         localStorage.removeItem(QUIZ_PAINTING_KEY);
-        console.log(`create new Quiz`,response);
         router.push(`/quiz/${response.id}`);
         return;
       }
 
     };
 
-    const handleAddQuizPainting = async (key : string,id : string) : Promise<boolean> =>{
+    const handleAddQuizPainting = async (key : StatePaintingKey, id : string) : Promise<boolean> =>{
         
           if(id.trim().length != id.length){
             setError(`Input ${key} has space or tab. please check start and end of string`);
@@ -116,6 +220,7 @@ export default function QuizForm() : JSX.Element {
             setError(`Input ${key} is out of ID format`);
             return false;
           }
+          
           const painting = await getPaintingAction(id);
           if(isServerActionError(painting)){
               throw new Error(painting.message);
@@ -125,32 +230,15 @@ export default function QuizForm() : JSX.Element {
               setError(errorMessage);
           }
           else{
-
-            if(quizPaintingMap.size === 4){
-              setError(`Can't add painting. Only 4 painting is added. `);
-              return false;
-            }
-
             //id 중복 금지..
 
-            if(quizPaintingMap.values().find(p=>p.id === id)){
+            if(isDuplicatedPaintingPainting(newQuiz,painting)){
                 setError(`Can't Add painting. ${id} is already exist. `);
                 return false;
             }
 
-            setQuizPaintingMap(prevMap=>{
-              const newMap = new Map(prevMap);
-              newMap.set(key,painting);
-              return newMap;
-            });
+            mapPaintingKeyToAction(key,painting);
 
-            //어떻게 setNewQuiz를 사용할까/
-            if(quizPaintingKeys[0] === key){
-                setNewQuiz(prev=>({...prev!,answerPaintingID : id}));
-            }
-            else{
-                setNewQuiz(prev=>({...prev!,distractorPaintingIDs : [...prev!.distractorPaintingIDs,id]}));
-            }
 
             return true;
         }
@@ -158,20 +246,8 @@ export default function QuizForm() : JSX.Element {
         
     }
 
-    const handleDeleteQuizPainting = async (key : string,id : string) : Promise<boolean> => {
-      if(!quizPaintingMap.has(key)){
-        setError(`${key} is seemed to be not written. please refresh page`);
-      }
-      const newMap = new Map(quizPaintingMap);
-      newMap.delete(key);
-      setQuizPaintingMap(newMap);
-      if(id === newQuiz!.answerPaintingID){
-          setNewQuiz(prev=>({...prev!,answerPaintingID : ""}));
-      }
-      else{
-          const distractors  = [...quizPaintingMap.values()].map(p=> p.id).filter(paintingID=> paintingID !== id && paintingID !== newQuiz?.answerPaintingID);
-          setNewQuiz(prev=>({...prev!,distractorPaintingIDs : [...distractors]}));
-      }
+    const handleDeleteQuizPainting = async (key : StatePaintingKey) : Promise<boolean> => {
+      mapPaintingKeyToAction(key,undefined);
       return true;
 
     }
@@ -183,7 +259,7 @@ export default function QuizForm() : JSX.Element {
         return;
       }
 
-      setNewQuiz(prev=>({...prev!, title }));
+      dispatch({type : 'SET_TITLE',title});
 
     }
 
@@ -194,12 +270,12 @@ export default function QuizForm() : JSX.Element {
         setError(`description can't be over ${MAX_LENGTH} characters`);
         return;
       }
-      setNewQuiz(prev=>({...prev!, description}));
+      dispatch({type : 'SET_DESCRIPTION',description});
     }
     
     // TODO: 훅 로직 점검하기 
     // - [x] debounce wrapper 훅 체크하기
-    //  -> <할 일 > 설명 ( 생략가능 )
+    // - [ ] 기존 퀴즈 편집시 임시 저장 로직 추가하기.
     // - [ ] <추가 작업>
     // ! 주의: <경고할 사항>
     // ? 질문: <의문점 또는 개선 방향>
@@ -207,49 +283,16 @@ export default function QuizForm() : JSX.Element {
 
 
     const saveNewQuiz = useRef(debounce( (value : NewQuiz|null) => {
-      console.log(`call saveNewQuiz`);
       localStorageUtils.setItemWithExpiry(QUIZ_FORM_KEY,JSON.stringify(value),STORAGE_TTL_MS);
     },500));
 
     const loadNewQuiz = useRef(()=>{
       const rawPrevNewQuiz : string|null = localStorageUtils.getItemWithExpiry(QUIZ_FORM_KEY);
-      const prevNewQuiz : NewQuiz = rawPrevNewQuiz && JSON.parse(rawPrevNewQuiz)  ? JSON.parse(rawPrevNewQuiz) : {
-        answerPaintingID : "",
-        distractorPaintingIDs :[] as string[],
-        title : "",
-        timeLimit : TIME_LIMIT,
-        description : "",
-        type : 'ONE_CHOICE'
-      };
-      setNewQuiz(prevNewQuiz);      
-      console.log('useEffect : load rawPrevNewQuiz',prevNewQuiz);
-      console.log(`value :`,rawPrevNewQuiz && JSON.parse(rawPrevNewQuiz));
-    });
-
-    const saveQuizPainting = useRef(debounce( (value : Map<string,Painting>) => {
-      //Q.왜 map은 저장시에 Object.fromEntries()를 사용하지?
-
-            console.log(`call saveQuizPainting`);
-      const jsonObject = Object.fromEntries(value);
-      localStorageUtils.setItemWithExpiry(QUIZ_PAINTING_KEY,JSON.stringify(jsonObject),STORAGE_TTL_MS);
-    },500));
-
-    const loadQuizPaintingMap = useRef(()=>{
-      const rawPrevQuizPaintings : string |null = localStorageUtils.getItemWithExpiry(QUIZ_PAINTING_KEY);
-      if(rawPrevQuizPaintings){
-        try{
-          const parsed = JSON.parse(rawPrevQuizPaintings);
-          const restoredMap = new Map<string,Painting>(Object.entries(parsed));
-          setQuizPaintingMap(restoredMap);
-        }catch(e : unknown){
-          console.error("Failed to load map from localStorage", e);
-          setError('Failed to load Quiz paintings from browser');
-        }
+      const prevNewQuiz : NewQuiz|undefined = rawPrevNewQuiz && JSON.parse(rawPrevNewQuiz)  ? JSON.parse(rawPrevNewQuiz) : undefined
+      if(prevNewQuiz){
+        dispatch({type :'SET_ALL', newQuiz : prevNewQuiz});
       }
     });
-
-    const getAnswerIcon = (isAnswer : boolean) => isAnswer ? <CheckCircle className=" hidden md:block text-green-500" /> : <XCircle className=" hidden md:block text-red-500" />;
-
 
     useEffect( ()=>{
       // 1.렌더링 된 후에 useEffect가 실행되므로, 저장된 값을 불러오는 동안에 깜빡이는 현상이 발생함.
@@ -257,24 +300,22 @@ export default function QuizForm() : JSX.Element {
       // 2. <InsertInput />요소의 값이 복원되지 않음.
       //=> 해결 방법 : <InsertInput /> prop에 전달될 값도 localStorage에 백업.
       loadNewQuiz.current();
-      loadQuizPaintingMap.current();
 
     },[]);
 
     useEffect(()=>{
       saveNewQuiz.current(newQuiz);
-      saveQuizPainting.current(quizPaintingMap);
-    },[newQuiz,quizPaintingMap]);
+    },[newQuiz]);
 
   
-    if(!newQuiz || !quizPaintingMap){
+    if(!newQuiz){
 
       return <Loading />
     }
   
     return (
       <div className="flex items-center justify-center h-full  bg-black">
-        {error.trim().length > 0 &&<AlertModal message={error} onClose={async ()=>setError('')}/>}
+        {error &&<AlertModal message={error} onClose={async ()=>setError('')}/>}
         <form
           onSubmit={(e)=>handleSubmit(e)}
           className="bg-gray-900 p-8 rounded-lg shadow-lg text-white max-w-5xl md:min-w-[600px]"
@@ -295,42 +336,48 @@ export default function QuizForm() : JSX.Element {
 
           <div key="painting selection" className="mb-4">
             <div className="grid grid-cols-1 gap-2 mb-2">
-
-              {
-                quizPaintingKeys.map((key,index)=>{
-                  const isAnswer = index === 0;
-                  const borderColor =  isAnswer ? `border-green-500` : `border-red-800`;
-                
-                  // const bgColor = isAnswer ? `bg-green-300` : `bg-red-500`;            
-                  return (<div key={key} className={`p-2 flex rounded-lg border-2 items-center gap-3 ${borderColor}`} >
-                  {getAnswerIcon(isAnswer)}
-                  <InsertToggleInput 
-                    handleAdd={(value : string)=>handleAddQuizPainting(key,value)}
-                    handleDelete={(value: string)=>handleDeleteQuizPainting(key,value)}
-                    defaultIsInserted={quizPaintingMap.has(key)}
-                    defaultValue={quizPaintingMap.get(key)?.id}
-                    placeholder={key}
+              <div className={`p-2 flex rounded-lg border-2 items-center gap-3 border-green-500`} >
+                <CheckCircle className=" hidden md:block text-green-500" />
+                <InsertToggleInput 
+                    handleAdd={(value : string)=>handleAddQuizPainting('answer',value)}
+                    handleDelete={()=>handleDeleteQuizPainting('answer')}
+                    defaultIsInserted={newQuiz['answer'] ? true : false}
+                    defaultValue={newQuiz['answer']?.id}
+                    placeholder={'answer'}
                 />
-                </div>);
-                })
-              }
+              </div>
+              {
+                distractorKeys
+                  .map((key)=>
+                    (<div key={key} className={`p-2 flex rounded-lg border-2 items-center gap-3 border-red-800`} >
+                      <XCircle className=" hidden md:block text-red-500" />
+                      <InsertToggleInput 
+                        handleAdd={(value : string)=>handleAddQuizPainting(key,value)}
+                        handleDelete={()=>handleDeleteQuizPainting(key)}
+                        defaultIsInserted={newQuiz[key] ? true : false}
+                        defaultValue={newQuiz[key]?.id}
+                        placeholder={key}
+                      />
+                    </div>
+                ))}
             </div>
             <div>
               <h1 className="text-2xl font-bold mb-2"> Quiz Paintings </h1>
               <div className="bg-gray-500 grid min-h-56 sm:grid-cols-1 md:grid-cols-2 items-center p-2 rounded-lg border-gray-200 border-2 gap-4">
-                  {quizPaintingKeys.map((key,idx)=>{
-                      const painting : Painting | undefined = quizPaintingMap.get(key);
-                      if(!painting){
-                          return null;
-                      }
-                      const borderColor = idx===0 ? "border-green-500" : "border-red-800";
-                      const {id,image_url,title,description } = painting;
-                      return (
-                          <div key={id} className={`rounded-lg border-2 ${borderColor} max-w-xs`}>
-                              <Card imageSrc={image_url} title={title} alt={description}/>
-                          </div>
-                      );
-                    })
+                  {newQuiz.answer 
+                    && 
+                    <div className={`rounded-lg border-2 border-green-500 max-w-xs`}>
+                      <Card imageSrc={newQuiz.answer.image_url} title={newQuiz.answer.title} alt={newQuiz.answer.description}/>
+                    </div>
+                  }
+                  {distractorKeys
+                    .map((key,idx)=> newQuiz[key])
+                    .filter(p=> p!==undefined)
+                    .map(p=>                          
+                    (<div key={p.id} className={`rounded-lg border-2 border-red-800 max-w-xs`}>
+                        <Card imageSrc={p.image_url} title={p.title} alt={p.description}/>
+                    </div>
+                    ))
                   }
               </div>
             </div>
