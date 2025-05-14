@@ -13,7 +13,6 @@ import { getPaintingAction } from "../../server-action/backend/painting/api";
 import { isHttpException, isServerActionError } from "../../server-action/backend/util";
 import { CreateQuizDTO } from "../../server-action/backend/quiz/dto";
 import { addQuizAction } from "../../server-action/backend/quiz/api";
-import { HttpStatus } from "../../server-action/backend/status";
 
 interface NewQuiz{
     answerPaintingID :string;
@@ -49,26 +48,33 @@ export default function QuizForm() : JSX.Element {
     const router = useRouter();
     const quizPaintingKeys : string[] = ['Answer painting','Distractor1','Distractor2','Distractor3'];
     const STORAGE_TTL_MS = 1800000;
+
+
+  const validBeforeSubmit = ()=>{
+
+    if(newQuiz!.title.trim().length ===0){
+      setError('please write title')
+      return;
+    }
+
+    if(newQuiz!.description.trim().length === 0){
+      setError('please write description');
+      return;
+    }
+
+    if(quizPaintingMap.size < 4){
+      setError('please fill four paintings');
+      return;
+    }
+
+  }
   
     const handleSubmit = async  (e : FormEvent<HTMLFormElement>   ) => {
         //server action 추가하기.
         // 그림 개수, 정답 그림 등 검증하기
       e.preventDefault();
 
-      if(newQuiz!.title.trim().length ===0){
-        setError('please write title')
-        return;
-      }
-
-      if(newQuiz!.description.trim().length === 0){
-        setError('please write description');
-        return;
-      }
-
-      if(quizPaintingMap.size < 4){
-        setError('please fill four paintings');
-        return;
-      }
+      validBeforeSubmit();
 
 
       const dto : CreateQuizDTO = {
@@ -116,13 +122,7 @@ export default function QuizForm() : JSX.Element {
           }
           else if(isHttpException(painting)){
               const errorMessage = Array.isArray(painting.message) ? painting.message.join('\n') : painting.message;
-            
-            if(painting.statusCode >= HttpStatus.BAD_REQUEST && painting.statusCode < HttpStatus.INTERNAL_SERVER_ERROR){
-                setError(errorMessage);
-            }
-            else{
-                throw new Error(errorMessage);
-            }
+              setError(errorMessage);
           }
           else{
 
@@ -164,15 +164,15 @@ export default function QuizForm() : JSX.Element {
       }
       const newMap = new Map(quizPaintingMap);
       newMap.delete(key);
-        setQuizPaintingMap(newMap);
-        if(id === newQuiz!.answerPaintingID){
-            setNewQuiz(prev=>({...prev!,answerPaintingID : ""}));
-        }
-        else{
-            const distractors  = [...quizPaintingMap.values()].map(p=> p.id).filter(paintingID=> paintingID !== id && paintingID !== newQuiz?.answerPaintingID);
-            setNewQuiz(prev=>({...prev!,distractorPaintingIDs : [...distractors]}));
-        }
-        return true;
+      setQuizPaintingMap(newMap);
+      if(id === newQuiz!.answerPaintingID){
+          setNewQuiz(prev=>({...prev!,answerPaintingID : ""}));
+      }
+      else{
+          const distractors  = [...quizPaintingMap.values()].map(p=> p.id).filter(paintingID=> paintingID !== id && paintingID !== newQuiz?.answerPaintingID);
+          setNewQuiz(prev=>({...prev!,distractorPaintingIDs : [...distractors]}));
+      }
+      return true;
 
     }
 
