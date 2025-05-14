@@ -4,12 +4,13 @@ import { MCQ } from '../../model/interface/MCQ';
 
 import { useRouter } from 'next/navigation';
 import { Painting } from '../../model/interface/painting';
-import { addQuizContextAction, scheduleQuizAction } from '../../server-action/backend/quiz/api';
+import { addQuizContextAction, scheduleQuizAction, submitQuizAction } from '../../server-action/backend/quiz/api';
 import { QuizStatus } from '../../server-action/backend/quiz/type';
 import { isHttpException, isServerActionError } from '../../server-action/backend/util';
 import { DetailQuizDTO, QuizContextDTO } from '../../server-action/backend/quiz/dto';
 import {  getPaintingAction } from '../../server-action/backend/painting/api';
 import { getQuizStatus, saveQuizStatus } from '../../storage/local/quiz';
+import ErrorModal from '../ErrorModal';
 interface DetailQuizProps {
     detailQuizDTO: DetailQuizDTO;
 }
@@ -23,7 +24,7 @@ interface DetailQuizProps {
 // * 참고: <관련 정보나 링크>
 
 export function DetailQuiz({ detailQuizDTO }: DetailQuizProps): React.JSX.Element {
-    const { quiz,  } = detailQuizDTO;
+    const { quiz, reactionCount, userReaction  } = detailQuizDTO;
     const mcq : MCQ= {
         id : quiz.id,
         distractorPaintings : quiz.distractor_paintings,
@@ -34,7 +35,7 @@ export function DetailQuiz({ detailQuizDTO }: DetailQuizProps): React.JSX.Elemen
         type : quiz.type
     } 
 
-   const router = useRouter();
+    const router = useRouter();
 
 
     const handelNextMCQ = async () => {
@@ -66,31 +67,8 @@ export function DetailQuiz({ detailQuizDTO }: DetailQuizProps): React.JSX.Elemen
     // ? 질문: <의문점 또는 개선 방향>
     // * 참고: <관련 정보나 링크>
     const handleImageSelected = async (selectedPainting : Painting) => {
-
-        const detailPainting = await getPaintingAction(selectedPainting.id);
-        if(isHttpException(detailPainting)){
-            const errorMessage = Array.isArray(detailPainting.message) ? detailPainting.message.join('\n') : detailPainting.message;
-            throw new Error(errorMessage);
-        }
-        else if(isServerActionError(detailPainting)){
-            throw new Error(detailPainting.message);
-        }
-
-        const response = await addQuizContextAction(generateQuizContextDTO(detailPainting));
-        if(isHttpException(response)){
-            const errorMessage = Array.isArray(response.message) ? response.message.join('\n') : response.message;
-            if(response.statusCode < 500){
-                alert(errorMessage);
-            }
-            else {
-                throw new Error(errorMessage);
-            }
-
-        }
-        else if(isServerActionError(response)){
-            throw new Error(response.message);
-        }
-        console.info(`[handleImageSelected]`,selectedPainting);
+        const isCorrect = mcq.answerPaintings[0].id === selectedPainting.id;
+         await Promise.all([updatePaintingContext(selectedPainting.id), submitQuizAction(quiz.id,{isCorrect})]);   
     }
 
     if(quiz.type === 'ONE_CHOICE'){
@@ -98,7 +76,7 @@ export function DetailQuiz({ detailQuizDTO }: DetailQuizProps): React.JSX.Elemen
         return <MCQView mcq={mcq} handelNextMCQ={handelNextMCQ} handleImageSelected={handleImageSelected} />;
     }
 
-    return <p> not implemented</p>
+    return <ErrorModal message='Not implemented page' />
 
 }
 
@@ -106,3 +84,30 @@ const generateQuizContextDTO = (painting : Painting) : QuizContextDTO => {
     const contextDTO : QuizContextDTO= {artist : painting.artist.name, page : 0};
     return contextDTO;
 }
+
+const updatePaintingContext = async (id : string) => {
+    const detailPainting = await getPaintingAction(id);
+    if(isHttpException(detailPainting)){
+        const errorMessage = Array.isArray(detailPainting.message) ? detailPainting.message.join('\n') : detailPainting.message;
+        throw new Error(errorMessage);
+    }
+    else if(isServerActionError(detailPainting)){
+        throw new Error(detailPainting.message);
+    }
+
+    const response = await addQuizContextAction(generateQuizContextDTO(detailPainting));
+    if(isHttpException(response)){
+        const errorMessage = Array.isArray(response.message) ? response.message.join('\n') : response.message;
+        if(response.statusCode < 500){
+            alert(errorMessage);
+        }
+        else {
+            throw new Error(errorMessage);
+        }
+
+    }
+    else if(isServerActionError(response)){
+        throw new Error(response.message);
+    }
+}
+
