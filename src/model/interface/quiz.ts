@@ -21,6 +21,7 @@ export interface Quiz {
     tags: Tag;
     styles: Style;
     artist: Artist;
+    owner_id: string;
 }
 
 export interface ShortQuiz {
