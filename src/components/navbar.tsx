@@ -17,9 +17,10 @@ import Link from "next/link";
 // ? 질문: <의문점 또는 개선 방향>
 // * 참고: <관련 정보나 링크>
 
-export default function Navbar() {
+export default async function Navbar() {
 
-  const user :User|undefined = getSignInInfo();
+  const user :User|undefined = await getSignInInfo();
+
   // console.log(user);
   return (
     <nav

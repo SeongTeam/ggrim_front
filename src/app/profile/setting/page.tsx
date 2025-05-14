@@ -11,7 +11,7 @@ import { updateUserUsernameAction } from "../../../server-action/backend/user/ap
 // - [ ] 회원가입 및 비밀번호 찾기 라우팅 로직 적용하기
 export default async function UpdateUsername() {
 
-  const userInfo = getSignInInfo();
+  const userInfo = await getSignInInfo();
 
   if(!userInfo){
     redirect(AUTH_LOGIC_ROUTE.SIGN_IN);
