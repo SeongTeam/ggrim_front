@@ -103,6 +103,32 @@ const addQuiz = async (
     return result;
 };
 
+const updateQuiz = async (
+    signInResponse: SignInResponse,
+    quizId: string,
+    dto: CreateQuizDTO,
+): Promise<Quiz | HttpException> => {
+    const backendUrl = getServerUrl();
+    const url = `${backendUrl}/quiz/${quizId}`;
+
+    const response = await fetch(url, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${signInResponse.accessToken}`,
+        },
+        body: JSON.stringify(dto),
+    });
+
+    if (!response.ok) {
+        const error: HttpException = await response.json();
+        return error;
+    }
+    const result: Quiz = await response.json();
+
+    return result;
+};
+
 const submitQuiz = async (quizID: string, dto: QuizSubmitDTO): Promise<boolean | HttpException> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/quiz/submit/${quizID}`;
@@ -244,6 +270,7 @@ export const getQuizAction = withErrorHandler(getQuiz);
 export const getQuizReactionsAction = withErrorHandler(getQuizReactions);
 
 export const addQuizAction = cookieWithErrorHandler(getSignInResponseOrRedirect, addQuiz);
+export const updateQuizAction = cookieWithErrorHandler(getSignInResponseOrRedirect, updateQuiz);
 
 export const submitQuizAction = withErrorHandler(submitQuiz);
 
