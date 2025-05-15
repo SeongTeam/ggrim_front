@@ -11,6 +11,7 @@ import { DetailQuizDTO, QuizContextDTO } from '../../server-action/backend/quiz/
 import {  getPaintingAction } from '../../server-action/backend/painting/api';
 import { getQuizStatus, saveQuizStatus } from '../../storage/local/quiz';
 import ErrorModal from '../ErrorModal';
+import QuizMenu from './QuizMenu';
 interface DetailQuizProps {
     detailQuizDTO: DetailQuizDTO;
     isOwnerAccess : boolean
@@ -76,9 +77,12 @@ export function DetailQuiz({ detailQuizDTO,isOwnerAccess }: DetailQuizProps): Re
 
         return(
             <div className="p-4 rounded-md shadow bg-ggrimBeige2" style={{ minHeight: '744px' }}>
-                <h3 className="text-xl font-bold text-gray-800 mb-6">
-                    {`${quiz.title}`}
-                </h3>
+                <div className='flex gap-2 justify-between'>
+                    <p className="text-3xl font-bold text-black mb-6">
+                        {`${quiz.title}`}
+                    </p>
+                    <QuizMenu quiz={quiz} isOwner={isOwnerAccess} />
+                </div>
                 <MCQView 
                     mcq={mcq} 
                     handelNextMCQ={handelNextMCQ} 
