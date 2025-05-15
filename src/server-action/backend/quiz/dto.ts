@@ -46,5 +46,5 @@ export interface QuizReactionCount {
 export interface DetailQuizDTO {
     quiz: Quiz;
     reactionCount: QuizReactionCount;
-    userReaction: QuizReactionType;
+    userReaction?: QuizReactionType;
 }
