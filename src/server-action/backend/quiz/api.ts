@@ -1,5 +1,5 @@
 'use server';
-import { getServerUrl, withErrorHandler } from '../lib';
+import { cookieWithErrorHandler, getServerUrl, withErrorHandler } from '../lib';
 import { MCQ } from '../../../model/interface/MCQ';
 import { Quiz, QuizDislike, QuizLike } from '../../../model/interface/quiz';
 import { getSignInResponseOrRedirect } from '../cookie';
@@ -64,11 +64,12 @@ const getQuiz = async (id: string): Promise<DetailQuizDTO> => {
     return result;
 };
 
-const addQuiz = async (dto: CreateQuizDTO): Promise<Quiz | HttpException> => {
+const addQuiz = async (
+    signInResponse: SignInResponse,
+    dto: CreateQuizDTO,
+): Promise<Quiz | HttpException> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/quiz`;
-
-    const signInResponse = await getSignInResponseOrRedirect();
 
     const response = await fetch(url, {
         method: 'POST',
@@ -132,13 +133,12 @@ const getQuizReactions = async (
 };
 
 const addQuizReactions = async (
+    signInResponse: SignInResponse,
     quizID: string,
     dto: QuizReactionDTO,
 ): Promise<boolean | HttpException> => {
     const backendUrl = getServerUrl();
-    const url = `${backendUrl}/quiz/${quizID}/reactions`;
-
-    const signInResponse = await getSignInResponseOrRedirect();
+    const url = `${backendUrl}/quiz/${quizID}/reaction`;
 
     const headers = {
         'Content-Type': 'application/json',
@@ -158,11 +158,12 @@ const addQuizReactions = async (
     return true;
 };
 
-const deleteQuizReaction = async (quizID: string): Promise<boolean | HttpException> => {
+const deleteQuizReaction = async (
+    signInResponse: SignInResponse,
+    quizID: string,
+): Promise<boolean | HttpException> => {
     const backendUrl = getServerUrl();
-    const url = `${backendUrl}/quiz/${quizID}/reactions`;
-
-    const signInResponse = await getSignInResponseOrRedirect();
+    const url = `${backendUrl}/quiz/${quizID}/reaction`;
 
     const headers = {
         Authorization: `Bearer ${signInResponse.accessToken}`,
@@ -227,13 +228,19 @@ export const getQuizAction = withErrorHandler(getQuiz);
 
 export const getQuizReactionsAction = withErrorHandler(getQuizReactions);
 
-export const addQuizAction = withErrorHandler(addQuiz);
+export const addQuizAction = cookieWithErrorHandler(getSignInResponseOrRedirect, addQuiz);
 
 export const submitQuizAction = withErrorHandler(submitQuiz);
 
-export const addQuizReactionsAction = withErrorHandler(addQuizReactions);
+export const addQuizReactionsAction = cookieWithErrorHandler(
+    getSignInResponseOrRedirect,
+    addQuizReactions,
+);
 
-export const deleteQuizReactionAction = withErrorHandler(deleteQuizReaction);
+export const deleteQuizReactionAction = cookieWithErrorHandler(
+    getSignInResponseOrRedirect,
+    deleteQuizReaction,
+);
 
 export const scheduleQuizAction = withErrorHandler(scheduleQuiz);
 
