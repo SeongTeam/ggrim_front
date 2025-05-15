@@ -13,6 +13,7 @@ import { getQuizStatus, saveQuizStatus } from '../../storage/local/quiz';
 import ErrorModal from '../ErrorModal';
 interface DetailQuizProps {
     detailQuizDTO: DetailQuizDTO;
+    isOwnerAccess : boolean
 }
 
 // TODO: <DetailQuiz/> 성능 개선
@@ -23,7 +24,7 @@ interface DetailQuizProps {
 // ? 질문: <의문점 또는 개선 방향>
 // * 참고: <관련 정보나 링크>
 
-export function DetailQuiz({ detailQuizDTO }: DetailQuizProps): React.JSX.Element {
+export function DetailQuiz({ detailQuizDTO,isOwnerAccess }: DetailQuizProps): React.JSX.Element {
     const { quiz, reactionCount, userReaction  } = detailQuizDTO;
     const mcq : MCQ= {
         id : quiz.id,
