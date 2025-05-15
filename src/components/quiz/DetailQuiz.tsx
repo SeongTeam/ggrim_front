@@ -73,13 +73,20 @@ export function DetailQuiz({ detailQuizDTO }: DetailQuizProps): React.JSX.Elemen
 
     if(quiz.type === 'ONE_CHOICE'){
 
-        return <MCQView 
+        return(
+            <div className="p-4 rounded-md shadow bg-ggrimBeige2" style={{ minHeight: '744px' }}>
+                <h3 className="text-xl font-bold text-gray-800 mb-6">
+                    {`${quiz.title}`}
+                </h3>
+                <MCQView 
                     mcq={mcq} 
                     handelNextMCQ={handelNextMCQ} 
                     handleImageSelected={handleImageSelected} 
                     userReaction={userReaction}
                     reactionCount={reactionCount}
                 />;
+            </div>
+        );
     }
 
     return <ErrorModal message='Not implemented page' />

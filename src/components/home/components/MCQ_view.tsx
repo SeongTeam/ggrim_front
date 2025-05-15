@@ -191,13 +191,7 @@ const MCQView = ({ mcq, handelNextMCQ, handleImageSelected, userReaction, reacti
     
 
     return (
-
-        <div className="p-4 rounded-md shadow bg-ggrimBeige2" style={{ minHeight: '744px' }}>
-            <h3 className="text-xl font-bold text-gray-800 mb-6">
-                {`${mcq.title}`}
-            </h3>
-            
-
+        <div>
             <motion.div
                 key={mcq.id}
                 initial={{ opacity: 0, x: 50 }}
