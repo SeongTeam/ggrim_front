@@ -2,7 +2,7 @@
 import { cookieWithErrorHandler, getServerUrl, withErrorHandler } from '../lib';
 import { MCQ } from '../../../model/interface/MCQ';
 import { Quiz, QuizDislike, QuizLike } from '../../../model/interface/quiz';
-import { getSignInResponseOrRedirect } from '../cookie';
+import { getSignInResponse, getSignInResponseOrRedirect } from '../cookie';
 import {
     CreateQuizDTO,
     DetailQuizDTO,
@@ -69,7 +69,9 @@ const findQuiz = async (
 
 const getQuiz = async (id: string): Promise<DetailQuizDTO> => {
     const backendUrl = getServerUrl();
-    const url = `${backendUrl}/quiz/${id}`;
+    const signInResponse = await getSignInResponse();
+    const param = signInResponse ? `?user-id=${signInResponse.user.id}` : '';
+    const url = `${backendUrl}/quiz/${id}` + param;
     const cacheTag = getQuizCacheTag(id);
     const response = await fetch(url, { next: { tags: [cacheTag] } });
     const result: DetailQuizDTO = await response.json();
