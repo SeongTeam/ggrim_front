@@ -11,8 +11,13 @@ export default async function QuizCreatePage(){
     }
 
     return(
-    <div className="mt-10">
-        <QuizForm />
+    <div className="mt-10 pt-10 px-40">
+        <div className="bg-zinc-800 pt-10 rounded-lg">
+            <h2 className="text-2xl font-bold mb-6 text-center text-white">
+                Create Quiz
+            </h2>
+            <QuizForm />
+        </div>
      </div>
     );
 }

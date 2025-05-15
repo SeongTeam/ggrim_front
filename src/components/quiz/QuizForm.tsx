@@ -327,15 +327,12 @@ export default function QuizForm({ quiz } : QuizFormProps) : JSX.Element {
     }
   
     return (
-      <div className="flex items-center justify-center h-full  bg-black">
+      <div className="flex items-center justify-center h-full">
         {error &&<AlertModal message={error} onClose={async ()=>setError('')}/>}
         <form
           onSubmit={(e)=>handleSubmit(e)}
-          className="bg-gray-900 p-8 rounded-lg shadow-lg text-white max-w-5xl md:min-w-[600px]"
+          className="rounded-lg shadow-lg text-white max-w-5xl md:min-w-[600px]"
         >
-          <h2 className="text-2xl font-bold mb-6 text-center text-white">
-            Create Quiz
-          </h2>
           <div className="mb-4">
             <input
               type="text"
@@ -384,7 +381,7 @@ export default function QuizForm({ quiz } : QuizFormProps) : JSX.Element {
                     </div>
                   }
                   {distractorKeys
-                    .map((key,idx)=> newQuiz[key])
+                    .map((key)=> newQuiz[key])
                     .filter(p=> p!==undefined)
                     .map(p=>                          
                     (<div key={p.id} className={`rounded-lg border-2 border-red-800 max-w-xs`}>
@@ -405,8 +402,8 @@ export default function QuizForm({ quiz } : QuizFormProps) : JSX.Element {
               required
             />
          </div>
-         <div className="flex justify-center">
-         <button type="submit" className="text-xl border-b-2 border-transparent hover:border-white"> Create </button>
+         <div className="flex justify-center mb-10">
+            <button type="submit" className="text-xl border-b-2 border-transparent hover:border-white"> Create </button>
          </div>
         </form>
       </div>
