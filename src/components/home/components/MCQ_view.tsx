@@ -194,13 +194,9 @@ const MCQView = ({ mcq, handelNextMCQ, handleImageSelected, userReaction, reacti
 
         <div className="p-4 rounded-md shadow bg-ggrimBeige2" style={{ minHeight: '744px' }}>
             <h3 className="text-xl font-bold text-gray-800 mb-6">
-
                 {`${mcq.title}`}
             </h3>
-            {/* <div>
-                <h1>API Data</h1>
-                <pre className="text-black">{JSON.stringify(mcq, null, 2)}</pre>
-            </div> */}
+            
 
             <motion.div
                 key={mcq.id}
@@ -227,9 +223,9 @@ const MCQView = ({ mcq, handelNextMCQ, handleImageSelected, userReaction, reacti
                                 alt={`Answer ${index}`}
                                 className={`w-50 h-auto max-h-[250px] max-w-full mb-2 ${getImageClasses(id)}`}
                             />
-            </div>
-        ))}
-    </div>
+                        </div>
+                     ))}
+                </div>
             </motion.div>
             <div className="flex justify-end items-center">
                 <SubmissionFeedback
