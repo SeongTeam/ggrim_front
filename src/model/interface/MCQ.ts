@@ -1,3 +1,5 @@
+import { QuizReactionCount } from '../../server-action/backend/quiz/dto';
+import { QuizReactionType } from '../../server-action/backend/quiz/type';
 import { Painting } from './painting';
 import { QUIZ_TYPE } from './quiz';
 
@@ -19,4 +21,6 @@ export interface MCQReaderViewProps {
     // currentAttributeIndex: number;
     handelNextMCQ: () => Promise<void>;
     handleImageSelected?: (selectedPainting: Painting) => Promise<void>;
+    reactionCount: QuizReactionCount;
+    userReaction?: QuizReactionType;
 }
