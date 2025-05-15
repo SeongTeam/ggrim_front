@@ -14,6 +14,17 @@ import {
 } from './dto';
 import { QuizReactionType, QuizStatus } from './type';
 import { HttpException } from '../common.dto';
+import { SignInResponse } from '../auth/type';
+import { revalidateTag } from 'next/cache';
+
+function getQuizCacheTag(quizId: string) {
+    return `quiz-${quizId}`;
+}
+
+function revalidateQuizTag(id: string) {
+    const tag = getQuizCacheTag(id);
+    revalidateTag(tag);
+}
 
 const getMCQData = async (): Promise<MCQ[] | HttpException> => {
     // const response = await fetch('http://localhost:4000/api/mcq', {
@@ -59,7 +70,8 @@ const findQuiz = async (
 const getQuiz = async (id: string): Promise<DetailQuizDTO> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/quiz/${id}`;
-    const response = await fetch(url);
+    const cacheTag = getQuizCacheTag(id);
+    const response = await fetch(url, { next: { tags: [cacheTag] } });
     const result: DetailQuizDTO = await response.json();
     return result;
 };
@@ -154,7 +166,7 @@ const addQuizReactions = async (
         const error: HttpException = await response.json();
         return error;
     }
-
+    revalidateQuizTag(quizID);
     return true;
 };
 
@@ -178,6 +190,7 @@ const deleteQuizReaction = async (
         return error;
     }
 
+    revalidateQuizTag(quizID);
     return true;
 };
 
