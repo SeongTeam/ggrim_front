@@ -12,7 +12,7 @@ import { CheckCircle, XCircle } from "lucide-react";
 import { getPaintingAction } from "../../server-action/backend/painting/api";
 import { isHttpException, isServerActionError } from "../../server-action/backend/util";
 import { CreateQuizDTO } from "../../server-action/backend/quiz/dto";
-import { addQuizAction } from "../../server-action/backend/quiz/api";
+import { addQuizAction, updateQuizAction } from "../../server-action/backend/quiz/api";
 import { Quiz } from "../../model/interface/quiz";
 
 interface NewQuiz{
@@ -130,7 +130,6 @@ export default function QuizForm({ quiz } : QuizFormProps) : JSX.Element {
     const distractorKeys : StatePaintingKey[] = ['distractor1','distractor2','distractor3'];
     const STORAGE_TTL_MS = 1800000;
     const QUIZ_FORM_KEY = 'new-quiz';
-    const QUIZ_PAINTING_KEY = 'quiz-painting'
 
 
   function mapPaintingKeyToAction(key : StatePaintingKey,painting : Painting|undefined) {
@@ -148,6 +147,30 @@ export default function QuizForm({ quiz } : QuizFormProps) : JSX.Element {
         setError('wrong handler run');
         return;
 
+    }
+
+  }
+
+  const callServerAction = async (dto : CreateQuizDTO, quiz : Quiz|undefined) =>{
+
+    const serverAction = quiz === undefined ? addQuizAction : ( dto : CreateQuizDTO ) => updateQuizAction(quiz.id,dto);
+    
+
+
+    const response  = await serverAction(dto);
+
+    if(isServerActionError(response)){
+      throw new Error(response.message);
+    }
+    else if(isHttpException(response)){
+        const errorMessage = Array.isArray(response.message) ? response.message.join('\n') : response.message;
+        setError(errorMessage+'\n'+'please try later');
+        return;
+    }
+    else{
+      localStorage.removeItem(QUIZ_FORM_KEY);
+      router.push(`/quiz/${response.id}`);
+      return;
     }
 
   }
@@ -189,22 +212,7 @@ export default function QuizForm({ quiz } : QuizFormProps) : JSX.Element {
         type : newQuiz!.type,
         timeLimit : newQuiz.timeLimit
       }
-      const response  = await addQuizAction(dto);
-
-      if(isServerActionError(response)){
-        throw new Error(response.message);
-      }
-      else if(isHttpException(response)){
-          const errorMessage = Array.isArray(response.message) ? response.message.join('\n') : response.message;
-          setError(errorMessage+'\n'+'please try later');
-          return;
-      }
-      else{
-        localStorage.removeItem(QUIZ_FORM_KEY);
-        localStorage.removeItem(QUIZ_PAINTING_KEY);
-        router.push(`/quiz/${response.id}`);
-        return;
-      }
+      await callServerAction(dto,quiz);
 
     };
 
