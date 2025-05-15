@@ -151,8 +151,6 @@ const MCQView = ({ mcq, handelNextMCQ, handleImageSelected, userReaction, reacti
         displayPaintings,
         handleReaderSelectAnswer,
         handleSubmit,
-        handleHintButtonClick,
-        clearSubmitState,
         handleClearSubmission,
     } = useMCQReader(mcq, 0);
 
@@ -175,12 +173,6 @@ const MCQView = ({ mcq, handelNextMCQ, handleImageSelected, userReaction, reacti
         handleSubmit();
     }
 
-    const handleTryAgain = () => {
-        console.log(`isSubmitted: ${isSubmitted}`);
-
-        clearSubmitState();
-        handelNextMCQ();
-    };
 
     const getCardClasses = (paintingId : string) => {
         if (isSubmitted) {
@@ -244,10 +236,8 @@ const MCQView = ({ mcq, handelNextMCQ, handleImageSelected, userReaction, reacti
                     isCorrect={isCorrect}
                     isSubmitted={isSubmitted}
                     handleSubmit={handleSubmitImage}
-                    handleHintButtonClick={handleHintButtonClick}
                     handleClearSubmission={handleClearSubmission}
                     handleNextMCQ={handelNextMCQ}
-                    handleTryAgain={handleTryAgain}
                     showHintButton={false}
                     toggleDislike={handleDisLike}
                     toggleLike={handleLike}

@@ -9,10 +9,8 @@ interface SubmissionFeedbackProps {
     isSubmitted: boolean;
 
     handleSubmit: () => void;
-    handleHintButtonClick: () => void;
     handleClearSubmission: () => void;
     handleNextMCQ: () => void;
-    handleTryAgain: () => void;
     showHintButton: boolean;
     toggleLike : ()=> void;
     toggleDislike : () => void;
@@ -27,7 +25,6 @@ const SubmissionFeedback: React.FC<SubmissionFeedbackProps> = ({
     isSubmitted,
     handleSubmit,
     handleNextMCQ,
-    handleTryAgain,
     toggleLike ,
     toggleDislike,
     liked,
