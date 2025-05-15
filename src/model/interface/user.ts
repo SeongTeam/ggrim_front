@@ -13,3 +13,10 @@ export interface User {
 
     last_login_date: Date;
 }
+
+export interface ShortUser {
+    id: string;
+    username: string;
+    role: UserRole;
+    active: UserState;
+}
