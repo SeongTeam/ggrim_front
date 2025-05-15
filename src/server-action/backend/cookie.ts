@@ -41,6 +41,17 @@ export async function getSignInResponseOrRedirect(): Promise<SignInResponse> {
     return JSON.parse(signInResponse) as SignInResponse;
 }
 
+export async function getSignInResponse(): Promise<SignInResponse | undefined> {
+    const cookieStore = cookies();
+    const signInResponse = cookieStore.get(ENUM_COOKIE_KEY.SIGN_IN_RESPONSE)?.value;
+
+    if (!signInResponse) {
+        return undefined;
+    }
+
+    return JSON.parse(signInResponse) as SignInResponse;
+}
+
 export async function setOneTimeToken(oneTimeToken: OneTimeToken): Promise<void> {
     const cookieStore = cookies();
     cookieStore.set(ENUM_COOKIE_KEY.ONE_TIME_TOKEN, JSON.stringify(oneTimeToken), {
