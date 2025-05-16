@@ -18,9 +18,9 @@ export interface Quiz {
     time_limit: number;
     description: string;
     type: QUIZ_TYPE;
-    tags: Tag;
-    styles: Style;
-    artist: Artist;
+    tags: Tag[];
+    styles: Style[];
+    artists: Artist[];
     owner_id: string;
     shortOwner: ShortUser;
 }
