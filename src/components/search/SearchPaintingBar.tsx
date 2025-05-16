@@ -3,6 +3,7 @@ import { ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from
 import {  RefObject, useRef, useState } from "react";
 import { SearchBar } from "../SearchBar";
 import { debounce } from "../../util/optimization";
+import { INPUT_KEY, InputKeyValue, SEARCH_PARAM_KEY } from "./const";
 
 interface ParsedInput {
     title : string;
@@ -14,7 +15,7 @@ interface ParsedInput {
 const regexPrefix='&&-'
 
 function parseInput(input: string): ParsedInput {
-    const extractValues = (key: string): string[] => {
+    const extractValues = (key: InputKeyValue): string[] => {
       // 정규식을 `&&-key:` 형식으로 변경
       const regex = new RegExp(`${regexPrefix}${key}:(\\S+)`, 'g');
       const values: string[] = [];
@@ -26,11 +27,11 @@ function parseInput(input: string): ParsedInput {
     };
   
     // 각 필드 추출
-    const tags = extractValues('tags');
-    const styles = extractValues('styles');
+    const tags = extractValues(INPUT_KEY.TAG);
+    const styles = extractValues(INPUT_KEY.STYLE);
     
     // 'artist'는 첫 번째 값만 추출
-    const artistMatches = extractValues('artist');
+    const artistMatches = extractValues(INPUT_KEY.ARTIST);
     const artist = artistMatches.length > 0 ? artistMatches[0] : '';
   
     // '&&-keyName:value' 형식 제거 후 남은 부분을 제목으로 처리
@@ -40,40 +41,46 @@ function parseInput(input: string): ParsedInput {
   }
 
 function getInput(searchParams : ReadonlyURLSearchParams) {
-    const title : string  = searchParams.get('title')||"";
-    const artist : string = searchParams.get('artist')||"";
-    const tags : string[] = searchParams.getAll('tags')||[];
-    const styles : string[] = searchParams.getAll('styles')||[];
+    const title : string  = searchParams.get(SEARCH_PARAM_KEY.TITLE)||"";
+    const artist : string = searchParams.get(SEARCH_PARAM_KEY.ARTIST)||"";
+    const tags : string[] = searchParams.getAll(SEARCH_PARAM_KEY.TAGS)||[];
+    const styles : string[] = searchParams.getAll(SEARCH_PARAM_KEY.STYLES)||[];
 
+    const inputs : string[]  = [title];
+    const delimiter = ' ';
 
-    let input = `${title} `;
 
     if(artist.trim() !== ""){
-        input +=`${regexPrefix}artist:${artist} `;
+        inputs.push(`${regexPrefix}${INPUT_KEY.ARTIST}:${artist}`);
     }
 
-    tags.forEach(tag=>input+=`${regexPrefix}tags:${tag} `);
+    if(tags.length !== 0){
+        inputs.push(...tags.map(t=>`${regexPrefix}${INPUT_KEY.TAG}:${t}`));
+    }
 
-    styles.forEach(style=>input+=`${regexPrefix}styles:${style} `);
+    if(styles.length !== 0){
 
-    return input;
+        inputs.push(...styles.map(s=>`${regexPrefix}${INPUT_KEY.STYLE}:${s}`));
+    }
+
+    return inputs.join(delimiter);
 
 }
 
 function getURL(input : string ) : string{
     const parsed : ParsedInput = parseInput(input);
 
-    let url = `/search?title=${parsed.title}`;
+    let url = `/search?${SEARCH_PARAM_KEY.TITLE}=${parsed.title}`;
 
     if(parsed.artist.trim() !== ""){
-        url += `&artist=${parsed.artist}`;
+        url += `&${SEARCH_PARAM_KEY.ARTIST}=${parsed.artist}`;
     }
 
     parsed.tags.forEach(tag=>
-        url += `&tags=${tag}` 
+        url += `&${SEARCH_PARAM_KEY.TAGS}=${tag}` 
     );
     parsed.styles.forEach(style=>
-        url += `&styles=${style}` 
+        url += `&${SEARCH_PARAM_KEY.STYLES}=${style}` 
     );
 
     return url;
