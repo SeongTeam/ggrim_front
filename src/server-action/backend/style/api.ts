@@ -2,9 +2,11 @@
 import { RequestQueryBuilder } from '@dataui/crud-request';
 import { Style } from 'util';
 import { getServerUrl, withErrorHandler } from '../lib';
-import { HttpException } from '../common.dto';
+import { HttpException, IPaginationResult } from '../common.dto';
 
-const findStyles = async (queryBuilder: RequestQueryBuilder): Promise<Style[] | HttpException> => {
+const findStyles = async (
+    queryBuilder: RequestQueryBuilder,
+): Promise<IPaginationResult<Style> | HttpException> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/style/`;
     const response = await fetch(url + `?${queryBuilder.query()}`);
@@ -14,7 +16,7 @@ const findStyles = async (queryBuilder: RequestQueryBuilder): Promise<Style[] | 
         return error;
     }
 
-    const result: Style[] = await response.json();
+    const result: IPaginationResult<Style> = await response.json();
     return result;
 };
 

@@ -3,8 +3,9 @@ import { HttpStatusValueType, ServiceExceptionValueType } from './status';
 export interface IPaginationResult<T> {
     data: T[];
     count: number;
-    pagination: number;
-    isMore?: boolean;
+    total: number;
+    page: number;
+    pageCount: number;
 }
 export interface HttpException {
     message: string | string[];
