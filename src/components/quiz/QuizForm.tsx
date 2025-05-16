@@ -1,7 +1,7 @@
 'use client'
 import {  FormEvent,  useEffect, useReducer, useRef, useState } from "react";
 import { Painting } from "../../model/interface/painting";
-import { Card } from "../card";
+import { Card } from "../Card";
 import { useRouter } from "next/navigation";
 import AlertModal from "../home/components/AlertModal";
 import { debounce } from "../../util/optimization";
