@@ -182,11 +182,11 @@ const MCQView = ({ mcq, handelNextMCQ, handleImageSelected, userReaction, reacti
     };
     
     const getBorderClasses = (paintingId : string) => (
-        readerSelectedAnswer === paintingId ? 'border-4 border-primary' : ''
+        readerSelectedAnswer === paintingId ? 'border-4 border-primary' : 'border-transparent border-4 '
     );
     
     const getImageClasses = (paintingId : string) => (
-        readerSelectedAnswer === paintingId ? 'ring-4 ring-primary' : ''
+        readerSelectedAnswer === paintingId ? 'ring-4 ring-primary' : 'ring-4 ring-transparent'
     );
     
 
