@@ -42,7 +42,7 @@ const SubmissionFeedback: React.FC<SubmissionFeedbackProps> = ({
                 onClick={handleSubmit}
                 className="font-semibold py-2 px-4 flex items-center gap-3 text-gray-600 bg-green-200 rounded-lg"
             >
-                Submit
+                 <p className='hidden md:block'>Submit</p>
                 <Icons.CornerRightUp />
             </button>
             <div className="flex flex-col items-center gap-1">
@@ -73,7 +73,7 @@ const SubmissionFeedback: React.FC<SubmissionFeedbackProps> = ({
                 onClick={handleNextMCQ}
                 className="py-2 px-4 flex items-center gap-3 text-white bg-black rounded-lg"
             >
-                NEXT
+                <p className='hidden md:block'>NEXT</p>
                 <ArrowRightCircleIcon />
             </button>
         </div>

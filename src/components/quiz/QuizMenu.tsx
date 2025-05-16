@@ -1,7 +1,7 @@
 // components/PostMenu.tsx
 'use client'
 
-import { MoreHorizontal, MoreVertical } from 'lucide-react'
+import {  MoreVertical } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { Quiz } from '../../model/interface/quiz'
 import { useRouter } from 'next/navigation'
@@ -93,7 +93,7 @@ export default function QuizMenu({
             className="flex p-2 flex-row rounded-md border bg-black text-white border-black hover:bg-gray-600 "
             aria-label="Menu"
         >
-            <p className=''>MENU</p>
+            <p className="hidden md:block">MENU</p>
             <MoreVertical />
         </button>
 
