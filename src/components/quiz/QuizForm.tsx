@@ -403,7 +403,7 @@ export default function QuizForm({ quiz } : QuizFormProps) : JSX.Element {
             />
          </div>
          <div className="flex justify-center mb-10">
-            <button type="submit" className="text-xl border-b-2 border-transparent hover:border-white"> Create </button>
+            <button type="submit" className="text-xl border-b-2 border-transparent hover:border-white"> {quiz === undefined ? 'Create' : 'Edit'} </button>
          </div>
         </form>
       </div>
