@@ -12,12 +12,10 @@ interface ParsedInput {
     styles : string[];
 }
 
-const regexPrefix='&&-'
-
 function parseInput(input: string): ParsedInput {
     const extractValues = (key: InputKeyValue): string[] => {
       // 정규식을 `&&-key:` 형식으로 변경
-      const regex = new RegExp(`${regexPrefix}${key}:(\\S+)`, 'g');
+      const regex = new RegExp(`${key}:(\\S+)`, 'g');
       const values: string[] = [];
       let match;
       while ((match = regex.exec(input)) !== null) {
@@ -34,8 +32,13 @@ function parseInput(input: string): ParsedInput {
     const artistMatches = extractValues(INPUT_KEY.ARTIST);
     const artist = artistMatches.length > 0 ? artistMatches[0] : '';
   
-    // '&&-keyName:value' 형식 제거 후 남은 부분을 제목으로 처리
-    const title = input.replace(/&&-\S+:\S+/g, '').trim();
+
+    // 1단계: key:value 전체 제거
+    const cleaned = input.replace(/\b\w+:\S+/g, '').trim();
+
+    // 2단계: 남은 단어 추출
+    const titleWords = cleaned.match(/\b\w+\b/g);
+    const title = titleWords ? titleWords.join(' ') : '';
   
     return { title, tags, styles, artist };
   }
@@ -51,16 +54,16 @@ function getInput(searchParams : ReadonlyURLSearchParams) {
 
 
     if(artist.trim() !== ""){
-        inputs.push(`${regexPrefix}${INPUT_KEY.ARTIST}:${artist}`);
+        inputs.push(`${INPUT_KEY.ARTIST}:${artist}`);
     }
 
     if(tags.length !== 0){
-        inputs.push(...tags.map(t=>`${regexPrefix}${INPUT_KEY.TAG}:${t}`));
+        inputs.push(...tags.map(t=>`${INPUT_KEY.TAG}:${t}`));
     }
 
     if(styles.length !== 0){
 
-        inputs.push(...styles.map(s=>`${regexPrefix}${INPUT_KEY.STYLE}:${s}`));
+        inputs.push(...styles.map(s=>`${INPUT_KEY.STYLE}:${s}`));
     }
 
     return inputs.join(delimiter);
@@ -110,11 +113,8 @@ export function SearchPaintingBar(props : SearchPaintingBarProps): React.JSX.Ele
             if(pathName !== '/'){
                 router.push('/');
             }
-
-            
             return;
         }
-
 
         router.push(getURL(searchTarget));
         setInput(searchTarget);
