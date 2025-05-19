@@ -1,9 +1,10 @@
-import { RequestQueryBuilder } from '@dataui/crud-request';
+'use server';
+import { CondOperator, RequestQueryBuilder } from '@dataui/crud-request';
 import { HttpException, IPaginationResult } from '../common.dto';
 import { getServerUrl, withErrorHandler } from '../lib';
 import { Artist } from '../../../model/interface/painting';
 
-export const findArtists = async (
+const getArtists = async (
     queryBuilder: RequestQueryBuilder,
 ): Promise<IPaginationResult<Artist> | HttpException> => {
     const backendUrl = getServerUrl();
@@ -17,6 +18,26 @@ export const findArtists = async (
 
     const result: IPaginationResult<Artist> = await response.json();
     return result;
+};
+
+const findArtists = async (
+    name: string,
+    pageCount = 20,
+    page = 0,
+): Promise<IPaginationResult<Artist> | HttpException> => {
+    const qb = RequestQueryBuilder.create();
+
+    qb.select(['name'])
+        .setFilter({
+            field: 'search_name',
+            operator: CondOperator.STARTS,
+            value: name.toLocaleUpperCase(),
+        })
+        .sortBy({ field: 'search_name', order: 'ASC' })
+        .setLimit(pageCount)
+        .setPage(page);
+
+    return getArtists(qb);
 };
 
 export const findArtistsAction = withErrorHandler(findArtists);
