@@ -31,16 +31,18 @@ export function QuizCardGrid( props: QuizCardGridProps ): React.JSX.Element {
       // 스크롤 이벤트 핸들러
     useEffect(() => {
         const loadMoreQuiz = async ()  => {
+
+            const isMore = findResultRef.current.page < findResultRef.current.pageCount;
         
-            if(!findResultRef.current.isMore || isLoadingRef.current){
+            if(!isMore || isLoadingRef.current){
                 console.log('not load quiz')
                 console.log(findResultRef,isLoadingRef);
                 return;
             }
             isLoadingRef.current = true;
 
-            console.log(`load ${findResultRef.current.pagination +1} page`);
-            const response  = await findQuizAction([],[],[],findResultRef.current.pagination+1);
+            console.log(`load ${findResultRef.current.page +1} page`);
+            const response  = await findQuizAction([],[],[],findResultRef.current.page+1);
             if(isServerActionError(response)){
                 throw new Error(response.message);
             }
