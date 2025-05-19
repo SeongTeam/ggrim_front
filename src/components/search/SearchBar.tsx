@@ -96,7 +96,7 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
     setCursorPosition(position);
   }
 
-  const applyAutoComplete = ( suggestion : string) =>{
+  const applySuggestion = ( suggestion : string) =>{
 
     const cursorWithoutEnter = cursorPosition-1;
     const paramCase = getParamCase(inputValue,cursorWithoutEnter);
@@ -243,7 +243,7 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
   };
 
   const selectSuggestion = (suggestion: string) => {
-    applyAutoComplete(suggestion);
+    applySuggestion(suggestion);
     setSuggestions([]);
     setShowSuggestions(false);
   };
