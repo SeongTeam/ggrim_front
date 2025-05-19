@@ -85,7 +85,7 @@ function getURL(input : string ) : string{
 }
 
 interface SearchPaintingBarProps {
-    inputRef? : RefObject<HTMLInputElement>;
+    inputRef : RefObject<HTMLInputElement>;
 }
 
 // TODO: <SearchPaintingBar /> 기능 개선
