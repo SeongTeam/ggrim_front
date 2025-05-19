@@ -1,3 +1,4 @@
+import { Style } from './styles';
 import { Tag } from './tag';
 
 export interface Painting {
@@ -12,13 +13,6 @@ export interface Painting {
     tags: Tag[];
     styles: Style[];
     artist: Artist;
-}
-
-export interface Style {
-    version: number | null;
-    id: string;
-    name: string;
-    info_url: string | null;
 }
 
 export interface Artist {
