@@ -80,7 +80,6 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
 
   const [inputValue, setInputValue] = useState(defaultValue||"");
   const [suggestions, setSuggestions] = useState<string[]>([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
   const [cursorPosition, setCursorPosition] = useState(defaultValue !== undefined ? defaultValue.length :0);
   const suggestionsRef = useRef<HTMLDivElement>(null);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
@@ -146,7 +145,7 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
 
 
   const keyDownHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (!showSuggestions || suggestions.length === 0) return;
+    if (suggestions.length === 0) return;
 
     if (e.key === 'ArrowDown') {
       e.preventDefault();
@@ -160,7 +159,7 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
         selectSuggestion(suggestions[highlightedIndex]);
       }
     } else if (e.key === 'Escape') {
-      setShowSuggestions(false);
+      setSuggestions([]);
     }
   };
 
@@ -174,7 +173,6 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
 
       case 'NO_QUOTED' : {
         setSuggestions(quotedBaseSuggestion);
-        setShowSuggestions(true);
         break;
       }
 
@@ -182,7 +180,6 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
         const quoted = getInsideDoubleQuotes(value,cursorPosition);
         setSuggestions(baseSuggestion.filter(suggestion=>suggestion.startsWith(quoted!)));
         setQuery(quoted!);
-        setShowSuggestions(true);
         break;
       }
 
@@ -208,14 +205,12 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
         
         console.log('filtered data ', filtered);
         setSuggestions(filtered);
-        setShowSuggestions(true);
-
         
       }
       break;
       case 'DEFAULT' : 
       default :
-        setShowSuggestions(false);
+        setSuggestions([]);
       break;
     }
 
@@ -245,7 +240,6 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
   const selectSuggestion = (suggestion: string) => {
     applySuggestion(suggestion);
     setSuggestions([]);
-    setShowSuggestions(false);
   };
 
   useEffect(() => {
@@ -254,7 +248,7 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
         suggestionsRef.current &&
         !suggestionsRef.current.contains(event.target as Node)
       ) {
-        setShowSuggestions(false);
+        setSuggestions([]);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -275,14 +269,11 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
         placeholder="Search Title..."
         onChange={changeHandler}
         className="w-full pl-10 pr-4 py-2 text-white bg-gray-800 rounded-lg outline-none focus:ring-2 focus:ring-red-500" 
-        onFocus={() => {
-          if (suggestions.length > 0) setShowSuggestions(true);
-        }}
         onKeyUp={handleClickOrKeyUp}
         onClick={handleClickOrKeyUp}
         onKeyDown={keyDownHandler}
       />
-        {showSuggestions && (
+        {suggestions.length >0 && (
           <AutocompleteList
             suggestions={suggestions}
             onSelect={selectSuggestion}
