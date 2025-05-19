@@ -3,7 +3,8 @@ import { ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from
 import {  RefObject, useRef, useState } from "react";
 import { SearchBar } from "../SearchBar";
 import { debounce } from "../../util/optimization";
-import { INPUT_KEY, InputKeyValue, SEARCH_PARAM_KEY } from "./const";
+import { INPUT_KEY, SEARCH_PARAM_KEY } from "./const";
+import { extractValuesInsideQuoted, makeQuoted } from "./util";
 
 interface ParsedInput {
     title : string;
@@ -13,32 +14,26 @@ interface ParsedInput {
 }
 
 function parseInput(input: string): ParsedInput {
-    const extractValues = (key: InputKeyValue): string[] => {
-      // 정규식을 `&&-key:` 형식으로 변경
-      const regex = new RegExp(`${key}:(\\S+)`, 'g');
-      const values: string[] = [];
-      let match;
-      while ((match = regex.exec(input)) !== null) {
-        values.push(match[1]);
-      }
-      return values;
-    };
+
   
     // 각 필드 추출
-    const tags = extractValues(INPUT_KEY.TAG);
-    const styles = extractValues(INPUT_KEY.STYLE);
+    const tags = extractValuesInsideQuoted(input,INPUT_KEY.TAG);
+    const styles = extractValuesInsideQuoted(input,INPUT_KEY.STYLE);
     
     // 'artist'는 첫 번째 값만 추출
-    const artistMatches = extractValues(INPUT_KEY.ARTIST);
+    const artistMatches = extractValuesInsideQuoted(input,INPUT_KEY.ARTIST);
     const artist = artistMatches.length > 0 ? artistMatches[0] : '';
   
 
-    // 1단계: key:value 전체 제거
-    const cleaned = input.replace(/\b\w+:\S+/g, '').trim();
+    // 1단계: "key:value" 형식(쌍따옴표 포함)을 제거
+    const cleaned = input.replace(/"\w+:[^"]*"/g, '').trim();
 
-    // 2단계: 남은 단어 추출
-    const titleWords = cleaned.match(/\b\w+\b/g);
-    const title = titleWords ? titleWords.join(' ') : '';
+    // 단어 추출: 따옴표나 쉼표 등 문장부호는 그대로 유지
+    // 단어 경계를 기준으로 쪼개되, 문장부호 포함된 항목도 추출되게 함
+    const parts = cleaned.split(/\s+/) // 공백 기준 분리
+                         .filter(Boolean); // 빈 문자열 제거
+    const title = parts.join(' ');
+    console.log('parseInput',{title,cleaned,parts});
   
     return { title, tags, styles, artist };
   }
@@ -54,16 +49,16 @@ function getInput(searchParams : ReadonlyURLSearchParams) {
 
 
     if(artist.trim() !== ""){
-        inputs.push(`${INPUT_KEY.ARTIST}:${artist}`);
+        inputs.push(makeQuoted(`${INPUT_KEY.ARTIST}:${artist}`));
     }
 
     if(tags.length !== 0){
-        inputs.push(...tags.map(t=>`${INPUT_KEY.TAG}:${t}`));
+        inputs.push(...tags.map(t=>makeQuoted(`${INPUT_KEY.TAG}:${t}`)));
     }
 
     if(styles.length !== 0){
 
-        inputs.push(...styles.map(s=>`${INPUT_KEY.STYLE}:${s}`));
+        inputs.push(...styles.map(s=>makeQuoted(`${INPUT_KEY.STYLE}:${s}`)));
     }
 
     return inputs.join(delimiter);
