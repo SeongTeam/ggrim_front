@@ -1,6 +1,6 @@
 'use client'
 import { Search } from "lucide-react";
-import React, {  RefObject, useEffect, useRef, useState } from "react";
+import React, {  RefObject, useEffect, useReducer, useRef,} from "react";
 import { INPUT_KEY, } from "./const";
 import {  findArtistsAction } from "../../server-action/backend/artist/api";
 import { findTagsAction } from "../../server-action/backend/tag/api";
@@ -70,6 +70,88 @@ function getServerAction( key : string) {
 
 }
 
+interface AutoCompleteState {
+ suggestions : string[];
+ selectedIndex : number;
+ query : string;
+}
+
+
+
+type AutoCompleteAction = 
+  | {type : 'SET_SUGGESTIONS', suggestions: string[] }
+  | {type : 'SET_SELECTED_INDEX' , selectedIndex : number}
+  | {type : 'SET_QUERY' , query : string } 
+  | {type : 'SET_ALL' , suggestions: string[] , selectedIndex : number, query : string }
+  | {type : 'RESET'}
+  
+
+
+ function autoCompleteReducer(state : AutoCompleteState, action : AutoCompleteAction) {
+
+  const { type } = action;
+
+  switch(type) {
+
+    case 'SET_SUGGESTIONS' :{
+      const { suggestions } = action;
+      return { ...state, suggestions};
+    }
+    case 'SET_SELECTED_INDEX' : {
+      const { selectedIndex } = action;
+      return { ...state, selectedIndex};
+    }
+    case 'SET_QUERY' : {
+      const { query } = action;
+      return { ...state, query};
+    }
+    case 'SET_ALL' : {
+      const { suggestions, selectedIndex,query } = action;
+      return { ...state,suggestions, selectedIndex,query};
+    }
+    case 'RESET' : {
+      return { suggestions : [], selectedIndex : -1, query : ''}
+    }
+    default : 
+      return state;
+  }
+}
+
+interface InputState {
+  text : string;
+  cursorPos : number;
+ }
+
+type InputAction = 
+| { type : 'SET_TEXT' , text : string }
+| { type : 'SET_CURSOR_POS' , cursorPos : number} 
+| { type : 'SET_ALL' , text : string, cursorPos : number };
+ 
+function inputReducer(state : InputState, action : InputAction) {
+
+  const { type } = action;
+
+  switch(type) {
+
+    case 'SET_TEXT' :{
+      const { text }= action;
+      return { ...state, text};
+    }
+    case 'SET_CURSOR_POS' : {
+      const { cursorPos} = action;
+      return { ...state, cursorPos};
+    }
+    case 'SET_ALL' : {
+      const { text, cursorPos } = action;
+      return { ...state, text, cursorPos };
+    }
+    default : 
+      return state;
+  }
+}
+
+
+
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
@@ -78,12 +160,22 @@ interface SearchBarProps {
 }
 export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
 
-  const [inputValue, setInputValue] = useState(defaultValue||"");
-  const [suggestions, setSuggestions] = useState<string[]>([]);
-  const [cursorPosition, setCursorPosition] = useState(defaultValue !== undefined ? defaultValue.length :0);
+  const initInputState : InputState = {
+    text : defaultValue ?? '',
+    cursorPos : 0
+  }
+
+  const initAutoCompleteState : AutoCompleteState = {
+    suggestions : [],
+    selectedIndex : -1,
+    query : '',
+
+  }
+
+  const [ inputState , inputDispatch ] = useReducer(inputReducer,initInputState)
+  const [ autoCompleteState, autoCompleteDispatch ] = useReducer(autoCompleteReducer,initAutoCompleteState);
   const suggestionsRef = useRef<HTMLDivElement>(null);
-  const [highlightedIndex, setHighlightedIndex] = useState(-1);
-  const [query, setQuery ] = useState('');
+
 
   const moveCursor = ( position : number) => {
     const input = inputRef.current!;
@@ -91,31 +183,30 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
 
     input.setSelectionRange(position,position);
     input.focus();
-
-    setCursorPosition(position);
   }
 
   const applySuggestion = ( suggestion : string) =>{
+    const { cursorPos, text } = inputState;
 
-    const cursorWithoutEnter = cursorPosition-1;
-    const paramCase = getParamCase(inputValue,cursorWithoutEnter);
-    let newInput = inputValue;
-    let newCursor = cursorPosition;
+    const cursorWithoutEnter = cursorPos-1;
+    const paramCase = getParamCase(text,cursorWithoutEnter);
+    let newInput = text;
+    let newCursor = cursorWithoutEnter;
 
     switch(paramCase){
 
       case 'NO_QUOTED' : {
-        const beforeCurSor = inputValue.slice(0,cursorWithoutEnter+1);
-        const afterCursor = inputValue.slice(cursorWithoutEnter+1);
+        const beforeCurSor = text.slice(0,cursorWithoutEnter+1);
+        const afterCursor = text.slice(cursorWithoutEnter+1);
         newInput = beforeCurSor +' '+ suggestion + ' ' + afterCursor;
         newCursor = cursorWithoutEnter + suggestion.length + 1;
         break;
       }
 
       case 'NO_PARAM' : {
-        const keyParts = getInsideDoubleQuotes(inputValue,cursorWithoutEnter);
-        const beforeKey = inputValue.slice(0,cursorWithoutEnter+1-keyParts!.length);
-        const afterCursor = inputValue.slice(cursorWithoutEnter+1);
+        const keyParts = getInsideDoubleQuotes(text,cursorWithoutEnter);
+        const beforeKey = text.slice(0,cursorWithoutEnter+1-keyParts!.length);
+        const afterCursor = text.slice(cursorWithoutEnter+1);
         newInput = beforeKey + suggestion + afterCursor;
         newCursor = cursorWithoutEnter + suggestion.slice(keyParts!.length).length +1;
         break;
@@ -123,10 +214,10 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
 
       case 'PARAM_KEY_ONLY' : {
 
-        const quoted = getInsideDoubleQuotes(inputValue,cursorWithoutEnter);
+        const quoted = getInsideDoubleQuotes(text,cursorWithoutEnter);
         const param = parseKeyValue(quoted!);
-        const beforeValue = inputValue.slice(0,cursorWithoutEnter+1-param!.value.length);
-        const afterCursor = inputValue.slice(cursorWithoutEnter+1);
+        const beforeValue = text.slice(0,cursorWithoutEnter+1-param!.value.length);
+        const afterCursor = text.slice(cursorWithoutEnter+1);
         newInput = beforeValue + suggestion + afterCursor;
         newCursor = cursorWithoutEnter + suggestion.slice(param!.value.length).length+2;
       }
@@ -137,49 +228,58 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
       break;
     }
 
-    setInputValue(newInput);
-    setCursorPosition(newCursor);
+    inputDispatch({ type : 'SET_TEXT', text : newInput});
+    inputDispatch({ type : 'SET_CURSOR_POS', cursorPos : newCursor});
     setTimeout(()=>moveCursor(newCursor),0);
     onSearch(newInput);
   }
 
 
   const keyDownHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const { suggestions, selectedIndex : prev} = autoCompleteState;
     if (suggestions.length === 0) return;
 
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-      setHighlightedIndex((prev) => (prev + 1) % suggestions.length);
+      const selectedIndex =  (prev + 1) % suggestions.length;
+      autoCompleteDispatch({ type : 'SET_SELECTED_INDEX' , selectedIndex});
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
-      setHighlightedIndex((prev) => (prev - 1 + suggestions.length) % suggestions.length);
+      const selectedIndex =  (prev - 1 + suggestions.length) % suggestions.length;
+      autoCompleteDispatch({ type : 'SET_SELECTED_INDEX' , selectedIndex});
     } else if (e.key === 'Enter') {
       e.preventDefault();
-      if (highlightedIndex >= 0) {
-        selectSuggestion(suggestions[highlightedIndex]);
+      if (prev >= 0) {
+        selectSuggestion(suggestions[prev]);
       }
     } else if (e.key === 'Escape') {
-      setSuggestions([]);
+      autoCompleteDispatch({type :'SET_SUGGESTIONS' , suggestions : []});
     }
   };
 
 
   const changeSuggestion = async (value : string) =>{
 
+    const cursorPosition= inputState.cursorPos
     const paramCase = getParamCase(value,cursorPosition);
     console.log('changeSuggestion' , paramCase);
+    let suggestions : string[] = [];
+    let query = '';
+    const selectedIndex = -1;
 
     switch(paramCase){
 
       case 'NO_QUOTED' : {
-        setSuggestions(quotedBaseSuggestion);
+        suggestions = quotedBaseSuggestion;
+        
         break;
       }
 
       case 'NO_PARAM' : {
         const quoted = getInsideDoubleQuotes(value,cursorPosition);
-        setSuggestions(baseSuggestion.filter(suggestion=>suggestion.startsWith(quoted!)));
-        setQuery(quoted!);
+        const filtered = baseSuggestion.filter(suggestion=>suggestion.startsWith(quoted!));
+        suggestions = filtered;
+        query = quoted!;
         break;
       }
 
@@ -190,8 +290,7 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
         console.log('PARAM_KEY_ONLY',param);
         const serverAction = getServerAction(param?.key||'');
         const response = await serverAction(param?.value ??'');
-        setQuery(param?.value ??'');
-
+        
         if(isServerActionError(response)){
           throw new Error(response.message);
         }
@@ -200,19 +299,19 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
           return;
         }
         console.log('auto complete suggestion', response);
-
-        const filtered = response.data.length > 0 ? response.data.map( d =>  d.name) : [''];
         
-        console.log('filtered data ', filtered);
-        setSuggestions(filtered);
+        suggestions = response.data.length > 0 ? response.data.map( d =>  d.name) : [''];
+        query = param?.value ??'';
+
         
       }
       break;
       case 'DEFAULT' : 
       default :
-        setSuggestions([]);
       break;
     }
+
+    autoCompleteDispatch({type :'SET_ALL' , query,suggestions,selectedIndex});
 
 
   }
@@ -220,26 +319,28 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
 
   const changeHandler = (e : React.ChangeEvent<HTMLInputElement>)=>{
     console.log('changeHandler : ',e.target.value);
-    setInputValue(e.target.value);
-    onSearch(e.target.value);
-    setCursorPosition(e.target.selectionStart ?? 0);
-
+    const text = e.target.value;
+    const cursorPos = e.target.selectionStart ??  0;
+    inputDispatch({type :'SET_ALL' , text,cursorPos});
     changeSuggestion(e.target.value);
-    setHighlightedIndex(-1);
 
+
+    
+    onSearch(e.target.value);
 
   };
 
   const handleClickOrKeyUp = ( ) => {
     console.log(`handleClickOrKeyUp`,inputRef?.current);
     if (inputRef&&inputRef.current) {
-      setCursorPosition(inputRef.current.selectionStart ?? 0);
+      const cursorPos = inputRef.current.selectionStart ?? 0;
+      inputDispatch({type :'SET_CURSOR_POS', cursorPos});
     }
   };
 
   const selectSuggestion = (suggestion: string) => {
     applySuggestion(suggestion);
-    setSuggestions([]);
+    autoCompleteDispatch({type : 'RESET'});
   };
 
   useEffect(() => {
@@ -248,7 +349,7 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
         suggestionsRef.current &&
         !suggestionsRef.current.contains(event.target as Node)
       ) {
-        setSuggestions([]);
+        autoCompleteDispatch({type : 'RESET'});
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -264,7 +365,7 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
       <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
       <input
         ref={inputRef}
-        value={inputValue}
+        value={inputState.text}
         type="text"
         placeholder="Search Title..."
         onChange={changeHandler}
@@ -273,13 +374,13 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
         onClick={handleClickOrKeyUp}
         onKeyDown={keyDownHandler}
       />
-        {suggestions.length >0 && (
+        {autoCompleteState.suggestions.length >0 && (
           <AutocompleteList
-            suggestions={suggestions}
+            suggestions={autoCompleteState.suggestions}
             onSelect={selectSuggestion}
-            query={query}
-            highlightedIndex={highlightedIndex}
-            setHighlightedIndex={setHighlightedIndex}
+            query={autoCompleteState.query}
+            highlightedIndex={autoCompleteState.selectedIndex}
+            setHighlightedIndex={(selectedIndex : number)=> autoCompleteDispatch({type : 'SET_SELECTED_INDEX',selectedIndex })}
           />
         )}
     </div>
