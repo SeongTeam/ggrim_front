@@ -24,13 +24,13 @@ function getParamCase( input : string, cursorPosition : number) : ParamCase {
   if(!result ){
     return 'NO_QUOTED'
   }
-  const parsed = parseKeyValue(result);
+  const param = parseKeyValue(result);
 
-  if(!parsed) {
+  if(!param) {
     return 'NO_PARAM'
   }
 
-  if(parsed?.key){
+  if(param?.key){
     return 'PARAM_KEY_ONLY'
   }
   
@@ -114,11 +114,11 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
       }
 
       case 'NO_PARAM' : {
-        const key = getInsideDoubleQuotes(inputValue,cursorWithoutEnter);
-        const beforeKey = inputValue.slice(0,cursorWithoutEnter+1-key!.length);
+        const keyParts = getInsideDoubleQuotes(inputValue,cursorWithoutEnter);
+        const beforeKey = inputValue.slice(0,cursorWithoutEnter+1-keyParts!.length);
         const afterCursor = inputValue.slice(cursorWithoutEnter+1);
         newInput = beforeKey + suggestion + afterCursor;
-        newCursor = cursorWithoutEnter + suggestion.slice(key!.length).length +1;
+        newCursor = cursorWithoutEnter + suggestion.slice(keyParts!.length).length +1;
         break;
       }
 
