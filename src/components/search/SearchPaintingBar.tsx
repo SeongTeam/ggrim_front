@@ -1,7 +1,7 @@
 'use client'
 import { ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from "next/navigation";
 import {  RefObject, useRef, useState } from "react";
-import { SearchBar } from "../SearchBar";
+import { SearchBar } from "./SearchBar";
 import { debounce } from "../../util/optimization";
 import { INPUT_KEY, SEARCH_PARAM_KEY } from "./const";
 import { extractValuesInsideQuoted, makeQuoted } from "./util";

@@ -1,13 +1,13 @@
 'use client'
 import { Search } from "lucide-react";
 import React, {  RefObject, useEffect, useRef, useState } from "react";
-import { INPUT_KEY, } from "./search/const";
-import {  findArtistsAction } from "../server-action/backend/artist/api";
-import { findTagsAction } from "../server-action/backend/tag/api";
-import { findStylesAction } from "../server-action/backend/style/api";
-import { isHttpException, isServerActionError } from "../server-action/backend/util";
+import { INPUT_KEY, } from "./const";
+import {  findArtistsAction } from "../../server-action/backend/artist/api";
+import { findTagsAction } from "../../server-action/backend/tag/api";
+import { findStylesAction } from "../../server-action/backend/style/api";
+import { isHttpException, isServerActionError } from "../../server-action/backend/util";
 import toast from "react-hot-toast";
-import { getInsideDoubleQuotes, parseKeyValue } from "./search/util"; 
+import { getInsideDoubleQuotes, parseKeyValue } from "./util"; 
 
 
 const baseSuggestion = Object.values(INPUT_KEY).map(str => str+':');
