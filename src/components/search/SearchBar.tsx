@@ -258,9 +258,8 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
   };
 
 
-  const changeSuggestion = async (value : string) =>{
+  const changeSuggestion = async (value : string , cursorPosition : number) =>{
 
-    const cursorPosition= inputState.cursorPos
     const paramCase = getParamCase(value,cursorPosition);
     console.log('changeSuggestion' , paramCase);
     let suggestions : string[] = [];
@@ -320,9 +319,11 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
   const changeHandler = (e : React.ChangeEvent<HTMLInputElement>)=>{
     console.log('changeHandler : ',e.target.value);
     const text = e.target.value;
-    const cursorPos = e.target.selectionStart ??  0;
+
+    // 커서의 위치에 있는 문자 기준은 커서의 왼쪽 문자를 기준으로 한다.
+    const cursorPos = e.target.selectionStart ? e.target.selectionStart-1 : 0;
+    changeSuggestion(e.target.value,cursorPos);
     inputDispatch({type :'SET_ALL' , text,cursorPos});
-    changeSuggestion(e.target.value);
 
 
     
