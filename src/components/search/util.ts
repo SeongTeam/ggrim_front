@@ -2,7 +2,12 @@ import { InputKeyValue } from './const';
 
 export const paramDelimiter = ':';
 
-export function parseKeyValue(input: string): { key: string; value: string } | undefined {
+interface InputParam {
+    key: string;
+    value: string;
+}
+
+export function parseKeyValue(input: string): InputParam | undefined {
     const match = input.match(/^([^:\s]+):(.+)$/);
     if (match) {
         const [, key, value] = match;

@@ -13,10 +13,6 @@ import { getInsideDoubleQuotes, parseKeyValue } from "./util";
 const baseSuggestion = Object.values(INPUT_KEY).map(str => str+':');
 const quotedBaseSuggestion = baseSuggestion.map(str => `"${str}"`);
 
-interface InputParam {
-  key : string;
-  value : string;
-}
 
 type SuggestionCase = 'SHOW_BASE'|'SHOW_QUOTED_BASE'|'SHOW_PARAM_RESULT'|'NOT_SHOW';
 function getSuggestionCase( input : string, cursorPosition : number) : SuggestionCase {
@@ -129,7 +125,7 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
       case 'SHOW_PARAM_RESULT' : {
 
         const quoted = getInsideDoubleQuotes(inputValue,cursorWithoutEnter);
-        const param : InputParam|undefined = parseKeyValue(quoted!);
+        const param = parseKeyValue(quoted!);
         const beforeValue = inputValue.slice(0,cursorWithoutEnter+1-param!.value.length);
         const afterCursor = inputValue.slice(cursorWithoutEnter+1);
         newInput = beforeValue + suggestion + afterCursor;
@@ -195,7 +191,7 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
       case 'SHOW_PARAM_RESULT' : {
 
         const quoted = getInsideDoubleQuotes(value,cursorPosition);
-        const param : InputParam|undefined = parseKeyValue(quoted!);
+        const param = parseKeyValue(quoted!);
         console.log('SHOW_PARAM_RESULT',param);
         const serverAction = getServerAction(param?.key||'');
         const response = await serverAction(param?.value ??'');
