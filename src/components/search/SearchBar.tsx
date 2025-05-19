@@ -8,32 +8,33 @@ import { findStylesAction } from "../../server-action/backend/style/api";
 import { isHttpException, isServerActionError } from "../../server-action/backend/util";
 import toast from "react-hot-toast";
 import { getInsideDoubleQuotes, parseKeyValue } from "./util"; 
+import { IPaginationResult } from "../../server-action/backend/common.dto";
 
 
 const baseSuggestion = Object.values(INPUT_KEY).map(str => str+':');
 const quotedBaseSuggestion = baseSuggestion.map(str => `"${str}"`);
 
 
-type SuggestionCase = 'SHOW_BASE'|'SHOW_QUOTED_BASE'|'SHOW_PARAM_RESULT'|'NOT_SHOW';
-function getSuggestionCase( input : string, cursorPosition : number) : SuggestionCase {
+type ParamCase = 'NO_QUOTED'|'NO_PARAM'|'PARAM_KEY_ONLY'|'DEFAULT';
+function getParamCase( input : string, cursorPosition : number) : ParamCase {
   
   const result = getInsideDoubleQuotes(input,cursorPosition);
   console.log('getSuggestionCase' , {input, cursorPosition , char : input[cursorPosition],result});
 
   if(!result ){
-    return 'SHOW_QUOTED_BASE'
+    return 'NO_QUOTED'
   }
   const parsed = parseKeyValue(result);
 
   if(!parsed) {
-    return 'SHOW_BASE'
+    return 'NO_PARAM'
   }
 
   if(parsed?.key){
-    return 'SHOW_PARAM_RESULT'
+    return 'PARAM_KEY_ONLY'
   }
   
-  return 'NOT_SHOW'
+  return 'DEFAULT'
 
 
 }
@@ -63,7 +64,7 @@ function getServerAction( key : string) {
     }
 
     default :
-      return async ( value : string) => [value];
+      return async ( value : string) : Promise<IPaginationResult<{name : string}>> => ({ data : [{name : value}], count : 0, page : 0, total : 0, pageCount : 0});
 
   }
 
@@ -98,14 +99,13 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
   const applyAutoComplete = ( suggestion : string) =>{
 
     const cursorWithoutEnter = cursorPosition-1;
-    const suggestionCase = getSuggestionCase(inputValue,cursorWithoutEnter);
+    const paramCase = getParamCase(inputValue,cursorWithoutEnter);
     let newInput = inputValue;
     let newCursor = cursorPosition;
-    console.log('applyAutoComplete' , {suggestionCase});
 
-    switch(suggestionCase){
+    switch(paramCase){
 
-      case 'SHOW_QUOTED_BASE' : {
+      case 'NO_QUOTED' : {
         const beforeCurSor = inputValue.slice(0,cursorWithoutEnter+1);
         const afterCursor = inputValue.slice(cursorWithoutEnter+1);
         newInput = beforeCurSor +' '+ suggestion + ' ' + afterCursor;
@@ -113,7 +113,7 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
         break;
       }
 
-      case 'SHOW_BASE' : {
+      case 'NO_PARAM' : {
         const key = getInsideDoubleQuotes(inputValue,cursorWithoutEnter);
         const beforeKey = inputValue.slice(0,cursorWithoutEnter+1-key!.length);
         const afterCursor = inputValue.slice(cursorWithoutEnter+1);
@@ -122,7 +122,7 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
         break;
       }
 
-      case 'SHOW_PARAM_RESULT' : {
+      case 'PARAM_KEY_ONLY' : {
 
         const quoted = getInsideDoubleQuotes(inputValue,cursorWithoutEnter);
         const param = parseKeyValue(quoted!);
@@ -132,17 +132,17 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
         newCursor = cursorWithoutEnter + suggestion.slice(param!.value.length).length+2;
       }
       break;
-      case 'NOT_SHOW' : {
+      case 'DEFAULT' : {
       }
       default :
       break;
-  }
+    }
 
-  setInputValue(newInput);
-  setCursorPosition(newCursor);
-  setTimeout(()=>moveCursor(newCursor),0);
-  onSearch(newInput);
-}
+    setInputValue(newInput);
+    setCursorPosition(newCursor);
+    setTimeout(()=>moveCursor(newCursor),0);
+    onSearch(newInput);
+  }
 
 
   const keyDownHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -153,9 +153,7 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
       setHighlightedIndex((prev) => (prev + 1) % suggestions.length);
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
-      setHighlightedIndex((prev) =>
-        prev <= 0 ? suggestions.length - 1 : prev - 1
-      );
+      setHighlightedIndex((prev) => (prev - 1 + suggestions.length) % suggestions.length);
     } else if (e.key === 'Enter') {
       e.preventDefault();
       if (highlightedIndex >= 0) {
@@ -169,18 +167,18 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
 
   const changeSuggestion = async (value : string) =>{
 
-    const suggestionCase = getSuggestionCase(value,cursorPosition);
-    console.log('changeSuggestion' , suggestionCase);
+    const paramCase = getParamCase(value,cursorPosition);
+    console.log('changeSuggestion' , paramCase);
 
-    switch(suggestionCase){
+    switch(paramCase){
 
-      case 'SHOW_QUOTED_BASE' : {
+      case 'NO_QUOTED' : {
         setSuggestions(quotedBaseSuggestion);
         setShowSuggestions(true);
         break;
       }
 
-      case 'SHOW_BASE' : {
+      case 'NO_PARAM' : {
         const quoted = getInsideDoubleQuotes(value,cursorPosition);
         setSuggestions(baseSuggestion.filter(suggestion=>suggestion.startsWith(quoted!)));
         setQuery(quoted!);
@@ -188,11 +186,11 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
         break;
       }
 
-      case 'SHOW_PARAM_RESULT' : {
+      case 'PARAM_KEY_ONLY' : {
 
         const quoted = getInsideDoubleQuotes(value,cursorPosition);
         const param = parseKeyValue(quoted!);
-        console.log('SHOW_PARAM_RESULT',param);
+        console.log('PARAM_KEY_ONLY',param);
         const serverAction = getServerAction(param?.key||'');
         const response = await serverAction(param?.value ??'');
         setQuery(param?.value ??'');
@@ -204,12 +202,6 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
           toast.error( Array.isArray(response.message) ? response.message.join('\n') : response.message);
           return;
         }
-
-        if(Array.isArray(response)){
-          setShowSuggestions(false);
-          return;
-        }
-
         console.log('auto complete suggestion', response);
 
         const filtered = response.data.length > 0 ? response.data.map( d =>  d.name) : [''];
@@ -221,7 +213,7 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
         
       }
       break;
-      case 'NOT_SHOW' : 
+      case 'DEFAULT' : 
       default :
         setShowSuggestions(false);
       break;
@@ -291,14 +283,14 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
         onKeyDown={keyDownHandler}
       />
         {showSuggestions && (
-        <AutocompleteList
-          suggestions={suggestions}
-          onSelect={selectSuggestion}
-          query={query}
-          highlightedIndex={highlightedIndex}
-          setHighlightedIndex={setHighlightedIndex}
-        />
-      )}
+          <AutocompleteList
+            suggestions={suggestions}
+            onSelect={selectSuggestion}
+            query={query}
+            highlightedIndex={highlightedIndex}
+            setHighlightedIndex={setHighlightedIndex}
+          />
+        )}
     </div>
   );
 }
@@ -310,7 +302,6 @@ interface AutocompleteListProps {
   query : string;
   highlightedIndex : number,
   setHighlightedIndex : (index : number) => void;
-
 }
 
 export function AutocompleteList({
@@ -319,7 +310,6 @@ export function AutocompleteList({
   query,
   highlightedIndex,
   setHighlightedIndex ,
-
 }: AutocompleteListProps) {
   if (suggestions.length === 0) return null;
 
