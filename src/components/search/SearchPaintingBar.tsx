@@ -5,6 +5,7 @@ import { SearchBar } from "./SearchBar";
 import { debounce } from "../../util/optimization";
 import { INPUT_KEY, SEARCH_PARAM_KEY } from "./const";
 import { extractValuesInsideQuoted, makeQuoted } from "./util";
+import { SEARCH_LOGIC_ROUTE } from "../../route/search/route";
 
 interface ParsedInput {
     title : string;
@@ -67,21 +68,9 @@ function getInput(searchParams : ReadonlyURLSearchParams) {
 
 function getURL(input : string ) : string{
     const parsed : ParsedInput = parseInput(input);
+    const {title,artist,tags,styles } = parsed;
 
-    let url = `/search?${SEARCH_PARAM_KEY.TITLE}=${parsed.title}`;
-
-    if(parsed.artist.trim() !== ""){
-        url += `&${SEARCH_PARAM_KEY.ARTIST}=${parsed.artist}`;
-    }
-
-    parsed.tags.forEach(tag=>
-        url += `&${SEARCH_PARAM_KEY.TAGS}=${tag}` 
-    );
-    parsed.styles.forEach(style=>
-        url += `&${SEARCH_PARAM_KEY.STYLES}=${style}` 
-    );
-
-    return url;
+    return SEARCH_LOGIC_ROUTE.SEARCH_PAINTING(title,artist,tags,styles);
 }
 
 interface SearchPaintingBarProps {
