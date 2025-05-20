@@ -1,6 +1,6 @@
 'use client';
 
-import MCQView from '@/components/home/components/MCQ_view';
+import MCQView from '@/components/quiz/mcq/MCQ_view';
 import { MCQ } from '@/model/interface/MCQ';
 import React from 'react';
 interface ArtworkQuizProps {

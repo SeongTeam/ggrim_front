@@ -1,6 +1,6 @@
 'use client';
 
-import { FeaturedImageGallery } from '@/components/home/components/featured_image_gallery';
+import { FeaturedImageGallery } from '@/components/home/featured_image_gallery';
 import React from 'react';
 import { Painting } from '../../model/interface/painting';
 

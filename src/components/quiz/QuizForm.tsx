@@ -3,7 +3,7 @@ import {  FormEvent,  useEffect, useReducer, useRef, useState } from "react";
 import { Painting } from "../../model/interface/painting";
 import { Card } from "../Card";
 import { useRouter } from "next/navigation";
-import AlertModal from "../home/components/AlertModal";
+import AlertModal from "../AlertModal";
 import { debounce } from "../../util/optimization";
 import { InsertToggleInput } from "../InsertToggleInput";
 import Loading from "../Loading";

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState} from 'react';
-import { Painting } from '../../../model/interface/painting';
+import { Painting } from '../../model/interface/painting';
 
 export type FeaturedImageGalleryProps = {
     paintings: Painting[];
