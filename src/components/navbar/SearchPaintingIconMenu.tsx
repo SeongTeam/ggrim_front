@@ -1,6 +1,6 @@
 "use client"
 import { Search } from "lucide-react";
-import { SearchPaintingBar } from "./search/SearchPaintingBar";
+import { SearchPaintingBar } from "../search/SearchPaintingBar";
 import { useEffect, useRef, useState } from "react";
 
 export function SearchPaintingIconMenu(){

@@ -2,8 +2,8 @@ import NavbarMenu from "./NavbarMenu";
 import { SearchPaintingIconMenu } from "./SearchPaintingIconMenu";
 import { NotifyIconMenu } from "./NotificationIconMenu";
 import { ProfileIconMenu } from "./ProfileIconMenu";
-import { getSignInInfo } from "../server-action/backend/cookie";
-import { User } from "../model/interface/user";
+import { getSignInInfo } from "../../server-action/backend/cookie";
+import { User } from "../../model/interface/user";
 import Link from "next/link";
 
 

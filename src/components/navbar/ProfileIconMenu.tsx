@@ -1,14 +1,14 @@
 "use client"
 
 import { LogOut, Settings, User as UserIcon  } from "lucide-react";
-import { User } from "../model/interface/user";
+import { User } from "../../model/interface/user";
 import { useEffect, useRef, useState } from "react";
-import { signOutAction } from "../server-action/backend/auth/api";
+import { signOutAction } from "../../server-action/backend/auth/api";
 import { useRouter } from "next/navigation";
-import { isServerActionError } from "../server-action/backend/util";
-import { syncUserToLocalStorage, getRunningUser, removeRunningUser } from "../storage/local/runningUser";
-import { PROFILE_LOGIC_ROUTE } from "../route/profile/route";
-import { AUTH_LOGIC_ROUTE } from "../route/auth/route";
+import { isServerActionError } from "../../server-action/backend/util";
+import { syncUserToLocalStorage, getRunningUser, removeRunningUser } from "../../storage/local/runningUser";
+import { PROFILE_LOGIC_ROUTE } from "../../route/profile/route";
+import { AUTH_LOGIC_ROUTE } from "../../route/auth/route";
 import toast from "react-hot-toast";
 
 interface ProfileIconMenuProps {
