@@ -9,7 +9,7 @@ import { deleteQuizReactionAction } from '../../server-action/backend/quiz/api'
 import { isHttpException, isServerActionError } from '../../server-action/backend/util'
 import { HttpStatus } from '../../server-action/backend/status'
 import toast from 'react-hot-toast'
-import GuideModal from '../GuideModal'
+import GuideModal from '../modal/GuideModal'
 
 type QuizMenuProps = {
   quiz : Quiz

@@ -10,7 +10,7 @@ import { isHttpException, isServerActionError } from '../../server-action/backen
 import { DetailQuizDTO, QuizContextDTO } from '../../server-action/backend/quiz/dto';
 import {  getPaintingAction } from '../../server-action/backend/painting/api';
 import { getQuizStatus, saveQuizStatus } from '../../storage/local/quiz';
-import ErrorModal from '../ErrorModal';
+import ErrorModal from '../modal/ErrorModal';
 import QuizMenu from './QuizMenu';
 interface DetailQuizProps {
     detailQuizDTO: DetailQuizDTO;

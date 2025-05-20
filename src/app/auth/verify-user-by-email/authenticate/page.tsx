@@ -9,8 +9,8 @@ import { generateSecurityTokenByEmailVerificationAction } from '../../../../serv
 import { isHttpException, isServerActionError } from '../../../../server-action/backend/util';
 import { HttpStatus } from '../../../../server-action/backend/status';
 import { OneTimeTokenPurposeValues } from '../../../../server-action/backend/auth/type';
-import ErrorModal from '../../../../components/ErrorModal';
-import GuideModal from '../../../../components/GuideModal';
+import ErrorModal from '../../../../components/modal/ErrorModal';
+import GuideModal from '../../../../components/modal/GuideModal';
 import { AUTH_LOGIC_ROUTE } from '../../../../route/auth/route';
 
 interface AuthenticateState {

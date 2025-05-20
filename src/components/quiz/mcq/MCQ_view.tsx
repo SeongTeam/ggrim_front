@@ -12,7 +12,7 @@ import { addQuizReactionsAction, deleteQuizReactionAction } from '../../../serve
 import { isHttpException, isServerActionError } from '../../../server-action/backend/util';
 import toast from 'react-hot-toast';
 import { HttpStatus } from '../../../server-action/backend/status';
-import ErrorModal from '../../ErrorModal';
+import ErrorModal from '../../modal/ErrorModal';
 
 interface ReactionState {
     like : number,

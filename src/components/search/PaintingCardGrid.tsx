@@ -3,7 +3,7 @@ import { MutableRefObject, useEffect, useRef, useState } from "react";
 import { Painting, ShortPainting } from "../../model/interface/painting";
 import HoverCard from "../HoverCard";
 import { PreviewPainting } from '../PreviewPainting';
-import { Modal } from "../Modal";
+import { Modal } from "../modal/Modal";
 import { PaintingDetailView } from "../PaintingDetailView";
 import { useSearchParams } from "next/navigation";
 import { throttle } from "../../util/optimization";

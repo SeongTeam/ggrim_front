@@ -7,8 +7,8 @@ import { signUpAction } from '../../server-action/backend/user/api'
 import { isHttpException, isServerActionError } from '../../server-action/backend/util'
 import { HttpStatus } from '../../server-action/backend/status'
 import { useRouter } from 'next/navigation'
-import GuideModal from '../GuideModal'
-import ErrorModal from '../ErrorModal'
+import GuideModal from '../modal/GuideModal'
+import ErrorModal from '../modal/ErrorModal'
 import { AUTH_LOGIC_ROUTE } from '../../route/auth/route'
 
 interface SignUpState {

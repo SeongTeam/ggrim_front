@@ -2,7 +2,7 @@ import React, { Suspense } from "react";
 import { PaintingCardGrid } from "../../components/search/PaintingCardGrid";
 import {  findPaintingAction } from "../../server-action/backend/painting/api";
 import { isHttpException, isServerActionError } from "../../server-action/backend/util";
-import ErrorModal from "../../components/ErrorModal";
+import ErrorModal from "../../components/modal/ErrorModal";
 import { SEARCH_PARAM_KEY } from "../../components/search/const";
 
 
