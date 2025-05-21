@@ -10,6 +10,7 @@ import { isHttpException, isServerActionError } from '../../server-action/backen
 import { HttpStatus } from '../../server-action/backend/status'
 import toast from 'react-hot-toast'
 import GuideModal from '../modal/GuideModal'
+import { SEARCH_LOGIC_ROUTE } from '../../route/search/route'
 
 type QuizMenuProps = {
   quiz : Quiz
@@ -152,7 +153,24 @@ interface ShowDescriptionProps {
 
 function ShowDescription( {quiz, isShow , setShow} : ShowDescriptionProps)  {
 
+  const router = useRouter();
   const modalRef = useRef<HTMLDivElement>(null)
+
+
+  const handleClickTag = (name : string)=>{
+    const url = SEARCH_LOGIC_ROUTE.SEARCH_PAINTING('','',[name]);
+    router.push(url);
+  }
+
+  const handleClickStyle = (name : string)=>{
+    const url = SEARCH_LOGIC_ROUTE.SEARCH_PAINTING('','',[],[name]);
+    router.push(url);
+  }
+
+  const handleClickArtist = (name : string)=>{
+    const url = SEARCH_LOGIC_ROUTE.SEARCH_PAINTING('',name);
+    router.push(url);
+  }
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -190,24 +208,43 @@ function ShowDescription( {quiz, isShow , setShow} : ShowDescriptionProps)  {
             <p className='text-xl text-black'>
               {quiz.description}
             </p>
-            <div className='mt-5 flex text-black text-xl'>
-              <p className='font-bold pr-5'> Artist: </p>
-              <div className='grid grid-cols-4 font-sans text-blue-500'>
-                {quiz.artists.map(a=> <p key={a.name}>#{a.name}</p>)
+            <div className='mt-5 flex text-black text-md'>
+              <p className='font-bold pr-5 font-sans'> Artist: </p>
+              <div className='grid grid-cols-4 text-blue-500'>
+                {quiz.artists.map(a=> <p 
+                                  key={a.name} 
+                                  className='border-b-2 border-transparent hover:border-blue-600 hover:cursor-pointer'
+                                  onClick={()=>handleClickArtist(a.name)}
+                                  >
+                                    #{a.name}
+                                  </p>)
                 }
               </div>
             </div>
-            <div className='mt-5 flex text-black text-xl'>
+            <div className='mt-5 flex text-black text-md'>
               <p className='font-bold pr-5'> Styles: </p>
               <div className='grid grid-cols-4 font-sans text-blue-500'>
-                {quiz.styles.map(s=> <p key={s.name}>#{s.name}</p>)
+                {quiz.styles.map(s=> <p 
+                                key={s.name}
+                                className='border-b-2 border-transparent hover:border-blue-600 hover:cursor-pointer'
+                                onClick={()=>handleClickStyle(s.name)}
+                                >
+                                  #{s.name}
+                                </p>)
                 }
               </div>
             </div>
-            <div className='mt-5 flex text-black text-xl'>
+            <div className='mt-5 flex text-black text-md'>
               <p className='font-bold pr-5'> Tags: </p>
-              <div className='grid grid-cols-4 font-sans text-blue-500'>
-                {quiz.tags.map(t=> <p key={t.name}>#{t.name}</p>)
+              <div className='flex flex-wrap gap-2 font-sans text-blue-500'>
+                {quiz.tags.map(t=> <p 
+                                  key={t.name}
+                                  className='border-b-2 border-transparent hover:border-blue-600 hover:cursor-pointer'
+                                  onClick={()=>handleClickTag(t.name)}
+                                  >
+                                    #{t.name}
+                                  </p>
+)
                 }
               </div>
             </div>
