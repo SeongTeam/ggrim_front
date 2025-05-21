@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import { getInsideDoubleQuotes, parseKeyValue } from "./util"; 
 import { IPaginationResult } from "../../server-action/backend/common.dto";
 import { AutocompleteList } from "./AutoCompleteList";
+import { useDebounceCallback } from "../../hooks/optimization";
 
 
 const baseSuggestion = Object.values(INPUT_KEY).map(str => str+':');
@@ -259,7 +260,7 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
   };
 
 
-  const changeSuggestion = async (value : string , cursorPosition : number) =>{
+  const changeSuggestionOrigin = async (value : string , cursorPosition : number) =>{
 
     const paramCase = getParamCase(value,cursorPosition);
     console.log('changeSuggestion' , paramCase);
@@ -315,6 +316,8 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
 
 
   }
+
+  const changeSuggestion = useDebounceCallback(changeSuggestionOrigin,300)
 
 
 
