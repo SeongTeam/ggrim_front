@@ -1,11 +1,11 @@
 'use client'
 import { ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from "next/navigation";
-import {  RefObject, useRef, useState } from "react";
+import {  RefObject, useState } from "react";
 import { SearchBar } from "./SearchBar";
-import { debounce } from "../../util/optimization";
 import { INPUT_KEY, SEARCH_PARAM_KEY } from "./const";
 import { extractValuesInsideQuoted, makeQuoted } from "./util";
 import { SEARCH_LOGIC_ROUTE } from "../../route/search/route";
+import { useDebounceCallback } from "../../hooks/optimization";
 
 interface ParsedInput {
     title : string;
@@ -91,7 +91,7 @@ export function SearchPaintingBar(props : SearchPaintingBarProps): React.JSX.Ele
     const searchParams = useSearchParams();
     const [input, setInput] = useState(getInput(searchParams));
     // const [results, setResults] = useState<Painting[]>([]);
-    const handleSearch = async (searchTarget: string) => {
+    const handleSearchOrigin = async (searchTarget: string) => {
         console.log('handleSearch');
         if(searchTarget.trim() === ""){
             if(pathName !== '/'){
@@ -105,10 +105,10 @@ export function SearchPaintingBar(props : SearchPaintingBarProps): React.JSX.Ele
         return;
     };
 
-    const handleSearchDebounceRef = useRef(debounce(handleSearch,500));
+    const handleSearch = useDebounceCallback(handleSearchOrigin,500);
 
     return (
-            <SearchBar inputRef={props.inputRef} onSearch={handleSearchDebounceRef.current} defaultValue={input} />
+            <SearchBar inputRef={props.inputRef} onSearch={handleSearch} defaultValue={input} />
 
     );
 }
