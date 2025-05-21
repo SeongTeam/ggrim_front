@@ -2,6 +2,10 @@ import Link from "next/link";
 import { AUTH_LOGIC_ROUTE } from "../../route/auth/route";
 import { PROFILE_LOGIC_ROUTE } from "../../route/profile/route";
 
+
+// TODO : Profile page 개선
+// - [ ] : 사용자가 생성한 퀴즈 목록 볼수 있는 page 추가하기
+
 export default function ProfilePage() {
     return (
       <main className="min-h-screen bg-black text-white flex items-center justify-center">
