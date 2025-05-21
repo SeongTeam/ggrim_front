@@ -76,6 +76,7 @@ interface AutoCompleteState {
  suggestions : string[];
  selectedIndex : number;
  query : string;
+ loading : boolean;
 }
 
 
@@ -84,7 +85,8 @@ type AutoCompleteAction =
   | {type : 'SET_SUGGESTIONS', suggestions: string[] }
   | {type : 'SET_SELECTED_INDEX' , selectedIndex : number}
   | {type : 'SET_QUERY' , query : string } 
-  | {type : 'SET_ALL' , suggestions: string[] , selectedIndex : number, query : string }
+  | {type : 'SET_ALL' , suggestions: string[] , selectedIndex : number, query : string,loading :boolean }
+  | {type : 'SET_LOADING' , loading : boolean}
   | {type : 'RESET'}
   
 
@@ -108,11 +110,15 @@ type AutoCompleteAction =
       return { ...state, query};
     }
     case 'SET_ALL' : {
-      const { suggestions, selectedIndex,query } = action;
-      return { ...state,suggestions, selectedIndex,query};
+      const { suggestions, selectedIndex,query, loading } = action;
+      return { ...state,suggestions, selectedIndex,query, loading};
+    }
+    case 'SET_LOADING' : {
+      const { loading } = action;
+      return { ...state, loading};
     }
     case 'RESET' : {
-      return { suggestions : [], selectedIndex : -1, query : ''}
+      return { suggestions : [], selectedIndex : -1, query : '', loading : false}
     }
     default : 
       return state;
@@ -171,7 +177,7 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
     suggestions : [],
     selectedIndex : -1,
     query : '',
-
+    loading : false,
   }
 
   const [ inputState , inputDispatch ] = useReducer(inputReducer,initInputState)
@@ -268,6 +274,7 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
     let query = '';
     const selectedIndex = -1;
 
+    autoCompleteDispatch({type : 'SET_LOADING', loading : true});
     switch(paramCase){
 
       case 'NO_QUOTED' : {
@@ -312,7 +319,7 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
       break;
     }
 
-    autoCompleteDispatch({type :'SET_ALL' , query,suggestions,selectedIndex});
+    autoCompleteDispatch({type :'SET_ALL' , query,suggestions,selectedIndex, loading : false});
 
 
   }
@@ -380,6 +387,12 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
         onClick={handleClickOrKeyUp}
         onKeyDown={keyDownHandler}
       />
+
+      {autoCompleteState.loading && (
+        <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+          <div className="h-4 w-4 border-2 border-t-blue-500 border-r-blue-500 border-b-gray-200 border-l-gray-200 rounded-full animate-spin" />
+        </div>
+      )}
         {autoCompleteState.suggestions.length >0 && (
           <AutocompleteList
             suggestions={autoCompleteState.suggestions}
