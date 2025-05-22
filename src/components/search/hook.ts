@@ -1,5 +1,5 @@
 'use client';
-import { RefObject, useEffect, useReducer, useRef } from 'react';
+import { Dispatch, RefObject, useCallback, useEffect, useReducer, useRef } from 'react';
 import { INPUT_KEY } from './const';
 import { findArtistsAction } from '../../server-action/backend/artist/api';
 import { findTagsAction } from '../../server-action/backend/tag/api';
@@ -7,114 +7,36 @@ import { findStylesAction } from '../../server-action/backend/style/api';
 import { isHttpException, isServerActionError } from '../../server-action/backend/util';
 import toast from 'react-hot-toast';
 import { getInsideDoubleQuotes, parseKeyValue } from './util';
-import { IPaginationResult } from '../../server-action/backend/common.dto';
+import {
+    HttpException,
+    IPaginationResult,
+    ServerActionError,
+} from '../../server-action/backend/common.dto';
 import { useDebounceCallback } from '../../hooks/optimization';
 
-const baseSuggestion = Object.values(INPUT_KEY).map((str) => str + ':');
-const quotedBaseSuggestion = baseSuggestion.map((str) => `"${str}"`);
+// Constants
+const BASE_SUGGESTIONS = Object.values(INPUT_KEY).map((str) => `${str}:`);
+const QUOTED_BASE_SUGGESTIONS = BASE_SUGGESTIONS.map((str) => `"${str}"`);
 
-type ParamCase = 'NO_QUOTED' | 'NO_PARAM' | 'PARAM_KEY_ONLY' | 'DEFAULT';
-function getParamCase(input: string, cursorPosition: number): ParamCase {
-    const result = getInsideDoubleQuotes(input, cursorPosition);
-    console.log('getSuggestionCase', {
-        input,
-        cursorPosition,
-        char: input[cursorPosition],
-        result,
-    });
-
-    if (!result) {
-        return 'NO_QUOTED';
-    }
-    const param = parseKeyValue(result);
-
-    if (!param) {
-        return 'NO_PARAM';
-    }
-
-    if (param?.key) {
-        return 'PARAM_KEY_ONLY';
-    }
-
-    return 'DEFAULT';
-}
-
-function getServerAction(key: string) {
-    switch (key) {
-        case 'artist': {
-            return (value: string) => {
-                return findArtistsAction(value);
-            };
-        }
-        case 'style': {
-            return (value: string) => findStylesAction(value);
-        }
-        case 'tag': {
-            return (value: string) => findTagsAction(value);
-        }
-        default:
-            return async (value: string): Promise<IPaginationResult<{ name: string }>> => ({
-                data: [{ name: value }],
-                count: 0,
-                page: 0,
-                total: 0,
-                pageCount: 0,
-            });
-    }
-}
+// Types
+export type ParamCase = 'NO_QUOTED' | 'NO_PARAM' | 'PARAM_KEY_ONLY' | 'DEFAULT';
 
 interface AutoCompleteState {
     suggestions: string[];
     selectedIndex: number;
     query: string;
     loading: boolean;
+    error: string | null;
 }
 
 type AutoCompleteAction =
-    | { type: 'SET_SUGGESTIONS'; suggestions: string[] }
-    | { type: 'SET_SELECTED_INDEX'; selectedIndex: number }
-    | { type: 'SET_QUERY'; query: string }
-    | {
-          type: 'SET_ALL';
-          suggestions: string[];
-          selectedIndex: number;
-          query: string;
-          loading: boolean;
-      }
-    | { type: 'SET_LOADING'; loading: boolean }
+    | { type: 'SET_SUGGESTIONS'; payload: string[] }
+    | { type: 'SET_SELECTED_INDEX'; payload: number }
+    | { type: 'SET_QUERY'; payload: string }
+    | { type: 'SET_LOADING'; payload: boolean }
+    | { type: 'SET_ERROR'; payload: string | null }
+    | { type: 'SET_ALL'; payload: Partial<AutoCompleteState> }
     | { type: 'RESET' };
-
-function autoCompleteReducer(state: AutoCompleteState, action: AutoCompleteAction) {
-    const { type } = action;
-
-    switch (type) {
-        case 'SET_SUGGESTIONS': {
-            const { suggestions } = action;
-            return { ...state, suggestions };
-        }
-        case 'SET_SELECTED_INDEX': {
-            const { selectedIndex } = action;
-            return { ...state, selectedIndex };
-        }
-        case 'SET_QUERY': {
-            const { query } = action;
-            return { ...state, query };
-        }
-        case 'SET_ALL': {
-            const { suggestions, selectedIndex, query, loading } = action;
-            return { ...state, suggestions, selectedIndex, query, loading };
-        }
-        case 'SET_LOADING': {
-            const { loading } = action;
-            return { ...state, loading };
-        }
-        case 'RESET': {
-            return { suggestions: [], selectedIndex: -1, query: '', loading: false };
-        }
-        default:
-            return state;
-    }
-}
 
 interface InputState {
     text: string;
@@ -122,214 +44,353 @@ interface InputState {
 }
 
 type InputAction =
-    | { type: 'SET_TEXT'; text: string }
-    | { type: 'SET_CURSOR_POS'; cursorPos: number }
-    | { type: 'SET_ALL'; text: string; cursorPos: number };
-
-function inputReducer(state: InputState, action: InputAction) {
-    const { type } = action;
-
-    switch (type) {
-        case 'SET_TEXT': {
-            const { text } = action;
-            return { ...state, text };
-        }
-        case 'SET_CURSOR_POS': {
-            const { cursorPos } = action;
-            return { ...state, cursorPos };
-        }
-        case 'SET_ALL': {
-            const { text, cursorPos } = action;
-            return { ...state, text, cursorPos };
-        }
-        default:
-            return state;
-    }
-}
+    | { type: 'SET_TEXT'; payload: string }
+    | { type: 'SET_CURSOR_POS'; payload: number }
+    | { type: 'SET_ALL'; payload: Partial<InputState> };
 
 interface UseSearchBarProps {
     onSearch: (query: string) => void;
     defaultValue?: string;
     inputRef: RefObject<HTMLInputElement>;
+    debounceMs?: number;
 }
 
-export function useSearchBar({ onSearch, defaultValue, inputRef }: UseSearchBarProps) {
-    const initInputState: InputState = {
-        text: defaultValue ?? '',
+interface UseSearchBarReturn {
+    inputState: InputState;
+    autoCompleteState: AutoCompleteState;
+    suggestionsRef: RefObject<HTMLDivElement>;
+    autoCompleteDispatch: Dispatch<AutoCompleteAction>;
+    handlers: {
+        onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+        onClickOrKeyUp: () => void;
+        onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+        onSelectSuggestion: (suggestion: string) => void;
+    };
+}
+
+// Utility functions
+function determineParamCase(input: string, cursorPosition: number): ParamCase {
+    const result = getInsideDoubleQuotes(input, cursorPosition);
+
+    if (!result) {
+        return 'NO_QUOTED';
+    }
+
+    const param = parseKeyValue(result);
+
+    if (!param) {
+        return 'NO_PARAM';
+    }
+
+    if (param.key) {
+        return 'PARAM_KEY_ONLY';
+    }
+
+    return 'DEFAULT';
+}
+
+function createServerAction(key: string) {
+    const actionMap: Record<
+        string,
+        (
+            value: string,
+        ) => Promise<IPaginationResult<{ name: string }> | HttpException | ServerActionError>
+    > = {
+        artist: (value: string) => findArtistsAction(value),
+        style: (value: string) => findStylesAction(value),
+        tag: (value: string) => findTagsAction(value),
+    };
+
+    return (
+        actionMap[key] ||
+        (async (value: string): Promise<IPaginationResult<{ name: string }>> => ({
+            data: [{ name: value }],
+            count: 0,
+            page: 0,
+            total: 0,
+            pageCount: 0,
+        }))
+    );
+}
+
+function calculateNewInput(
+    text: string,
+    cursorPos: number,
+    suggestion: string,
+): { newInput: string; newCursor: number } {
+    const cursorWithoutEnter = cursorPos - 1;
+    const paramCase = determineParamCase(text, cursorWithoutEnter);
+
+    switch (paramCase) {
+        case 'NO_QUOTED': {
+            const beforeCursor = text.slice(0, cursorWithoutEnter + 1);
+            const afterCursor = text.slice(cursorWithoutEnter + 1);
+            return {
+                newInput: `${beforeCursor} ${suggestion} ${afterCursor}`,
+                newCursor: cursorWithoutEnter + suggestion.length + 2,
+            };
+        }
+
+        case 'NO_PARAM': {
+            const keyParts = getInsideDoubleQuotes(text, cursorWithoutEnter);
+            if (!keyParts) return { newInput: text, newCursor: cursorPos };
+
+            const beforeKey = text.slice(0, cursorWithoutEnter + 1 - keyParts.length);
+            const afterCursor = text.slice(cursorWithoutEnter + 1);
+            return {
+                newInput: beforeKey + suggestion + afterCursor,
+                newCursor: cursorWithoutEnter + suggestion.slice(keyParts.length).length + 1,
+            };
+        }
+
+        case 'PARAM_KEY_ONLY': {
+            const quoted = getInsideDoubleQuotes(text, cursorWithoutEnter);
+            if (!quoted) return { newInput: text, newCursor: cursorPos };
+
+            const param = parseKeyValue(quoted);
+            if (!param) return { newInput: text, newCursor: cursorPos };
+
+            const beforeValue = text.slice(0, cursorWithoutEnter + 1 - param.value.length);
+            const afterCursor = text.slice(cursorWithoutEnter + 1);
+            return {
+                newInput: beforeValue + suggestion + afterCursor,
+                newCursor: cursorWithoutEnter + suggestion.slice(param.value.length).length + 2,
+            };
+        }
+
+        default:
+            return { newInput: text, newCursor: cursorPos };
+    }
+}
+
+// Reducers
+function autoCompleteReducer(
+    state: AutoCompleteState,
+    action: AutoCompleteAction,
+): AutoCompleteState {
+    switch (action.type) {
+        case 'SET_SUGGESTIONS':
+            return { ...state, suggestions: action.payload };
+        case 'SET_SELECTED_INDEX':
+            return { ...state, selectedIndex: action.payload };
+        case 'SET_QUERY':
+            return { ...state, query: action.payload };
+        case 'SET_LOADING':
+            return { ...state, loading: action.payload };
+        case 'SET_ERROR':
+            return { ...state, error: action.payload };
+        case 'SET_ALL':
+            return { ...state, ...action.payload };
+        case 'RESET':
+            return {
+                suggestions: [],
+                selectedIndex: -1,
+                query: '',
+                loading: false,
+                error: null,
+            };
+        default:
+            return state;
+    }
+}
+
+function inputReducer(state: InputState, action: InputAction): InputState {
+    switch (action.type) {
+        case 'SET_TEXT':
+            return { ...state, text: action.payload };
+        case 'SET_CURSOR_POS':
+            return { ...state, cursorPos: action.payload };
+        case 'SET_ALL':
+            return { ...state, ...action.payload };
+        default:
+            return state;
+    }
+}
+
+// Main hook
+export function useSearchBar({
+    onSearch,
+    defaultValue = '',
+    inputRef,
+    debounceMs = 300,
+}: UseSearchBarProps): UseSearchBarReturn {
+    // Initial states
+    const initialInputState: InputState = {
+        text: defaultValue,
         cursorPos: 0,
     };
 
-    const initAutoCompleteState: AutoCompleteState = {
+    const initialAutoCompleteState: AutoCompleteState = {
         suggestions: [],
         selectedIndex: -1,
         query: '',
         loading: false,
+        error: null,
     };
 
-    const [inputState, inputDispatch] = useReducer(inputReducer, initInputState);
+    // State management
+    const [inputState, inputDispatch] = useReducer(inputReducer, initialInputState);
     const [autoCompleteState, autoCompleteDispatch] = useReducer(
         autoCompleteReducer,
-        initAutoCompleteState,
+        initialAutoCompleteState,
     );
     const suggestionsRef = useRef<HTMLDivElement>(null);
 
-    const moveCursor = (position: number) => {
-        const input = inputRef.current!;
-        console.log('moveCursor', { input });
+    const safeMoveCursor = useCallback(
+        (position: number) => {
+            if (!inputRef.current) return;
 
-        input.setSelectionRange(position, position);
-        input.focus();
-    };
-
-    const applySuggestion = (suggestion: string) => {
-        const { cursorPos, text } = inputState;
-
-        const cursorWithoutEnter = cursorPos - 1;
-        const paramCase = getParamCase(text, cursorWithoutEnter);
-        let newInput = text;
-        let newCursor = cursorWithoutEnter;
-
-        switch (paramCase) {
-            case 'NO_QUOTED': {
-                const beforeCurSor = text.slice(0, cursorWithoutEnter + 1);
-                const afterCursor = text.slice(cursorWithoutEnter + 1);
-                newInput = beforeCurSor + ' ' + suggestion + ' ' + afterCursor;
-                newCursor = cursorWithoutEnter + suggestion.length + 1;
-                break;
+            try {
+                inputRef.current.setSelectionRange(position, position);
+                inputRef.current.focus();
+            } catch (error) {
+                console.warn('Failed to move cursor:', error);
             }
-            case 'NO_PARAM': {
-                const keyParts = getInsideDoubleQuotes(text, cursorWithoutEnter);
-                const beforeKey = text.slice(0, cursorWithoutEnter + 1 - keyParts!.length);
-                const afterCursor = text.slice(cursorWithoutEnter + 1);
-                newInput = beforeKey + suggestion + afterCursor;
-                newCursor = cursorWithoutEnter + suggestion.slice(keyParts!.length).length + 1;
-                break;
-            }
-            case 'PARAM_KEY_ONLY':
-                {
-                    const quoted = getInsideDoubleQuotes(text, cursorWithoutEnter);
-                    const param = parseKeyValue(quoted!);
-                    const beforeValue = text.slice(0, cursorWithoutEnter + 1 - param!.value.length);
-                    const afterCursor = text.slice(cursorWithoutEnter + 1);
-                    newInput = beforeValue + suggestion + afterCursor;
-                    newCursor =
-                        cursorWithoutEnter + suggestion.slice(param!.value.length).length + 2;
-                }
-                break;
-            case 'DEFAULT':
-            default:
-                break;
-        }
+        },
+        [inputRef],
+    );
 
-        inputDispatch({ type: 'SET_TEXT', text: newInput });
-        inputDispatch({ type: 'SET_CURSOR_POS', cursorPos: newCursor });
-        setTimeout(() => moveCursor(newCursor), 0);
-        onSearch(newInput);
-    };
+    const applySuggestion = useCallback(
+        (suggestion: string) => {
+            const { newInput, newCursor } = calculateNewInput(
+                inputState.text,
+                inputState.cursorPos,
+                suggestion,
+            );
 
-    const changeSuggestionOrigin = async (value: string, cursorPosition: number) => {
-        const paramCase = getParamCase(value, cursorPosition);
-        console.log('changeSuggestion', paramCase);
+            inputDispatch({ type: 'SET_ALL', payload: { text: newInput, cursorPos: newCursor } });
+
+            // Use setTimeout to ensure DOM update before cursor movement
+            setTimeout(() => safeMoveCursor(newCursor), 0);
+            onSearch(newInput);
+        },
+        [inputState.text, inputState.cursorPos, safeMoveCursor, onSearch],
+    );
+
+    const fetchSuggestions = async (value: string, cursorPosition: number) => {
+        const paramCase = determineParamCase(value, cursorPosition);
         let suggestions: string[] = [];
         let query = '';
-        const selectedIndex = -1;
 
-        autoCompleteDispatch({ type: 'SET_LOADING', loading: true });
+        autoCompleteDispatch({ type: 'SET_LOADING', payload: true });
+        autoCompleteDispatch({ type: 'SET_ERROR', payload: null });
         switch (paramCase) {
             case 'NO_QUOTED': {
-                suggestions = quotedBaseSuggestion;
+                suggestions = QUOTED_BASE_SUGGESTIONS;
                 break;
             }
+
             case 'NO_PARAM': {
                 const quoted = getInsideDoubleQuotes(value, cursorPosition);
-                const filtered = baseSuggestion.filter((suggestion) =>
-                    suggestion.startsWith(quoted!),
-                );
-                suggestions = filtered;
-                query = quoted!;
-                break;
-            }
-            case 'PARAM_KEY_ONLY':
-                {
-                    const quoted = getInsideDoubleQuotes(value, cursorPosition);
-                    const param = parseKeyValue(quoted!);
-                    console.log('PARAM_KEY_ONLY', param);
-                    const serverAction = getServerAction(param?.key || '');
-                    const response = await serverAction(param?.value ?? '');
-
-                    if (isServerActionError(response)) {
-                        throw new Error(response.message);
-                    } else if (isHttpException(response)) {
-                        toast.error(
-                            Array.isArray(response.message)
-                                ? response.message.join('\n')
-                                : response.message,
-                        );
-                        return;
-                    }
-                    console.log('auto complete suggestion', response);
-
-                    suggestions =
-                        response.data.length > 0 ? response.data.map((d) => d.name) : [''];
-                    query = param?.value ?? '';
+                if (quoted) {
+                    suggestions = BASE_SUGGESTIONS.filter((suggestion) =>
+                        suggestion.startsWith(quoted),
+                    );
+                    query = quoted;
                 }
                 break;
-            case 'DEFAULT':
+            }
+
+            case 'PARAM_KEY_ONLY': {
+                const quoted = getInsideDoubleQuotes(value, cursorPosition);
+                if (!quoted) break;
+
+                const param = parseKeyValue(quoted);
+                if (!param?.key) break;
+
+                const serverAction = createServerAction(param.key);
+                const response = await serverAction(param.value || '');
+
+                if (isServerActionError(response)) {
+                    throw new Error(response.message);
+                }
+
+                if (isHttpException(response)) {
+                    const errorMessage = Array.isArray(response.message)
+                        ? response.message.join('\n')
+                        : response.message;
+                    toast.error(errorMessage);
+                    autoCompleteDispatch({ type: 'SET_ERROR', payload: errorMessage });
+                    return;
+                }
+
+                suggestions = response.data.length > 0 ? response.data.map((d) => d.name) : [''];
+                query = param.value || '';
+                break;
+            }
+
             default:
                 break;
         }
 
         autoCompleteDispatch({
             type: 'SET_ALL',
-            query,
-            suggestions,
-            selectedIndex,
-            loading: false,
+            payload: {
+                suggestions,
+                query,
+                selectedIndex: -1,
+                loading: false,
+            },
         });
     };
 
-    const changeSuggestion = useDebounceCallback(changeSuggestionOrigin, 300);
+    const debouncedFetchSuggestions = useDebounceCallback(fetchSuggestions, debounceMs);
 
-    const keyDownHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        const { suggestions, selectedIndex: prev } = autoCompleteState;
-        if (suggestions.length === 0) return;
-
-        if (e.key === 'ArrowDown') {
-            e.preventDefault();
-            const selectedIndex = (prev + 1) % suggestions.length;
-            autoCompleteDispatch({ type: 'SET_SELECTED_INDEX', selectedIndex });
-        } else if (e.key === 'ArrowUp') {
-            e.preventDefault();
-            const selectedIndex = (prev - 1 + suggestions.length) % suggestions.length;
-            autoCompleteDispatch({ type: 'SET_SELECTED_INDEX', selectedIndex });
-        } else if (e.key === 'Enter') {
-            e.preventDefault();
-            if (prev >= 0) {
-                selectSuggestion(suggestions[prev]);
-            }
-        } else if (e.key === 'Escape') {
-            autoCompleteDispatch({ type: 'SET_SUGGESTIONS', suggestions: [] });
-        }
-    };
-
-    const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Event handlers
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const text = e.target.value;
-        // 커서의 위치에 있는 문자 기준은 커서의 왼쪽 문자를 기준으로 한다.
-        const cursorPos = e.target.selectionStart ? e.target.selectionStart - 1 : 0;
-        changeSuggestion(e.target.value, cursorPos);
-        inputDispatch({ type: 'SET_ALL', text, cursorPos });
-        onSearch(e.target.value);
+        const cursorPos = Math.max(0, (e.target.selectionStart || 1) - 1);
+        inputDispatch({ type: 'SET_ALL', payload: { text, cursorPos } });
+        debouncedFetchSuggestions(text, cursorPos);
+        onSearch(text);
     };
 
     const handleClickOrKeyUp = () => {
-        console.log(`handleClickOrKeyUp`, inputRef?.current);
-        if (inputRef && inputRef.current) {
-            const cursorPos = inputRef.current.selectionStart ?? 0;
-            inputDispatch({ type: 'SET_CURSOR_POS', cursorPos });
+        if (!inputRef.current) return;
+
+        const cursorPos = inputRef.current.selectionStart || 0;
+        inputDispatch({ type: 'SET_CURSOR_POS', payload: cursorPos });
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        const { suggestions, selectedIndex } = autoCompleteState;
+        if (suggestions.length === 0) return;
+
+        switch (e.key) {
+            case 'ArrowDown':
+                e.preventDefault();
+                autoCompleteDispatch({
+                    type: 'SET_SELECTED_INDEX',
+                    payload: (selectedIndex + 1) % suggestions.length,
+                });
+                break;
+
+            case 'ArrowUp':
+                e.preventDefault();
+                autoCompleteDispatch({
+                    type: 'SET_SELECTED_INDEX',
+                    payload: (selectedIndex - 1 + suggestions.length) % suggestions.length,
+                });
+                break;
+
+            case 'Enter':
+                e.preventDefault();
+                if (selectedIndex >= 0 && suggestions[selectedIndex]) {
+                    applySuggestion(suggestions[selectedIndex]);
+                    autoCompleteDispatch({ type: 'RESET' });
+                }
+                break;
+
+            case 'Escape':
+                autoCompleteDispatch({ type: 'RESET' });
+                break;
+
+            default:
+                break;
         }
     };
 
-    const selectSuggestion = (suggestion: string) => {
+    const handleSelectSuggestion = (suggestion: string) => {
         applySuggestion(suggestion);
         autoCompleteDispatch({ type: 'RESET' });
     };
@@ -347,11 +408,13 @@ export function useSearchBar({ onSearch, defaultValue, inputRef }: UseSearchBarP
     return {
         inputState,
         autoCompleteState,
-        autoCompleteDispatch,
         suggestionsRef,
-        changeHandler,
-        handleClickOrKeyUp,
-        keyDownHandler,
-        selectSuggestion,
+        autoCompleteDispatch,
+        handlers: {
+            onChange: handleChange,
+            onClickOrKeyUp: handleClickOrKeyUp,
+            onKeyDown: handleKeyDown,
+            onSelectSuggestion: handleSelectSuggestion,
+        },
     };
 }

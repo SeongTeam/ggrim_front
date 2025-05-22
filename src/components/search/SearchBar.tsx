@@ -18,16 +18,13 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
   const {
     inputState,
     autoCompleteState,
-    autoCompleteDispatch,
     suggestionsRef,
-    changeHandler,
-    handleClickOrKeyUp,
-    keyDownHandler,
-    selectSuggestion
+    autoCompleteDispatch,
+    handlers
   } = useSearchBar({
     onSearch,
     defaultValue,
-    inputRef
+    inputRef,
   });
 
   return (
@@ -38,11 +35,11 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
         value={inputState.text}
         type="text"
         placeholder="Search Title..."
-        onChange={changeHandler}
+        onChange={handlers.onChange}
         className="w-full pl-10 pr-4 py-2 text-white bg-gray-800 rounded-lg outline-none focus:ring-2 focus:ring-red-500" 
-        onKeyUp={handleClickOrKeyUp}
-        onClick={handleClickOrKeyUp}
-        onKeyDown={keyDownHandler}
+        onKeyUp={handlers.onClickOrKeyUp}
+        onClick={handlers.onClickOrKeyUp}
+        onKeyDown={handlers.onKeyDown}
       />
 
       {autoCompleteState.loading && (
@@ -54,11 +51,11 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
       {autoCompleteState.suggestions.length > 0 && (
         <AutocompleteList
           suggestions={autoCompleteState.suggestions}
-          onSelect={selectSuggestion}
+          onSelect={handlers.onSelectSuggestion}
           query={autoCompleteState.query}
           highlightedIndex={autoCompleteState.selectedIndex}
           setHighlightedIndex={(selectedIndex: number) => 
-            autoCompleteDispatch({ type: 'SET_SELECTED_INDEX', selectedIndex })
+            autoCompleteDispatch({ type: 'SET_SELECTED_INDEX', payload: selectedIndex })
           }
         />
       )}
