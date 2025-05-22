@@ -1,21 +1,21 @@
 'use client'
-import {  FormEvent,  useEffect, useReducer, useRef, useState } from "react";
+import {  FormEvent,  useCallback,  useEffect, useReducer,  useState } from "react";
 import { Painting } from "../../model/interface/painting";
 import { Card } from "../Card";
 import { useRouter } from "next/navigation";
 import AlertModal from "../modal/AlertModal";
-import { debounce } from "../../util/optimization";
 import { InsertToggleInput } from "../InsertToggleInput";
 import Loading from "../Loading";
-import { localStorageUtils } from "../../util/browser";
 import { CheckCircle, XCircle } from "lucide-react";
 import { getPaintingAction } from "../../server-action/backend/painting/api";
 import { isHttpException, isServerActionError } from "../../server-action/backend/util";
 import { CreateQuizDTO } from "../../server-action/backend/quiz/dto";
 import { addQuizAction, updateQuizAction } from "../../server-action/backend/quiz/api";
 import { Quiz } from "../../model/interface/quiz";
+import { getSavedNewQuiz, removeSavedNewQuiz, saveNewQuiz } from "../../storage/local/quiz";
+import { useDebounceCallback } from "../../hooks/optimization";
 
-interface NewQuiz{
+export interface NewQuiz{
   answer :Painting|undefined;
   distractor1 : Painting|undefined
   distractor2 : Painting|undefined
@@ -128,8 +128,6 @@ export default function QuizForm({ quiz } : QuizFormProps) : JSX.Element {
     const [error,setError] = useState("");
     const router = useRouter();
     const distractorKeys : StatePaintingKey[] = ['distractor1','distractor2','distractor3'];
-    const STORAGE_TTL_MS = 1800000;
-    const QUIZ_FORM_KEY = 'new-quiz';
 
 
   function mapPaintingKeyToAction(key : StatePaintingKey,painting : Painting|undefined) {
@@ -168,7 +166,7 @@ export default function QuizForm({ quiz } : QuizFormProps) : JSX.Element {
         return;
     }
     else{
-      localStorage.removeItem(QUIZ_FORM_KEY);
+      removeSavedNewQuiz();
       router.push(`/quiz/${response.id}`);
       return;
     }
@@ -290,35 +288,31 @@ export default function QuizForm({ quiz } : QuizFormProps) : JSX.Element {
     // * 참고: <관련 정보나 링크>
 
 
-    const saveNewQuiz = useRef(debounce( (value : NewQuiz|null) => {
-      localStorageUtils.setItemWithExpiry(QUIZ_FORM_KEY,JSON.stringify(value),STORAGE_TTL_MS);
-    },500));
+    const saveNewQuizDebounced = useDebounceCallback(saveNewQuiz ,500);
 
-    const loadNewQuiz = useRef(()=>{
-      const rawPrevNewQuiz : string|null = localStorageUtils.getItemWithExpiry(QUIZ_FORM_KEY);
-      const prevNewQuiz : NewQuiz|undefined = rawPrevNewQuiz && JSON.parse(rawPrevNewQuiz)  ? JSON.parse(rawPrevNewQuiz) : undefined
+    const loadNewQuiz = useCallback(()=>{
+      const prevNewQuiz = getSavedNewQuiz();
       if(prevNewQuiz){
         dispatch({type :'SET_ALL', newQuiz : prevNewQuiz});
       }
-    });
+    },[]);
 
     useEffect( ()=>{
       // 1.렌더링 된 후에 useEffect가 실행되므로, 저장된 값을 불러오는 동안에 깜빡이는 현상이 발생함.
       //=> 해결 방법 : newQuiz 상태의 초기값을 null로 지정. null인경우, loading 컴포넌트를 보여줌
       // 2. <InsertInput />요소의 값이 복원되지 않음.
       //=> 해결 방법 : <InsertInput /> prop에 전달될 값도 localStorage에 백업.
-
       if(!quiz){
-        loadNewQuiz.current();
+        loadNewQuiz();
       }
 
-    },[]);
+    },[quiz,loadNewQuiz]);
 
     useEffect(()=>{
       if(!quiz){
-        saveNewQuiz.current(newQuiz);
+        saveNewQuizDebounced(newQuiz);
       }
-    },[newQuiz]);
+    },[newQuiz,quiz,saveNewQuizDebounced]);
 
   
     if(!newQuiz){
