@@ -11,5 +11,5 @@ export const SEARCH_PARAM_KEY = {
     TITLE: 'title',
 } as const;
 
-export type InputKeyValue = (typeof INPUT_KEY)[keyof typeof INPUT_KEY];
-export type SearchParamKeyValue = (typeof SEARCH_PARAM_KEY)[keyof typeof SEARCH_PARAM_KEY];
+export const BASE_SUGGESTIONS = Object.values(INPUT_KEY).map((str) => `${str}:`);
+export const QUOTED_BASE_SUGGESTIONS = BASE_SUGGESTIONS.map((str) => `"${str}"`);

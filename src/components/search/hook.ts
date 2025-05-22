@@ -1,52 +1,26 @@
 'use client';
 import { Dispatch, RefObject, useCallback, useEffect, useReducer, useRef } from 'react';
-import { INPUT_KEY } from './const';
+import { BASE_SUGGESTIONS, QUOTED_BASE_SUGGESTIONS } from './const';
 import { findArtistsAction } from '../../server-action/backend/artist/api';
 import { findTagsAction } from '../../server-action/backend/tag/api';
 import { findStylesAction } from '../../server-action/backend/style/api';
 import { isHttpException, isServerActionError } from '../../server-action/backend/util';
 import toast from 'react-hot-toast';
-import { getInsideDoubleQuotes, parseKeyValue } from './util';
+import {
+    calculateNewInput,
+    determineParamCase,
+    getInsideDoubleQuotes,
+    parseKeyValue,
+} from './util';
 import {
     HttpException,
     IPaginationResult,
     ServerActionError,
 } from '../../server-action/backend/common.dto';
 import { useDebounceCallback } from '../../hooks/optimization';
+import { AutoCompleteAction, AutoCompleteState, InputAction, InputState } from './type';
 
 // Constants
-const BASE_SUGGESTIONS = Object.values(INPUT_KEY).map((str) => `${str}:`);
-const QUOTED_BASE_SUGGESTIONS = BASE_SUGGESTIONS.map((str) => `"${str}"`);
-
-// Types
-export type ParamCase = 'NO_QUOTED' | 'NO_PARAM' | 'PARAM_KEY_ONLY' | 'DEFAULT';
-
-interface AutoCompleteState {
-    suggestions: string[];
-    selectedIndex: number;
-    query: string;
-    loading: boolean;
-    error: string | null;
-}
-
-type AutoCompleteAction =
-    | { type: 'SET_SUGGESTIONS'; payload: string[] }
-    | { type: 'SET_SELECTED_INDEX'; payload: number }
-    | { type: 'SET_QUERY'; payload: string }
-    | { type: 'SET_LOADING'; payload: boolean }
-    | { type: 'SET_ERROR'; payload: string | null }
-    | { type: 'SET_ALL'; payload: Partial<AutoCompleteState> }
-    | { type: 'RESET' };
-
-interface InputState {
-    text: string;
-    cursorPos: number;
-}
-
-type InputAction =
-    | { type: 'SET_TEXT'; payload: string }
-    | { type: 'SET_CURSOR_POS'; payload: number }
-    | { type: 'SET_ALL'; payload: Partial<InputState> };
 
 interface UseSearchBarProps {
     onSearch: (query: string) => void;
@@ -69,25 +43,6 @@ interface UseSearchBarReturn {
 }
 
 // Utility functions
-function determineParamCase(input: string, cursorPosition: number): ParamCase {
-    const result = getInsideDoubleQuotes(input, cursorPosition);
-
-    if (!result) {
-        return 'NO_QUOTED';
-    }
-
-    const param = parseKeyValue(result);
-
-    if (!param) {
-        return 'NO_PARAM';
-    }
-
-    if (param.key) {
-        return 'PARAM_KEY_ONLY';
-    }
-
-    return 'DEFAULT';
-}
 
 function createServerAction(key: string) {
     const actionMap: Record<
@@ -111,56 +66,6 @@ function createServerAction(key: string) {
             pageCount: 0,
         }))
     );
-}
-
-function calculateNewInput(
-    text: string,
-    cursorPos: number,
-    suggestion: string,
-): { newInput: string; newCursor: number } {
-    const cursorWithoutEnter = cursorPos - 1;
-    const paramCase = determineParamCase(text, cursorWithoutEnter);
-
-    switch (paramCase) {
-        case 'NO_QUOTED': {
-            const beforeCursor = text.slice(0, cursorWithoutEnter + 1);
-            const afterCursor = text.slice(cursorWithoutEnter + 1);
-            return {
-                newInput: `${beforeCursor} ${suggestion} ${afterCursor}`,
-                newCursor: cursorWithoutEnter + suggestion.length + 2,
-            };
-        }
-
-        case 'NO_PARAM': {
-            const keyParts = getInsideDoubleQuotes(text, cursorWithoutEnter);
-            if (!keyParts) return { newInput: text, newCursor: cursorPos };
-
-            const beforeKey = text.slice(0, cursorWithoutEnter + 1 - keyParts.length);
-            const afterCursor = text.slice(cursorWithoutEnter + 1);
-            return {
-                newInput: beforeKey + suggestion + afterCursor,
-                newCursor: cursorWithoutEnter + suggestion.slice(keyParts.length).length + 1,
-            };
-        }
-
-        case 'PARAM_KEY_ONLY': {
-            const quoted = getInsideDoubleQuotes(text, cursorWithoutEnter);
-            if (!quoted) return { newInput: text, newCursor: cursorPos };
-
-            const param = parseKeyValue(quoted);
-            if (!param) return { newInput: text, newCursor: cursorPos };
-
-            const beforeValue = text.slice(0, cursorWithoutEnter + 1 - param.value.length);
-            const afterCursor = text.slice(cursorWithoutEnter + 1);
-            return {
-                newInput: beforeValue + suggestion + afterCursor,
-                newCursor: cursorWithoutEnter + suggestion.slice(param.value.length).length + 2,
-            };
-        }
-
-        default:
-            return { newInput: text, newCursor: cursorPos };
-    }
 }
 
 // Reducers

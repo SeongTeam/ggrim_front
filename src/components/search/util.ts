@@ -1,4 +1,4 @@
-import { InputKeyValue } from './const';
+import { InputKeyValue, ParamCase } from './type';
 
 export const paramDelimiter = ':';
 
@@ -98,4 +98,74 @@ export function getInsideDoubleQuotes(text: string, cursorPosition: number): str
     }
 
     return undefined;
+}
+
+export function determineParamCase(input: string, cursorPosition: number): ParamCase {
+    const result = getInsideDoubleQuotes(input, cursorPosition);
+
+    if (!result) {
+        return 'NO_QUOTED';
+    }
+
+    const param = parseKeyValue(result);
+
+    if (!param) {
+        return 'NO_PARAM';
+    }
+
+    if (param.key) {
+        return 'PARAM_KEY_ONLY';
+    }
+
+    return 'DEFAULT';
+}
+
+export function calculateNewInput(
+    text: string,
+    cursorPos: number,
+    suggestion: string,
+): { newInput: string; newCursor: number } {
+    const cursorWithoutEnter = cursorPos - 1;
+    const paramCase = determineParamCase(text, cursorWithoutEnter);
+
+    switch (paramCase) {
+        case 'NO_QUOTED': {
+            const beforeCursor = text.slice(0, cursorWithoutEnter + 1);
+            const afterCursor = text.slice(cursorWithoutEnter + 1);
+            return {
+                newInput: `${beforeCursor} ${suggestion} ${afterCursor}`,
+                newCursor: cursorWithoutEnter + suggestion.length + 2,
+            };
+        }
+
+        case 'NO_PARAM': {
+            const keyParts = getInsideDoubleQuotes(text, cursorWithoutEnter);
+            if (!keyParts) return { newInput: text, newCursor: cursorPos };
+
+            const beforeKey = text.slice(0, cursorWithoutEnter + 1 - keyParts.length);
+            const afterCursor = text.slice(cursorWithoutEnter + 1);
+            return {
+                newInput: beforeKey + suggestion + afterCursor,
+                newCursor: cursorWithoutEnter + suggestion.slice(keyParts.length).length + 1,
+            };
+        }
+
+        case 'PARAM_KEY_ONLY': {
+            const quoted = getInsideDoubleQuotes(text, cursorWithoutEnter);
+            if (!quoted) return { newInput: text, newCursor: cursorPos };
+
+            const param = parseKeyValue(quoted);
+            if (!param) return { newInput: text, newCursor: cursorPos };
+
+            const beforeValue = text.slice(0, cursorWithoutEnter + 1 - param.value.length);
+            const afterCursor = text.slice(cursorWithoutEnter + 1);
+            return {
+                newInput: beforeValue + suggestion + afterCursor,
+                newCursor: cursorWithoutEnter + suggestion.slice(param.value.length).length + 2,
+            };
+        }
+
+        default:
+            return { newInput: text, newCursor: cursorPos };
+    }
 }
