@@ -1,4 +1,5 @@
-import { Artist, Painting, Style } from './interface/painting';
+import { Artist, Painting } from './interface/painting';
+import { Style } from './interface/styles';
 import { Tag } from './interface/tag';
 
 export class PaintingModel implements Painting {

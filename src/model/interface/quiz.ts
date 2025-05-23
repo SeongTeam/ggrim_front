@@ -1,4 +1,5 @@
-import { Artist, Painting, Style } from './painting';
+import { Artist, Painting } from './painting';
+import { Style } from './styles';
 import { Tag } from './tag';
 import { ShortUser, User } from './user';
 
