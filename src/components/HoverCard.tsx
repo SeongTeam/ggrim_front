@@ -1,7 +1,7 @@
 'use client'
 import { getUrlImageSize } from '@/util/imageUtiles';
 import { useEffect, useState } from 'react';
-import { Card, CardProps } from './card';
+import { Card, CardProps } from './Card';
 
 interface HoverCardProps {
     cardProps : CardProps

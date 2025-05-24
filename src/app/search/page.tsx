@@ -1,8 +1,9 @@
 import React, { Suspense } from "react";
 import { PaintingCardGrid } from "../../components/search/PaintingCardGrid";
-import { serverLogger } from "../../util/logger";
 import {  findPaintingAction } from "../../server-action/backend/painting/api";
 import { isHttpException, isServerActionError } from "../../server-action/backend/util";
+import ErrorModal from "../../components/modal/ErrorModal";
+import { SEARCH_PARAM_KEY } from "../../components/search/const";
 
 
 // TODO: Search Page 개선
@@ -23,20 +24,22 @@ import { isHttpException, isServerActionError } from "../../server-action/backen
   export default async function SearchPage( {searchParams  } : SearchPageProps
   ) {
 
-    const title = (await searchParams).title || "";
-    const artist = (await searchParams).artist || "";
-    const tags = (await searchParams).tags || [];
-    const styles = ( await searchParams).styles || [];
+    const title = (await searchParams)[SEARCH_PARAM_KEY.TITLE] || "";
+    const artist = (await searchParams)[SEARCH_PARAM_KEY.ARTIST] || "";
+    const tags = (await searchParams)[SEARCH_PARAM_KEY.TAGS]|| [];
+    const styles = ( await searchParams)[SEARCH_PARAM_KEY.STYLES]|| [];
 
 
-    
-    const searchTitle = typeof title === 'string' ? title : JSON.stringify(title);
-    const searchArtist = typeof artist === 'string' ? artist : JSON.stringify(artist);
-    const searchTags = typeof tags === 'string' ? [tags] : tags;
-    const searchStyles = typeof styles ==='string' ? [styles] : styles;
+    if(Array.isArray(title) || Array.isArray(artist)){
+        return <ErrorModal message="wrong access with invalid parameter"/>
+    }
 
-    const response = await findPaintingAction(searchTitle,searchArtist,searchTags,searchStyles);
-    serverLogger.info(`{path : /search}current param : $${JSON.stringify({title,artist,tags,styles})}`);
+    const response = await findPaintingAction(
+        title,
+        artist,
+        Array.isArray(tags) ? tags : [tags],
+        Array.isArray(styles) ? styles : [styles]
+      );
 
       if(isServerActionError(response)){
           throw new Error(response.message);

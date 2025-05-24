@@ -1,8 +1,11 @@
 'use client'
 import { ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from "next/navigation";
-import {  RefObject, useRef, useState } from "react";
-import { SearchBar } from "../SearchBar";
-import { debounce } from "../../util/optimization";
+import {  RefObject, useState } from "react";
+import { SearchBar } from "./SearchBar";
+import { INPUT_KEY, SEARCH_PARAM_KEY } from "./const";
+import { extractValuesInsideQuoted, makeQuoted } from "./util";
+import { SEARCH_LOGIC_ROUTE } from "../../route/search/route";
+import { useDebounceCallback } from "../../hooks/optimization";
 
 interface ParsedInput {
     title : string;
@@ -11,76 +14,67 @@ interface ParsedInput {
     styles : string[];
 }
 
-const regexPrefix='&&-'
-
 function parseInput(input: string): ParsedInput {
-    const extractValues = (key: string): string[] => {
-      // 정규식을 `&&-key:` 형식으로 변경
-      const regex = new RegExp(`${regexPrefix}${key}:(\\S+)`, 'g');
-      const values: string[] = [];
-      let match;
-      while ((match = regex.exec(input)) !== null) {
-        values.push(match[1]);
-      }
-      return values;
-    };
+
   
     // 각 필드 추출
-    const tags = extractValues('tags');
-    const styles = extractValues('styles');
+    const tags = extractValuesInsideQuoted(input,INPUT_KEY.TAG);
+    const styles = extractValuesInsideQuoted(input,INPUT_KEY.STYLE);
     
     // 'artist'는 첫 번째 값만 추출
-    const artistMatches = extractValues('artist');
+    const artistMatches = extractValuesInsideQuoted(input,INPUT_KEY.ARTIST);
     const artist = artistMatches.length > 0 ? artistMatches[0] : '';
   
-    // '&&-keyName:value' 형식 제거 후 남은 부분을 제목으로 처리
-    const title = input.replace(/&&-\S+:\S+/g, '').trim();
+
+    // 1단계: "key:value" 형식(쌍따옴표 포함)을 제거
+    const cleaned = input.replace(/"\w+:[^"]*"/g, '').trim();
+
+    // 단어 추출: 따옴표나 쉼표 등 문장부호는 그대로 유지
+    // 단어 경계를 기준으로 쪼개되, 문장부호 포함된 항목도 추출되게 함
+    const parts = cleaned.split(/\s+/) // 공백 기준 분리
+                         .filter(Boolean); // 빈 문자열 제거
+    const title = parts.join(' ');
+    console.log('parseInput',{title,cleaned,parts});
   
     return { title, tags, styles, artist };
   }
 
 function getInput(searchParams : ReadonlyURLSearchParams) {
-    const title : string  = searchParams.get('title')||"";
-    const artist : string = searchParams.get('artist')||"";
-    const tags : string[] = searchParams.getAll('tags')||[];
-    const styles : string[] = searchParams.getAll('styles')||[];
+    const title : string  = searchParams.get(SEARCH_PARAM_KEY.TITLE)||"";
+    const artist : string = searchParams.get(SEARCH_PARAM_KEY.ARTIST)||"";
+    const tags : string[] = searchParams.getAll(SEARCH_PARAM_KEY.TAGS)||[];
+    const styles : string[] = searchParams.getAll(SEARCH_PARAM_KEY.STYLES)||[];
 
+    const inputs : string[]  = [title];
+    const delimiter = ' ';
 
-    let input = `${title} `;
 
     if(artist.trim() !== ""){
-        input +=`${regexPrefix}artist:${artist} `;
+        inputs.push(makeQuoted(`${INPUT_KEY.ARTIST}:${artist}`));
     }
 
-    tags.forEach(tag=>input+=`${regexPrefix}tags:${tag} `);
+    if(tags.length !== 0){
+        inputs.push(...tags.map(t=>makeQuoted(`${INPUT_KEY.TAG}:${t}`)));
+    }
 
-    styles.forEach(style=>input+=`${regexPrefix}styles:${style} `);
+    if(styles.length !== 0){
 
-    return input;
+        inputs.push(...styles.map(s=>makeQuoted(`${INPUT_KEY.STYLE}:${s}`)));
+    }
+
+    return inputs.join(delimiter);
 
 }
 
 function getURL(input : string ) : string{
     const parsed : ParsedInput = parseInput(input);
+    const {title,artist,tags,styles } = parsed;
 
-    let url = `/search?title=${parsed.title}`;
-
-    if(parsed.artist.trim() !== ""){
-        url += `&artist=${parsed.artist}`;
-    }
-
-    parsed.tags.forEach(tag=>
-        url += `&tags=${tag}` 
-    );
-    parsed.styles.forEach(style=>
-        url += `&styles=${style}` 
-    );
-
-    return url;
+    return SEARCH_LOGIC_ROUTE.SEARCH_PAINTING(title,artist,tags,styles);
 }
 
 interface SearchPaintingBarProps {
-    inputRef? : RefObject<HTMLInputElement>;
+    inputRef : RefObject<HTMLInputElement>;
 }
 
 // TODO: <SearchPaintingBar /> 기능 개선
@@ -97,27 +91,24 @@ export function SearchPaintingBar(props : SearchPaintingBarProps): React.JSX.Ele
     const searchParams = useSearchParams();
     const [input, setInput] = useState(getInput(searchParams));
     // const [results, setResults] = useState<Painting[]>([]);
-    const handleSearch = async (searchTarget: string) => {
+    const handleSearchOrigin = async (searchTarget: string) => {
         console.log('handleSearch');
         if(searchTarget.trim() === ""){
             if(pathName !== '/'){
                 router.push('/');
             }
-
-            
             return;
         }
-
 
         router.push(getURL(searchTarget));
         setInput(searchTarget);
         return;
     };
 
-    const handleSearchDebounceRef = useRef(debounce(handleSearch,500));
+    const handleSearch = useDebounceCallback(handleSearchOrigin,500);
 
     return (
-            <SearchBar inputRef={props.inputRef} onSearch={handleSearchDebounceRef.current} defaultValue={input} />
+            <SearchBar inputRef={props.inputRef} onSearch={handleSearch} defaultValue={input} />
 
     );
 }

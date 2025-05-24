@@ -1,14 +1,14 @@
 'use server';
-import { RequestQueryBuilder } from '@dataui/crud-request';
+import { CondOperator, RequestQueryBuilder } from '@dataui/crud-request';
 import { Tag } from '../../../model/interface/tag';
 import { getServerUrl, withErrorHandler } from '../lib';
-import { HttpException } from '../common.dto';
+import { HttpException, IPaginationResult } from '../common.dto';
 
-export const findTags = async (
+const getTags = async (
     queryBuilder: RequestQueryBuilder,
-): Promise<Tag[] | HttpException> => {
+): Promise<IPaginationResult<Tag> | HttpException> => {
     const backendUrl = getServerUrl();
-    const url = `${backendUrl}/tag`;
+    const url = `${backendUrl}/painting/tag`;
     const response = await fetch(url + `?${queryBuilder.query()}`);
 
     if (!response.ok) {
@@ -16,8 +16,27 @@ export const findTags = async (
         return error;
     }
 
-    const result: Tag[] = await response.json();
+    const result: IPaginationResult<Tag> = await response.json();
     return result;
+};
+
+const findTags = async (
+    name: string,
+    pageCount = 20,
+    page = 0,
+): Promise<IPaginationResult<Tag> | HttpException> => {
+    const qb = RequestQueryBuilder.create();
+    const searchName = name.toLocaleUpperCase();
+
+    if (searchName !== '') {
+        qb.select(['name']).setFilter({
+            field: 'search_name',
+            operator: CondOperator.STARTS,
+            value: searchName,
+        });
+    }
+    qb.sortBy({ field: 'search_name', order: 'ASC' }).setLimit(pageCount).setPage(page);
+    return getTags(qb);
 };
 
 export const findTagsAction = withErrorHandler(findTags);

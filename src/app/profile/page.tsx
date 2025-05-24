@@ -1,7 +1,12 @@
 import Link from "next/link";
 import { AUTH_LOGIC_ROUTE } from "../../route/auth/route";
+import { PROFILE_LOGIC_ROUTE } from "../../route/profile/route";
 
-export default function AuthPage() {
+
+// TODO : Profile page 개선
+// - [ ] : 사용자가 생성한 퀴즈 목록 볼수 있는 page 추가하기
+
+export default function ProfilePage() {
     return (
       <main className="min-h-screen bg-black text-white flex items-center justify-center">
         <SettingsMenu />
@@ -13,7 +18,7 @@ export default function AuthPage() {
   
   const menuItems = [
     { label: "Update Password", href: AUTH_LOGIC_ROUTE.VERIFY_USER('update-password')},
-    { label: "Update Username", href: "/settings/update-username" },
+    { label: "Update Username", href: PROFILE_LOGIC_ROUTE.SETTING_ACCOUNT },
     { label: "Delete Account", href: AUTH_LOGIC_ROUTE.VERIFY_USER('delete-account') , highlight : true},
   ];
   

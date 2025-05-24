@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Painting } from "../model/interface/painting";
 import { ChevronRight, ChevronUp } from 'lucide-react'
+import { CopyButton } from "./Copybutton";
 
 interface PaintingDetailViewProps {
     painting : Painting | undefined;
@@ -55,9 +56,12 @@ export const PaintingDetailView = ( {painting } : PaintingDetailViewProps) => {
                 <p className="text-sm text-gray-500 mt-2">
                     Styles: {painting.styles.map( style => style.name).join(', ')}
                 </p>
-                <p className="text-sm text-gray-500 mt-2">
-                    painting: {painting.id}
-                </p>
+                <div className="flex gap-2">
+                    <p className="text-sm text-gray-500 mt-2">
+                        painting ID: {painting.id} 
+                    </p>
+                    <CopyButton textToCopy={painting.id} />
+                </div>
                 <p className="text-base text-gray-500 mt-2">
                     Description:{" "}
                     {painting.description.length > 30 && !showFullDescription

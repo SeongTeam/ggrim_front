@@ -1,11 +1,11 @@
 import { Minus, Plus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export interface InsertToggleInputProps{
     handleAdd : (value : string)=>Promise<boolean>;
     handleDelete : (value : string)=>Promise<boolean>;
     placeholder? : string;
-    defaultValue ? : string;
+    defaultValue? : string;
     defaultIsInserted ? : boolean;
   }
 export function InsertToggleInput({handleAdd,handleDelete,placeholder, defaultValue,defaultIsInserted} : InsertToggleInputProps) : JSX.Element {
@@ -27,6 +27,14 @@ export function InsertToggleInput({handleAdd,handleDelete,placeholder, defaultVa
             setIsInserted(false);
         }
     }
+
+    useEffect(()=> {
+        setValue(defaultValue||'');
+    },[defaultValue]);
+
+    useEffect(()=> {
+        setIsInserted(defaultIsInserted||false);
+    },[defaultIsInserted]);
 
 
 

@@ -1,14 +1,17 @@
 'use client';
 
-import MCQView from '@/components/home/components/MCQ_view';
+
 import { MCQ } from '@/model/interface/MCQ';
 import React from 'react';
+import MCQView from '../quiz/mcq/MCQ_view';
+import { QuizReactionCount } from '../../server-action/backend/quiz/dto';
 interface ArtworkQuizProps {
     mcqAttributes: MCQ[];
+    reactionCounts : QuizReactionCount[]
 }
 
 export function ArtworkQuiz(artworkQuizProps: ArtworkQuizProps) {
-    const { mcqAttributes } = artworkQuizProps;
+    const { mcqAttributes, reactionCounts } = artworkQuizProps;
     const [currentIndex, setCurrentIndex] = React.useState(0);
 
     const handelNextMCQ = async (): Promise<void> => {
@@ -35,6 +38,7 @@ export function ArtworkQuiz(artworkQuizProps: ArtworkQuizProps) {
                         mcq={mcqAttributes[currentIndex]}
                         // currentAttributeIndex={currentIndex}
                         handelNextMCQ={handelNextMCQ}
+                        reactionCount={reactionCounts[currentIndex]}
                     />
                 </div>
             </div>
