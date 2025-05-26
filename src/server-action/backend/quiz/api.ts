@@ -58,7 +58,7 @@ const findQuiz = async (
     const styleParam = styles.map((s) => `styles[]=${s}`).join('&');
     const url = `${backendUrl}/quiz?${artistsParam}&${tagParam}&${styleParam}&page=${page}`;
 
-    const response = await fetch(url);
+    const response = await fetch(url, { cache: 'no-store' });
     if (!response.ok) {
         const error: HttpException = await response.json();
         return error;
