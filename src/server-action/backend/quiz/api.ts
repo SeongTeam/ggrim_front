@@ -51,12 +51,13 @@ const findQuiz = async (
     tags: string[] = [],
     styles: string[] = [],
     page: number = 0,
+    count: number = 50,
 ): Promise<FindQuizResult | HttpException> => {
     const backendUrl = getServerUrl();
     const artistsParam = artists.map((a) => `artists[]=${a}`).join('&');
     const tagParam = tags.map((t) => `tags[]=${t}`).join('&');
     const styleParam = styles.map((s) => `styles[]=${s}`).join('&');
-    const url = `${backendUrl}/quiz?${artistsParam}&${tagParam}&${styleParam}&page=${page}`;
+    const url = `${backendUrl}/quiz?${artistsParam}&${tagParam}&${styleParam}&page=${page}&count=${count}`;
 
     const response = await fetch(url, { cache: 'no-store' });
     if (!response.ok) {
