@@ -130,6 +130,29 @@ const updateQuiz = async (
     return result;
 };
 
+const deleteQuiz = async (
+    signInResponse: SignInResponse,
+    quizId: string,
+): Promise<void | HttpException> => {
+    const backendUrl = getServerUrl();
+    const url = `${backendUrl}/quiz/${quizId}`;
+
+    const response = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${signInResponse.accessToken}`,
+        },
+    });
+
+    if (!response.ok) {
+        const error: HttpException = await response.json();
+        return error;
+    }
+
+    revalidateQuizTag(quizId);
+};
+
 const submitQuiz = async (quizID: string, dto: QuizSubmitDTO): Promise<boolean | HttpException> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/quiz/submit/${quizID}`;
@@ -272,6 +295,7 @@ export const getQuizReactionsAction = withErrorHandler(getQuizReactions);
 
 export const addQuizAction = cookieWithErrorHandler(getSignInResponseOrRedirect, addQuiz);
 export const updateQuizAction = cookieWithErrorHandler(getSignInResponseOrRedirect, updateQuiz);
+export const deleteQuizAction = cookieWithErrorHandler(getSignInResponseOrRedirect, deleteQuiz);
 
 export const submitQuizAction = withErrorHandler(submitQuiz);
 
