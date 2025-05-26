@@ -5,11 +5,10 @@ import {   MoreVertical, X,} from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { Quiz } from '../../model/interface/quiz'
 import { useRouter } from 'next/navigation'
-import { deleteQuizReactionAction } from '../../server-action/backend/quiz/api'
+import { deleteQuizAction } from '../../server-action/backend/quiz/api'
 import { isHttpException, isServerActionError } from '../../server-action/backend/util'
 import { HttpStatus } from '../../server-action/backend/status'
 import toast from 'react-hot-toast'
-import GuideModal from '../modal/GuideModal'
 import { SEARCH_LOGIC_ROUTE } from '../../route/search/route'
 
 type QuizMenuProps = {
@@ -24,7 +23,6 @@ export default function QuizMenu({
 }: QuizMenuProps) {
   const [open, setOpen] = useState(false)
   const router = useRouter();
-  const [success, setSuccess ] = useState('');
   const [isShow, setIsShow] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null)
 
@@ -49,16 +47,13 @@ export default function QuizMenu({
   const onEdit = () => {
     router.push(`/quiz/${quiz.id}/edit`);
   }
-  const handleSuccess = () => {
-    router.push(`/`);
-  }
 
   const onDescription =() => {
     setIsShow(true);
   }
 
   const onDelete = async () => {
-    const response = await deleteQuizReactionAction(quiz.id);
+    const response = await deleteQuizAction(quiz.id);
 
     if(isServerActionError(response)){
         throw new Error(response.message);
@@ -78,7 +73,7 @@ export default function QuizMenu({
         }
     }
     else{
-        setSuccess('Success Delete');
+        router.push('/quiz');
     }
   }
 
@@ -86,7 +81,6 @@ export default function QuizMenu({
 
   return (
     <>
-        { success && <GuideModal message={success} onClickNext={handleSuccess} />}
         {isShow 
           && <ShowDescription 
                 quiz={quiz} 
