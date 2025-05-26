@@ -20,7 +20,7 @@ export default async function QuizListPage() {
     }
 
     return (
-        <div>
+        <div className='pt-2'>
             <QuizCardGrid findResult={response} />
         </div>
     );
