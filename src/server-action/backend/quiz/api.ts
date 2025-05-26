@@ -110,7 +110,6 @@ const updateQuiz = async (
 ): Promise<Quiz | HttpException> => {
     const backendUrl = getServerUrl();
     const url = `${backendUrl}/quiz/${quizId}`;
-    const cacheTag = getQuizCacheTag(quizId);
 
     const response = await fetch(url, {
         method: 'PUT',
@@ -119,7 +118,6 @@ const updateQuiz = async (
             Authorization: `Bearer ${signInResponse.accessToken}`,
         },
         body: JSON.stringify(dto),
-        next: { tags: [cacheTag] },
     });
 
     if (!response.ok) {
@@ -127,6 +125,7 @@ const updateQuiz = async (
         return error;
     }
     const result: Quiz = await response.json();
+    revalidateQuizTag(quizId);
 
     return result;
 };
