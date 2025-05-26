@@ -11,12 +11,12 @@ export interface QuizCardProps {
     // * 참고: <관련 정보나 링크>
   
 export function QuizCard({ title, onClick}: QuizCardProps) {
-    const size = 20;
+    const size = 60;
     const uiTitle = title.length > size ? title.slice(0,size) + '...' : title;
     return (
 
           <div className="bg-gray-900 rounded-lg overflow-hidden  hover:bg-gray-700" >
-            <div className="bg-white p-2 pt-4 rounded-lg h-24 ">
+            <div className="bg-white p-2 pt-4 rounded-lg h-32 md:h-40 ">
               <p className="text-gray-700 text-lg font-bold font-sans-serif">{uiTitle}</p>
             </div>
 
