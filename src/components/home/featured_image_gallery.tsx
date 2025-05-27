@@ -27,6 +27,8 @@ export const FeaturedImageGallery: React.FC<FeaturedImageGalleryProps> = ({ pain
     const goToNext = () => {
         setCurrentIndex((prevIndex) => ((prevIndex+1)%paintings.length));
     };
+    const imageH = 480;
+    const imageW = 300;
 
     return (
         <div className="flex flex-col ml-5 pt-5 mb-2 justify-start">
@@ -39,8 +41,9 @@ export const FeaturedImageGallery: React.FC<FeaturedImageGalleryProps> = ({ pain
                         alt="Main Image"
                         className="object-contain max-h-[850px] max-w-full  p-1 "
                     /> */}
-                    <Image src={painting.image_url} width={painting.width} height={painting.height} onClick={handleOpen} alt="Main Image" />
-
+                    <div className={`relative w-[${imageW}px] h-[${imageH}px] xl:w-[${imageW*2} px] xl:h-[${imageH*2} px]`}>
+                        <Image src={painting.image_url} fill={true} onClick={handleOpen} alt="Main Image" />
+                    </div>
                     {/* 왼쪽 버튼 */}
                     <button
                         onClick={goToPrevious}
