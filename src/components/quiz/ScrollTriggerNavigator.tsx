@@ -9,9 +9,10 @@ interface Section {
 
 interface ScrollTriggerNavigatorProps {
   section: Section;
+  criticalRatio? : number;
 }
 
-export default function ScrollTriggerNavigator({ section }: ScrollTriggerNavigatorProps) {
+export default function ScrollTriggerNavigator({ section, criticalRatio = 0.5 }: ScrollTriggerNavigatorProps) {
     const router = useRouter();
     const [currentSection, setCurrentSection] = useState<string | null>(null);
   
@@ -23,7 +24,7 @@ export default function ScrollTriggerNavigator({ section }: ScrollTriggerNavigat
         const rect = element.getBoundingClientRect();
         const visibleRatio = Math.max(0, (window.innerHeight - rect.top) / window.innerHeight);
   
-        if (visibleRatio > 0.5 && section.path !== currentSection) {
+        if (visibleRatio > criticalRatio && section.path !== currentSection) {
           setCurrentSection(section.path);
           router.push(section.path);
         }
@@ -31,7 +32,7 @@ export default function ScrollTriggerNavigator({ section }: ScrollTriggerNavigat
   
       window.addEventListener("scroll", handleScroll);
       return () => window.removeEventListener("scroll", handleScroll);
-    }, [section, currentSection, router]);
+    }, [section, currentSection, router,criticalRatio]);
   
     return null;
   }
