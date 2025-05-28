@@ -27,23 +27,28 @@ export const FeaturedImageGallery: React.FC<FeaturedImageGalleryProps> = ({ pain
     const goToNext = () => {
         setCurrentIndex((prevIndex) => ((prevIndex+1)%paintings.length));
     };
-    const imageH = 480;
-    const imageW = 300;
 
     return (
         <div className="flex flex-col ml-5 pt-5 mb-2 justify-start">
 
-            <section className="flex flex-col mr-auto items-start gap-5 pt-6 pb-10 max-w-4xl ">
+            <section className="flex flex-col gap-2 mr-auto items-start pt-6 pb-10 max-w-4xl ">
                 {/* Main Image Carousel */}
-                <div className="flex w-full relative justify-center items-center">
+                <div className="flex w-full relative justify-center items-center h-[480px] lg:h-[960px] overflow-hidden">
                     {/* <img
                         src={currentImage}
                         alt="Main Image"
                         className="object-contain max-h-[850px] max-w-full  p-1 "
                     /> */}
-                    <div className={`relative w-[${imageW}px] h-[${imageH}px] xl:w-[${imageW*2} px] xl:h-[${imageH*2} px]`}>
-                        <Image src={painting.image_url} fill={true} onClick={handleOpen} alt="Main Image" />
-                    </div>
+                    <Image 
+                        src={painting.image_url} 
+                        width={painting.width}
+                        height={painting.height}
+                        onClick={handleOpen} 
+                        alt="Main Image" 
+                        // fill={true}
+                        className='w-[350px] lg:w-[700px] h-auto'
+                        priority={true}
+                        />
                     {/* 왼쪽 버튼 */}
                     <button
                         onClick={goToPrevious}
