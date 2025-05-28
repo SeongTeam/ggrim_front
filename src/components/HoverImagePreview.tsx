@@ -1,4 +1,5 @@
 import { getUrlImageSize } from '@/util/imageUtiles';
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
 interface HoverImagePreviewProps {
@@ -22,7 +23,15 @@ export default function HoverImagePreview({ url }: HoverImagePreviewProps) {
             <p className="cursor-pointer text-blue-500 underline">{url}</p>
             {isHovered && (
                 <div className="absolute bottom-0 right-0 mt-8 p-2 bg-white shadow-lg border rounded-lg z-10">
-                    <img src={url} alt="Preview" className="max-w-xs max-h-64 rounded" />
+                    {/*TODO : <Image /> prop 개선하기
+                        - [ ] : 컴포넌트 목적 및 필요 상황 파악한 뒤 적절한 width,height 설정하기
+                    */}
+                    <Image 
+                        src={url} 
+                        alt="Preview" 
+                        width={100}
+                        height={150}
+                        className="max-w-xs max-h-64 rounded" />
                     {imageSize && (
                         <p className="text-sm text-gray-500 mt-2">
                             Size: {imageSize.width}px × {imageSize.height}px
