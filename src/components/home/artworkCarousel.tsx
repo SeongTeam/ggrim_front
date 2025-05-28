@@ -25,7 +25,7 @@ export function ArtworkCarousel(props: ArtworkCarouselProps) {
         <section className="sm:px-16 md:px-40 lg:60 !py-20">
             <section>
                 <p className="text-3xl font-bold text-yellow-400">
-                    Enjoy Paintings
+                    Enjoy Classic Paintings
                 </p>
                 <div className="bg-ggrimGrey1 mt-5 rounded-md">
                     <FeaturedImageGallery paintings={curatedWorkAttributes} />
