@@ -1,3 +1,4 @@
+import Image from "next/image";
 
 export interface CardProps {
     imageSrc : string,
@@ -7,12 +8,19 @@ export interface CardProps {
   
 export function Card({ imageSrc,alt,title }: CardProps) {
     return (
+        <section className="bg-gray-900 rounded overflow-hidden">
+          <div className="relative h-40 ">
+            <Image
+              src={imageSrc} 
+              alt={alt} 
+              fill={true}
+              sizes="400px"
+              priority={true}
+              className="object-cover" 
+              />
 
-          <div className="bg-gray-900 rounded-lg overflow-hidden">
-            <img src={imageSrc} alt={alt} className="w-full h-40 object-cover" />
-            <div className="p-2">
-              <p className="text-white text-sm">{title}</p>
-            </div>
           </div>
+          <p className="p-2 text-white text-sm">{title}</p>
+        </section>
         );
   }
