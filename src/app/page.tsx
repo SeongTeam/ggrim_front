@@ -3,7 +3,7 @@ import { ArtworkCarousel } from '../components/home/artworkCarousel';
 import ScrollTriggerNavigator from '../components/quiz/ScrollTriggerNavigator';
 import ScrollExpander from '../components/ScrollExpander';
 import {  getWeekArtWorkDataAction } from '../server-action/backend/painting/api';
-import {  findQuizAction, scheduleQuizAction, } from '../server-action/backend/quiz/api';
+import {  getQuizListAction, scheduleQuizAction, } from '../server-action/backend/quiz/api';
 import { isHttpException, isServerActionError } from '../server-action/backend/util';
 
 // TODO: Main Page 리팩토링하기
@@ -16,7 +16,7 @@ import { isHttpException, isServerActionError } from '../server-action/backend/u
 export default async function Campaign() {
     const domID = `main`;
     
-    const [artworkOfWeekData , quizzes, responseQuizDTO] = await Promise.all([getWeekArtWorkDataAction(),findQuizAction(),scheduleQuizAction()]);
+    const [artworkOfWeekData , quizzes, responseQuizDTO] = await Promise.all([getWeekArtWorkDataAction(),getQuizListAction(),scheduleQuizAction()]);
 
     if(isServerActionError(responseQuizDTO)){
 

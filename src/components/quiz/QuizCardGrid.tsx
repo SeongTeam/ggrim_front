@@ -6,7 +6,7 @@ import {  ShortQuiz } from "../../model/interface/quiz";
 import { QuizCard } from "../QuizCard";
 import { useRouter } from "next/navigation";
 import { FindQuizResult } from "../../server-action/backend/quiz/dto";
-import { findQuizAction } from "../../server-action/backend/quiz/api";
+import { getQuizListAction } from "../../server-action/backend/quiz/api";
 import { isHttpException, isServerActionError } from "../../server-action/backend/util";
 
 interface QuizCardGridProps  {
@@ -42,7 +42,7 @@ export function QuizCardGrid( props: QuizCardGridProps ): React.JSX.Element {
             isLoadingRef.current = true;
 
             console.log(`load ${findResultRef.current.page +1} page`);
-            const response  = await findQuizAction([],[],[],findResultRef.current.page+1);
+            const response  = await getQuizListAction(findResultRef.current.page+1);
             if(isServerActionError(response)){
                 throw new Error(response.message);
             }

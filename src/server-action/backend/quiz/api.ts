@@ -17,6 +17,8 @@ import { HttpException } from '../common.dto';
 import { SignInResponse } from '../auth/type';
 import { revalidateTag } from 'next/cache';
 
+const QUIZ_LIST_TAG = 'quiz_list_tag';
+
 function getQuizCacheTag(quizId: string) {
     return `quiz-${quizId}`;
 }
@@ -24,6 +26,10 @@ function getQuizCacheTag(quizId: string) {
 function revalidateQuizTag(id: string) {
     const tag = getQuizCacheTag(id);
     revalidateTag(tag);
+}
+
+function revalidateQuizList() {
+    revalidateTag(QUIZ_LIST_TAG);
 }
 
 const getMCQData = async (): Promise<MCQ[] | HttpException> => {
@@ -46,6 +52,15 @@ const getMCQData = async (): Promise<MCQ[] | HttpException> => {
     return res.data;
 };
 
+// TODO 빌드 오류 개선하기
+// - 해당 API를 사용하는 SSR page는 빌드시, 다음 오류가 발생한다.
+//      - Error: Dynamic server usage: no-store fetch http://localhost:3000/quiz?&&&page=0&count=50 /quiz
+//      - 다음 사이트 확인 결과, nextjs의 SSR 최적화를 위해서 DynamicServerError가 발생하였고, withErrorHandler()에 의해 에러가 catch된 것으로 보인다.
+//      - 에러 원인은 no-store 캐시 옵션 fetch를 감지한 static SSR 작업이 발생시켰다.
+//          - https://github.com/vercel/next.js/issues/46737#issuecomment-2449603499
+// - 해결방법은 여러가지 이지만, cache를 사용하는 getQuizList()를 새로 선언하여 해결하였다.
+// - 추후 findQuiz()를 사용하여 동일 문제가 발생시, revalidate : 30s 을 적용 고려.
+
 const findQuiz = async (
     artists: string[] = [],
     tags: string[] = [],
@@ -60,6 +75,20 @@ const findQuiz = async (
     const url = `${backendUrl}/quiz?${artistsParam}&${tagParam}&${styleParam}&page=${page}&count=${count}`;
 
     const response = await fetch(url, { cache: 'no-store' });
+    if (!response.ok) {
+        const error: HttpException = await response.json();
+        return error;
+    }
+    const result: FindQuizResult = await response.json();
+    return result;
+};
+
+const getQuizList = async (page: number = 0) => {
+    const backendUrl = getServerUrl();
+    const count = 50;
+    const url = `${backendUrl}/quiz?page=${page}&count=${count}`;
+
+    const response = await fetch(url, { next: { tags: [QUIZ_LIST_TAG] } });
     if (!response.ok) {
         const error: HttpException = await response.json();
         return error;
@@ -99,6 +128,8 @@ const addQuiz = async (
         const error: HttpException = await response.json();
         return error;
     }
+
+    revalidateQuizList();
     const result: Quiz = await response.json();
 
     return result;
@@ -127,6 +158,7 @@ const updateQuiz = async (
     }
     const result: Quiz = await response.json();
     revalidateQuizTag(quizId);
+    revalidateQuizList();
 
     return result;
 };
@@ -152,6 +184,7 @@ const deleteQuiz = async (
     }
 
     revalidateQuizTag(quizId);
+    revalidateQuizList();
 };
 
 const submitQuiz = async (quizID: string, dto: QuizSubmitDTO): Promise<boolean | HttpException> => {
@@ -290,6 +323,7 @@ const addQuizContext = async (dto: QuizContextDTO): Promise<boolean | HttpExcept
 export const getMCQDataAction = withErrorHandler(getMCQData);
 
 export const findQuizAction = withErrorHandler(findQuiz);
+export const getQuizListAction = withErrorHandler(getQuizList);
 export const getQuizAction = withErrorHandler(getQuiz);
 
 export const getQuizReactionsAction = withErrorHandler(getQuizReactions);
