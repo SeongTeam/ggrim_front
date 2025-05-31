@@ -1,7 +1,7 @@
 # 1단계: 의존성 설치 및 애플리케이션 빌드
 FROM node:22-alpine AS builder
 
-LABEL mainainer="ggrim@front"
+LABEL maintainer="ggrim@front"
 LABEL version="0.1.0"
 LABEL description="test"
 
