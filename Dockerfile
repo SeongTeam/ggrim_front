@@ -6,21 +6,17 @@ LABEL version="0.1.0"
 LABEL description="test"
 
 # -------- 배포에서만 사용-----
-ARG HOSTNAME 
 ARG BACKEND_URL 
-ARG NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME 
-ARG NEXT_PUBLIC_CLOUDINARY_API_KEY 
-ARG CLOUDINARY_API_SECRET 
-ARG CAESAR_SHIFT
+ARG NODE_ENV
 # -----------
 
 # 작업 디렉토리 설정
-WORKDIR ./front
+WORKDIR front
 
 
 # 패키지 파일 복사
-COPY . .
-RUN pwd && ls
+COPY . ./
+RUN pwd && ls -la
 # COPY shared/. ./shared/.
 
 # WORKDIR ./front/
@@ -36,7 +32,7 @@ RUN  npm ci  &&  npm run build
 FROM node:22-alpine
 
 # WORK Directory 설정
-WORKDIR ./app
+WORKDIR app
 # 빌드 단계에서 생성된 필수 파일만 복사
 COPY --from=builder /front/.next/standalone ./
 COPY --from=builder /front/.next/static ./.next/static
@@ -46,13 +42,8 @@ RUN chown -R node:node /app
 
 EXPOSE 4000
 
-ENV PORT 4000
-ENV HOSTNAME ${HOSTNAME}
-ENV NEXT_PUBLIC_BACKEND_URL ${NEXT_PUBLIC_BACKEND_URL}
-ENV NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME ${NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}
-ENV NEXT_PUBLIC_CLOUDINARY_API_KEY ${NEXT_PUBLIC_CLOUDINARY_API_KEY}
-ENV CLOUDINARY_API_SECRET ${CLOUDINARY_API_SECRET}
-ENV CAESAR_SHIFT=${CAESAR_SHIFT}
+ENV BACKEND_URL ${BACKEND_URL}
+ENV NODE_ENV ${NODE_ENV}
 
 USER node
 
