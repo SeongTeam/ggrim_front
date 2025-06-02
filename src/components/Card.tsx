@@ -1,21 +1,31 @@
 import Image from "next/image";
 
+
+interface NextImageProps {
+  height : number;
+  width : number;
+  priority? : boolean;
+  src : string;
+  alt : string,
+
+}
+
 export interface CardProps {
-    imageSrc : string,
-    alt : string,
     title : string,
+    imageProps : NextImageProps
   }
   
-export function Card({ imageSrc,alt,title }: CardProps) {
+export function Card({ title,imageProps }: CardProps) {
     return (
         <section className="bg-gray-900 rounded overflow-hidden">
-          <div className="relative h-80 ">
+          <div className="flex">
             <Image
-              src={imageSrc} 
-              alt={alt} 
-              fill={true}
+              src={imageProps.src} 
+              alt={imageProps.alt} 
               sizes="400px"
-              priority={true}
+              priority={imageProps.priority ?? false}
+              width={imageProps.width}
+              height={imageProps.height}
               className="object-cover" 
               />
 

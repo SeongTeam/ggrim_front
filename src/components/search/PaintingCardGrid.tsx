@@ -128,7 +128,7 @@ export function PaintingCardGrid( props: PaintingCardGridProps ): React.JSX.Elem
                 {searchPaintings.map((item) => (
                     <div key={`${item.id}+searchPaintingHoverCard`} className="max-w-2xl h-[400px]">
                     <HoverCard  
-                        cardProps ={{imageSrc : item.image_url, alt : item.title, title : item.title}}
+                        cardProps ={{ imageProps : { src : item.image_url, height : item.height, width : item.width, alt : item.title } , title : item.title}}
                         onClick={()=>openModal(item.id)}
                         >
                         <PreviewPainting shortPainting={item} />

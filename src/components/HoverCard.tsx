@@ -14,7 +14,7 @@ export default function HoverCard({ cardProps, children, onClick }: HoverCardPro
     const [,setImageSize] = useState<{ width: number; height: number } | null>(null);
 
     useEffect(() => {
-        getUrlImageSize(cardProps.imageSrc).then(setImageSize);
+        getUrlImageSize(cardProps.imageProps.src).then(setImageSize);
     }, [cardProps,children]);
 
     return (
