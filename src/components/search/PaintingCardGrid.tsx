@@ -124,7 +124,11 @@ export function PaintingCardGrid( props: PaintingCardGridProps ): React.JSX.Elem
 
 
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 mt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 
+                gap-4 
+                mt-4
+                px-4 sm:px-0
+                ">
                 {searchPaintings.map((item) => (
                     <div key={`${item.id}+searchPaintingHoverCard`} className="max-w-2xl h-[400px]">
                     <HoverCard  
