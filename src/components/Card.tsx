@@ -17,19 +17,18 @@ export interface CardProps {
   
 export function Card({ title,imageProps }: CardProps) {
     return (
-        <section className="bg-gray-900 rounded overflow-hidden">
-          <div className="flex">
-            <Image
-              src={imageProps.src} 
-              alt={imageProps.alt} 
-              sizes="400px"
-              priority={imageProps.priority ?? false}
-              width={imageProps.width}
-              height={imageProps.height}
-              className="object-cover" 
-              />
-
-          </div>
+        <section className="flex flex-col bg-gray-900 rounded overflow-hidden">
+            <div className="max-h-[330px] overflow-hidden">
+              <Image
+                src={imageProps.src} 
+                alt={imageProps.alt} 
+                priority={imageProps.priority ?? false}
+                width={imageProps.width}
+                height={imageProps.height}
+                sizes="400px"
+                className="w-full h-auto object-cover" 
+                />
+              </div>
           <p className="p-2 text-white text-sm">{title}</p>
         </section>
         );
