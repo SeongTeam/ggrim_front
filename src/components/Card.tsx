@@ -9,7 +9,7 @@ export interface CardProps {
 export function Card({ imageSrc,alt,title }: CardProps) {
     return (
         <section className="bg-gray-900 rounded overflow-hidden">
-          <div className="relative h-40 ">
+          <div className="relative h-80 ">
             <Image
               src={imageSrc} 
               alt={alt} 
