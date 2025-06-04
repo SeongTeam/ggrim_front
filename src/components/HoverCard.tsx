@@ -1,6 +1,5 @@
 'use client'
-import { getUrlImageSize } from '@/util/imageUtiles';
-import { useEffect, useState } from 'react';
+import {useState } from 'react';
 import { Card, CardProps } from './Card';
 
 interface HoverCardProps {
@@ -11,11 +10,6 @@ interface HoverCardProps {
 
 export default function HoverCard({ cardProps, children, onClick }: HoverCardProps) {
     const [isHovered, setIsHovered] = useState(false);
-    const [,setImageSize] = useState<{ width: number; height: number } | null>(null);
-
-    useEffect(() => {
-        getUrlImageSize(cardProps.imageProps.src).then(setImageSize);
-    }, [cardProps,children]);
 
     return (
         <div
