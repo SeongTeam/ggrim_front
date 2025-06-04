@@ -1,5 +1,6 @@
 'server-only';
 import { serverLogger } from '../../util/logger';
+import { getRequestId } from '../../util/middlewareUtils';
 import { ServerActionError } from './common.dto';
 import { isHttpException } from './util';
 
@@ -30,7 +31,10 @@ export function withErrorHandler<T extends (...args: any[]) => Promise<any>>(
     action: T,
 ): (...args: Parameters<T>) => Promise<Awaited<ReturnType<T>> | ServerActionError> {
     return async (...args: Parameters<T>) => {
+        const start = Date.now();
+        const requestId = getRequestId();
         try {
+            serverLogger.info(`[req-${requestId}] call ${action.name}()`);
             const response = await action(...args);
 
             if (isHttpException(response)) {
@@ -45,6 +49,9 @@ export function withErrorHandler<T extends (...args: any[]) => Promise<any>>(
                 message: err?.message || 'Unknown server error',
                 stack: err.stack || 'withErrorHandler()',
             };
+        } finally {
+            const delay = Date.now() - start;
+            serverLogger.info(`[req-${requestId}] pop ${action.name}() , delay : ${delay}ms`);
         }
     };
 }
