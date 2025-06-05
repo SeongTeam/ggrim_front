@@ -320,30 +320,44 @@ const addQuizContext = async (dto: QuizContextDTO): Promise<boolean | HttpExcept
     return result;
 };
 
-export const getMCQDataAction = withErrorHandler(getMCQData);
+export const getMCQDataAction = withErrorHandler('getMCQData', getMCQData);
 
-export const findQuizAction = withErrorHandler(findQuiz);
-export const getQuizListAction = withErrorHandler(getQuizList);
-export const getQuizAction = withErrorHandler(getQuiz);
+export const findQuizAction = withErrorHandler('findQuiz', findQuiz);
+export const getQuizListAction = withErrorHandler('getQuizList', getQuizList);
+export const getQuizAction = withErrorHandler('getQuiz', getQuiz);
 
-export const getQuizReactionsAction = withErrorHandler(getQuizReactions);
+export const getQuizReactionsAction = withErrorHandler('getQuizReactions', getQuizReactions);
 
-export const addQuizAction = cookieWithErrorHandler(getSignInResponseOrRedirect, addQuiz);
-export const updateQuizAction = cookieWithErrorHandler(getSignInResponseOrRedirect, updateQuiz);
-export const deleteQuizAction = cookieWithErrorHandler(getSignInResponseOrRedirect, deleteQuiz);
+export const addQuizAction = cookieWithErrorHandler(
+    getSignInResponseOrRedirect,
+    'addQuiz',
+    addQuiz,
+);
+export const updateQuizAction = cookieWithErrorHandler(
+    getSignInResponseOrRedirect,
+    'updateQuiz',
+    updateQuiz,
+);
+export const deleteQuizAction = cookieWithErrorHandler(
+    getSignInResponseOrRedirect,
+    'deleteQuiz',
+    deleteQuiz,
+);
 
-export const submitQuizAction = withErrorHandler(submitQuiz);
+export const submitQuizAction = withErrorHandler('submitQuiz', submitQuiz);
 
 export const addQuizReactionsAction = cookieWithErrorHandler(
     getSignInResponseOrRedirect,
+    'addQuizReactions',
     addQuizReactions,
 );
 
 export const deleteQuizReactionAction = cookieWithErrorHandler(
     getSignInResponseOrRedirect,
+    'deleteQuizReaction',
     deleteQuizReaction,
 );
 
-export const scheduleQuizAction = withErrorHandler(scheduleQuiz);
+export const scheduleQuizAction = withErrorHandler('scheduleQuiz', scheduleQuiz);
 
-export const addQuizContextAction = withErrorHandler(addQuizContext);
+export const addQuizContextAction = withErrorHandler('addQuizContext', addQuizContext);

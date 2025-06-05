@@ -168,18 +168,31 @@ const recoverUser = async (
     return true;
 };
 
-export const signUpAction = cookieWithErrorHandler(getOneTimeTokenOrRedirect, signUp);
+export const signUpAction = cookieWithErrorHandler(getOneTimeTokenOrRedirect, 'signUp', signUp);
 
-export const getUserAction = withErrorHandler(getUser);
+export const getUserAction = withErrorHandler('getUser', getUser);
 
-export const findUsersAction = withErrorHandler(findUsers);
+export const findUsersAction = withErrorHandler('findUsers', findUsers);
 
-export const updateUserPWAction = cookieWithErrorHandler(getOneTimeTokenOrRedirect, updateUserPW);
+export const updateUserPWAction = cookieWithErrorHandler(
+    getOneTimeTokenOrRedirect,
+    'updateUserPW',
+    updateUserPW,
+);
 
 export const updateUserUsernameAction = cookieWithErrorHandler(
     getSignInResponseOrRedirect,
+    'updateUserUsername',
     updateUserUsername,
 );
 
-export const deleteUserAction = cookieWithErrorHandler(getOneTimeTokenOrRedirect, deleteUser);
-export const recoverUserAction = cookieWithErrorHandler(getOneTimeTokenOrRedirect, recoverUser);
+export const deleteUserAction = cookieWithErrorHandler(
+    getOneTimeTokenOrRedirect,
+    'deleteUser',
+    deleteUser,
+);
+export const recoverUserAction = cookieWithErrorHandler(
+    getOneTimeTokenOrRedirect,
+    'recoverUser',
+    recoverUser,
+);

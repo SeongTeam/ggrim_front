@@ -39,4 +39,4 @@ const findTags = async (
     return getTags(qb);
 };
 
-export const findTagsAction = withErrorHandler(findTags);
+export const findTagsAction = withErrorHandler('findTags', findTags);

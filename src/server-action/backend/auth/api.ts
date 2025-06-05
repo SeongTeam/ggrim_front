@@ -173,17 +173,27 @@ const signOut = async () => {
     deleteSignInResponse();
 };
 
-export const signInAction = withErrorHandler(signIn);
+export const signInAction = withErrorHandler('signIn', signIn);
 
-export const requestVerificationAction = withErrorHandler(requestVerification);
-export const verifyEmailAction = withErrorHandler(verifyEmail);
+export const requestVerificationAction = withErrorHandler(
+    'requestVerification',
+    requestVerification,
+);
+export const verifyEmailAction = withErrorHandler('verifyEmail', verifyEmail);
 
-export const generateSecurityTokenAction = withErrorHandler(generateSecurityToken);
+export const generateSecurityTokenAction = withErrorHandler(
+    'generateSecurityToken',
+    generateSecurityToken,
+);
 
-export const sendSecurityTokenToEmailAction = withErrorHandler(sendSecurityTokenToEmail);
+export const sendSecurityTokenToEmailAction = withErrorHandler(
+    'sendSecurityTokenToEmail',
+    sendSecurityTokenToEmail,
+);
 
 export const generateSecurityTokenByEmailVerificationAction = withErrorHandler(
+    'generateSecurityTokenByEmailVerification',
     generateSecurityTokenByEmailVerification,
 );
 
-export const signOutAction = withErrorHandler(signOut);
+export const signOutAction = withErrorHandler('signOut', signOut);

@@ -40,4 +40,4 @@ const findStyles = async (
     return getStyles(qb);
 };
 
-export const findStylesAction = withErrorHandler(findStyles);
+export const findStylesAction = withErrorHandler('findStyles', findStyles);

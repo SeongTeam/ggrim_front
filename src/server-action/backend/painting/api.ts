@@ -1,7 +1,6 @@
 'use server';
 import { getServerUrl, withErrorHandler } from '../lib';
 import { Painting } from '../../../model/interface/painting';
-import { serverLogger } from '../../../util/logger';
 import { FindPaintingResult } from './dto';
 import { HttpException } from '../common.dto';
 
@@ -40,9 +39,7 @@ const findPainting = async (
     const tagParam = tags.map((t) => `tags[]=${t}`).join('&');
     const styleParam = styles.map((s) => `styles[]=${s}`).join('&');
     const url = `${backendUrl}/painting?${titleParam}&${artistParam}&${tagParam}&${styleParam}&page=${page}`;
-    serverLogger.info(`[findPaintings] url=${url}`);
     const response = await fetch(url);
-
     if (!response.ok) {
         const error: HttpException = await response.json();
         return error;
@@ -66,8 +63,8 @@ const getPainting = async (id: string): Promise<Painting | HttpException> => {
     return painting;
 };
 
-export const getWeekArtWorkDataAction = withErrorHandler(getWeekArtWorkData);
+export const getWeekArtWorkDataAction = withErrorHandler('getWeekArtWorkData', getWeekArtWorkData);
 
-export const findPaintingAction = withErrorHandler(findPainting);
+export const findPaintingAction = withErrorHandler('findPainting', findPainting);
 
-export const getPaintingAction = withErrorHandler(getPainting);
+export const getPaintingAction = withErrorHandler('getPainting', getPainting);

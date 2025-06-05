@@ -4,12 +4,11 @@ import { getRequestId } from '../../util/middlewareUtils';
 import { ServerActionError } from './common.dto';
 import { isHttpException } from './util';
 
+serverLogger.info(`BACKEND_URL=${process.env.BACKEND_URL} `);
 export function getServerUrl(): string {
     const url = process.env.BACKEND_URL;
-    serverLogger.info(`BACKEND_URL=${url} `);
-
     if (url == undefined) {
-        console.error(` 'process.env.BACKEND_URL' not read`);
+        serverLogger.error(` 'process.env.BACKEND_URL' not read`);
         return '';
     }
     return url;
@@ -28,13 +27,14 @@ export function getServerUrl(): string {
 // * 참고: <관련 정보나 링크>
 
 export function withErrorHandler<T extends (...args: any[]) => Promise<any>>(
+    actionName: string,
     action: T,
 ): (...args: Parameters<T>) => Promise<Awaited<ReturnType<T>> | ServerActionError> {
     return async (...args: Parameters<T>) => {
         const start = Date.now();
         const requestId = getRequestId();
         try {
-            serverLogger.info(`[req-${requestId}] call ${action.name}()`);
+            serverLogger.info(`[req-${requestId}] call ${actionName}()`);
             const response = await action(...args);
 
             if (isHttpException(response)) {
@@ -51,7 +51,7 @@ export function withErrorHandler<T extends (...args: any[]) => Promise<any>>(
             };
         } finally {
             const delay = Date.now() - start;
-            serverLogger.info(`[req-${requestId}] pop ${action.name}() , delay : ${delay}ms`);
+            serverLogger.info(`[req-${requestId}] pop ${actionName}() , delay : ${delay}ms`);
         }
     };
 }
@@ -60,10 +60,11 @@ type TailParameters<T> = T extends (cookie: any, ...args: infer R) => any ? R : 
 
 export function cookieWithErrorHandler<C, T extends (cookie: C, ...args: any[]) => Promise<any>>(
     getCookie: () => Promise<C>,
+    actionName: string,
     action: T,
 ): (...args: TailParameters<T>) => Promise<Awaited<ReturnType<T>> | ServerActionError> {
     return async (...args: TailParameters<T>) => {
         const cookie = await getCookie();
-        return withErrorHandler(() => action(cookie, ...args))();
+        return withErrorHandler(actionName, () => action(cookie, ...args))();
     };
 }
