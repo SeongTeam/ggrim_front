@@ -1,20 +1,44 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuid } from 'uuid';
-import { ENUM_HEADER_LOG, getRequestId } from './util/middlewareUtils';
+import { ENUM_HEADER_LOG } from './util/middlewareUtils';
 
 export function middleware(req: NextRequest) {
     const requestId = uuid();
-    const res = NextResponse.next();
     req.headers.set(ENUM_HEADER_LOG.REQUEST_ID, requestId);
+
+    const requestInfo = {
+        time: getFormatDate(),
+        method: req.method,
+        pathName: req.nextUrl.pathname,
+        search: req.nextUrl.search,
+    };
+
+    logMessage(requestId, `Entry.\n` + JSON.stringify(requestInfo, null, 2));
+    const res = NextResponse.next();
     res.headers.set(ENUM_HEADER_LOG.REQUEST_ID, requestId);
 
-    logMessage(`Entry : ${req.url}`);
     return res;
 }
 
 export const config = {
-    matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+    matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
 };
+
+function logMessage(requestId: string, message: string) {
+    const body = {
+        message: `[🌰middleware][req-${requestId}] ${message}`,
+    };
+    const headers = {
+        'Content-Type': 'application/json',
+        [ENUM_HEADER_LOG.INTERNAL_API_KEY]: process.env.INTERNAL_LOG_API_KEY!,
+    };
+    const url = `${process.env.BASE_URL}/api/log`;
+    fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(body),
+        headers,
+    }).catch(() => console.error(`middleware log fail. `, body));
+}
 
 function getFormatDate(): string {
     const date = new Date();
@@ -30,9 +54,4 @@ function getFormatDate(): string {
     const milliseconds = pad(date.getMilliseconds(), 3);
 
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
-}
-
-function logMessage(message: string) {
-    const requestId = getRequestId();
-    console.log(`🌰 [middleware] ${getFormatDate()} [req-${requestId}] ${message}`);
 }
