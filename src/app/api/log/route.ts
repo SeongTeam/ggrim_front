@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
         }
 
         const body = await req.json();
-        serverLogger.info(body);
+        serverLogger.info(JSON.stringify(body, null, 2));
         return NextResponse.json({ status: 'ok' });
     } catch (e) {
         serverLogger.error('Failed to log', e);
