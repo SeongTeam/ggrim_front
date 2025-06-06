@@ -32,26 +32,34 @@ export function withErrorHandler<T extends (...args: any[]) => Promise<any>>(
 ): (...args: Parameters<T>) => Promise<Awaited<ReturnType<T>> | ServerActionError> {
     return async (...args: Parameters<T>) => {
         const start = Date.now();
+        let status = 'success';
         const requestId = getRequestId();
         try {
-            serverLogger.info(`[req-${requestId}] call ${actionName}()`);
+            logMessage(requestId || 'undefined', `call ${actionName}()`);
             const response = await action(...args);
 
             if (isHttpException(response)) {
                 serverLogger.error(
-                    `[${action.name}] response is not ok. ${JSON.stringify(response, null, 2)}`,
+                    `[${actionName}] response is not ok. ${JSON.stringify(response, null, 2)}`,
                 );
             }
             return response;
         } catch (err: any) {
-            console.error(`[${action.name}] Unknown server error:`, err);
+            serverLogger.error(`${actionName}() fail. Unknown server error:`, err);
+            status = 'server-error';
             return {
                 message: err?.message || 'Unknown server error',
                 stack: err.stack || 'withErrorHandler()',
             };
         } finally {
             const delay = Date.now() - start;
-            serverLogger.info(`[req-${requestId}] pop ${actionName}() , delay : ${delay}ms`);
+            const info = {
+                requestId,
+                status,
+                action: actionName,
+                delay: delay + 'ms',
+            };
+            logMessage(requestId || 'undefined', `End ${actionName}()`, info);
         }
     };
 }
@@ -67,4 +75,15 @@ export function cookieWithErrorHandler<C, T extends (cookie: C, ...args: any[]) 
         const cookie = await getCookie();
         return withErrorHandler(actionName, () => action(cookie, ...args))();
     };
+}
+
+function logMessage(requestId: string, message: string, info?: Record<string, any>) {
+    const context = `🚀server-action`;
+    const result = {
+        context,
+        requestId,
+        ...info,
+    };
+
+    serverLogger.info(message + '\n' + JSON.stringify(result, null, 2));
 }
