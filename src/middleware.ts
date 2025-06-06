@@ -13,7 +13,7 @@ export function middleware(req: NextRequest) {
         search: req.nextUrl.search,
     };
 
-    logMessage(requestId, `Entry.\n` + JSON.stringify(requestInfo, null, 2));
+    logMessage(requestId, `Entry.`, requestInfo);
     const res = NextResponse.next();
     res.headers.set(ENUM_HEADER_LOG.REQUEST_ID, requestId);
 
@@ -24,9 +24,12 @@ export const config = {
     matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
 };
 
-function logMessage(requestId: string, message: string) {
+function logMessage(requestId: string, message: string, info?: Record<string, any>) {
     const body = {
-        message: `[🌰middleware][req-${requestId}] ${message}`,
+        context: `🌰middleware`,
+        requestId,
+        message,
+        ...info,
     };
     const headers = {
         'Content-Type': 'application/json',
