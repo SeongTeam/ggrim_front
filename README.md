@@ -69,12 +69,8 @@ async login(@Body() loginDto: LoginDto) {
 ### Docker Build
 
 ```sh
-docker build \
-  --build-arg HOSTNAME=1234 \
+docker build --no-cache \
   --build-arg BACKEND_URL=1234 \
-  --build-arg NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=1234 \
-  --build-arg NEXT_PUBLIC_CLOUDINARY_API_KEY=1234 \
-  --build-arg CLOUDINARY_API_SECRET=1234 \
-  --build-arg CAESAR_SHIFT=1234 \
+  --build-arg NODE_ENV=1234 \
   -t front-app:latest .
 ```
