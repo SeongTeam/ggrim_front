@@ -28,8 +28,8 @@ const nextConfig = {
         return config
       },
       experimental : {
-        instrumentationsHook : true,
-      }
+        instrumentationHook : true,
+      },
 };
 
 if (process.env.NODE_ENV === "production") {
