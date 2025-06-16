@@ -1,4 +1,4 @@
-import { Quiz, QUIZ_TYPE, ShortQuiz } from '../../../model/interface/quiz';
+import { Quiz, QUIZ_TYPE, ShortQuiz } from './type';
 import { IPaginationResult } from '../common.dto';
 import { QuizReactionType, QuizStatus } from './type';
 export type FindQuizResult = IPaginationResult<ShortQuiz>;

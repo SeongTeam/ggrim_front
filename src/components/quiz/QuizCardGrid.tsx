@@ -2,7 +2,7 @@
 import { MutableRefObject, useEffect, useRef, useState } from "react";
 
 import { throttle } from "../../util/optimization";
-import {  ShortQuiz } from "../../model/interface/quiz";
+import { ShortQuiz } from '@/server-action/backend/quiz/type';
 import { QuizCard } from "../QuizCard";
 import { useRouter } from "next/navigation";
 import { FindQuizResult } from "../../server-action/backend/quiz/dto";

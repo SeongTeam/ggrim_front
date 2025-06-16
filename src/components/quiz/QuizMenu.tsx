@@ -3,7 +3,7 @@
 
 import {   MoreVertical, X,} from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
-import { Quiz } from '../../model/interface/quiz'
+import { Quiz } from '@/server-action/backend/quiz/type'
 import { useRouter } from 'next/navigation'
 import { deleteQuizAction } from '../../server-action/backend/quiz/api'
 import { isHttpException, isServerActionError } from '../../server-action/backend/util'

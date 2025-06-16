@@ -11,7 +11,7 @@ import { getPaintingAction } from "../../server-action/backend/painting/api";
 import { isHttpException, isServerActionError } from "../../server-action/backend/util";
 import { CreateQuizDTO } from "../../server-action/backend/quiz/dto";
 import { addQuizAction, updateQuizAction } from "../../server-action/backend/quiz/api";
-import { Quiz } from "../../model/interface/quiz";
+import { Quiz } from '@/server-action/backend/quiz/type';
 import { getSavedNewQuiz, removeSavedNewQuiz, saveNewQuiz } from "../../storage/local/quiz";
 import { useDebounceCallback } from "../../hooks/optimization";
 

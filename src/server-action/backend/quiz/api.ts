@@ -1,7 +1,7 @@
 'use server';
 import { cookieWithErrorHandler, getServerUrl, withErrorHandler } from '../lib';
 import { MCQ } from '../../../model/interface/MCQ';
-import { Quiz, QuizDislike, QuizLike } from '../../../model/interface/quiz';
+import { Quiz, QuizDislike, QuizLike } from './type';
 import { getSignInResponse, getSignInResponseOrRedirect } from '../cookie';
 import {
     CreateQuizDTO,
