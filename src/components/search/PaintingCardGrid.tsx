@@ -24,18 +24,18 @@ export function PaintingCardGrid( props: PaintingCardGridProps ): React.JSX.Elem
     const searchParam = useSearchParams();
 
     const openModal = async (paintingId : string) =>{
-    const response = await getPaintingAction(paintingId)
-        if(isServerActionError(response)){
-            throw new Error(response.message);
-        }
-        else if(isHttpException(response)){
-            const errorMessage = Array.isArray(response.message) ? response.message.join('\n') : response.message;
-            console.log(`id(${paintingId} error.
-                ${errorMessage}`);
-            
-        }else{
-            setSelectedPainting(response);
-        }
+        const response = await getPaintingAction(paintingId)
+            if(isServerActionError(response)){
+                throw new Error(response.message);
+            }
+            else if(isHttpException(response)){
+                const errorMessage = Array.isArray(response.message) ? response.message.join('\n') : response.message;
+                console.log(`id(${paintingId} error.
+                    ${errorMessage}`);
+                
+            }else{
+                setSelectedPainting(response);
+            }
     }
 
     const closeModal = () =>{
