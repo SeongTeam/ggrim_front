@@ -13,10 +13,12 @@ const nextConfig = {
     images: {
         remotePatterns: [
             {
-                protocol: 'https',
-                hostname: '**.wikiart.org',
-            },
+              protocol : 'https',
+              hostname : process.env.ALLOW_IMAGE_ORIGIN
+            }
         ],
+
+        minimumCacheTTL: 3600,
     },
     // solve debug console error that un file '/.next/server/vendor-chunks/render-from-template-context.js.map'
     //ref : https://github.com/vercel/next.js/issues/65795#issuecomment-2439641016 
