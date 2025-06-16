@@ -2,7 +2,7 @@
 import { CondOperator, RequestQueryBuilder } from '@dataui/crud-request';
 import { HttpException, IPaginationResult } from '../common.dto';
 import { getServerUrl, withErrorHandler } from '../lib';
-import { Artist } from '../../../model/interface/painting';
+import { Artist } from './dto';
 
 const getArtists = async (
     queryBuilder: RequestQueryBuilder,

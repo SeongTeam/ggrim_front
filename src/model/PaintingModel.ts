@@ -1,4 +1,5 @@
-import { Artist, Painting } from './interface/painting';
+import { Painting } from './interface/painting';
+import { Artist } from '@/server-action/backend/artist/dto';
 import { Style } from './interface/styles';
 import { Tag } from './interface/tag';
 
