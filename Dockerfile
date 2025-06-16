@@ -8,6 +8,7 @@ LABEL description="test"
 # -------- 배포에서만 사용-----
 ARG BACKEND_URL 
 ARG NODE_ENV
+ARG ALLOW_IMAGE_ORIGIN
 # -----------
 
 # 작업 디렉토리 설정
@@ -37,6 +38,7 @@ EXPOSE 4000
 
 ENV BACKEND_URL=${BACKEND_URL}
 ENV NODE_ENV=${NODE_ENV}
+ENV ALLOW_IMAGE_ORIGIN=${ALLOW_IMAGE_ORIGIN}
 
 USER node
 
