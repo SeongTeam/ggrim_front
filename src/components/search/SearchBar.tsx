@@ -34,7 +34,7 @@ export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
         ref={inputRef}
         value={inputState.text}
         type="text"
-        placeholder="Search Title..."
+        placeholder="Search Painting..."
         onChange={handlers.onChange}
         className="w-full pl-10 pr-4 py-2 text-white bg-gray-800 rounded-lg outline-none focus:ring-2 focus:ring-red-500" 
         onKeyUp={handlers.onClickOrKeyUp}

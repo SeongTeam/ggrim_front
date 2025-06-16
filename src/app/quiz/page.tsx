@@ -1,5 +1,5 @@
 import { QuizCardGrid } from '../../components/quiz/QuizCardGrid';
-import { findQuizAction } from '../../server-action/backend/quiz/api';
+import { getQuizListAction } from '../../server-action/backend/quiz/api';
 import { isHttpException, isServerActionError } from '../../server-action/backend/util';
 
 
@@ -7,7 +7,7 @@ import { isHttpException, isServerActionError } from '../../server-action/backen
 export default async function QuizListPage() {
 
 
-    const response  = await findQuizAction();
+    const response  = await getQuizListAction();
 
     if(isServerActionError(response)){
         throw new Error(response.message);
@@ -20,7 +20,7 @@ export default async function QuizListPage() {
     }
 
     return (
-        <div>
+        <div className='pt-2'>
             <QuizCardGrid findResult={response} />
         </div>
     );

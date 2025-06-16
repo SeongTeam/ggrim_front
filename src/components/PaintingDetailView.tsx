@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Painting } from "../model/interface/painting";
 import { ChevronRight, ChevronUp } from 'lucide-react'
 import { CopyButton } from "./Copybutton";
+import Image from "next/image";
 
 interface PaintingDetailViewProps {
     painting : Painting | undefined;
@@ -37,9 +38,14 @@ export const PaintingDetailView = ( {painting } : PaintingDetailViewProps) => {
 
     return (
         <div className="bottom-0 right-0 mt-8 bg-gray-900 shadow-lg w-full border-0 rounded-lg">
-            <div className="max-h-fit rounded">
-                <img src={painting.image_url} alt="Preview" className="w-full object-cover rounded" />
-            </div>
+
+            <Image 
+                src={painting.image_url} 
+                alt="Detail Image View"
+                width={painting.width}
+                height={painting.height} 
+                className="w-screen rounded h-auto" />
+
             <div className='p-2'>
                 <h3 className='mb-8 text-white'>
                     {painting.title}

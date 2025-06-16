@@ -13,6 +13,7 @@ import { isHttpException, isServerActionError } from '../../../server-action/bac
 import toast from 'react-hot-toast';
 import { HttpStatus } from '../../../server-action/backend/status';
 import ErrorModal from '../../modal/ErrorModal';
+import Image from 'next/image';
 
 interface ReactionState {
     like : number,
@@ -206,16 +207,19 @@ const MCQView = ({ mcq, handelNextMCQ, handleImageSelected, userReaction, reacti
             >
                 {errorMessage && <ErrorMessage message={errorMessage} />}
                 <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-4">
-                    {displayPaintings.map(({ id, image_url }, index) => (
+                    {displayPaintings.map(({ id, image_url,width,height }, index) => (
                         <div
                             key={id}
                             className={`flex flex-col items-center p-4 rounded-md shadow-md ${getCardClasses(id)} ${getBorderClasses(id)}`}
                             onClick={() => handleImageClick(id)}
                         >
-                            <img
+                            <Image
                                 src={image_url}
                                 alt={`Answer ${index}`}
-                                className={`w-50 h-auto max-h-[250px] max-w-full mb-2 ${getImageClasses(id)}`}
+                                width={width}
+                                height={height}
+                                priority={true}
+                                className={`w-auto h-[250px] md:h-[350px] xl:h-[500px] mb-2 ${getImageClasses(id)}`}
                             />
                         </div>
                      ))}

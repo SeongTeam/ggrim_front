@@ -22,7 +22,7 @@ export const Modal = ({ onClose, children } : ModalProps) => {
         className="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50 overflow-y-auto"
         onClick={handleOutsideClick}
         >
-      <div className="relative bg-white rounded-lg p-6 max-w-xl w-full max-h-screen overflow-y-auto">
+      <div className="relative bg-white rounded-lg p-6 max-w-3xl w-full max-h-screen overflow-y-auto">
         <button
           className="absolute top-4 right-4 text-gray-600 hover:text-gray-900 font-bold"
           onClick={onClose}

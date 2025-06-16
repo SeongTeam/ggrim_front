@@ -42,3 +42,10 @@ next-env.d.ts
 
 # log
 logs/*
+
+# docker
+docker-*.sh
+build.log
+
+#.vscode
+.vscode/*

@@ -1,8 +1,9 @@
 // import { Navbar } from '@/components';
 import { ArtworkCarousel } from '../components/home/artworkCarousel';
-import {  getWeekArtWorkDataAction } from '../server-action/backend/painting/api';
 import ScrollTriggerNavigator from '../components/quiz/ScrollTriggerNavigator';
-import {  scheduleQuizAction } from '../server-action/backend/quiz/api';
+import ScrollExpander from '../components/ScrollExpander';
+import {  getWeekArtWorkDataAction } from '../server-action/backend/painting/api';
+import {  getQuizListAction, scheduleQuizAction, } from '../server-action/backend/quiz/api';
 import { isHttpException, isServerActionError } from '../server-action/backend/util';
 
 // TODO: Main Page 리팩토링하기
@@ -13,17 +14,15 @@ import { isHttpException, isServerActionError } from '../server-action/backend/u
 // * 참고: <관련 정보나 링크>
 
 export default async function Campaign() {
-    const artworkOfWeekData = await getWeekArtWorkDataAction();
     const domID = `main`;
     
-    const responseQuizDTO = (await scheduleQuizAction());
+    const [artworkOfWeekData , quizzes, responseQuizDTO] = await Promise.all([getWeekArtWorkDataAction(),getQuizListAction(),scheduleQuizAction()]);
 
     if(isServerActionError(responseQuizDTO)){
 
         throw new Error(responseQuizDTO.message);
     }
-
-    if(isHttpException(responseQuizDTO)){
+    else if(isHttpException(responseQuizDTO)){
         const errorMessage = Array.isArray(responseQuizDTO.message) ? responseQuizDTO.message.join('\n') : responseQuizDTO.message;
         
         throw new Error(errorMessage,);
@@ -32,22 +31,37 @@ export default async function Campaign() {
     if(isServerActionError(artworkOfWeekData)){
         throw new Error(artworkOfWeekData.message);
     }
-
-    if(isHttpException(artworkOfWeekData)){
+    else if(isHttpException(artworkOfWeekData)){
         const errorMessage = Array.isArray(artworkOfWeekData.message) ? artworkOfWeekData.message.join('\n') : artworkOfWeekData.message;
         
         throw new Error(errorMessage);
     }
 
+    if(isServerActionError(quizzes)){
+        throw new Error(quizzes.message);
+    }
+    else if(isHttpException(quizzes)){
+        const errorMessage = Array.isArray(quizzes.message) ? quizzes.message.join('\n') : quizzes.message;
+        
+        throw new Error(errorMessage);
+    }
+    
+
+
+
 
     return (
 
-        <div id={domID}>
+        <div >
             {/* <Navbar /> */}
-            <ArtworkCarousel curatedWorkAttributes={artworkOfWeekData} />
+            <ArtworkCarousel curatedWorkAttributes={artworkOfWeekData} quizzes={quizzes.data} />
             {/* <MackRecoilUI></MackRecoilUI> */}
             {/* <Footer /> */}
-            <ScrollTriggerNavigator section={{id : domID, path : `/quiz/${responseQuizDTO.shortQuiz.id}` }} />
+            <div id={domID} className='flex justify-center bg-yellow-400 overflow-hidden transition-all duration-300' style={{ height: '50px' }}>
+                <p className='text-3xl text-black'>Scroll and Enjoy Quiz</p>
+                <ScrollExpander domId={domID} maxHeight={400} incrementAmount={20} />
+                <ScrollTriggerNavigator section={{id : domID, path : `/quiz/${responseQuizDTO.shortQuiz.id}` }} criticalRatio={0.1} />
             </div>
+        </div>
     );
 }

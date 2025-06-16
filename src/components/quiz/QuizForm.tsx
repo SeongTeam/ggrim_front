@@ -371,7 +371,8 @@ export default function QuizForm({ quiz } : QuizFormProps) : JSX.Element {
                   {newQuiz.answer 
                     && 
                     <div className={`rounded-lg border-2 border-green-500 max-w-xs`}>
-                      <Card imageSrc={newQuiz.answer.image_url} title={newQuiz.answer.title} alt={newQuiz.answer.description}/>
+                      <Card imageProps={{ src : newQuiz.answer.image_url, alt : newQuiz.answer.description, width : newQuiz.answer.width, height : newQuiz.answer.height  }} 
+                            title={newQuiz.answer.title} />
                     </div>
                   }
                   {distractorKeys
@@ -379,7 +380,10 @@ export default function QuizForm({ quiz } : QuizFormProps) : JSX.Element {
                     .filter(p=> p!==undefined)
                     .map(p=>                          
                     (<div key={p.id} className={`rounded-lg border-2 border-red-800 max-w-xs`}>
-                        <Card imageSrc={p.image_url} title={p.title} alt={p.description}/>
+                        <Card 
+                          imageProps={{ src : p.image_url, alt : p.description, width : p.width, height : p.height  }}
+                          title={p.title} 
+                        />
                     </div>
                     ))
                   }

@@ -24,18 +24,18 @@ export function PaintingCardGrid( props: PaintingCardGridProps ): React.JSX.Elem
     const searchParam = useSearchParams();
 
     const openModal = async (paintingId : string) =>{
-    const response = await getPaintingAction(paintingId)
-        if(isServerActionError(response)){
-            throw new Error(response.message);
-        }
-        else if(isHttpException(response)){
-            const errorMessage = Array.isArray(response.message) ? response.message.join('\n') : response.message;
-            console.log(`id(${paintingId} error.
-                ${errorMessage}`);
-            
-        }else{
-            setSelectedPainting(response);
-        }
+        const response = await getPaintingAction(paintingId)
+            if(isServerActionError(response)){
+                throw new Error(response.message);
+            }
+            else if(isHttpException(response)){
+                const errorMessage = Array.isArray(response.message) ? response.message.join('\n') : response.message;
+                console.log(`id(${paintingId} error.
+                    ${errorMessage}`);
+                
+            }else{
+                setSelectedPainting(response);
+            }
     }
 
     const closeModal = () =>{
@@ -124,11 +124,15 @@ export function PaintingCardGrid( props: PaintingCardGridProps ): React.JSX.Elem
 
 
     return (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-4 mt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 
+                gap-4 
+                mt-4
+                px-4 sm:px-0
+                ">
                 {searchPaintings.map((item) => (
-                    <div key={`${item.id}+searchPaintingHoverCard`} className="max-w-xs">
+                    <div key={`${item.id}+searchPaintingHoverCard`} className="max-w-2xl h-[400px]">
                     <HoverCard  
-                        cardProps ={{imageSrc : item.image_url, alt : item.title, title : item.title}}
+                        cardProps ={{ imageProps : { src : item.image_url, height : item.height, width : item.width, alt : item.title } , title : item.title}}
                         onClick={()=>openModal(item.id)}
                         >
                         <PreviewPainting shortPainting={item} />

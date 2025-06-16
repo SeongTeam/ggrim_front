@@ -40,4 +40,4 @@ const findArtists = async (
     return getArtists(qb);
 };
 
-export const findArtistsAction = withErrorHandler(findArtists);
+export const findArtistsAction = withErrorHandler('findArtists', findArtists);

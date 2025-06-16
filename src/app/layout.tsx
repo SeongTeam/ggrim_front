@@ -6,6 +6,7 @@ import { Suspense } from 'react';
 import Navbar from '../components/navbar/Navbar';
 import Loading from '../components/Loading';
 import { Toaster } from 'react-hot-toast';
+import { WebVitals } from '../components/WebVitals';
 
 const roboto = Roboto({
     subsets: ['latin'],
@@ -38,7 +39,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                         <div className="mb-16">
                             <Navbar />
                         </div>
-
+                        <WebVitals />
                         {children}
                     </Suspense>
                 </RecoilRootWrapper>

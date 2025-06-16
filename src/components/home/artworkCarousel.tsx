@@ -3,29 +3,48 @@
 import { FeaturedImageGallery } from '@/components/home/featured_image_gallery';
 import React from 'react';
 import { Painting } from '../../model/interface/painting';
+import { ShortQuiz } from '../../model/interface/quiz';
+import { QuizCard } from '../QuizCard';
+import { useRouter } from 'next/navigation';
 
 interface ArtworkCarouselProps {
     curatedWorkAttributes: Painting[];
+    quizzes: ShortQuiz[];
 }
 
 export function ArtworkCarousel(props: ArtworkCarouselProps) {
-    const { curatedWorkAttributes } = props;
+    const { curatedWorkAttributes, quizzes } = props;
+    const router = useRouter();
+
+    const handleClickCard = (quiz : ShortQuiz) =>{
+        const url : string = `/quiz/${quiz.id}`;
+        router.push(url);
+    }
 
     return (
-        <section className=" sm:px-16 md:px-40 lg:60 !py-20">
-            <div className="container mx-auto bg-ggrimGrey1">
-                <div className="flex max-w-md flex-col items-start">
-                    {/* 여기서 max-w-lg로 조정 */}
-                    <div className="pt-5 pl-20 mb-2 ">
-                        <p className="!text-ggrimBrown1 text-3xl font-bold relative after:content-[''] after:block after:w-full after:h-1 after:bg-ggrimBrown1 after:mt-2">
-                            Painting of the Week
-                        </p>
-                    </div>
-                </div>
-                <div className="w-lg bg-ggrimGrey1">
+        <section className="sm:px-16 md:px-40 lg:60 !py-20">
+            <section>
+                <p className="text-3xl font-bold text-yellow-400">
+                    Enjoy Classic Paintings
+                </p>
+                <div className="bg-ggrimGrey1 mt-5 rounded-md">
                     <FeaturedImageGallery paintings={curatedWorkAttributes} />
                 </div>
-            </div>
+                
+            </section>
+            <section>
+                <p className="text-3xl font-bold text-yellow-400">
+                    Enjoy Painting Quizzes
+                </p>
+                <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 mt-4">
+                    {quizzes.slice(0,21).map((quiz) => (
+                        <div key={`${quiz.id}`} className="max-w-xs">
+                            <QuizCard title={quiz.title} onClick={()=> handleClickCard(quiz)} />  
+                        </div>
+                    ))}
+                </div>
+            </section>
+
         </section>
     );
 }
