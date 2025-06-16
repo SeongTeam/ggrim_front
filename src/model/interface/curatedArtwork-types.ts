@@ -1,4 +1,4 @@
-import { Painting } from '@/server-action/backend/painting/dto';
+import { Painting } from '@/server-action/backend/painting/type';
 
 export const curatedContentType = {
     GIF: 'GIF',

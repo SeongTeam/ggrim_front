@@ -1,7 +1,7 @@
 
 'use client'
 import React, { useState } from "react";
-import { Painting } from '@/server-action/backend/painting/dto';
+import { Painting } from '@/server-action/backend/painting/type';
 import { ChevronRight, ChevronUp } from 'lucide-react'
 import { CopyButton } from "./Copybutton";
 import Image from "next/image";

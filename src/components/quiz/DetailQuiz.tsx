@@ -3,7 +3,7 @@ import MCQView from '@/components/quiz/mcq/MCQ_view';
 import { MCQ } from '../../model/interface/MCQ';
 
 import { useRouter } from 'next/navigation';
-import { Painting } from '@/server-action/backend/painting/dto';
+import { Painting } from '@/server-action/backend/painting/type';
 import { addQuizContextAction, scheduleQuizAction, submitQuizAction } from '../../server-action/backend/quiz/api';
 import { QuizStatus } from '../../server-action/backend/quiz/type';
 import { isHttpException, isServerActionError } from '../../server-action/backend/util';

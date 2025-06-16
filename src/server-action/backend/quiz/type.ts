@@ -2,7 +2,7 @@ import { Style } from '../../../model/interface/styles';
 import { Tag } from '../../../model/interface/tag';
 import { ShortUser, User } from '../../../model/interface/user';
 import { Artist } from '../artist/dto';
-import { Painting } from '../painting/dto';
+import { Painting } from '../painting/type';
 import { QuizContextDTO } from './dto';
 
 export const QuizReactionTypeValues = {

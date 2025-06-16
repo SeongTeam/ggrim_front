@@ -1,7 +1,7 @@
 'use client';
 
 import Image from "next/image";
-import { ShortPainting } from '@/server-action/backend/painting/dto';
+import { ShortPainting } from '@/server-action/backend/painting/type';
 
 
 interface PreviewPaintingProps {

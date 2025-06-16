@@ -1,7 +1,7 @@
 'use client';
 import { MutableRefObject, useEffect, useRef, useState } from "react";
-import { FindPaintingResult, Painting } from '@/server-action/backend/painting/dto';
-import { ShortPainting } from '@/server-action/backend/painting/dto';
+import { FindPaintingResult, Painting } from '@/server-action/backend/painting/type';
+import { ShortPainting } from '@/server-action/backend/painting/type';
 import HoverCard from "../HoverCard";
 import { PreviewPainting } from '../PreviewPainting';
 import { Modal } from "../modal/Modal";

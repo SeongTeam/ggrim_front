@@ -3,7 +3,7 @@
 import { MCQ } from '@/model/interface/MCQ';
 import { shuffleMerge } from '@/util/shuffleMerge';
 import { useState } from 'react';
-import { Painting } from '@/server-action/backend/painting/dto';
+import { Painting } from '@/server-action/backend/painting/type';
 // import { submitMCQAnswer } from "@/services/mcqClientService";
 
 const useMCQReader = (attrs: MCQ, selectedAnswer: number) => {
