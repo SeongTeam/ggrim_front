@@ -100,8 +100,9 @@ const getQuizList = async (page: number = 0) => {
 const getQuiz = async (id: string): Promise<DetailQuizDTO> => {
     const backendUrl = getServerUrl();
     const signInResponse = await getSignInResponse();
-    const param = signInResponse ? `?user-id=${signInResponse.user.id}` : '';
-    const url = `${backendUrl}/quiz/${id}` + param;
+    const userIdParam = signInResponse ? `user-id=${signInResponse.user.id}` : '';
+    const isS3AccessParam = `isS3Access=true`;
+    const url = `${backendUrl}/quiz/${id}?${isS3AccessParam}&${userIdParam}`;
     const cacheTag = getQuizCacheTag(id);
     const response = await fetch(url, { next: { tags: [cacheTag] } });
     const result: DetailQuizDTO = await response.json();

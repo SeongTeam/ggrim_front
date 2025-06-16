@@ -10,8 +10,8 @@ const getWeekArtWorkData = async (): Promise<Painting[] | HttpException> => {
     //     cache: 'no-cache',
     // });  // src/data에 파일을 읽어 올 때 사용
     const serverUrl = getServerUrl();
-
-    const url: string = serverUrl + '/painting/artwork-of-week';
+    const isS3AccessParam = `isS3Access=true`;
+    const url: string = serverUrl + `/painting/artwork-of-week?${isS3AccessParam}`;
     const response = await fetch(url, {
         cache: 'no-cache',
     }); // 서버에 있는 데이터 읽어 올때 사용
@@ -38,7 +38,8 @@ const findPainting = async (
     const artistParam = `artistName=${artist}`;
     const tagParam = tags.map((t) => `tags[]=${t}`).join('&');
     const styleParam = styles.map((s) => `styles[]=${s}`).join('&');
-    const url = `${backendUrl}/painting?${titleParam}&${artistParam}&${tagParam}&${styleParam}&page=${page}`;
+    const isS3AccessParam = `isS3Access=true`;
+    const url = `${backendUrl}/painting?${isS3AccessParam}&${titleParam}&${artistParam}&${tagParam}&${styleParam}&page=${page}`;
     const response = await fetch(url);
     if (!response.ok) {
         const error: HttpException = await response.json();
@@ -51,7 +52,8 @@ const findPainting = async (
 
 const getPainting = async (id: string): Promise<Painting | HttpException> => {
     const backendUrl = getServerUrl();
-    const url = `${backendUrl}/painting/${id}`;
+    const isS3AccessParam = `isS3Access=true`;
+    const url = `${backendUrl}/painting/${id}?${isS3AccessParam}`;
     const response = await fetch(url);
     const painting: Painting = await response.json();
 
