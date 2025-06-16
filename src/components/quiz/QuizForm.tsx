@@ -1,6 +1,6 @@
 'use client'
 import {  FormEvent,  useCallback,  useEffect, useReducer,  useState } from "react";
-import { Painting } from "../../model/interface/painting";
+import { Painting } from '@/server-action/backend/painting/dto';
 import { Card } from "../Card";
 import { useRouter } from "next/navigation";
 import AlertModal from "../modal/AlertModal";

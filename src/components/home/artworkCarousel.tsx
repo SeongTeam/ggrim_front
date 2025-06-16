@@ -2,7 +2,7 @@
 
 import { FeaturedImageGallery } from '@/components/home/featured_image_gallery';
 import React from 'react';
-import { Painting } from '../../model/interface/painting';
+import { Painting } from '@/server-action/backend/painting/dto';
 import { ShortQuiz } from '../../model/interface/quiz';
 import { QuizCard } from '../QuizCard';
 import { useRouter } from 'next/navigation';

@@ -1,13 +1,13 @@
 'use client';
 import { MutableRefObject, useEffect, useRef, useState } from "react";
-import { Painting, ShortPainting } from "../../model/interface/painting";
+import { FindPaintingResult, Painting } from '@/server-action/backend/painting/dto';
+import { ShortPainting } from '@/server-action/backend/painting/dto';
 import HoverCard from "../HoverCard";
 import { PreviewPainting } from '../PreviewPainting';
 import { Modal } from "../modal/Modal";
 import { PaintingDetailView } from "../PaintingDetailView";
 import { useSearchParams } from "next/navigation";
 import { throttle } from "../../util/optimization";
-import { FindPaintingResult } from "../../server-action/backend/painting/dto";
 import { findPaintingAction, getPaintingAction } from "../../server-action/backend/painting/api";
 import { isHttpException, isServerActionError } from "../../server-action/backend/util";
 

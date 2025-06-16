@@ -1,4 +1,4 @@
-import { Painting } from './painting';
+import { Painting } from '@/server-action/backend/painting/dto';
 import { Artist } from '@/server-action/backend/artist/dto';
 import { Style } from './styles';
 import { Tag } from './tag';

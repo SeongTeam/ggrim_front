@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState} from 'react';
-import { Painting } from '../../model/interface/painting';
+import { Painting } from '@/server-action/backend/painting/dto';
 import Image from 'next/image';
 import { PaintingDetailView } from '../PaintingDetailView';
 import { Modal } from '../modal/Modal';
