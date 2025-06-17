@@ -1,7 +1,7 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
-import RecoilRootWrapper from '@/recoil/recoil_wrapper';
+import RecoilRootWrapper from '@/components/recoil/recoil_wrapper';
 import { Suspense } from 'react';
 import Navbar from '../components/navbar/Navbar';
 import Loading from '../components/common/Loading';
