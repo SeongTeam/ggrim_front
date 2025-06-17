@@ -4,7 +4,7 @@ import { Painting } from '@/server-action/backend/painting/type';
 import { Card } from "../common/Card";
 import { useRouter } from "next/navigation";
 import AlertModal from "../modal/AlertModal";
-import { InsertToggleInput } from "../InsertToggleInput";
+import { InsertToggleInput } from "../common/InsertToggleInput";
 import Loading from "../common/Loading";
 import { CheckCircle, XCircle } from "lucide-react";
 import { getPaintingAction } from "../../server-action/backend/painting/api";

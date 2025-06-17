@@ -1,5 +1,5 @@
 import React, { useReducer } from 'react';
-import CustomInput from '../../CustomInput';
+import CustomInput from '../../common/CustomInput';
 import DropdownMenu from '../../modal/DropdownMenu';
 import { FormState, getEmptyFormState } from './states';
 import { _CuratedContentType } from './type';
