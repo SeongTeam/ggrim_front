@@ -1,4 +1,4 @@
-import { PaintingModel } from '@/model/PaintingModel';
+import { PaintingModel } from './type';
 import CuratedArtworkCard from './CuratedArtworkCard';
 import { FormState } from './states';
 import { CuratedArtWorkAttribute } from './type';
