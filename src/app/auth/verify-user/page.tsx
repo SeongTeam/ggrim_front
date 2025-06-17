@@ -1,6 +1,6 @@
 import { SignInForm } from "../../../components/auth/SignInForm";
 import { generateSecurityTokenAction } from "../../../server-action/backend/auth/api";
-import { OneTimeTokenPurposeValues } from "../../../server-action/backend/auth/type";
+import { ONE_TIME_TOKEN_PURPOSE } from "../../../server-action/backend/auth/type";
 import ErrorModal from "../../../components/modal/ErrorModal";
 import AuthFooter from "../../../components/auth/AuthFooter";
 import { AUTH_LOGIC_ROUTE } from "../../../route/auth/route";
@@ -27,10 +27,10 @@ export default async function VerifyUser({
 
   switch(purpose){
 
-    case OneTimeTokenPurposeValues.UPDATE_PASSWORD : 
+    case ONE_TIME_TOKEN_PURPOSE.UPDATE_PASSWORD : 
         nextRoute = AUTH_LOGIC_ROUTE.UPDATE_PASSWORD;
         break;
-    case OneTimeTokenPurposeValues.DELETE_ACCOUNT :
+    case ONE_TIME_TOKEN_PURPOSE.DELETE_ACCOUNT :
         nextRoute = AUTH_LOGIC_ROUTE.DELETE_ACCOUNT
         break;
     default : 

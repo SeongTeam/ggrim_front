@@ -15,6 +15,6 @@ export interface CreateOneTimeTokenDTO {
 export class SendOneTimeTokenDTO {
     email!: string;
 
-    // @IsInArray([OneTimeTokenPurposeValues.UPDATE_PASSWORD, OneTimeTokenPurposeValues.RECOVER_ACCOUNT])
+    // @IsInArray([ONE_TIME_TOKEN_PURPOSE.UPDATE_PASSWORD, ONE_TIME_TOKEN_PURPOSE.RECOVER_ACCOUNT])
     purpose!: OneTimeTokenPurpose;
 }

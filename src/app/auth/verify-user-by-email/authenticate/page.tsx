@@ -8,7 +8,7 @@ import { isOnetimeTokenPurpose } from '../../../../server-action/backend/auth/ut
 import { generateSecurityTokenByEmailVerificationAction } from '../../../../server-action/backend/auth/api';
 import { isHttpException, isServerActionError } from '../../../../server-action/backend/common/util';
 import { HttpStatus } from '../../../../server-action/backend/common/status';
-import { OneTimeTokenPurposeValues } from '../../../../server-action/backend/auth/type';
+import { ONE_TIME_TOKEN_PURPOSE } from '../../../../server-action/backend/auth/type';
 import ErrorModal from '../../../../components/modal/ErrorModal';
 import GuideModal from '../../../../components/modal/GuideModal';
 import { AUTH_LOGIC_ROUTE } from '../../../../route/auth/route';
@@ -66,10 +66,10 @@ export default function AuthCallbackPage() {
 
   const handleSuccess = () => {
     switch(state.purpose){
-      case OneTimeTokenPurposeValues.UPDATE_PASSWORD : 
+      case ONE_TIME_TOKEN_PURPOSE.UPDATE_PASSWORD : 
           router.push(AUTH_LOGIC_ROUTE.UPDATE_PASSWORD);
           break;
-      case OneTimeTokenPurposeValues.RECOVER_ACCOUNT :
+      case ONE_TIME_TOKEN_PURPOSE.RECOVER_ACCOUNT :
       default :
           toast.error('sorry. not implement ');
       };

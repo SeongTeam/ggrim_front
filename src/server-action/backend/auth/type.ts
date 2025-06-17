@@ -1,6 +1,6 @@
 import { User } from '../user/type';
 
-export const OneTimeTokenPurposeValues = {
+export const ONE_TIME_TOKEN_PURPOSE = {
     UPDATE_PASSWORD: 'update-password',
     DELETE_ACCOUNT: 'delete-account',
     MAGIC_LOGIN: 'magic-login',
@@ -10,7 +10,7 @@ export const OneTimeTokenPurposeValues = {
     // RESET_PASSWORD: 'reset-password',
 } as const;
 export type OneTimeTokenPurpose =
-    (typeof OneTimeTokenPurposeValues)[keyof typeof OneTimeTokenPurposeValues];
+    (typeof ONE_TIME_TOKEN_PURPOSE)[keyof typeof ONE_TIME_TOKEN_PURPOSE];
 
 export interface OneTimeToken {
     id: string;
