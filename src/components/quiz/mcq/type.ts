@@ -1,9 +1,9 @@
-import { QuizReactionCount } from '../../server-action/backend/quiz/dto';
-import { QuizReactionType } from '../../server-action/backend/quiz/type';
-import { Painting } from '@/server-action/backend/painting/type';
-import { QUIZ_TYPE } from '@/server-action/backend/quiz/type';
+import { Painting } from '../../../server-action/backend/painting/type';
+import { QuizReactionCount } from '../../../server-action/backend/quiz/dto';
+import { QUIZ_TYPE, QuizReactionType } from '../../../server-action/backend/quiz/type';
 
 //Multiple-Choice-Question
+
 export interface MCQ {
     id: string;
     distractorPaintings: Painting[];
@@ -12,8 +12,6 @@ export interface MCQ {
     description: string;
     timeLimit: number;
     type: QUIZ_TYPE;
-    // category: string;
-    // similarity: string;
 }
 
 export interface MCQReaderViewProps {

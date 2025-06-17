@@ -1,7 +1,7 @@
 'use client';
 
 
-import { MCQ } from '@/model/interface/MCQ';
+import { MCQ } from '../quiz/mcq/type';
 import React from 'react';
 import MCQView from '../quiz/mcq/MCQ_view';
 import { QuizReactionCount } from '../../server-action/backend/quiz/dto';

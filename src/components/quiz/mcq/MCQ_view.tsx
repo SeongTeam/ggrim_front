@@ -5,7 +5,7 @@ import useMCQReader from './reader/use_MCQ_reader';
 import { ErrorMessage } from './shared';
 import SubmissionFeedback from './reader/parts/submission_feedback';
 import { motion } from 'framer-motion';
-import { MCQReaderViewProps } from '@/model/interface/MCQ';
+import { MCQReaderViewProps } from './type';
 import { QuizReactionType } from '../../../server-action/backend/quiz/type';
 import { QuizReactionCount } from '../../../server-action/backend/quiz/dto';
 import { addQuizReactionsAction, deleteQuizReactionAction } from '../../../server-action/backend/quiz/api';

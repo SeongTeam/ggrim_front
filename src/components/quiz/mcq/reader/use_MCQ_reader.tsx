@@ -1,6 +1,6 @@
 // custom hook for managing mcq logic in reader mode
 
-import { MCQ } from '@/model/interface/MCQ';
+import { MCQ } from '../type';
 import { shuffleMerge } from '@/util/shuffleMerge';
 import { useState } from 'react';
 import { Painting } from '@/server-action/backend/painting/type';

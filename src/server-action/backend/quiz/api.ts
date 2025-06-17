@@ -1,6 +1,6 @@
 'use server';
 import { cookieWithErrorHandler, getServerUrl, withErrorHandler } from '../lib';
-import { MCQ } from '../../../model/interface/MCQ';
+import { MCQ } from '@/components/quiz/mcq/type';
 import { Quiz, QuizDislike, QuizLike } from './type';
 import { getSignInResponse, getSignInResponseOrRedirect } from '../cookie';
 import {
