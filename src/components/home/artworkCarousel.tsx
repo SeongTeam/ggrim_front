@@ -4,7 +4,7 @@ import { FeaturedImageGallery } from '@/components/home/featured_image_gallery';
 import React from 'react';
 import { Painting } from '@/server-action/backend/painting/type';
 import { ShortQuiz } from '@/server-action/backend/quiz/type';
-import { QuizCard } from '../QuizCard';
+import { QuizCard } from '../quiz/QuizCard';
 import { useRouter } from 'next/navigation';
 
 interface ArtworkCarouselProps {
