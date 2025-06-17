@@ -8,7 +8,7 @@ export interface InsertToggleInputProps{
     defaultValue? : string;
     defaultIsInserted ? : boolean;
   }
-export function InsertToggleInput({handleAdd,handleDelete,placeholder, defaultValue,defaultIsInserted} : InsertToggleInputProps) : JSX.Element {
+export const InsertToggleInput = ({handleAdd,handleDelete,placeholder, defaultValue,defaultIsInserted} : InsertToggleInputProps) : JSX.Element  => {
     const [isInserted, setIsInserted] = useState(defaultIsInserted||false);
     const [value ,setValue] = useState(defaultValue||'');
 
