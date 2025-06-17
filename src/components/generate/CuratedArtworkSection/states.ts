@@ -1,4 +1,4 @@
-import { _CuratedContentType } from '@/model/interface/curatedArtwork-types';
+import { _CuratedContentType } from './type';
 
 export interface FormState {
     cldId: string;

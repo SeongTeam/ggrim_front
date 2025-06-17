@@ -2,7 +2,7 @@ import React, { useReducer } from 'react';
 import CustomInput from '../../CustomInput';
 import DropdownMenu from '../../modal/DropdownMenu';
 import { FormState, getEmptyFormState } from './states';
-import { _CuratedContentType } from '@/model/interface/curatedArtwork-types';
+import { _CuratedContentType } from './type';
 
 interface CuratedArtworkFormProps {
     addCuratedArtwork: (formState: FormState) => void;

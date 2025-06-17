@@ -1,7 +1,7 @@
 import { PaintingModel } from '@/model/PaintingModel';
 import CuratedArtworkCard from './CuratedArtworkCard';
 import { FormState } from './states';
-import { CuratedArtWorkAttribute } from '@/model/interface/curatedArtwork-types';
+import { CuratedArtWorkAttribute } from './type';
 import { getUrlImageSize } from '@/util/imageUtiles';
 
 interface CuratedArtworkListProps {
