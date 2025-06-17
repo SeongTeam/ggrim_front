@@ -21,7 +21,7 @@ const initState : DeleteAccountState= {
     input : ''
 }
 
-export default function DeleteAccountForm() {
+export const DeleteAccountForm = () => {
   const [state, setState] = useState(initState);
   const router = useRouter();
 
