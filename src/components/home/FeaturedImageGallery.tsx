@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { PaintingDetailView } from '../search/PaintingDetailView';
 import { Modal } from '../modal/Modal';
 
-export type FeaturedImageGalleryProps = {
+export interface FeaturedImageGalleryProps {
     paintings: Painting[];
 };
 
