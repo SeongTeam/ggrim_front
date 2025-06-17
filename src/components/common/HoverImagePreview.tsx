@@ -6,7 +6,7 @@ interface HoverImagePreviewProps {
     url: string;
 }
 
-export default function HoverImagePreview({ url }: HoverImagePreviewProps) {
+export const HoverImagePreview = ({ url }: HoverImagePreviewProps) => {
     const [isHovered, setIsHovered] = useState(false);
     const [imageSize, setImageSize] = useState<{ width: number; height: number } | null>(null);
 
