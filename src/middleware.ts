@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuid } from 'uuid';
-import { ENUM_HEADER_LOG, setRequestId } from './util/request';
+import { X_HEADER_FIELD, setRequestId } from './util/request';
 
 export function middleware(req: NextRequest) {
     const requestId = uuid();
@@ -15,7 +15,7 @@ export function middleware(req: NextRequest) {
 
     // logMessage(requestId, `Entry.`, requestInfo);
     const res = NextResponse.next();
-    res.headers.set(ENUM_HEADER_LOG.REQUEST_ID, requestId);
+    res.headers.set(X_HEADER_FIELD.REQUEST_ID, requestId);
 
     return res;
 }
@@ -33,7 +33,7 @@ export const config = {
 //     };
 //     const headers = {
 //         'Content-Type': 'application/json',
-//         [ENUM_HEADER_LOG.INTERNAL_API_KEY]: process.env.INTERNAL_LOG_API_KEY!,
+//         [X_HEADER_FIELD.INTERNAL_API_KEY]: process.env.INTERNAL_LOG_API_KEY!,
 //     };
 //     const url = `${process.env.BASE_URL}/api/log`;
 //     fetch(url, {
