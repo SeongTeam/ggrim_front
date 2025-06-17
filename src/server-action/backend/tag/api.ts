@@ -1,6 +1,6 @@
 'use server';
 import { CondOperator, RequestQueryBuilder } from '@dataui/crud-request';
-import { Tag } from '../../../model/interface/tag';
+import { Tag } from './type';
 import { getServerUrl, withErrorHandler } from '../lib';
 import { HttpException, IPaginationResult } from '../common.dto';
 

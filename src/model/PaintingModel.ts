@@ -1,7 +1,7 @@
 import { Painting } from '@/server-action/backend/painting/type';
 import { Artist } from '@/server-action/backend/artist/dto';
 import { Style } from '@/server-action/backend/style/type';
-import { Tag } from './interface/tag';
+import { Tag } from '@/server-action/backend/tag/type';
 
 export class PaintingModel implements Painting {
     version: number;

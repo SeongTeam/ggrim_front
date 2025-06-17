@@ -1,5 +1,5 @@
 import { Style } from '../style/type';
-import { Tag } from '../../../model/interface/tag';
+import { Tag } from '../tag/type';
 import { ShortUser, User } from '../../../model/interface/user';
 import { Artist } from '../artist/dto';
 import { Painting } from '../painting/type';

@@ -1,5 +1,5 @@
 import { Style } from '../style/type';
-import { Tag } from '../../../model/interface/tag';
+import { Tag } from '../tag/type';
 import { Artist } from '../artist/dto';
 import { IPaginationResult } from '../common.dto';
 
