@@ -27,7 +27,7 @@ const initState = {
     errorMessage : '',
     };
 
-export default function SignUpForm() {
+export const SignUpForm = () => {
 
   const [form, setForm] = useState<SignUpState>(initState)
   const router = useRouter();
