@@ -1,5 +1,5 @@
 'server-only';
-import { serverLogger } from '../../util/logger';
+import { serverLogger } from '../../util/serverLogger';
 import { getRequestId } from '../../util/request';
 import { ServerActionError } from './common.dto';
 import { isHttpException } from './util';

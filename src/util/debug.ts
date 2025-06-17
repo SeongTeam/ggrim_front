@@ -1,5 +1,5 @@
 import assert from 'node:assert';
-import { serverLogger } from './logger';
+import { serverLogger } from './serverLogger';
 const isDebugMode = process.env.NODE_ENV === 'development';
 
 export function assertOrLog(condition: boolean, message?: string): void {

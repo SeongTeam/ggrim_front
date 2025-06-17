@@ -1,7 +1,7 @@
 'server-only';
 
 import { Mutex } from 'async-mutex';
-import { serverLogger } from './logger';
+import { serverLogger } from './serverLogger';
 
 const QUEUE_SIZE = 30;
 const HIGH_PRIORITY_SIZE = 20;
