@@ -3,7 +3,7 @@
 import React, { useState} from 'react';
 import { Painting } from '@/server-action/backend/painting/type';
 import Image from 'next/image';
-import { PaintingDetailView } from '../PaintingDetailView';
+import { PaintingDetailView } from '../search/PaintingDetailView';
 import { Modal } from '../modal/Modal';
 
 export type FeaturedImageGalleryProps = {
