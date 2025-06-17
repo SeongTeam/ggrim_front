@@ -5,12 +5,12 @@ import { Artist } from '../artist/dto';
 import { Painting } from '../painting/type';
 import { QuizContextDTO } from './dto';
 
-export const QuizReactionTypeValues = {
+export const QUIZ_REACTION = {
     LIKE: 'like',
     DISLIKE: 'dislike',
 } as const;
 
-export type QuizReactionType = (typeof QuizReactionTypeValues)[keyof typeof QuizReactionTypeValues];
+export type QuizReactionType = (typeof QUIZ_REACTION)[keyof typeof QUIZ_REACTION];
 
 export interface QuizStatus {
     context: QuizContextDTO;
