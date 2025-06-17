@@ -1,6 +1,6 @@
 import { Style } from '../style/type';
 import { Tag } from '../tag/type';
-import { ShortUser, User } from '../../../model/interface/user';
+import { ShortUser, User } from '../user/type';
 import { Artist } from '../artist/dto';
 import { Painting } from '../painting/type';
 import { QuizContextDTO } from './dto';

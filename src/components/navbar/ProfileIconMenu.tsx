@@ -1,7 +1,7 @@
 "use client"
 
 import { LogOut, Settings, User as UserIcon  } from "lucide-react";
-import { User } from "../../model/interface/user";
+import { User } from "@/server-action/backend/user/type";
 import { useEffect, useRef, useState } from "react";
 import { signOutAction } from "../../server-action/backend/auth/api";
 import { useRouter } from "next/navigation";

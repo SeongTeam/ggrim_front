@@ -1,4 +1,4 @@
-import { User } from '../../../model/interface/user';
+import { User } from '../user/type';
 
 export const OneTimeTokenPurposeValues = {
     UPDATE_PASSWORD: 'update-password',

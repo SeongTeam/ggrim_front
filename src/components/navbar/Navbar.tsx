@@ -3,7 +3,7 @@ import { SearchPaintingIconMenu } from "./SearchPaintingIconMenu";
 import { NotifyIconMenu } from "./NotificationIconMenu";
 import { ProfileIconMenu } from "./ProfileIconMenu";
 import { getSignInInfo } from "../../server-action/backend/cookie";
-import { User } from "../../model/interface/user";
+import { User } from "@/server-action/backend/user/type";
 import Link from "next/link";
 
 

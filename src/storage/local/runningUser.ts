@@ -1,5 +1,5 @@
 'use client';
-import { User } from '../../model/interface/user';
+import { User } from '@/server-action/backend/user/type';
 import { CreateQuizDTO } from '../../server-action/backend/quiz/dto';
 import { ENUM_LOCAL_STORAGE_KEY } from './const';
 
