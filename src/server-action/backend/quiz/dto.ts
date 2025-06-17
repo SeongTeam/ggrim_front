@@ -1,7 +1,5 @@
 import { Quiz, QuizType, ShortQuiz } from './type';
-import { IPaginationResult } from '../common/dto';
 import { QuizReaction, QuizStatus } from './type';
-export type FindQuizResult = IPaginationResult<ShortQuiz>;
 export interface CreateQuizDTO {
     answerPaintingIds: string[];
 

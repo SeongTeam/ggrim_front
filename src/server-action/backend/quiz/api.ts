@@ -6,13 +6,12 @@ import { getSignInResponse, getSignInResponseOrRedirect } from '../common/cookie
 import {
     CreateQuizDTO,
     DetailQuizDTO,
-    FindQuizResult,
     QuizContextDTO,
     QuizReactionDTO,
     QuizSubmitDTO,
     ResponseQuizDTO,
 } from './dto';
-import { QuizReaction, QuizStatus } from './type';
+import { QuizReaction, QuizStatus, FindQuizResult } from './type';
 import { HttpException } from '../common/dto';
 import { SignInResponse } from '../auth/type';
 import { revalidateTag } from 'next/cache';

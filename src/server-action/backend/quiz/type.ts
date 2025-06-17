@@ -4,6 +4,7 @@ import { ShortUser, User } from '../user/type';
 import { Artist } from '../artist/dto';
 import { Painting } from '../painting/type';
 import { QuizContextDTO } from './dto';
+import { IPaginationResult } from '../common/dto';
 
 export const QUIZ_REACTION = {
     LIKE: 'like',
@@ -73,3 +74,4 @@ export interface QuizDislike {
 
     quiz_id: string;
 }
+export type FindQuizResult = IPaginationResult<ShortQuiz>;
