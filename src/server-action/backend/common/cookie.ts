@@ -9,7 +9,7 @@ import { isHttpException, isServerActionError } from './util';
 const ENUM_COOKIE_KEY = {
     SIGN_IN_RESPONSE: 'SignInResponse',
     ONE_TIME_TOKEN: 'OneTimeToken',
-};
+} as const;
 
 export async function getOneTimeTokenOrRedirect(): Promise<OneTimeToken> {
     const cookieStore = cookies();
