@@ -8,7 +8,7 @@ interface HoverCardProps {
     onClick? : ()=> void
 }
 
-export default function HoverCard({ cardProps, children, onClick }: HoverCardProps) {
+export const HoverCard = ({ cardProps, children, onClick }: HoverCardProps) => {
     const [isHovered, setIsHovered] = useState(false);
 
     return (
