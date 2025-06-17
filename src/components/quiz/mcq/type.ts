@@ -1,6 +1,6 @@
 import { Painting } from '../../../server-action/backend/painting/type';
 import { QuizReactionCount } from '../../../server-action/backend/quiz/dto';
-import { QUIZ_TYPE, QuizReactionType } from '../../../server-action/backend/quiz/type';
+import { QuizType, QuizReactionType } from '../../../server-action/backend/quiz/type';
 
 //Multiple-Choice-Question
 
@@ -11,7 +11,7 @@ export interface MCQ {
     title: string;
     description: string;
     timeLimit: number;
-    type: QUIZ_TYPE;
+    type: QuizType;
 }
 
 export interface MCQReaderViewProps {

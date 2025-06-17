@@ -1,4 +1,4 @@
-import { Quiz, QUIZ_TYPE, ShortQuiz } from './type';
+import { Quiz, QuizType, ShortQuiz } from './type';
 import { IPaginationResult } from '../common/dto';
 import { QuizReactionType, QuizStatus } from './type';
 export type FindQuizResult = IPaginationResult<ShortQuiz>;
@@ -13,7 +13,7 @@ export interface CreateQuizDTO {
 
     timeLimit: number;
 
-    type: QUIZ_TYPE;
+    type: QuizType;
 
     description: string;
 }

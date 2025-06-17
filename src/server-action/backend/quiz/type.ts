@@ -17,7 +17,7 @@ export interface QuizStatus {
     currentIndex: number;
     endIndex: number;
 }
-export type QUIZ_TYPE = 'ONE_CHOICE' | 'MULTIPLE_CHOICE' | 'TRUE_FALSE';
+export type QuizType = 'ONE_CHOICE' | 'MULTIPLE_CHOICE' | 'TRUE_FALSE';
 
 export interface Quiz {
     version: number;
@@ -32,7 +32,7 @@ export interface Quiz {
     incorrect_count: number;
     time_limit: number;
     description: string;
-    type: QUIZ_TYPE;
+    type: QuizType;
     tags: Tag[];
     styles: Style[];
     artists: Artist[];
