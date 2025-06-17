@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuid } from 'uuid';
-import { ENUM_HEADER_LOG } from './util/request';
+import { ENUM_HEADER_LOG, setRequestId } from './util/request';
 
 export function middleware(req: NextRequest) {
     const requestId = uuid();
-    req.headers.set(ENUM_HEADER_LOG.REQUEST_ID, requestId);
+    setRequestId(requestId, req);
 
     // const requestInfo = {
     //     time: getFormatDate(),
