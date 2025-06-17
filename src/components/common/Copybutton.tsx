@@ -2,7 +2,7 @@ import { Clipboard, ClipboardCheck } from 'lucide-react';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 
-type CopyButtonProps = {
+interface CopyButtonProps {
   textToCopy: string;
   buttonLabel?: string;
   copiedLabel?: string;
