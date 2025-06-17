@@ -11,7 +11,7 @@ import { QuizReactionCount } from '../../../server-action/backend/quiz/dto';
 import { addQuizReactionsAction, deleteQuizReactionAction } from '../../../server-action/backend/quiz/api';
 import { isHttpException, isServerActionError } from '../../../server-action/backend/common/util';
 import toast from 'react-hot-toast';
-import { HttpStatus } from '../../../server-action/backend/common/status';
+import { HTTP_STATUS } from '../../../server-action/backend/common/status';
 import ErrorModal from '../../modal/ErrorModal';
 import Image from 'next/image';
 
@@ -101,11 +101,11 @@ const MCQView = ({ mcq, handelNextMCQ, handleImageSelected, userReaction, reacti
            const {statusCode, message } = response;
            const errorMessage = Array.isArray(message) ? message.join('\n') : message;
            switch(statusCode){
-                case HttpStatus.UNAUTHORIZED :
+                case HTTP_STATUS.UNAUTHORIZED :
                     toast.error(errorMessage);
                     break;
-                case HttpStatus.BAD_REQUEST:
-                case HttpStatus.FORBIDDEN :
+                case HTTP_STATUS.BAD_REQUEST:
+                case HTTP_STATUS.FORBIDDEN :
                     setError(errorMessage);
                     break;
                 default :

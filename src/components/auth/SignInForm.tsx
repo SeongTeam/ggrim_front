@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { HttpStatus } from '../../server-action/backend/common/status';
+import { HTTP_STATUS } from '../../server-action/backend/common/status';
 import { HttpException, ServerActionError } from '../../server-action/backend/common/dto';
 import { isHttpException, isServerActionError } from '../../server-action/backend/common/util';
 import toast from 'react-hot-toast';
@@ -30,9 +30,9 @@ export const SignInForm = ({ formAction, NextRoute} : SignInFormProps) => {
       const errorMessage = Array.isArray(response.message) ? response.message.join('\n') : response.message;
 
       switch(statusCode){
-        case HttpStatus.FORBIDDEN :
-        case HttpStatus.UNAUTHORIZED :
-        case HttpStatus.BAD_REQUEST :
+        case HTTP_STATUS.FORBIDDEN :
+        case HTTP_STATUS.UNAUTHORIZED :
+        case HTTP_STATUS.BAD_REQUEST :
           toast.error(errorMessage);
           break;
         default : 

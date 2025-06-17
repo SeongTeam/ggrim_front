@@ -7,7 +7,7 @@ import { Quiz } from '@/server-action/backend/quiz/type'
 import { useRouter } from 'next/navigation'
 import { deleteQuizAction } from '../../server-action/backend/quiz/api'
 import { isHttpException, isServerActionError } from '../../server-action/backend/common/util'
-import { HttpStatus } from '../../server-action/backend/common/status'
+import { HTTP_STATUS } from '../../server-action/backend/common/status'
 import toast from 'react-hot-toast'
 import { SEARCH_LOGIC_ROUTE } from '../../route/search/route'
 
@@ -63,9 +63,9 @@ export default function QuizMenu({
         const messages : string [] = Array.isArray(response.message) ? response.message : [ response.message];
         
         switch(statusCode){
-            case HttpStatus.BAD_REQUEST:
-            case HttpStatus.FORBIDDEN:
-            case HttpStatus.UNAUTHORIZED:
+            case HTTP_STATUS.BAD_REQUEST:
+            case HTTP_STATUS.FORBIDDEN:
+            case HTTP_STATUS.UNAUTHORIZED:
                 messages.forEach(m=>toast.error(m));
                 break;
             default : 

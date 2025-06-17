@@ -4,7 +4,7 @@ import { useState, FormEvent } from 'react';
 import { deleteUserAction } from '../../server-action/backend/user/api';
 import toast from 'react-hot-toast';
 import { isHttpException, isServerActionError } from '../../server-action/backend/common/util';
-import { HttpStatus } from '../../server-action/backend/common/status';
+import { HTTP_STATUS } from '../../server-action/backend/common/status';
 import GuideModal from '../modal/GuideModal';
 import { useRouter } from 'next/navigation';
 import ErrorModal from '../modal/ErrorModal';
@@ -67,9 +67,9 @@ export default function DeleteAccountForm() {
         const errorMessage = Array.isArray(response.message) ? response.message.join('\n') : response.message;
   
         switch(statusCode){
-          case HttpStatus.FORBIDDEN :
-          case HttpStatus.UNAUTHORIZED :
-          case HttpStatus.BAD_REQUEST :
+          case HTTP_STATUS.FORBIDDEN :
+          case HTTP_STATUS.UNAUTHORIZED :
+          case HTTP_STATUS.BAD_REQUEST :
             setState(prev=> ({...prev,'error' : errorMessage}));
             break;
           default : 

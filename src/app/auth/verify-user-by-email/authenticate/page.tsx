@@ -7,7 +7,7 @@ import toast from 'react-hot-toast';
 import { isOnetimeTokenPurpose } from '../../../../server-action/backend/auth/util';
 import { generateSecurityTokenByEmailVerificationAction } from '../../../../server-action/backend/auth/api';
 import { isHttpException, isServerActionError } from '../../../../server-action/backend/common/util';
-import { HttpStatus } from '../../../../server-action/backend/common/status';
+import { HTTP_STATUS } from '../../../../server-action/backend/common/status';
 import { ONE_TIME_TOKEN_PURPOSE } from '../../../../server-action/backend/auth/type';
 import ErrorModal from '../../../../components/modal/ErrorModal';
 import GuideModal from '../../../../components/modal/GuideModal';
@@ -97,9 +97,9 @@ export default function AuthCallbackPage() {
         const errorMessage = Array.isArray(response.message) ? response.message.join('\n') : response.message;
   
         switch(statusCode){
-          case HttpStatus.FORBIDDEN :
-          case HttpStatus.UNAUTHORIZED :
-          case HttpStatus.BAD_REQUEST :
+          case HTTP_STATUS.FORBIDDEN :
+          case HTTP_STATUS.UNAUTHORIZED :
+          case HTTP_STATUS.BAD_REQUEST :
             dispatch({type : 'ERROR',message : errorMessage});
             return;
           default :

@@ -5,7 +5,7 @@ import toast from 'react-hot-toast'
 import { signUpAction } from '../../server-action/backend/user/api'
 
 import { isHttpException, isServerActionError } from '../../server-action/backend/common/util'
-import { HttpStatus } from '../../server-action/backend/common/status'
+import { HTTP_STATUS } from '../../server-action/backend/common/status'
 import { useRouter } from 'next/navigation'
 import GuideModal from '../modal/GuideModal'
 import ErrorModal from '../modal/ErrorModal'
@@ -63,11 +63,11 @@ export default function SignUpForm() {
     const { message , statusCode } = response;
     const errorMessages : string[] = Array.isArray(message) ? message : [message];
     switch(statusCode){
-        case HttpStatus.FORBIDDEN :
-        case HttpStatus.BAD_REQUEST :
+        case HTTP_STATUS.FORBIDDEN :
+        case HTTP_STATUS.BAD_REQUEST :
             errorMessages.forEach((msg) => toast.error(msg));
             break;
-        case HttpStatus.UNAUTHORIZED :
+        case HTTP_STATUS.UNAUTHORIZED :
             setForm({...initState , errorMessage : errorMessages.join('\n')});
             break;
         default : 

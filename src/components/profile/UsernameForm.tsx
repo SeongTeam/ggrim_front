@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { isHttpException, isServerActionError } from '../../server-action/backend/common/util'
-import { HttpStatus } from '../../server-action/backend/common/status'
+import { HTTP_STATUS } from '../../server-action/backend/common/status'
 import { HttpException, ServerActionError } from '../../server-action/backend/common/dto'
 import { useRouter } from 'next/navigation'
 import GuideModal from '../modal/GuideModal'
@@ -50,9 +50,9 @@ const UpdateUsernameForm = ({
            const {message} = response;
      
            switch(statusCode){
-             case HttpStatus.FORBIDDEN :
-             case HttpStatus.UNAUTHORIZED :
-             case HttpStatus.BAD_REQUEST :
+             case HTTP_STATUS.FORBIDDEN :
+             case HTTP_STATUS.UNAUTHORIZED :
+             case HTTP_STATUS.BAD_REQUEST :
                if(Array.isArray(message)){
                 message.forEach((m) => toast.error(m));
                }

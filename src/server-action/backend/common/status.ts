@@ -1,4 +1,4 @@
-export const ServiceExceptionEnum = {
+export const SERVICE_EXCEPTION_ENUM = {
     BASE: 30000,
     NOT_IMPLEMENTED: 30001,
 
@@ -19,7 +19,7 @@ export const ServiceExceptionEnum = {
     DB_INCONSISTENCY: 39000,
 } as const;
 
-export const HttpStatus = {
+export const HTTP_STATUS = {
     CONTINUE: 100,
     SWITCHING_PROTOCOLS: 101,
     PROCESSING: 102,
@@ -70,8 +70,8 @@ export const HttpStatus = {
     HTTP_VERSION_NOT_SUPPORTED: 505,
 } as const;
 
-export type ServiceExceptionType = keyof typeof ServiceExceptionEnum;
-export type HttpStatusType = keyof typeof HttpStatus;
+export type ServiceExceptionType = keyof typeof SERVICE_EXCEPTION_ENUM;
+export type HttpStatusType = keyof typeof HTTP_STATUS;
 
-export type HttpStatusValueType = (typeof HttpStatus)[HttpStatusType];
-export type ServiceExceptionValueType = (typeof ServiceExceptionEnum)[ServiceExceptionType];
+export type HttpStatusValueType = (typeof HTTP_STATUS)[HttpStatusType];
+export type ServiceExceptionValueType = (typeof SERVICE_EXCEPTION_ENUM)[ServiceExceptionType];
