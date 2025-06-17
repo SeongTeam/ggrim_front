@@ -2,7 +2,7 @@
 import { RequestQueryBuilder } from '@dataui/crud-request';
 import { cookieWithErrorHandler, getServerUrl, withErrorHandler } from '../common/lib';
 import { User } from './type';
-import { ENUM_ONE_TIME_TOKEN_HEADER, ENUM_SECURITY_TOKEN_HEADER } from '../auth/header';
+import { ONE_TIME_TOKEN_HEADER, SECURITY_TOKEN_HEADER } from '../auth/header';
 import { CreateUserDTO, ReplacePassWordDTO, ReplaceUsernameDTO } from './dto';
 import { HttpException } from '../common/dto';
 import { OneTimeToken, SignInResponse } from '../auth/type';
@@ -22,8 +22,8 @@ const signUp = async (
 
     const headers = {
         'Content-Type': 'application/json',
-        [ENUM_ONE_TIME_TOKEN_HEADER.X_ONE_TIME_TOKEN]: oneTimeToken.token,
-        [ENUM_ONE_TIME_TOKEN_HEADER.X_ONE_TIME_TOKEN_ID]: oneTimeToken.id,
+        [ONE_TIME_TOKEN_HEADER.X_ONE_TIME_TOKEN]: oneTimeToken.token,
+        [ONE_TIME_TOKEN_HEADER.X_ONE_TIME_TOKEN_ID]: oneTimeToken.id,
     };
     const response = await fetch(url, {
         method: 'POST',
@@ -77,8 +77,8 @@ const updateUserPW = async (
 
     const headers = {
         'Content-Type': 'application/json',
-        [ENUM_SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN_ID]: oneTimeToken.token,
-        [ENUM_SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN]: oneTimeToken.id,
+        [SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN_ID]: oneTimeToken.token,
+        [SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN]: oneTimeToken.id,
     };
     const response = await fetch(url, {
         method: 'PUT',
@@ -125,8 +125,8 @@ const deleteUser = async (oneTimeToken: OneTimeToken): Promise<boolean | HttpExc
 
     const headers = {
         'Content-Type': 'application/json',
-        [ENUM_SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN_ID]: oneTimeToken.id,
-        [ENUM_SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN]: oneTimeToken.token,
+        [SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN_ID]: oneTimeToken.id,
+        [SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN]: oneTimeToken.token,
     };
     const response = await fetch(url, {
         method: 'DELETE',
@@ -152,8 +152,8 @@ const recoverUser = async (
     const url = `${backendUrl}/user/recover/${email}`;
     const headers = {
         'Content-Type': 'application/json',
-        [ENUM_SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN_ID]: oneTimeToken.token,
-        [ENUM_SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN]: oneTimeToken.id,
+        [SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN_ID]: oneTimeToken.token,
+        [SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN]: oneTimeToken.id,
     };
     const response = await fetch(url, {
         method: 'PATCH',

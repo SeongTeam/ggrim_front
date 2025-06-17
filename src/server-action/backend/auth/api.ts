@@ -9,7 +9,7 @@ import {
 import { OneTimeToken, SignInResponse } from './type';
 import { deleteSignInResponse, setOneTimeToken, setSignInResponse } from '../common/cookie';
 import { HttpException } from '../common/dto';
-import { ENUM_SECURITY_TOKEN_HEADER } from './header';
+import { SECURITY_TOKEN_HEADER } from './header';
 
 //TODO : 사용자 정보를 반환하도록 수정하기
 const signIn = async (id: string, password: string): Promise<boolean | HttpException> => {
@@ -148,8 +148,8 @@ const generateSecurityTokenByEmailVerification = async (
     const url = `${backendUrl}/auth/security-token/from-email-verification`;
     const headers = {
         'Content-Type': 'application/json',
-        [ENUM_SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN]: accessToken,
-        [ENUM_SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN_ID]: identifier,
+        [SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN]: accessToken,
+        [SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN_ID]: identifier,
     };
     const response = await fetch(url, {
         method: 'POST',
