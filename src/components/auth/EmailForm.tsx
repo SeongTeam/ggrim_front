@@ -6,13 +6,13 @@ import { isHttpException, isServerActionError } from '../../server-action/backen
 import { HTTP_STATUS } from '../../server-action/backend/common/status'
 import { HttpException, ServerActionError } from '../../server-action/backend/common/dto'
 
-interface EmailForm {
+interface EmailFormProp {
     emailFormAction : (email : string ) => Promise<boolean|ServerActionError|HttpException>
 }
 
- const EmailForm = ({
+export const EmailForm = ({
     emailFormAction,
-}: EmailForm) =>{
+}: EmailFormProp) =>{
   const [email, setEmail] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -68,5 +68,3 @@ interface EmailForm {
     </form>
   )
 }
-
-export default EmailForm;
