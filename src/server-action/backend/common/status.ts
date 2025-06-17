@@ -70,8 +70,8 @@ export const HTTP_STATUS = {
     HTTP_VERSION_NOT_SUPPORTED: 505,
 } as const;
 
-export type ServiceExceptionType = keyof typeof SERVICE_EXCEPTION_ENUM;
+export type ServiceExceptionKey = keyof typeof SERVICE_EXCEPTION_ENUM;
 export type HttpStatusType = keyof typeof HTTP_STATUS;
 
 export type HttpStatusValueType = (typeof HTTP_STATUS)[HttpStatusType];
-export type ServiceExceptionValueType = (typeof SERVICE_EXCEPTION_ENUM)[ServiceExceptionType];
+export type ServiceExceptionValue = (typeof SERVICE_EXCEPTION_ENUM)[ServiceExceptionKey];
