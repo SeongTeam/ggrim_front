@@ -9,14 +9,14 @@ interface CustomInputProps {
     required?: boolean;
 }
 
-export default function CustomInput({
+export const CustomInput = ({
     label,
     type = 'text',
     value,
     onChange,
     placeholder = '',
     required = false,
-}: CustomInputProps) {
+}: CustomInputProps) => {
     const handleChange: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (e) => {
         onChange(e.target.value);
     };
