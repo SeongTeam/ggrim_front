@@ -3,8 +3,8 @@
 import { useState, FormEvent } from 'react';
 import { deleteUserAction } from '../../server-action/backend/user/api';
 import toast from 'react-hot-toast';
-import { isHttpException, isServerActionError } from '../../server-action/backend/util';
-import { HttpStatus } from '../../server-action/backend/status';
+import { isHttpException, isServerActionError } from '../../server-action/backend/common/util';
+import { HttpStatus } from '../../server-action/backend/common/status';
 import GuideModal from '../modal/GuideModal';
 import { useRouter } from 'next/navigation';
 import ErrorModal from '../modal/ErrorModal';

@@ -1,7 +1,7 @@
 'use server';
-import { getServerUrl, withErrorHandler } from '../lib';
+import { getServerUrl, withErrorHandler } from '../common/lib';
 import { FindPaintingResult, Painting } from './type';
-import { HttpException } from '../dto';
+import { HttpException } from '../common/dto';
 
 // TODO page.tsx 최소화 예정 (데이터 처리 함수 옮길 예정)
 const getWeekArtWorkData = async (): Promise<Painting[] | HttpException> => {

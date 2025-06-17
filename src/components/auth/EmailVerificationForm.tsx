@@ -2,8 +2,8 @@
 
 import { useState } from 'react'
 import { requestVerificationAction, verifyEmailAction } from '../../server-action/backend/auth/api'
-import { isHttpException, isServerActionError } from '../../server-action/backend/util'
-import { HttpStatus } from '../../server-action/backend/status'
+import { isHttpException, isServerActionError } from '../../server-action/backend/common/util'
+import { HttpStatus } from '../../server-action/backend/common/status'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
 

@@ -1,6 +1,6 @@
 import AuthFooter from "../../../components/auth/AuthFooter";
 import UpdateUsernameForm from "../../../components/profile/UsernameForm";
-import { getSignInInfo } from "../../../server-action/backend/cookie";
+import { getSignInInfo } from "../../../server-action/backend/common/cookie";
 import { AUTH_LOGIC_ROUTE } from "../../../route/auth/route";
 import { redirect } from "next/navigation";
 import { updateUserUsernameAction } from "../../../server-action/backend/user/api";

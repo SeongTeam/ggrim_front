@@ -9,9 +9,9 @@ import { MCQReaderViewProps } from './type';
 import { QuizReactionType } from '../../../server-action/backend/quiz/type';
 import { QuizReactionCount } from '../../../server-action/backend/quiz/dto';
 import { addQuizReactionsAction, deleteQuizReactionAction } from '../../../server-action/backend/quiz/api';
-import { isHttpException, isServerActionError } from '../../../server-action/backend/util';
+import { isHttpException, isServerActionError } from '../../../server-action/backend/common/util';
 import toast from 'react-hot-toast';
-import { HttpStatus } from '../../../server-action/backend/status';
+import { HttpStatus } from '../../../server-action/backend/common/status';
 import ErrorModal from '../../modal/ErrorModal';
 import Image from 'next/image';
 

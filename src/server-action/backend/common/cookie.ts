@@ -1,10 +1,10 @@
 'server-only';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { OneTimeToken, SignInResponse } from './auth/type';
+import { OneTimeToken, SignInResponse } from '../auth/type';
 import { ResponseCookies } from 'next/dist/compiled/@edge-runtime/cookies';
-import { AUTH_LOGIC_ROUTE } from '../../route/auth/route';
-import { getUserAction } from './user/api';
+import { AUTH_LOGIC_ROUTE } from '../../../route/auth/route';
+import { getUserAction } from '../user/api';
 import { isHttpException, isServerActionError } from './util';
 const ENUM_COOKIE_KEY = {
     SIGN_IN_RESPONSE: 'SignInResponse',

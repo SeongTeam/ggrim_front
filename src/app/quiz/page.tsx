@@ -1,6 +1,6 @@
 import { QuizCardGrid } from '../../components/quiz/QuizCardGrid';
 import { getQuizListAction } from '../../server-action/backend/quiz/api';
-import { isHttpException, isServerActionError } from '../../server-action/backend/util';
+import { isHttpException, isServerActionError } from '../../server-action/backend/common/util';
 
 
 

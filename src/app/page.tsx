@@ -4,7 +4,7 @@ import ScrollTriggerNavigator from '../components/quiz/ScrollTriggerNavigator';
 import ScrollExpander from '../components/home/ScrollExpander';
 import {  getWeekArtWorkDataAction } from '../server-action/backend/painting/api';
 import {  getQuizListAction, scheduleQuizAction, } from '../server-action/backend/quiz/api';
-import { isHttpException, isServerActionError } from '../server-action/backend/util';
+import { isHttpException, isServerActionError } from '../server-action/backend/common/util';
 
 // TODO: Main Page 리팩토링하기
 // - [ ] 컴포넌트 함수 이름 변경하여 기능 명확성 향상시키기

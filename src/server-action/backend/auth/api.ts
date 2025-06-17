@@ -1,5 +1,5 @@
 'use server';
-import { getServerUrl, withErrorHandler } from '../lib';
+import { getServerUrl, withErrorHandler } from '../common/lib';
 import {
     CreateOneTimeTokenDTO,
     requestVerificationDTO,
@@ -7,8 +7,8 @@ import {
     VerifyDTO,
 } from './dto';
 import { OneTimeToken, SignInResponse } from './type';
-import { deleteSignInResponse, setOneTimeToken, setSignInResponse } from '../cookie';
-import { HttpException } from '../dto';
+import { deleteSignInResponse, setOneTimeToken, setSignInResponse } from '../common/cookie';
+import { HttpException } from '../common/dto';
 import { ENUM_SECURITY_TOKEN_HEADER } from './header';
 
 //TODO : 사용자 정보를 반환하도록 수정하기

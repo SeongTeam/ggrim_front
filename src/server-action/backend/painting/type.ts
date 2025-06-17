@@ -1,7 +1,7 @@
 import { Style } from '../style/type';
 import { Tag } from '../tag/type';
 import { Artist } from '../artist/dto';
-import { IPaginationResult } from '../dto';
+import { IPaginationResult } from '../common/dto';
 
 export type FindPaintingResult = IPaginationResult<ShortPainting>;
 export interface ShortPainting {

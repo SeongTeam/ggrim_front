@@ -9,7 +9,7 @@ import { PaintingDetailView } from "./PaintingDetailView";
 import { useSearchParams } from "next/navigation";
 import { throttle } from "../../util/optimization";
 import { findPaintingAction, getPaintingAction } from "../../server-action/backend/painting/api";
-import { isHttpException, isServerActionError } from "../../server-action/backend/util";
+import { isHttpException, isServerActionError } from "../../server-action/backend/common/util";
 
 interface PaintingCardGridProps  {
     findResult : FindPaintingResult;

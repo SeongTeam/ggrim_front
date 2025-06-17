@@ -1,17 +1,17 @@
 'use server';
 import { RequestQueryBuilder } from '@dataui/crud-request';
-import { cookieWithErrorHandler, getServerUrl, withErrorHandler } from '../lib';
+import { cookieWithErrorHandler, getServerUrl, withErrorHandler } from '../common/lib';
 import { User } from './type';
 import { ENUM_ONE_TIME_TOKEN_HEADER, ENUM_SECURITY_TOKEN_HEADER } from '../auth/header';
 import { CreateUserDTO, ReplacePassWordDTO, ReplaceUsernameDTO } from './dto';
-import { HttpException } from '../dto';
+import { HttpException } from '../common/dto';
 import { OneTimeToken, SignInResponse } from '../auth/type';
 import {
     deleteOneTimeToken,
     deleteSignInResponse,
     getOneTimeTokenOrRedirect,
     getSignInResponseOrRedirect,
-} from '../cookie';
+} from '../common/cookie';
 
 const signUp = async (
     oneTimeToken: OneTimeToken,

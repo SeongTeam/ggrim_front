@@ -1,8 +1,8 @@
 import ErrorModal from "../../../../components/modal/ErrorModal";
 import QuizForm from "../../../../components/quiz/QuizForm";
-import { getSignInInfo } from "../../../../server-action/backend/cookie";
+import { getSignInInfo } from "../../../../server-action/backend/common/cookie";
 import { getQuizAction } from "../../../../server-action/backend/quiz/api";
-import { isHttpException, isServerActionError } from "../../../../server-action/backend/util";
+import { isHttpException, isServerActionError } from "../../../../server-action/backend/common/util";
 
 
 interface QuizEditPageProps {
