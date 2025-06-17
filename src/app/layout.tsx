@@ -6,7 +6,7 @@ import { Suspense } from 'react';
 import Navbar from '../components/navbar/Navbar';
 import Loading from '../components/common/Loading';
 import { Toaster } from 'react-hot-toast';
-import { WebVitals } from '../components/WebVitals';
+import { WebVitals } from '../components/web-vitals/WebVitals';
 
 const roboto = Roboto({
     subsets: ['latin'],
