@@ -84,7 +84,7 @@ interface SearchPaintingBarProps {
 // ! 주의: <경고할 사항>
 // ? 질문: <의문점 또는 개선 방향>
 // * 참고: <관련 정보나 링크>
-export function SearchPaintingBar(props : SearchPaintingBarProps): React.JSX.Element {
+export const SearchPaintingBar = (props : SearchPaintingBarProps): React.JSX.Element => {
 
     const router = useRouter();
     const pathName = usePathname();

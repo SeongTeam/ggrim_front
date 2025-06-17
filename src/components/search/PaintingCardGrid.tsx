@@ -15,7 +15,7 @@ interface PaintingCardGridProps  {
     findResult : FindPaintingResult;
 }
 
-export function PaintingCardGrid( props: PaintingCardGridProps ): React.JSX.Element {
+export const PaintingCardGrid = ( props: PaintingCardGridProps ): React.JSX.Element  =>{
 
     const [selectedPainting , setSelectedPainting] = useState<Painting|undefined>(undefined);
     const [searchPaintings,setSearchPaintings] = useState<ShortPainting[]>(props.findResult.data); // Q. 초기값은 언제 반영되지? 만약 다른 state가 갱신되면, 현재 state는 기존값 유지 Or 초기값? 

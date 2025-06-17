@@ -6,13 +6,13 @@ interface AutocompleteListProps {
     setHighlightedIndex : (index : number) => void;
   }
   
-  export function AutocompleteList({
+  export const AutocompleteList = ({
     suggestions,
     onSelect,
     query,
     highlightedIndex,
     setHighlightedIndex ,
-  }: AutocompleteListProps) {
+  }: AutocompleteListProps) => {
     if (suggestions.length === 0) return null;
   
     const highlightMatch = (text: string, query: string) => {

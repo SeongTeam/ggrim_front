@@ -13,7 +13,7 @@ interface SearchBarProps {
   defaultValue? : string;
   inputRef : RefObject<HTMLInputElement>
 }
-export function SearchBar({ onSearch, defaultValue,inputRef }: SearchBarProps) {
+export const SearchBar = ({ onSearch, defaultValue,inputRef }: SearchBarProps) => {
 
   const {
     inputState,
