@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { Painting } from '@/server-action/backend/painting/type';
 import { ChevronRight, ChevronUp } from 'lucide-react'
-import { CopyButton } from "./Copybutton";
+import { CopyButton } from "./common/Copybutton";
 import Image from "next/image";
 
 interface PaintingDetailViewProps {

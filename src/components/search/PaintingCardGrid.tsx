@@ -2,7 +2,7 @@
 import { MutableRefObject, useEffect, useRef, useState } from "react";
 import { FindPaintingResult, Painting } from '@/server-action/backend/painting/type';
 import { ShortPainting } from '@/server-action/backend/painting/type';
-import HoverCard from "../HoverCard";
+import HoverCard from "../common/HoverCard";
 import { PreviewPainting } from '../PreviewPainting';
 import { Modal } from "../modal/Modal";
 import { PaintingDetailView } from "../PaintingDetailView";

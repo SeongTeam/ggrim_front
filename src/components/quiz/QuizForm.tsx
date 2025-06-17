@@ -1,11 +1,11 @@
 'use client'
 import {  FormEvent,  useCallback,  useEffect, useReducer,  useState } from "react";
 import { Painting } from '@/server-action/backend/painting/type';
-import { Card } from "../Card";
+import { Card } from "../common/Card";
 import { useRouter } from "next/navigation";
 import AlertModal from "../modal/AlertModal";
 import { InsertToggleInput } from "../InsertToggleInput";
-import Loading from "../Loading";
+import Loading from "../common/Loading";
 import { CheckCircle, XCircle } from "lucide-react";
 import { getPaintingAction } from "../../server-action/backend/painting/api";
 import { isHttpException, isServerActionError } from "../../server-action/backend/util";
