@@ -1,5 +1,5 @@
 // import { Navbar } from '@/components';
-import { ArtworkCarousel } from '../components/home/artworkCarousel';
+import { ArtworkCarousel } from '@/components/home/ArtworkCarousel';
 import ScrollTriggerNavigator from '../components/quiz/ScrollTriggerNavigator';
 import ScrollExpander from '../components/home/ScrollExpander';
 import {  getWeekArtWorkDataAction } from '../server-action/backend/painting/api';

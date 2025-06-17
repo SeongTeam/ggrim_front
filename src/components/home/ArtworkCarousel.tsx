@@ -1,6 +1,6 @@
 'use client';
 
-import { FeaturedImageGallery } from '@/components/home/featured_image_gallery';
+import { FeaturedImageGallery } from '@/components/home/FeaturedImageGallery';
 import React from 'react';
 import { Painting } from '@/server-action/backend/painting/type';
 import { ShortQuiz } from '@/server-action/backend/quiz/type';
