@@ -1,7 +1,7 @@
-import { Artist } from '../../../server-action/backend/artist/dto';
-import { Painting } from '../../../server-action/backend/painting/type';
-import { Style } from '../../../server-action/backend/style/type';
-import { Tag } from '../../../server-action/backend/tag/type';
+import { Artist } from '../../server-action/backend/artist/dto';
+import { Painting } from '../../server-action/backend/painting/type';
+import { Style } from '../../server-action/backend/style/type';
+import { Tag } from '../../server-action/backend/tag/type';
 
 export const curatedContentType = {
     GIF: 'GIF',

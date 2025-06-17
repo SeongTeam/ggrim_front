@@ -1,4 +1,4 @@
-import CuratedArtworkSection from '@/components/generate/CuratedArtworkSection';
+import CuratedArtworkSection from '@/components/curaded-artwork';
 import ErrorModal from '../../../components/modal/ErrorModal';
 
 function CuratedArtwork() {

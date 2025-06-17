@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { FormState } from './states';
 import { formStateAtom } from './atom';
-import HoverImagePreview from '../../common/HoverImagePreview';
+import HoverImagePreview from '../common/HoverImagePreview';
 
 interface CuratedArtworkCardProps {
     formState: FormState;
