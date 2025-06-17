@@ -2,7 +2,7 @@
 import { Search } from "lucide-react";
 import React, {  RefObject,} from "react";
 
-import { useSearchBar } from "./hook";
+import { useSearchBar } from "./useSearchBar";
 import { AutocompleteList } from "./AutoCompleteList";
 
 
