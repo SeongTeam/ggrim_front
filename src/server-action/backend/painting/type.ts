@@ -1,4 +1,4 @@
-import { Style } from '../../../model/interface/styles';
+import { Style } from '../style/type';
 import { Tag } from '../../../model/interface/tag';
 import { Artist } from '../artist/dto';
 import { IPaginationResult } from '../common.dto';

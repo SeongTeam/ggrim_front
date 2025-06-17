@@ -2,7 +2,7 @@
 import { CondOperator, RequestQueryBuilder } from '@dataui/crud-request';
 import { getServerUrl, withErrorHandler } from '../lib';
 import { HttpException, IPaginationResult } from '../common.dto';
-import { Style } from '../../../model/interface/styles';
+import { Style } from './type';
 
 const getStyles = async (
     queryBuilder: RequestQueryBuilder,

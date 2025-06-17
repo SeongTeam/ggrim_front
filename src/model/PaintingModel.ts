@@ -1,6 +1,6 @@
 import { Painting } from '@/server-action/backend/painting/type';
 import { Artist } from '@/server-action/backend/artist/dto';
-import { Style } from './interface/styles';
+import { Style } from '@/server-action/backend/style/type';
 import { Tag } from './interface/tag';
 
 export class PaintingModel implements Painting {

@@ -1,4 +1,4 @@
-import { Style } from '../../../model/interface/styles';
+import { Style } from '../style/type';
 import { Tag } from '../../../model/interface/tag';
 import { ShortUser, User } from '../../../model/interface/user';
 import { Artist } from '../artist/dto';
