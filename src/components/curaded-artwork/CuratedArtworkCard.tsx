@@ -9,10 +9,10 @@ interface CuratedArtworkCardProps {
     index: number;
 }
 
-export default function CuratedArtworkCard({
+export const CuratedArtworkCard = ({
     formState: curatedArtwork,
     index,
-}: CuratedArtworkCardProps) {
+}: CuratedArtworkCardProps) => {
     const [editableFormState, setEditableArtwork] = useState(curatedArtwork);
     const [curatedArtworks, setCuratedArtworks] = useRecoilState(formStateAtom);
     const [isEditing, setIsEditing] = useState(false);

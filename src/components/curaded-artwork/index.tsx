@@ -1,12 +1,12 @@
 'use client';
 
 import { useRecoilState } from 'recoil';
-import CuratedArtworkList from './CuratedArtworkList';
-import CuratedArtworkForm from './CuratedArtworkForm';
+import { CuratedArtworkList }from './CuratedArtworkList';
+import { CuratedArtworkForm }from './CuratedArtworkForm';
 import { FormState } from './states';
 import { formStateAtom } from './atom';
 
-export default function CuratedArtworkSection() {
+export const CuratedArtworkSection = () => {
     const [curatedArtworkFormStates, setCuratedArtwork] = useRecoilState(formStateAtom);
 
     const addCuratedArtwork = (memo: FormState) => {

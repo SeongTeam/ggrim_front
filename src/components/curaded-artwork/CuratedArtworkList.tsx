@@ -1,5 +1,5 @@
 import { PaintingModel } from './type';
-import CuratedArtworkCard from './CuratedArtworkCard';
+import { CuratedArtworkCard } from './CuratedArtworkCard';
 import { FormState } from './states';
 import { CuratedArtWorkAttribute } from './type';
 import { getUrlImageSize } from '@/util/imageUtiles';
@@ -40,7 +40,7 @@ const transformCuratedArtWorkAttribute = async (
     return transformed;
 };
 
-export default function CuratedArtworkList({ curatedArtworks }: CuratedArtworkListProps) {
+export const CuratedArtworkList = ({ curatedArtworks }: CuratedArtworkListProps) => {
     const handleDownloadJson = async () => {
         const data = await transformCuratedArtWorkAttribute(curatedArtworks);
         const jsonData = { dataName: 'artwork of week', data };

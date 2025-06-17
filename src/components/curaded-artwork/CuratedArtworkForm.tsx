@@ -23,7 +23,7 @@ function formReducer(state: FormState, action: FormAction): FormState {
     return { ...state, [action.type]: action.value };
 }
 
-export default function CuratedArtworkForm({ addCuratedArtwork }: CuratedArtworkFormProps) {
+export const CuratedArtworkForm = ({ addCuratedArtwork }: CuratedArtworkFormProps) => {
     const [state, dispatch] = useReducer(formReducer, getEmptyFormState());
 
     const setState = () => {
