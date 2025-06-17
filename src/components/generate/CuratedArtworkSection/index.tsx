@@ -4,7 +4,7 @@ import { useRecoilState } from 'recoil';
 import CuratedArtworkList from './CuratedArtworkList';
 import CuratedArtworkForm from './CuratedArtworkForm';
 import { FormState } from './states';
-import { formStateAtom } from '@/atom/curatedArtworkFormAtom';
+import { formStateAtom } from './atom';
 
 export default function CuratedArtworkSection() {
     const [curatedArtworkFormStates, setCuratedArtwork] = useRecoilState(formStateAtom);
