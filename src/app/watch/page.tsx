@@ -1,6 +1,6 @@
 'use client';
 
-import VideoPlayer from '@/components/VideoPlayer';
+import VideoPlayer from '@/components/cloudinary/VideoPlayer';
 import { Suspense } from 'react';
 
 // 화면 크기 고정 (412 × 732)
