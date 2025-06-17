@@ -1,10 +1,10 @@
 import { NewQuiz } from '../../components/quiz/QuizForm';
 import { QuizStatus } from '../../server-action/backend/quiz/type';
 import { localStorageUtils } from '../../util/browser';
-import { ENUM_LOCAL_STORAGE_KEY } from './const';
+import { LOCAL_STORAGE_KEY } from './const';
 
 export function getQuizStatus(): undefined | QuizStatus {
-    const rawStatus = localStorage.getItem(ENUM_LOCAL_STORAGE_KEY.QUIZ_STATUS);
+    const rawStatus = localStorage.getItem(LOCAL_STORAGE_KEY.QUIZ_STATUS);
 
     try {
         const status: QuizStatus | undefined = rawStatus ? JSON.parse(rawStatus) : undefined;
@@ -16,7 +16,7 @@ export function getQuizStatus(): undefined | QuizStatus {
 }
 
 export function saveQuizStatus(quizStatus: QuizStatus): boolean {
-    localStorage.setItem(ENUM_LOCAL_STORAGE_KEY.QUIZ_STATUS, JSON.stringify(quizStatus));
+    localStorage.setItem(LOCAL_STORAGE_KEY.QUIZ_STATUS, JSON.stringify(quizStatus));
 
     return true;
 }
@@ -24,20 +24,16 @@ export function saveQuizStatus(quizStatus: QuizStatus): boolean {
 const STORAGE_TTL_MS = 1800000;
 
 export function saveNewQuiz(newQuiz: NewQuiz, ttl = STORAGE_TTL_MS) {
-    localStorageUtils.setItemWithExpiry(
-        ENUM_LOCAL_STORAGE_KEY.NEW_QUIZ,
-        JSON.stringify(newQuiz),
-        ttl,
-    );
+    localStorageUtils.setItemWithExpiry(LOCAL_STORAGE_KEY.NEW_QUIZ, JSON.stringify(newQuiz), ttl);
 }
 
 export function removeSavedNewQuiz() {
-    localStorage.removeItem(ENUM_LOCAL_STORAGE_KEY.NEW_QUIZ);
+    localStorage.removeItem(LOCAL_STORAGE_KEY.NEW_QUIZ);
 }
 
 export function getSavedNewQuiz(): NewQuiz | undefined {
     const rawPrevNewQuiz: string | null = localStorageUtils.getItemWithExpiry(
-        ENUM_LOCAL_STORAGE_KEY.NEW_QUIZ,
+        LOCAL_STORAGE_KEY.NEW_QUIZ,
     );
     const prevNewQuiz: NewQuiz | undefined =
         rawPrevNewQuiz && JSON.parse(rawPrevNewQuiz) ? JSON.parse(rawPrevNewQuiz) : undefined;

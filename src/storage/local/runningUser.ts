@@ -1,7 +1,7 @@
 'use client';
 import { User } from '@/server-action/backend/user/type';
 import { CreateQuizDTO } from '../../server-action/backend/quiz/dto';
-import { ENUM_LOCAL_STORAGE_KEY } from './const';
+import { LOCAL_STORAGE_KEY } from './const';
 
 export interface RunningUser {
     username: string;
@@ -15,7 +15,7 @@ export interface QuizDraft {
 }
 
 function saveRunningUser(runningUser: RunningUser): boolean {
-    localStorage.setItem(ENUM_LOCAL_STORAGE_KEY.RUNNING_USER, JSON.stringify(runningUser));
+    localStorage.setItem(LOCAL_STORAGE_KEY.RUNNING_USER, JSON.stringify(runningUser));
     return true;
 }
 
@@ -23,13 +23,13 @@ export function syncUserToLocalStorage(user: User): boolean {
     const { username, id } = user;
     const runningUser: RunningUser = { username, id };
 
-    localStorage.setItem(ENUM_LOCAL_STORAGE_KEY.RUNNING_USER, JSON.stringify(runningUser));
+    localStorage.setItem(LOCAL_STORAGE_KEY.RUNNING_USER, JSON.stringify(runningUser));
 
     return true;
 }
 
 export function getRunningUser(): undefined | RunningUser {
-    const result = localStorage.getItem(ENUM_LOCAL_STORAGE_KEY.RUNNING_USER);
+    const result = localStorage.getItem(LOCAL_STORAGE_KEY.RUNNING_USER);
     if (!result) {
         return undefined;
     }
@@ -42,7 +42,7 @@ export function getRunningUser(): undefined | RunningUser {
 }
 
 export function removeRunningUser() {
-    localStorage.removeItem(ENUM_LOCAL_STORAGE_KEY.RUNNING_USER);
+    localStorage.removeItem(LOCAL_STORAGE_KEY.RUNNING_USER);
 }
 
 export function saveQuizDraft(quizDraft: QuizDraft): boolean {
