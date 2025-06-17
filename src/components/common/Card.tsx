@@ -15,7 +15,7 @@ export interface CardProps {
     imageProps : NextImageProps
   }
   
-export function Card({ title,imageProps }: CardProps) {
+export const Card = ({ title,imageProps }: CardProps) => {
     return (
         <section className="flex flex-col bg-gray-900 rounded overflow-hidden">
             <div className="max-h-[330px] overflow-hidden">
