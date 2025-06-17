@@ -10,7 +10,7 @@ interface ArtworkQuizProps {
     reactionCounts : QuizReactionCount[]
 }
 
-export function ArtworkQuiz(artworkQuizProps: ArtworkQuizProps) {
+export const ArtworkQuiz = (artworkQuizProps: ArtworkQuizProps) => {
     const { mcqAttributes, reactionCounts } = artworkQuizProps;
     const [currentIndex, setCurrentIndex] = React.useState(0);
 

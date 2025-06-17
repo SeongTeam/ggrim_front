@@ -12,7 +12,7 @@ interface ArtworkCarouselProps {
     quizzes: ShortQuiz[];
 }
 
-export function ArtworkCarousel(props: ArtworkCarouselProps) {
+export const ArtworkCarousel = (props: ArtworkCarouselProps) => {
     const { curatedWorkAttributes, quizzes } = props;
     const router = useRouter();
 

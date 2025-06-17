@@ -7,7 +7,7 @@ interface ScrollExpanderProps {
   incrementAmount?: number; // amount of height increase per scroll
 }
 
-export default function ScrollExpander({ domId, maxHeight = 300, incrementAmount = 10 }: ScrollExpanderProps) {
+export const ScrollExpander = ({ domId, maxHeight = 300, incrementAmount = 10 }: ScrollExpanderProps) => {
   const lastScrollY = useRef<number>(0);
 
   useEffect(() => {
