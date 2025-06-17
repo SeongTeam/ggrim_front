@@ -2,7 +2,7 @@
 import { LoaderCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-export default function Loading() {
+export const Loading = () => {
   return (
     <div className="flex h-screen w-full items-center justify-center bg-gray-900 text-white">
       <motion.div
