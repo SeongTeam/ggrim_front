@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuid } from 'uuid';
-import { ENUM_HEADER_LOG } from './util/middlewareUtils';
+import { ENUM_HEADER_LOG } from './util/request';
 
 export function middleware(req: NextRequest) {
     const requestId = uuid();

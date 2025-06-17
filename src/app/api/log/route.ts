@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { serverLogger } from '../../../util/logger';
-import { ENUM_HEADER_LOG } from '../../../util/middlewareUtils';
+import { ENUM_HEADER_LOG } from '../../../util/request';
 
 export async function POST(req: NextRequest) {
     try {
