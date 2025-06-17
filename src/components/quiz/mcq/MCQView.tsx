@@ -6,7 +6,7 @@ import { ErrorMessage } from './shared';
 import SubmissionFeedback from './reader/parts/SubmissionFeedback';
 import { motion } from 'framer-motion';
 import { MCQReaderViewProps } from './type';
-import { QuizReactionType } from '../../../server-action/backend/quiz/type';
+import { QuizReaction } from '../../../server-action/backend/quiz/type';
 import { QuizReactionCount } from '../../../server-action/backend/quiz/dto';
 import { addQuizReactionsAction, deleteQuizReactionAction } from '../../../server-action/backend/quiz/api';
 import { isHttpException, isServerActionError } from '../../../server-action/backend/common/util';
@@ -18,7 +18,7 @@ import Image from 'next/image';
 interface ReactionState {
     like : number,
     dislike : number,
-    userReaction? : QuizReactionType,
+    userReaction? : QuizReaction,
 }
 
 type Action = 
@@ -62,7 +62,7 @@ function reducer( state : ReactionState , action : Action) : ReactionState {
 }
 
 
-const initializeState = (reactionCount : QuizReactionCount, userReaction? : QuizReactionType) => {
+const initializeState = (reactionCount : QuizReactionCount, userReaction? : QuizReaction) => {
     return {
         like : reactionCount.likeCount,
         dislike : reactionCount.dislikeCount,
@@ -92,7 +92,7 @@ const MCQView = ({ mcq, handelNextMCQ, handleImageSelected, userReaction, reacti
     const [reaction, dispatch] = useReducer(reducer,initializeState(reactionCount,userReaction));
     const [error , setError] = useState('');
 
-    const callReactionServerAction = async ( type :QuizReactionType) => {
+    const callReactionServerAction = async ( type :QuizReaction) => {
         const response = await addQuizReactionsAction(mcq.id,{type});
         if(isServerActionError(response)){
             throw new Error('unstable situation');
@@ -119,7 +119,7 @@ const MCQView = ({ mcq, handelNextMCQ, handleImageSelected, userReaction, reacti
     }
 
     const handleLike = async () => {
-        const prevReaction : QuizReactionType|undefined = reaction.userReaction;
+        const prevReaction : QuizReaction|undefined = reaction.userReaction;
         dispatch({type : 'RESET_REACTION'});
         if(prevReaction === 'like'){
             await deleteQuizReactionAction(mcq.id);
@@ -132,7 +132,7 @@ const MCQView = ({ mcq, handelNextMCQ, handleImageSelected, userReaction, reacti
     }
 
     const handleDisLike = async () =>{
-        const prevReaction : QuizReactionType|undefined = reaction.userReaction;
+        const prevReaction : QuizReaction|undefined = reaction.userReaction;
         dispatch({type : 'RESET_REACTION'});
         if(prevReaction === 'dislike'){
             await deleteQuizReactionAction(mcq.id);

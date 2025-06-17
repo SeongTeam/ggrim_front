@@ -10,7 +10,7 @@ export const QUIZ_REACTION = {
     DISLIKE: 'dislike',
 } as const;
 
-export type QuizReactionType = (typeof QUIZ_REACTION)[keyof typeof QUIZ_REACTION];
+export type QuizReaction = (typeof QUIZ_REACTION)[keyof typeof QUIZ_REACTION];
 
 export interface QuizStatus {
     context: QuizContextDTO;

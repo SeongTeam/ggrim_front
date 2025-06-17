@@ -12,7 +12,7 @@ import {
     QuizSubmitDTO,
     ResponseQuizDTO,
 } from './dto';
-import { QuizReactionType, QuizStatus } from './type';
+import { QuizReaction, QuizStatus } from './type';
 import { HttpException } from '../common/dto';
 import { SignInResponse } from '../auth/type';
 import { revalidateTag } from 'next/cache';
@@ -211,7 +211,7 @@ const submitQuiz = async (quizID: string, dto: QuizSubmitDTO): Promise<boolean |
 
 const getQuizReactions = async (
     quizID: string,
-    type: QuizReactionType,
+    type: QuizReaction,
     page?: number,
     findUserId?: string,
 ): Promise<QuizDislike[] | QuizLike[] | HttpException> => {
