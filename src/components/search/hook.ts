@@ -17,7 +17,7 @@ import {
     IPaginationResult,
     ServerActionError,
 } from '../../server-action/backend/common.dto';
-import { useDebounceCallback } from '../../hooks/optimization';
+import { useDebounceCallback } from '../../hooks/useDebounceCallback';
 import { AutoCompleteAction, AutoCompleteState, InputAction, InputState } from './type';
 
 // Constants

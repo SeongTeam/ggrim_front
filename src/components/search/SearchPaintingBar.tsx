@@ -5,7 +5,7 @@ import { SearchBar } from "./SearchBar";
 import { INPUT_KEY, SEARCH_PARAM_KEY } from "./const";
 import { extractValuesInsideQuoted, makeQuoted } from "./util";
 import { SEARCH_LOGIC_ROUTE } from "../../route/search/route";
-import { useDebounceCallback } from "../../hooks/optimization";
+import { useDebounceCallback } from "../../hooks/useDebounceCallback";
 
 interface ParsedInput {
     title : string;

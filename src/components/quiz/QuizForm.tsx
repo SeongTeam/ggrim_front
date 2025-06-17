@@ -13,7 +13,7 @@ import { CreateQuizDTO } from "../../server-action/backend/quiz/dto";
 import { addQuizAction, updateQuizAction } from "../../server-action/backend/quiz/api";
 import { Quiz } from '@/server-action/backend/quiz/type';
 import { getSavedNewQuiz, removeSavedNewQuiz, saveNewQuiz } from "../../storage/local/quiz";
-import { useDebounceCallback } from "../../hooks/optimization";
+import { useDebounceCallback } from "../../hooks/useDebounceCallback";
 
 export interface NewQuiz{
   answer :Painting|undefined;
