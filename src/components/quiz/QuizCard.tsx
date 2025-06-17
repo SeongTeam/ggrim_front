@@ -10,7 +10,7 @@ export interface QuizCardProps {
     // ? 질문: <의문점 또는 개선 방향>
     // * 참고: <관련 정보나 링크>
   
-export function QuizCard({ title, onClick}: QuizCardProps) {
+export const QuizCard = ({ title, onClick}: QuizCardProps) => {
     const size = 60;
     const uiTitle = title.length > size ? title.slice(0,size) + '...' : title;
     return (

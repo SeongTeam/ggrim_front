@@ -123,7 +123,7 @@ const isDuplicatedPaintingPainting = (state : NewQuiz, painting : Painting) => {
 
 
 
-export default function QuizForm({ quiz } : QuizFormProps) : JSX.Element {
+export const QuizForm = ({ quiz } : QuizFormProps) : JSX.Element => {
     const [newQuiz,dispatch] = useReducer(reducer,quiz, initializeState);
     const [error,setError] = useState("");
     const router = useRouter();

@@ -12,7 +12,7 @@ interface QuizCardGridProps  {
     findResult : FindQuizResult;
 }
 
-export function QuizCardGrid( props: QuizCardGridProps ): React.JSX.Element {
+export const QuizCardGrid = ( props: QuizCardGridProps ): React.JSX.Element => {
 
     const [findQuizzes,setFindQuizzes] = useState<ShortQuiz[]>(props.findResult.data); // Q. 초기값은 언제 반영되지? 만약 다른 state가 갱신되면, 현재 state는 기존값 유지 Or 초기값? 
     const isLoadingRef : MutableRefObject<boolean>= useRef(false);

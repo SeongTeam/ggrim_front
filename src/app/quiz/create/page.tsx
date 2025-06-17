@@ -1,5 +1,5 @@
 import { ErrorModal } from "../../../components/modal/ErrorModal";
-import QuizForm from "../../../components/quiz/QuizForm";
+import { QuizForm} from "../../../components/quiz/QuizForm";
 import { getSignInInfo } from "../../../server-action/backend/common/cookie";
 
 export default async function QuizCreatePage(){

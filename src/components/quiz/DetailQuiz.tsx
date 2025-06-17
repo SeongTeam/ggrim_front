@@ -11,7 +11,7 @@ import { DetailQuizDTO, QuizContextDTO } from '../../server-action/backend/quiz/
 import {  getPaintingAction } from '../../server-action/backend/painting/api';
 import { getQuizStatus, saveQuizStatus } from '../../storage/local/quiz';
 import { ErrorModal } from '../modal/ErrorModal';
-import QuizMenu from './QuizMenu';
+import { QuizMenu } from './QuizMenu';
 interface DetailQuizProps {
     detailQuizDTO: DetailQuizDTO;
     isOwnerAccess : boolean
@@ -25,7 +25,7 @@ interface DetailQuizProps {
 // ? 질문: <의문점 또는 개선 방향>
 // * 참고: <관련 정보나 링크>
 
-export function DetailQuiz({ detailQuizDTO,isOwnerAccess }: DetailQuizProps): React.JSX.Element {
+export const DetailQuiz = ({ detailQuizDTO,isOwnerAccess }: DetailQuizProps): React.JSX.Element => {
     const { quiz, reactionCount, userReaction  } = detailQuizDTO;
     const mcq : MCQ= {
         id : quiz.id,

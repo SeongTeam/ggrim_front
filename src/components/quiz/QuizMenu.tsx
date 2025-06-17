@@ -17,10 +17,10 @@ type QuizMenuProps = {
 
 }
 
-export default function QuizMenu({
+export const QuizMenu = ({
     quiz,
   isOwner,
-}: QuizMenuProps) {
+}: QuizMenuProps) => {
   const [open, setOpen] = useState(false)
   const router = useRouter();
   const [isShow, setIsShow] = useState(false);
@@ -145,7 +145,7 @@ interface ShowDescriptionProps {
   setShow : (v : boolean) => void
 }
 
-function ShowDescription( {quiz, isShow , setShow} : ShowDescriptionProps)  {
+const ShowDescription = ({quiz, isShow , setShow} : ShowDescriptionProps) => {
 
   const router = useRouter();
   const modalRef = useRef<HTMLDivElement>(null)

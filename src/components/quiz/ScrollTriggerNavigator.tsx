@@ -12,7 +12,7 @@ interface ScrollTriggerNavigatorProps {
   criticalRatio? : number;
 }
 
-export default function ScrollTriggerNavigator({ section, criticalRatio = 0.5 }: ScrollTriggerNavigatorProps) {
+export const ScrollTriggerNavigator = ({ section, criticalRatio = 0.5 }: ScrollTriggerNavigatorProps) => {
     const router = useRouter();
     const [currentSection, setCurrentSection] = useState<string | null>(null);
   
