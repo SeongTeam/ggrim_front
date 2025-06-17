@@ -1,9 +1,9 @@
 // main component for the reader's mcq interface
 
 import React, { useReducer, useState } from 'react';
-import useMCQReader from './reader/use_MCQ_reader';
+import useMCQReader from './reader/useMCQReader';
 import { ErrorMessage } from './shared';
-import SubmissionFeedback from './reader/parts/submission_feedback';
+import SubmissionFeedback from './reader/parts/SubmissionFeedback';
 import { motion } from 'framer-motion';
 import { MCQReaderViewProps } from './type';
 import { QuizReactionType } from '../../../server-action/backend/quiz/type';

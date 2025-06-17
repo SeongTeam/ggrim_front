@@ -1,5 +1,5 @@
 'use client'
-import MCQView from '@/components/quiz/mcq/MCQ_view';
+import MCQView from '@/components/quiz/mcq/MCQView';
 import { MCQ } from './mcq/type';
 
 import { useRouter } from 'next/navigation';
