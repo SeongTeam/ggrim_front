@@ -1,6 +1,6 @@
 import AuthFooter from '../../../components/auth/AuthFooter';
 import { EmailForm } from '../../../components/auth/EmailForm';
-import ErrorModal from '../../../components/modal/ErrorModal';
+import { ErrorModal } from '../../../components/modal/ErrorModal';
 import { sendSecurityTokenToEmailAction } from '../../../server-action/backend/auth/api';
 import { isOnetimeTokenPurpose } from '../../../server-action/backend/auth/util';
 

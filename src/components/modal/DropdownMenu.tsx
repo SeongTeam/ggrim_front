@@ -14,14 +14,15 @@ interface DropdownMenuProps<T> {
   required?: boolean;
 }
 
-export default function DropdownMenuInput<T>({
+
+export const  DropdownMenu = <T,>({
   label,
   options,
   value,
   onChange,
   placeholder = "Select an option",
   required = false,
-}: DropdownMenuProps<T>) {
+}: DropdownMenuProps<T>)  => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 

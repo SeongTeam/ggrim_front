@@ -1,7 +1,7 @@
 import { SignInForm } from "../../../components/auth/SignInForm";
 import { generateSecurityTokenAction } from "../../../server-action/backend/auth/api";
 import { ONE_TIME_TOKEN_PURPOSE } from "../../../server-action/backend/auth/type";
-import ErrorModal from "../../../components/modal/ErrorModal";
+import { ErrorModal } from "../../../components/modal/ErrorModal";
 import AuthFooter from "../../../components/auth/AuthFooter";
 import { AUTH_LOGIC_ROUTE } from "../../../route/auth/route";
 

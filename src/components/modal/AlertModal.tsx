@@ -4,7 +4,7 @@ interface AlertModalProps {
     onClose : ()=>Promise<void>;
 }
 
-export default function AlertModal({ message , onClose } : AlertModalProps) {
+export const  AlertModal = ({ message , onClose } : AlertModalProps) => {
     return (
       <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center">
         <div className="bg-gray-900 text-white p-6 rounded-lg shadow-lg w-80">

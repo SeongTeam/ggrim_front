@@ -1,5 +1,5 @@
 import { CuratedArtworkSection } from '@/components/curated-artwork/CuratedArtworkSection';
-import ErrorModal from '../../../components/modal/ErrorModal';
+import { ErrorModal } from '../../../components/modal/ErrorModal';
 
 function CuratedArtwork() {
 

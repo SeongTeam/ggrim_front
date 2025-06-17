@@ -9,7 +9,7 @@ interface ErrorModalProps {
 }
 
 
-const ErrorModal = ({ message, onClose }:ErrorModalProps) => {
+export const ErrorModal = ({ message, onClose }:ErrorModalProps) => {
     const router = useRouter();
 
     if(!onClose){
@@ -28,4 +28,3 @@ const ErrorModal = ({ message, onClose }:ErrorModalProps) => {
     )
   }
   
-export default ErrorModal;

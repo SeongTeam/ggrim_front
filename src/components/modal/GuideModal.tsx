@@ -1,4 +1,3 @@
-
 'use client'
 
 interface GuideModalProps {
@@ -7,7 +6,7 @@ interface GuideModalProps {
 }
 
 
-const GuideModal = ({ message, onClickNext }:GuideModalProps) => {
+export const GuideModal = ({ message, onClickNext }:GuideModalProps) => {
 
 
     return (
@@ -22,4 +21,3 @@ const GuideModal = ({ message, onClickNext }:GuideModalProps) => {
     )
   }
   
-export default GuideModal;

@@ -6,7 +6,7 @@ import { isHttpException, isServerActionError } from '../../server-action/backen
 import { HTTP_STATUS } from '../../server-action/backend/common/status'
 import { HttpException, ServerActionError } from '../../server-action/backend/common/dto'
 import { useRouter } from 'next/navigation'
-import GuideModal from '../modal/GuideModal'
+import { GuideModal } from '../modal/GuideModal'
 
 
 interface UsernameFormProps { 

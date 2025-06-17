@@ -3,7 +3,7 @@ import {  FormEvent,  useCallback,  useEffect, useReducer,  useState } from "rea
 import { Painting } from '@/server-action/backend/painting/type';
 import { Card } from "../common/Card";
 import { useRouter } from "next/navigation";
-import AlertModal from "../modal/AlertModal";
+import { AlertModal } from "../modal/AlertModal";
 import { InsertToggleInput } from "../common/InsertToggleInput";
 import { Loading } from "../common/Loading";
 import { CheckCircle, XCircle } from "lucide-react";

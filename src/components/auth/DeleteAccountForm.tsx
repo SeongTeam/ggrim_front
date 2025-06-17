@@ -5,9 +5,9 @@ import { deleteUserAction } from '../../server-action/backend/user/api';
 import toast from 'react-hot-toast';
 import { isHttpException, isServerActionError } from '../../server-action/backend/common/util';
 import { HTTP_STATUS } from '../../server-action/backend/common/status';
-import GuideModal from '../modal/GuideModal';
+import { GuideModal } from '../modal/GuideModal';
 import { useRouter } from 'next/navigation';
-import ErrorModal from '../modal/ErrorModal';
+import { ErrorModal } from '../modal/ErrorModal';
 
 interface DeleteAccountState {
     error : string;

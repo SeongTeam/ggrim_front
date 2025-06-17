@@ -12,7 +12,7 @@ import { addQuizReactionsAction, deleteQuizReactionAction } from '../../../serve
 import { isHttpException, isServerActionError } from '../../../server-action/backend/common/util';
 import toast from 'react-hot-toast';
 import { HTTP_STATUS } from '../../../server-action/backend/common/status';
-import ErrorModal from '../../modal/ErrorModal';
+import { ErrorModal } from '../../modal/ErrorModal';
 import Image from 'next/image';
 
 interface ReactionState {
