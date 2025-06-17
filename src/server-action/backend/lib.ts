@@ -1,7 +1,7 @@
 'server-only';
 import { serverLogger } from '../../util/serverLogger';
 import { getRequestId } from '../../util/request';
-import { ServerActionError } from './common.dto';
+import { ServerActionError } from './dto';
 import { isHttpException } from './util';
 
 serverLogger.info(`BACKEND_URL=${process.env.BACKEND_URL} `);

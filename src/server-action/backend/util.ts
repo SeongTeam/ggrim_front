@@ -1,4 +1,4 @@
-import { BackendHttpException, HttpException, ServerActionError } from './common.dto';
+import { BackendHttpException, HttpException, ServerActionError } from './dto';
 
 export function isHttpException(response: any): response is HttpException {
     const uniqueKey: keyof HttpException = 'statusCode';

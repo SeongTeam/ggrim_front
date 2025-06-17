@@ -16,7 +16,7 @@ import {
     HttpException,
     IPaginationResult,
     ServerActionError,
-} from '../../server-action/backend/common.dto';
+} from '../../server-action/backend/dto';
 import { useDebounceCallback } from '../../hooks/useDebounceCallback';
 import { AutoCompleteAction, AutoCompleteState, InputAction, InputState } from './type';
 

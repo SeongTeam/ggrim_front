@@ -8,7 +8,7 @@ import {
 } from './dto';
 import { OneTimeToken, SignInResponse } from './type';
 import { deleteSignInResponse, setOneTimeToken, setSignInResponse } from '../cookie';
-import { HttpException } from '../common.dto';
+import { HttpException } from '../dto';
 import { ENUM_SECURITY_TOKEN_HEADER } from './header';
 
 //TODO : 사용자 정보를 반환하도록 수정하기

@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { HttpStatus } from '../../server-action/backend/status';
-import { HttpException, ServerActionError } from '../../server-action/backend/common.dto';
+import { HttpException, ServerActionError } from '../../server-action/backend/dto';
 import { isHttpException, isServerActionError } from '../../server-action/backend/util';
 import toast from 'react-hot-toast';
 

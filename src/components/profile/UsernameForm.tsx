@@ -4,7 +4,7 @@ import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { isHttpException, isServerActionError } from '../../server-action/backend/util'
 import { HttpStatus } from '../../server-action/backend/status'
-import { HttpException, ServerActionError } from '../../server-action/backend/common.dto'
+import { HttpException, ServerActionError } from '../../server-action/backend/dto'
 import { useRouter } from 'next/navigation'
 import GuideModal from '../modal/GuideModal'
 

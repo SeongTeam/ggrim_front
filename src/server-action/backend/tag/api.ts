@@ -2,7 +2,7 @@
 import { CondOperator, RequestQueryBuilder } from '@dataui/crud-request';
 import { Tag } from './type';
 import { getServerUrl, withErrorHandler } from '../lib';
-import { HttpException, IPaginationResult } from '../common.dto';
+import { HttpException, IPaginationResult } from '../dto';
 
 const getTags = async (
     queryBuilder: RequestQueryBuilder,

@@ -1,7 +1,7 @@
 'use server';
 import { CondOperator, RequestQueryBuilder } from '@dataui/crud-request';
 import { getServerUrl, withErrorHandler } from '../lib';
-import { HttpException, IPaginationResult } from '../common.dto';
+import { HttpException, IPaginationResult } from '../dto';
 import { Style } from './type';
 
 const getStyles = async (

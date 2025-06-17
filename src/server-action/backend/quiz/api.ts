@@ -13,7 +13,7 @@ import {
     ResponseQuizDTO,
 } from './dto';
 import { QuizReactionType, QuizStatus } from './type';
-import { HttpException } from '../common.dto';
+import { HttpException } from '../dto';
 import { SignInResponse } from '../auth/type';
 import { revalidateTag } from 'next/cache';
 
