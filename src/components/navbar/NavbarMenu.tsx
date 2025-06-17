@@ -10,7 +10,7 @@ const NavRoute = {
  
 }
 
-export default function NavbarMenu() {
+export const NavbarMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => setIsOpen((prev) => !prev);

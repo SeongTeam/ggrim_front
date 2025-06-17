@@ -3,7 +3,7 @@ import { Search } from "lucide-react";
 import { SearchPaintingBar } from "../search/SearchPaintingBar";
 import { useEffect, useRef, useState } from "react";
 
-export function SearchPaintingIconMenu(){
+export const SearchPaintingIconMenu = () => {
     const [isSearching,setIsSearching] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
   

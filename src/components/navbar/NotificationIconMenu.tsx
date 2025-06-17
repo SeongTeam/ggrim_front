@@ -1,7 +1,7 @@
 "use client"
 import { Bell } from "lucide-react";
 
-export function NotifyIconMenu() {
+export const NotifyIconMenu = () => {
     const handleClickBellIcon = ()=>{
         alert('not implement');
       }

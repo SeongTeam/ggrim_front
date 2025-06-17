@@ -15,7 +15,7 @@ interface ProfileIconMenuProps {
   user : User
 }
 
-export function ProfileIconMenu({ user }: ProfileIconMenuProps) {
+export const ProfileIconMenu = ({ user }: ProfileIconMenuProps) => {
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();

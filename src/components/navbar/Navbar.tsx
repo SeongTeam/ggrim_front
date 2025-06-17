@@ -1,4 +1,4 @@
-import NavbarMenu from "./NavbarMenu";
+import { NavbarMenu } from "./NavbarMenu";
 import { SearchPaintingIconMenu } from "./SearchPaintingIconMenu";
 import { NotifyIconMenu } from "./NotificationIconMenu";
 import { ProfileIconMenu } from "./ProfileIconMenu";
@@ -17,7 +17,7 @@ import Link from "next/link";
 // ? 질문: <의문점 또는 개선 방향>
 // * 참고: <관련 정보나 링크>
 
-export default async function Navbar() {
+export const Navbar = async () => {
 
   const user :User|undefined = await getSignInInfo();
 

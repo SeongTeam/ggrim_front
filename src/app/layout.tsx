@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
 import RecoilRootWrapper from '@/components/recoil/RecoilRootWrapper';
 import { Suspense } from 'react';
-import Navbar from '../components/navbar/Navbar';
+import { Navbar } from '../components/navbar/Navbar';
 import { Loading } from '../components/common/Loading';
 import { Toaster } from 'react-hot-toast';
 import { WebVitals } from '../components/web-vitals/WebVitals';
