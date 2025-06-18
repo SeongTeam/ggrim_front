@@ -91,12 +91,12 @@ export const EmailVerificationForm = ({nextRoute} : EmailVerificationForm) => {
             onChange={e => setEmail(e.target.value)}
             disabled={isPinCodeSent}
             required
-            className="w-full px-4 py-2 rounded bg-gray-800 text-white disabled:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-[#222] disabled:cursor-not-allowed disabled:text-black
+            className="w-full px-4 py-2 rounded bg-gray-800 text-white disabled:opacity-50 disabled:bg-[#222] disabled:cursor-not-allowed
             border border-transparent focus:outline-none"
         />
         <button
             type="submit"
-            className="w-full bg-red-600 text-white px-4 py-2 rounded font-semibold disabled:bg-[#555] disabled:text-gray-300 disabled:cursor-not-allowed disabled:hover:bg-[#555] disabled:text-black"
+            className="w-full bg-red-600 text-white px-4 py-2 rounded font-semibold disabled:text-gray-300  disabled:bg-[#555] disabled:cursor-not-allowed disabled:hover:bg-[#555] "
             disabled={isPinCodeSent}
         >
             Send
