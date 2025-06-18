@@ -89,7 +89,7 @@ export function cookieWithErrorHandler<C, T extends (cookie: C, ...args: any[]) 
     };
 }
 
-function logMessage(requestId: string, message: string, info?: Record<string, any>) {
+function logMessage(requestId: string, message: string, info?: Record<string, unknown>) {
     const context = `🚀server-action`;
     const result = {
         context,
