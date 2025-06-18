@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { debounce } from '../util/optimization';
 
-export function useDebounceCallback<T extends (...args: any[]) => any>(
+export function useDebounceCallback<T extends (...args: unknown[]) => void>(
     callback: T,
     delayMS: number,
     deps: React.DependencyList = [],
-): T {
+): (...args: Parameters<T>) => void {
     const callbackRef = useRef(callback);
 
     // 콜백 함수 업데이트
@@ -15,9 +15,10 @@ export function useDebounceCallback<T extends (...args: any[]) => any>(
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     return useCallback(
-        debounce((...args: Parameters<T>) => {
-            return callbackRef.current(...args);
-        }, delayMS) as T,
+        debounce<Parameters<T>, (...args: Parameters<T>) => void>(
+            (...args) => callbackRef.current(...args),
+            delayMS,
+        ),
         [...deps, delayMS],
     );
 }
