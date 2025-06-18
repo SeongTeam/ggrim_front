@@ -18,9 +18,10 @@ export class WinstonTraceExporter extends ConsoleSpanExporter {
             resource: {
                 attributes: span.resource.attributes,
             },
-            instrumentationScope: (span as any)['instrumentationScope'] || undefined,
+            //# delete properties not provided from opentelemetry/sdk-trace-base@1.30.1
+            // instrumentationScope: (span as any)['instrumentationScope'] || undefined,
+            // parentSpanContext: (span as any)['parentSpanContext'] || undefined,
             traceId: span.spanContext().traceId,
-            parentSpanContext: (span as any)['parentSpanContext'] || undefined,
             traceState: span.spanContext().traceState?.serialize(),
             name: span.name,
             id: span.spanContext().spanId,
