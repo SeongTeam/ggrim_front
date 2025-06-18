@@ -2,7 +2,7 @@
 import { ConsoleSpanExporter, ReadableSpan } from '@opentelemetry/sdk-trace-base';
 import { ExportResult, ExportResultCode, hrTimeToMicroseconds } from '@opentelemetry/core';
 import util from 'util';
-import { serverLogger } from '../util/serverLogger';
+import { serverLogger } from '../serverLogger';
 
 export class WinstonTraceExporter extends ConsoleSpanExporter {
     export(spans: ReadableSpan[], resultCallback: (result: ExportResult) => void): void {
