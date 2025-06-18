@@ -29,7 +29,7 @@ export function getServerUrl(): string {
 export function withErrorHandler<T extends (...args: any[]) => Promise<any>>(
     actionName: string,
     action: T,
-): (...args: Parameters<T>) => Promise<Awaited<ReturnType<T>> | ServerActionError> {
+): (...args: Parameters<T>) => Promise<ReturnType<T> | ServerActionError> {
     return async (...args: Parameters<T>) => {
         const start = Date.now();
         let status = 'success';
@@ -44,13 +44,10 @@ export function withErrorHandler<T extends (...args: any[]) => Promise<any>>(
                 );
             }
             return response;
-        } catch (err: any) {
+        } catch (err: unknown) {
             serverLogger.error(`${actionName}() fail. Unknown server error:`, err);
             status = 'server-error';
-            return {
-                message: err?.message || 'Unknown server error',
-                stack: err.stack || 'withErrorHandler()',
-            };
+            return handleError(err);
         } finally {
             const delay = Date.now() - start;
             const info = {
@@ -61,6 +58,21 @@ export function withErrorHandler<T extends (...args: any[]) => Promise<any>>(
             };
             logMessage(requestId || 'undefined', `End ${actionName}()`, info);
         }
+    };
+}
+
+function handleError(err: unknown): ServerActionError {
+    let message = 'Unknown server error';
+    let stack = 'withErrorHandler()';
+
+    if (err instanceof Error) {
+        message = err.message;
+        stack = err.stack ?? stack;
+    }
+
+    return {
+        message,
+        stack,
     };
 }
 
