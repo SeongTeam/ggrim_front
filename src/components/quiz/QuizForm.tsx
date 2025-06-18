@@ -12,7 +12,7 @@ import { isHttpException, isServerActionError } from "../../server-action/backen
 import { CreateQuizDTO } from "../../server-action/backend/quiz/dto";
 import { addQuizAction, updateQuizAction } from "../../server-action/backend/quiz/api";
 import { Quiz } from '@/server-action/backend/quiz/type';
-import { getSavedNewQuiz, removeSavedNewQuiz, saveNewQuiz } from "../../storage/local/quiz";
+import { getSavedNewQuiz, removeSavedNewQuiz, saveNewQuiz } from "../../state/browser/quiz";
 import { useDebounceCallback } from "../../hooks/useDebounceCallback";
 
 export interface NewQuiz{

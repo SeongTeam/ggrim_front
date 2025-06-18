@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { signOutAction } from "../../server-action/backend/auth/api";
 import { useRouter } from "next/navigation";
 import { isServerActionError } from "../../server-action/backend/common/util";
-import { syncUserToLocalStorage, getRunningUser, removeRunningUser } from "../../storage/local/runningUser";
+import { syncUserToLocalStorage, getRunningUser, removeRunningUser } from "../../state/browser/runningUser";
 import { PROFILE_LOGIC_ROUTE } from "../../route/profile/route";
 import { AUTH_LOGIC_ROUTE } from "../../route/auth/route";
 import toast from "react-hot-toast";
