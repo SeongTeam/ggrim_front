@@ -29,10 +29,10 @@ export const FeaturedImageGallery: React.FC<FeaturedImageGalleryProps> = ({ pain
 	};
 
 	return (
-		<div className="flex flex-col ml-5 pt-5 mb-2 justify-start">
-			<section className="flex flex-col gap-2 mr-auto items-start pt-6 pb-10 max-w-4xl ">
+		<div className="mb-2 ml-5 flex flex-col justify-start pt-5">
+			<section className="mr-auto flex max-w-4xl flex-col items-start gap-2 pb-10 pt-6">
 				{/* Main Image Carousel */}
-				<div className="flex w-full relative justify-center items-center h-[480px] lg:h-[960px] overflow-hidden">
+				<div className="relative flex h-[480px] w-full items-center justify-center overflow-hidden lg:h-[960px]">
 					{/* <img
                         src={currentImage}
                         alt="Main Image"
@@ -45,27 +45,27 @@ export const FeaturedImageGallery: React.FC<FeaturedImageGalleryProps> = ({ pain
 						onClick={handleOpen}
 						alt="Main Image"
 						// fill={true}
-						className="w-[350px] lg:w-[700px] h-auto"
+						className="h-auto w-[350px] lg:w-[700px]"
 						priority={true}
 					/>
 					{/* 왼쪽 버튼 */}
 					<button
 						onClick={goToPrevious}
-						className="absolute left-4 top-1/2 transform -translate-y-1/2  bg-gray-600 opacity-50 hover:bg-gray-800 text-white p-2 rounded-full"
+						className="absolute left-4 top-1/2 -translate-y-1/2 transform rounded-full bg-gray-600 p-2 text-white opacity-50 hover:bg-gray-800"
 					>
 						◀
 					</button>
 					{/* 오른쪽 버튼 */}
 					<button
 						onClick={goToNext}
-						className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-gray-600 opacity-50 hover:bg-gray-800 text-white p-2 rounded-full"
+						className="absolute right-4 top-1/2 -translate-y-1/2 transform rounded-full bg-gray-600 p-2 text-white opacity-50 hover:bg-gray-800"
 					>
 						▶
 					</button>
 				</div>
 				{/* Thumbnail Navigation */}
-				<div className="flex flex-col w-full py-5 pl-2 bg-black rounded-lg text-gray-200">
-					<h3 className="text-2xl font-semibold "> {painting.title}</h3>
+				<div className="flex w-full flex-col rounded-lg bg-black py-5 pl-2 text-gray-200">
+					<h3 className="text-2xl font-semibold"> {painting.title}</h3>
 					<p className="text-sm"> by {painting.artist.name}</p>
 				</div>
 			</section>

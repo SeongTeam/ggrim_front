@@ -6,8 +6,8 @@ import { Suspense } from 'react';
 // 화면 크기 고정 (412 × 732)
 function WatchPage() {
 	return (
-		<div className="flex justify-start min-w-[412px] min-h-[732px] bg-gray-900">
-			<section className="w-[412px] h-[732px]">
+		<div className="flex min-h-[732px] min-w-[412px] justify-start bg-gray-900">
+			<section className="h-[732px] w-[412px]">
 				<Suspense>
 					<VideoPlayer />
 				</Suspense>

@@ -58,7 +58,7 @@ export const PasswordUpdateForm = ({ formAction, NextRoute }: PasswordUpdateForm
 				<input
 					type="password"
 					placeholder="Password"
-					className="p-3 rounded bg-gray-800 text-white placeholder-gray-400"
+					className="rounded bg-gray-800 p-3 text-white placeholder-gray-400"
 					value={password}
 					onChange={(e) => setPassword(e.target.value)}
 					required
@@ -66,14 +66,14 @@ export const PasswordUpdateForm = ({ formAction, NextRoute }: PasswordUpdateForm
 				<input
 					type="password"
 					placeholder="Repeat Password"
-					className="p-3 rounded bg-gray-800 text-white placeholder-gray-400"
+					className="rounded bg-gray-800 p-3 text-white placeholder-gray-400"
 					value={passwordRepeat}
 					onChange={(e) => setPasswordRepeat(e.target.value)}
 					required
 				/>
 				<button
 					type="submit"
-					className="bg-red-600 hover:bg-red-700 transition p-3 rounded font-semibold"
+					className="rounded bg-red-600 p-3 font-semibold transition hover:bg-red-700"
 				>
 					Update password
 				</button>

@@ -86,13 +86,13 @@ export const QuizCardGrid = (props: QuizCardGridProps): React.JSX.Element => {
 	// }, [findQuizzes]); // findQuizzes 상태가 변경될 때마다 로그 출력
 
 	return (
-		<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-4 mt-4">
+		<div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6">
 			{findQuizzes.map((quiz) => (
 				<div key={`${quiz.id}`} className="max-w-xs">
 					<QuizCard title={quiz.title} onClick={() => handleClickCard(quiz)} />
 				</div>
 			))}
-			{isLoadingRef.current && <p className="text-center mt-4">Loading...</p>}
+			{isLoadingRef.current && <p className="mt-4 text-center">Loading...</p>}
 		</div>
 	);
 };

@@ -43,8 +43,8 @@ export const DropdownMenu = <T,>({
 	}, []);
 
 	return (
-		<div className="relative w-full mb-4" ref={menuRef}>
-			<label className="block text-gray-600 mb-2">{label}</label>
+		<div className="relative mb-4 w-full" ref={menuRef}>
+			<label className="mb-2 block text-gray-600">{label}</label>
 
 			<input
 				type="text"
@@ -52,16 +52,16 @@ export const DropdownMenu = <T,>({
 				onClick={toggleMenu}
 				placeholder={placeholder}
 				readOnly
-				className="w-full text-blue-300 border border-gray-300 rounded-lg p-2 cursor-pointer"
+				className="w-full cursor-pointer rounded-lg border border-gray-300 p-2 text-blue-300"
 				required={required}
 			/>
 			{isOpen && (
-				<ul className="absolute left-0 mt-2 w-full text-gray-700 bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+				<ul className="absolute left-0 z-10 mt-2 w-full rounded-lg border border-gray-300 bg-white text-gray-700 shadow-lg">
 					{options.map((option, index) => (
 						<li
 							key={index}
 							onClick={() => handleOptionClick(option.value)}
-							className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+							className="cursor-pointer px-4 py-2 hover:bg-gray-100"
 						>
 							{option.label}
 						</li>

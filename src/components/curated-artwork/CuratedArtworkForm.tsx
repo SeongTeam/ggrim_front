@@ -84,8 +84,8 @@ export const CuratedArtworkForm = ({ addCuratedArtwork }: CuratedArtworkFormProp
 	];
 
 	return (
-		<form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md">
-			<h2 className="text-xl font-bold mb-4 text-gray-700">Create new CuratedArtwork</h2>
+		<form onSubmit={handleSubmit} className="rounded-lg bg-white p-6 shadow-md">
+			<h2 className="mb-4 text-xl font-bold text-gray-700">Create new CuratedArtwork</h2>
 			{inputs.map((input, index) => (
 				<CustomInput
 					key={index}
@@ -115,7 +115,7 @@ export const CuratedArtworkForm = ({ addCuratedArtwork }: CuratedArtworkFormProp
 
 			<button
 				type="submit"
-				className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-300"
+				className="rounded-lg bg-blue-500 px-4 py-2 text-white transition duration-300 hover:bg-blue-600"
 			>
 				Add CuratedArtwork
 			</button>

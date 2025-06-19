@@ -84,43 +84,43 @@ export const SignUpForm = () => {
 	return (
 		<form
 			onSubmit={handleSubmit}
-			className="bg-[#141414] p-8 rounded-lg w-96 shadow-lg space-y-6"
+			className="w-96 space-y-6 rounded-lg bg-[#141414] p-8 shadow-lg"
 		>
-			<h2 className="text-3xl font-bold text-white text-center">Sign Up</h2>
+			<h2 className="text-center text-3xl font-bold text-white">Sign Up</h2>
 
 			<div>
-				<label className="block mb-1 text-sm">Username</label>
+				<label className="mb-1 block text-sm">Username</label>
 				<input
 					type="text"
 					value={form.username}
 					onChange={handleChange('username')}
-					className="w-full p-2 rounded bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-red-500"
+					className="w-full rounded bg-gray-800 p-2 text-white focus:outline-none focus:ring-2 focus:ring-red-500"
 					required
 				/>
 			</div>
 
 			<div>
-				<label className="block mb-1 text-sm">Password</label>
+				<label className="mb-1 block text-sm">Password</label>
 				<input
 					type="password"
 					value={form.password}
 					onChange={handleChange('password')}
-					className="w-full p-2 rounded bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-red-500"
+					className="w-full rounded bg-gray-800 p-2 text-white focus:outline-none focus:ring-2 focus:ring-red-500"
 					required
 				/>
-				<label className="block mb-1 text-sm">Password Repeat</label>
+				<label className="mb-1 block text-sm">Password Repeat</label>
 				<input
 					type="password"
 					value={form.passwordRepeat}
 					onChange={handleChange('passwordRepeat')}
-					className="w-full p-2 rounded bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-red-500"
+					className="w-full rounded bg-gray-800 p-2 text-white focus:outline-none focus:ring-2 focus:ring-red-500"
 					required
 				/>
 			</div>
 
 			<button
 				type="submit"
-				className="w-full bg-red-600 hover:bg-red-700 py-2 rounded font-semibold"
+				className="w-full rounded bg-red-600 py-2 font-semibold hover:bg-red-700"
 			>
 				Sign Up
 			</button>

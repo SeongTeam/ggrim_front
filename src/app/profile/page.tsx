@@ -7,7 +7,7 @@ import { PROFILE_LOGIC_ROUTE } from '../../route/profile/route';
 
 export default function ProfilePage() {
 	return (
-		<main className="min-h-screen bg-black text-white flex items-center justify-center">
+		<main className="flex min-h-screen items-center justify-center bg-black text-white">
 			<SettingsMenu />
 		</main>
 	);
@@ -26,7 +26,7 @@ const menuItems = [
 function SettingsMenu() {
 	return (
 		<div className="w-full max-w-md">
-			<table className="w-full border bg-zinc-900 border-zinc-700 rounded-2xl overflow-hidden">
+			<table className="w-full overflow-hidden rounded-2xl border border-zinc-700 bg-zinc-900">
 				<tbody>
 					{menuItems.map((item, index) => {
 						const isFirst = index === 0;
@@ -34,10 +34,9 @@ function SettingsMenu() {
 						return (
 							<tr
 								key={item.href}
-								className={`border-b border-zinc-700 hover:bg-zinc-600 transition-colors duration-200
-                } ${
-					isFirst ? 'first:rounded-t-2xl' : ''
-				} ${isLast ? 'last:rounded-b-2xl border-b-0' : ''}`}
+								className={`} border-b border-zinc-700 transition-colors duration-200 hover:bg-zinc-600 ${
+									isFirst ? 'first:rounded-t-2xl' : ''
+								} ${isLast ? 'border-b-0 last:rounded-b-2xl' : ''}`}
 							>
 								<td className="p-4 text-center">
 									<Link

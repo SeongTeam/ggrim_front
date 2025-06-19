@@ -290,11 +290,11 @@ export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
 	}
 
 	return (
-		<div className="flex items-center justify-center h-full">
+		<div className="flex h-full items-center justify-center">
 			{error && <AlertModal message={error} onClose={async () => setError('')} />}
 			<form
 				onSubmit={(e) => handleSubmit(e)}
-				className="rounded-lg shadow-lg text-white max-w-5xl md:min-w-[600px]"
+				className="max-w-5xl rounded-lg text-white shadow-lg md:min-w-[600px]"
 			>
 				<div className="mb-4">
 					<input
@@ -302,17 +302,17 @@ export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
 						placeholder="Title"
 						value={newQuiz.title}
 						onChange={(e) => handleChangeTitle(e.target.value)}
-						className="w-full p-3 bg-gray-800 border border-gray-700 rounded focus:outline-none focus:border-red-600 transition"
+						className="w-full rounded border border-gray-700 bg-gray-800 p-3 transition focus:border-red-600 focus:outline-none"
 						required
 					/>
 				</div>
 
 				<div key="painting selection" className="mb-4">
-					<div className="grid grid-cols-1 gap-2 mb-2">
+					<div className="mb-2 grid grid-cols-1 gap-2">
 						<div
-							className={`p-2 flex rounded-lg border-2 items-center gap-3 border-green-500`}
+							className={`flex items-center gap-3 rounded-lg border-2 border-green-500 p-2`}
 						>
-							<CheckCircle className=" hidden md:block text-green-500" />
+							<CheckCircle className="hidden text-green-500 md:block" />
 							<InsertToggleInput
 								handleAdd={(value: string) =>
 									handleAddQuizPainting('answer', value)
@@ -326,9 +326,9 @@ export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
 						{distractorKeys.map((key) => (
 							<div
 								key={key}
-								className={`p-2 flex rounded-lg border-2 items-center gap-3 border-red-800`}
+								className={`flex items-center gap-3 rounded-lg border-2 border-red-800 p-2`}
 							>
-								<XCircle className=" hidden md:block text-red-500" />
+								<XCircle className="hidden text-red-500 md:block" />
 								<InsertToggleInput
 									handleAdd={(value: string) => handleAddQuizPainting(key, value)}
 									handleDelete={() => handleDeleteQuizPainting(key)}
@@ -340,10 +340,10 @@ export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
 						))}
 					</div>
 					<div>
-						<h1 className="text-2xl font-bold mb-2"> Quiz Paintings </h1>
-						<div className="bg-gray-500 grid min-h-56 sm:grid-cols-1 md:grid-cols-2 items-center p-2 rounded-lg border-gray-200 border-2 gap-4">
+						<h1 className="mb-2 text-2xl font-bold"> Quiz Paintings </h1>
+						<div className="grid min-h-56 items-center gap-4 rounded-lg border-2 border-gray-200 bg-gray-500 p-2 sm:grid-cols-1 md:grid-cols-2">
 							{newQuiz.answer && (
-								<div className={`rounded-lg border-2 border-green-500 max-w-xs`}>
+								<div className={`max-w-xs rounded-lg border-2 border-green-500`}>
 									<Card
 										imageProps={{
 											src: newQuiz.answer.image_url,
@@ -361,7 +361,7 @@ export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
 								.map((p) => (
 									<div
 										key={p.id}
-										className={`rounded-lg border-2 border-red-800 max-w-xs`}
+										className={`max-w-xs rounded-lg border-2 border-red-800`}
 									>
 										<Card
 											imageProps={{
@@ -382,14 +382,14 @@ export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
 						placeholder="Description"
 						value={newQuiz.description}
 						onChange={(e) => handleChangeDescription(e.target.value)}
-						className="w-full p-3 bg-gray-800 border border-gray-700 rounded focus:outline-none focus:border-red-600 transition"
+						className="w-full rounded border border-gray-700 bg-gray-800 p-3 transition focus:border-red-600 focus:outline-none"
 						required
 					/>
 				</div>
-				<div className="flex justify-center mb-10">
+				<div className="mb-10 flex justify-center">
 					<button
 						type="submit"
-						className="text-xl border-b-2 border-transparent hover:border-white"
+						className="border-b-2 border-transparent text-xl hover:border-white"
 					>
 						{' '}
 						{quiz === undefined ? 'Create' : 'Edit'}{' '}

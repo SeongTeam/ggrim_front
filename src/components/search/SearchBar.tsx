@@ -27,15 +27,15 @@ export const SearchBar = ({ onSearch, defaultValue, inputRef }: SearchBarProps) 
 				type="text"
 				placeholder="Search Painting..."
 				onChange={handlers.onChange}
-				className="w-full pl-10 pr-4 py-2 text-white bg-gray-800 rounded-lg outline-none focus:ring-2 focus:ring-red-500"
+				className="w-full rounded-lg bg-gray-800 py-2 pl-10 pr-4 text-white outline-none focus:ring-2 focus:ring-red-500"
 				onKeyUp={handlers.onClickOrKeyUp}
 				onClick={handlers.onClickOrKeyUp}
 				onKeyDown={handlers.onKeyDown}
 			/>
 
 			{autoCompleteState.loading && (
-				<div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-					<div className="h-4 w-4 border-2 border-t-blue-500 border-r-blue-500 border-b-gray-200 border-l-gray-200 rounded-full animate-spin" />
+				<div className="absolute right-3 top-1/2 -translate-y-1/2 transform">
+					<div className="h-4 w-4 animate-spin rounded-full border-2 border-b-gray-200 border-l-gray-200 border-r-blue-500 border-t-blue-500" />
 				</div>
 			)}
 

@@ -83,12 +83,11 @@ export const EmailVerificationForm = ({ nextRoute }: EmailVerificationForm) => {
 					onChange={(e) => setEmail(e.target.value)}
 					disabled={isPinCodeSent}
 					required
-					className="w-full px-4 py-2 rounded bg-gray-800 text-white disabled:opacity-50 disabled:bg-[#222] disabled:cursor-not-allowed
-            border border-transparent focus:outline-none"
+					className="w-full rounded border border-transparent bg-gray-800 px-4 py-2 text-white focus:outline-none disabled:cursor-not-allowed disabled:bg-[#222] disabled:opacity-50"
 				/>
 				<button
 					type="submit"
-					className="w-full bg-red-600 text-white px-4 py-2 rounded font-semibold disabled:text-gray-300  disabled:bg-[#555] disabled:cursor-not-allowed disabled:hover:bg-[#555] "
+					className="w-full rounded bg-red-600 px-4 py-2 font-semibold text-white disabled:cursor-not-allowed disabled:bg-[#555] disabled:text-gray-300 disabled:hover:bg-[#555]"
 					disabled={isPinCodeSent}
 				>
 					Send
@@ -102,11 +101,11 @@ export const EmailVerificationForm = ({ nextRoute }: EmailVerificationForm) => {
 					placeholder="PinCode"
 					value={pin}
 					onChange={(e) => setPin(e.target.value)}
-					className="w-full px-4 py-2 rounded bg-gray-800 text-white tracking-widest disabled:opacity-50 disabled:bg-[#222] disabled:cursor-not-allowed border border-transparent focus:outline-none"
+					className="w-full rounded border border-transparent bg-gray-800 px-4 py-2 tracking-widest text-white focus:outline-none disabled:cursor-not-allowed disabled:bg-[#222] disabled:opacity-50"
 				/>
 				<button
 					type="submit"
-					className="w-full bg-red-600 text-white px-4 py-2 rounded font-semibold disabled:bg-[#555] disabled:text-gray-300 disabled:cursor-not-allowed disabled:hover:bg-[#555]"
+					className="w-full rounded bg-red-600 px-4 py-2 font-semibold text-white disabled:cursor-not-allowed disabled:bg-[#555] disabled:text-gray-300 disabled:hover:bg-[#555]"
 					disabled={!isPinCodeSent}
 				>
 					Verify

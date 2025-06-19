@@ -22,16 +22,16 @@ export const ArtworkCarousel = (props: ArtworkCarouselProps) => {
 	};
 
 	return (
-		<section className="sm:px-16 md:px-40 lg:60 !py-20">
+		<section className="lg:60 !py-20 sm:px-16 md:px-40">
 			<section>
 				<p className="text-3xl font-bold text-yellow-400">Enjoy Classic Paintings</p>
-				<div className="bg-ggrimGrey1 mt-5 rounded-md">
+				<div className="mt-5 rounded-md bg-ggrimGrey1">
 					<FeaturedImageGallery paintings={curatedWorkAttributes} />
 				</div>
 			</section>
 			<section>
 				<p className="text-3xl font-bold text-yellow-400">Enjoy Painting Quizzes</p>
-				<div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 mt-4">
+				<div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
 					{quizzes.slice(0, 21).map((quiz) => (
 						<div key={`${quiz.id}`} className="max-w-xs">
 							<QuizCard title={quiz.title} onClick={() => handleClickCard(quiz)} />

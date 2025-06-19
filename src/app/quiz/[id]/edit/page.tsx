@@ -30,9 +30,9 @@ export default async function QuizEditPage({ params }: QuizEditPageProps) {
 	}
 
 	return (
-		<div className="mt-10 pt-10 px-40">
-			<div className="bg-zinc-800 pt-10 rounded-lg">
-				<h2 className="text-2xl font-bold mb-6 text-center text-white">Edit Quiz</h2>
+		<div className="mt-10 px-40 pt-10">
+			<div className="rounded-lg bg-zinc-800 pt-10">
+				<h2 className="mb-6 text-center text-2xl font-bold text-white">Edit Quiz</h2>
 				<QuizForm quiz={quiz} />
 			</div>
 		</div>

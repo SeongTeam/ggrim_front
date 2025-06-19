@@ -50,7 +50,7 @@ export const InsertToggleInput = ({
 					placeholder={placeholder || 'input value'}
 					value={value}
 					onChange={(e) => setValue(e.target.value)}
-					className="w-full p-3 bg-gray-800 border border-gray-700 rounded focus:outline-none focus:border-white transition disabled:bg-gray-400"
+					className="w-full rounded border border-gray-700 bg-gray-800 p-3 transition focus:border-white focus:outline-none disabled:bg-gray-400"
 					disabled={isInserted}
 					required
 				/>
@@ -59,7 +59,7 @@ export const InsertToggleInput = ({
 				type="button"
 				onClick={handleClickAdd}
 				disabled={value.trim().length === 0 || isInserted}
-				className="p-2 bg-blue-500 text-white rounded-full disabled:bg-gray-400 transition hover:bg-blue-600"
+				className="rounded-full bg-blue-500 p-2 text-white transition hover:bg-blue-600 disabled:bg-gray-400"
 			>
 				<Plus size={15} />
 			</button>
@@ -68,7 +68,7 @@ export const InsertToggleInput = ({
 				type="button"
 				onClick={handleClickDelete}
 				disabled={!isInserted}
-				className="p-2 bg-red-500 text-white rounded-full disabled:bg-gray-400 transition hover:bg-red-600"
+				className="rounded-full bg-red-500 p-2 text-white transition hover:bg-red-600 disabled:bg-gray-400"
 			>
 				<Minus size={15} />
 			</button>

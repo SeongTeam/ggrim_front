@@ -22,7 +22,7 @@ export const HoverImagePreview = ({ url }: HoverImagePreviewProps) => {
 		>
 			<p className="cursor-pointer text-blue-500 underline">{url}</p>
 			{isHovered && (
-				<div className="absolute bottom-0 right-0 mt-8 p-2 bg-white shadow-lg border rounded-lg z-10">
+				<div className="absolute bottom-0 right-0 z-10 mt-8 rounded-lg border bg-white p-2 shadow-lg">
 					{/*TODO : <Image /> prop 개선하기
                         - [ ] : 컴포넌트 목적 및 필요 상황 파악한 뒤 적절한 width,height 설정하기
                     */}
@@ -31,10 +31,10 @@ export const HoverImagePreview = ({ url }: HoverImagePreviewProps) => {
 						alt="Preview"
 						width={100}
 						height={150}
-						className="max-w-xs max-h-64 rounded"
+						className="max-h-64 max-w-xs rounded"
 					/>
 					{imageSize && (
-						<p className="text-sm text-gray-500 mt-2">
+						<p className="mt-2 text-sm text-gray-500">
 							Size: {imageSize.width}px × {imageSize.height}px
 						</p>
 					)}

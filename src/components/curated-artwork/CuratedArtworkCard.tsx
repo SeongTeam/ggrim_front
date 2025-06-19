@@ -49,13 +49,13 @@ export const CuratedArtworkCard = ({
 		];
 
 		return fields.map(({ label, value, field }, index) => (
-			<div key={`${field}+${index}`} className="edit-input ">
-				<label className="block text-gray-600 mb-2">{label}</label>
+			<div key={`${field}+${index}`} className="edit-input">
+				<label className="mb-2 block text-gray-600">{label}</label>
 				<input
 					type="text"
 					value={value}
 					onChange={handleInputChange(field)}
-					className="text-blue-500 border  p-1 rounded-md w-full"
+					className="w-full rounded-md border p-1 text-blue-500"
 					placeholder={label}
 				/>
 			</div>
@@ -63,23 +63,23 @@ export const CuratedArtworkCard = ({
 	};
 
 	return (
-		<li className="bg-gray-100 p-4 rounded-lg shadow-sm">
-			<div className="flex items-start py-2 justify-between">
+		<li className="rounded-lg bg-gray-100 p-4 shadow-sm">
+			<div className="flex items-start justify-between py-2">
 				{isEditing ? (
 					<input
 						type="text"
 						value={editableFormState.id}
 						onChange={handleInputChange('id')}
-						className="text-xl font-extrabold text-gray-800 border mb-3 p-1  w-full rounded-md"
+						className="mb-3 w-full rounded-md border p-1 text-xl font-extrabold text-gray-800"
 						placeholder="ID"
 					/>
 				) : (
-					<h3 className="text-lg font-semibold text-gray-800 line-clamp-3">
+					<h3 className="line-clamp-3 text-lg font-semibold text-gray-800">
 						{curatedArtwork.id}
 					</h3>
 				)}
 				<button
-					className="text-black font-mono py-1 pl-12 pr-2 rounded-lg hover:underline text-sm"
+					className="rounded-lg py-1 pl-12 pr-2 font-mono text-sm text-black hover:underline"
 					onClick={() => (isEditing ? handleSave() : setIsEditing(true))}
 				>
 					{isEditing ? 'Save' : 'Edit'}
@@ -91,20 +91,20 @@ export const CuratedArtworkCard = ({
 					<textarea
 						value={editableFormState.operatorDescription}
 						onChange={handleInputChange('operatorDescription')}
-						className="text-gray-600 mt-2 border p-1 rounded-md h-80 w-full"
+						className="mt-2 h-80 w-full rounded-md border p-1 text-gray-600"
 						placeholder="Operator Description"
 					/>
 				</>
 			) : (
 				<>
-					<p className="text-blue-500 mt-2 truncate">cld_Id: {curatedArtwork.cldId}</p>
+					<p className="mt-2 truncate text-blue-500">cld_Id: {curatedArtwork.cldId}</p>
 					<HoverImagePreview url={curatedArtwork.imageUrl}></HoverImagePreview>
-					<p className="text-gray-700 mt-2">
+					<p className="mt-2 text-gray-700">
 						operatorDescription: {curatedArtwork.operatorDescription}
 					</p>
 				</>
 			)}
-			<p className="text-sm text-gray-500 mt-4">content type: {curatedArtwork.type}</p>
+			<p className="mt-4 text-sm text-gray-500">content type: {curatedArtwork.type}</p>
 		</li>
 	);
 };

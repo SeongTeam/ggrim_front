@@ -32,7 +32,7 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
 	return (
 		<button
 			onClick={handleCopy}
-			className={`flex items-center justify-center px-2 py-1 rounded-md bg-gray-600 text-white hover:bg-gray-700 active:scale-95 transition duration-150 ease-in-out ${className}`}
+			className={`flex items-center justify-center rounded-md bg-gray-600 px-2 py-1 text-white transition duration-150 ease-in-out hover:bg-gray-700 active:scale-95 ${className}`}
 			style={{
 				minWidth: '10px',
 				touchAction: 'manipulation',

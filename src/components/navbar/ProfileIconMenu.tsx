@@ -81,28 +81,28 @@ export const ProfileIconMenu = ({ user }: ProfileIconMenuProps) => {
 	return (
 		<div className="relative" ref={menuRef}>
 			<UserIcon
-				className="text-white w-7 h-7 cursor-pointer hover:opacity-80"
+				className="h-7 w-7 cursor-pointer text-white hover:opacity-80"
 				onClick={toggleMenu}
 			/>
 			{open && (
-				<div className="absolute right-0 mt-2 w-48 bg-zinc-900 text-white rounded-lg shadow-lg z-50">
-					<div className="px-4 py-3 border-b border-zinc-700">
+				<div className="absolute right-0 z-50 mt-2 w-48 rounded-lg bg-zinc-900 text-white shadow-lg">
+					<div className="border-b border-zinc-700 px-4 py-3">
 						<p className="text-sm font-medium">{user.username}</p>
 						<p className="text-xs text-zinc-400">{user.email}</p>
 					</div>
 					<ul className="py-1">
 						<li
-							className="px-4 py-2 hover:bg-zinc-800 cursor-pointer flex items-center gap-2"
+							className="flex cursor-pointer items-center gap-2 px-4 py-2 hover:bg-zinc-800"
 							onClick={handleSetting}
 						>
-							<Settings className="w-4 h-4" />
+							<Settings className="h-4 w-4" />
 							Account Setting
 						</li>
 						<li
-							className="px-4 py-2 hover:bg-zinc-800 cursor-pointer flex items-center gap-2 text-red-400"
+							className="flex cursor-pointer items-center gap-2 px-4 py-2 text-red-400 hover:bg-zinc-800"
 							onClick={handleSignOut}
 						>
-							<LogOut className="w-4 h-4" />
+							<LogOut className="h-4 w-4" />
 							Sign Out
 						</li>
 					</ul>

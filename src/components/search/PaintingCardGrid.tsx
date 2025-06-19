@@ -125,15 +125,9 @@ export const PaintingCardGrid = (props: PaintingCardGridProps): React.JSX.Elemen
 	// }, [searchPaintings]); // searchPaintings 상태가 변경될 때마다 로그 출력
 
 	return (
-		<div
-			className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 
-                gap-4 
-                mt-4
-                px-4 sm:px-0
-                "
-		>
+		<div className="mt-4 grid grid-cols-1 gap-4 px-4 sm:grid-cols-2 sm:px-0 md:grid-cols-3 xl:grid-cols-4">
 			{searchPaintings.map((item) => (
-				<div key={`${item.id}+searchPaintingHoverCard`} className="max-w-2xl h-[400px]">
+				<div key={`${item.id}+searchPaintingHoverCard`} className="h-[400px] max-w-2xl">
 					<HoverCard
 						cardProps={{
 							imageProps: {
@@ -155,7 +149,7 @@ export const PaintingCardGrid = (props: PaintingCardGridProps): React.JSX.Elemen
 					<PaintingDetailView painting={selectedPainting} />
 				</Modal>
 			)}
-			{isLoadingRef.current && <p className="text-center mt-4">Loading...</p>}
+			{isLoadingRef.current && <p className="mt-4 text-center">Loading...</p>}
 		</div>
 	);
 };

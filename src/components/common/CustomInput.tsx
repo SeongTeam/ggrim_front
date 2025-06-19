@@ -23,13 +23,13 @@ export const CustomInput = ({
 
 	return (
 		<div className="mb-4">
-			<label className="block text-gray-600 mb-2">{label}</label>
+			<label className="mb-2 block text-gray-600">{label}</label>
 			{type === 'textarea' ? (
 				<textarea
 					value={value}
 					onChange={handleChange}
 					placeholder={placeholder}
-					className="w-full border border-gray-300  text-gray-700 rounded-lg p-2 h-32"
+					className="h-32 w-full rounded-lg border border-gray-300 p-2 text-gray-700"
 					required={required}
 				/>
 			) : (
@@ -38,7 +38,7 @@ export const CustomInput = ({
 					value={value}
 					onChange={handleChange}
 					placeholder={placeholder}
-					className="w-full border border-gray-300   text-gray-700 rounded-lg p-2"
+					className="w-full rounded-lg border border-gray-300 p-2 text-gray-700"
 					required={required}
 				/>
 			)}

@@ -82,9 +82,9 @@ export const DetailQuiz = ({
 
 	if (quiz.type === 'ONE_CHOICE') {
 		return (
-			<div className="p-4 rounded-md shadow bg-ggrimBeige2" style={{ minHeight: '744px' }}>
-				<div className="flex gap-2 justify-between">
-					<p className="text-3xl font-bold text-black mb-6">{`${quiz.title}`}</p>
+			<div className="rounded-md bg-ggrimBeige2 p-4 shadow" style={{ minHeight: '744px' }}>
+				<div className="flex justify-between gap-2">
+					<p className="mb-6 text-3xl font-bold text-black">{`${quiz.title}`}</p>
 					<QuizMenu quiz={quiz} isOwner={isOwnerAccess} />
 				</div>
 				<MCQView

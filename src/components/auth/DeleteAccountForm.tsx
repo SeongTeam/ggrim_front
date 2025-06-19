@@ -85,18 +85,18 @@ export const DeleteAccountForm = () => {
 			<form onSubmit={handleSubmit} className="flex flex-col gap-4">
 				<label className="text-sm text-zinc-400">
 					To confirm, type{' '}
-					<span className="text-red-500 font-semibold">{expectedPhrase}</span>
+					<span className="font-semibold text-red-500">{expectedPhrase}</span>
 				</label>
 				<input
 					type="text"
-					className="p-3 rounded bg-zinc-800 text-white border border-zinc-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+					className="rounded border border-zinc-700 bg-zinc-800 p-3 text-white focus:outline-none focus:ring-2 focus:ring-red-500"
 					placeholder="Type here..."
 					value={state.input}
 					onChange={(e) => handleStateChange('input', e.target.value)}
 				/>
 				<button
 					type="submit"
-					className="bg-red-600 hover:bg-red-700 transition-colors text-white font-semibold py-2 rounded"
+					className="rounded bg-red-600 py-2 font-semibold text-white transition-colors hover:bg-red-700"
 				>
 					Delete My Account
 				</button>

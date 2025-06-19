@@ -19,7 +19,7 @@ export const SearchPaintingIconMenu = () => {
 
 	return (
 		<div
-			className="min-w-[250px] min-h-[40px] flex items-center justify-end"
+			className="flex min-h-[40px] min-w-[250px] items-center justify-end"
 			onBlur={(e) => {
 				if (!e.currentTarget.contains(e.relatedTarget)) {
 					setIsSearching(false);
@@ -30,7 +30,7 @@ export const SearchPaintingIconMenu = () => {
 				<SearchPaintingBar inputRef={inputRef} />
 			) : (
 				<Search
-					className="text-white w-6 h-6 cursor-pointer hover:opacity-80"
+					className="h-6 w-6 cursor-pointer text-white hover:opacity-80"
 					onClick={handleClickSearchIcon}
 				/>
 			)}

@@ -36,10 +36,10 @@ const SubmissionFeedback: React.FC<SubmissionFeedbackProps> = ({
 		{' '}
 		{/* 오른쪽 정렬 */}
 		<FeedBackResult isCorrect={isCorrect} isSubmitted={isSubmitted} />
-		<div className="flex justify-end items-center space-x-4">
+		<div className="flex items-center justify-end space-x-4">
 			<button
 				onClick={handleSubmit}
-				className="font-semibold py-2 px-4 flex items-center gap-3 text-gray-600 bg-green-200 rounded-lg"
+				className="flex items-center gap-3 rounded-lg bg-green-200 px-4 py-2 font-semibold text-gray-600"
 			>
 				<p className="hidden md:block">Submit</p>
 				<Icons.CornerRightUp />
@@ -47,11 +47,9 @@ const SubmissionFeedback: React.FC<SubmissionFeedbackProps> = ({
 			<div className="flex flex-col items-center gap-1">
 				<button
 					onClick={toggleLike}
-					className={`p-4 rounded-full border-2 transition-colors duration-300 text-black
-                    ${liked ? 'bg-green-500 border-green-500' : 'border-gray-400 dark:border-gray-600'}
-                    `}
+					className={`rounded-full border-2 p-4 text-black transition-colors duration-300 ${liked ? 'border-green-500 bg-green-500' : 'border-gray-400 dark:border-gray-600'} `}
 				>
-					<ThumbsUp className="w-4 h-4" />
+					<ThumbsUp className="h-4 w-4" />
 				</button>
 				<span className="text-sm text-black">{likeCount}</span>
 			</div>
@@ -59,18 +57,16 @@ const SubmissionFeedback: React.FC<SubmissionFeedbackProps> = ({
 			<div className="flex flex-col items-center gap-1">
 				<button
 					onClick={toggleDislike}
-					className={`p-4 rounded-full border-2 transition-colors duration-300  text-black
-                    ${disliked ? 'bg-red-500 border-red-500' : 'border-gray-400 dark:border-gray-600'}
-                    `}
+					className={`rounded-full border-2 p-4 text-black transition-colors duration-300 ${disliked ? 'border-red-500 bg-red-500' : 'border-gray-400 dark:border-gray-600'} `}
 				>
-					<ThumbsDown className="w-4 h-4" />
+					<ThumbsDown className="h-4 w-4" />
 				</button>
 				<span className="text-sm text-black">{dislikeCount}</span>
 			</div>
 
 			<button
 				onClick={handleNextMCQ}
-				className="py-2 px-4 flex items-center gap-3 text-white bg-black rounded-lg"
+				className="flex items-center gap-3 rounded-lg bg-black px-4 py-2 text-white"
 			>
 				<p className="hidden md:block">NEXT</p>
 				<ArrowRightCircleIcon />
@@ -89,7 +85,7 @@ interface FeedBackResultProps {
 const FeedBackResult = ({ isCorrect, isSubmitted }: FeedBackResultProps) => {
 	if (!isSubmitted) {
 		return (
-			<div className="text-2xl font-semibold text-success mb-2 text-zinc-800">
+			<div className="text-success mb-2 text-2xl font-semibold text-zinc-800">
 				Could you find?
 			</div>
 		);
@@ -97,9 +93,9 @@ const FeedBackResult = ({ isCorrect, isSubmitted }: FeedBackResultProps) => {
 
 	if (isCorrect) {
 		return (
-			<div className="text-2xl font-semibold text-success mb-2 text-green-500">Correct!</div>
+			<div className="text-success mb-2 text-2xl font-semibold text-green-500">Correct!</div>
 		);
 	}
 
-	return <div className="text-2xl font-semibold text-error mb-2 text-red-500">Incorrect...</div>;
+	return <div className="text-error mb-2 text-2xl font-semibold text-red-500">Incorrect...</div>;
 };

@@ -190,11 +190,11 @@ const MCQView = ({
 				}}
 			>
 				{errorMessage && <ErrorMessage message={errorMessage} />}
-				<div className="grid sm:grid-cols-1 md:grid-cols-2 gap-4">
+				<div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2">
 					{displayPaintings.map(({ id, image_url, width, height }, index) => (
 						<div
 							key={id}
-							className={`flex flex-col items-center p-4 rounded-md shadow-md ${getCardClasses(id)} ${getBorderClasses(id)}`}
+							className={`flex flex-col items-center rounded-md p-4 shadow-md ${getCardClasses(id)} ${getBorderClasses(id)}`}
 							onClick={() => handleImageClick(id)}
 						>
 							<Image
@@ -203,13 +203,13 @@ const MCQView = ({
 								width={width}
 								height={height}
 								priority={true}
-								className={`w-auto h-[250px] md:h-[350px] xl:h-[500px] mb-2 ${getImageClasses(id)}`}
+								className={`mb-2 h-[250px] w-auto md:h-[350px] xl:h-[500px] ${getImageClasses(id)}`}
 							/>
 						</div>
 					))}
 				</div>
 			</motion.div>
-			<div className="flex justify-end items-center">
+			<div className="flex items-center justify-end">
 				<SubmissionFeedback
 					isCorrect={isCorrect}
 					isSubmitted={isSubmitted}

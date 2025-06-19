@@ -7,7 +7,7 @@ export const NotifyIconMenu = () => {
 	};
 	return (
 		<Bell
-			className="text-white w-6 h-6 cursor-pointer hover:opacity-80"
+			className="h-6 w-6 cursor-pointer text-white hover:opacity-80"
 			onClick={() => handleClickBellIcon()}
 		/>
 	);

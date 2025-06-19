@@ -15,7 +15,7 @@ export interface CardProps {
 
 export const Card = ({ title, imageProps }: CardProps) => {
 	return (
-		<section className="flex flex-col bg-gray-900 rounded overflow-hidden">
+		<section className="flex flex-col overflow-hidden rounded bg-gray-900">
 			<div className="max-h-[330px] overflow-hidden">
 				<Image
 					src={imageProps.src}
@@ -24,10 +24,10 @@ export const Card = ({ title, imageProps }: CardProps) => {
 					width={imageProps.width}
 					height={imageProps.height}
 					sizes="400px"
-					className="w-full h-auto object-cover"
+					className="h-auto w-full object-cover"
 				/>
 			</div>
-			<p className="p-2 text-white text-sm">{title}</p>
+			<p className="p-2 text-sm text-white">{title}</p>
 		</section>
 	);
 };

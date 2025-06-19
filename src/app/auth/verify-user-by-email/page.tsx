@@ -26,9 +26,9 @@ export default async function Verify({ searchParams }: verifyUserByEmailProps) {
 	};
 
 	return (
-		<main className="min-h-screen flex items-center justify-center bg-black text-white">
-			<div className="bg-neutral-900 p-8 rounded-md shadow-md w-full max-w-md space-y-6">
-				<h1 className="text-3xl font-bold mb-6">Verify User By Email</h1>
+		<main className="flex min-h-screen items-center justify-center bg-black text-white">
+			<div className="w-full max-w-md space-y-6 rounded-md bg-neutral-900 p-8 shadow-md">
+				<h1 className="mb-6 text-3xl font-bold">Verify User By Email</h1>
 				<EmailForm emailFormAction={handleAction} />
 
 				<AuthFooter state="VERIFY_USER_BY_EMAIL" />

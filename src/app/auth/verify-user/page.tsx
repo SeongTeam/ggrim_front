@@ -37,9 +37,9 @@ export default async function VerifyUser({ searchParams }: VerifyUserProps) {
 	// TODO 브라우저 쿠키 ID와 PW 미적용해야함
 
 	return (
-		<main className="flex items-center justify-center min-h-screen bg-cover bg-center">
-			<div className="bg-black bg-opacity-75 p-8 rounded-md w-full max-w-md">
-				<h1 className="text-3xl font-bold mb-6">Verify User</h1>
+		<main className="flex min-h-screen items-center justify-center bg-cover bg-center">
+			<div className="w-full max-w-md rounded-md bg-black bg-opacity-75 p-8">
+				<h1 className="mb-6 text-3xl font-bold">Verify User</h1>
 				<SignInForm formAction={handleFormAction} NextRoute={nextRoute} />
 				<AuthFooter state="VERIFY_EMAIL" />
 			</div>

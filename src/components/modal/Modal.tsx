@@ -18,12 +18,12 @@ export const Modal = ({ onClose, children }: ModalProps) => {
 	return (
 		<div
 			id={modalId}
-			className="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50 overflow-y-auto"
+			className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black bg-opacity-80"
 			onClick={handleOutsideClick}
 		>
-			<div className="relative bg-white rounded-lg p-6 max-w-3xl w-full max-h-screen overflow-y-auto">
+			<div className="relative max-h-screen w-full max-w-3xl overflow-y-auto rounded-lg bg-white p-6">
 				<button
-					className="absolute top-4 right-4 text-gray-600 hover:text-gray-900 font-bold"
+					className="absolute right-4 top-4 font-bold text-gray-600 hover:text-gray-900"
 					onClick={onClose}
 				>
 					Close

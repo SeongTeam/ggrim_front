@@ -22,17 +22,17 @@ export const ArtworkQuiz = (artworkQuizProps: ArtworkQuizProps) => {
 	};
 
 	return (
-		<section className="sm:px-16 md:px-40 lg:60 !py-20 ">
-			<div className="container mx-auto  bg-ggrimGrey1">
+		<section className="lg:60 !py-20 sm:px-16 md:px-40">
+			<div className="container mx-auto bg-ggrimGrey1">
 				<div className="flex max-w-md flex-col items-start">
 					{/* 여기서 max-w-lg로 조정 */}
-					<div className="pt-5 pl-20 mb-2 ">
-						<p className="!text-ggrimBrown1 text-3xl font-bold relative after:content-[''] after:block after:w-full after:h-1 after:bg-ggrimBrown1 after:mt-2">
+					<div className="mb-2 pl-20 pt-5">
+						<p className="relative text-3xl font-bold !text-ggrimBrown1 after:mt-2 after:block after:h-1 after:w-full after:bg-ggrimBrown1 after:content-['']">
 							Quiz of the Week
 						</p>
 					</div>
 				</div>
-				<div className=" bg-ggrimGrey1 ">
+				<div className="bg-ggrimGrey1">
 					<MCQView
 						mcq={mcqAttributes[currentIndex]}
 						// currentAttributeIndex={currentIndex}

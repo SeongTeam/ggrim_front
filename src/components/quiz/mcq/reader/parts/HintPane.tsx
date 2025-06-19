@@ -68,25 +68,25 @@ const HintPane: React.FC<HintPaneProps> = ({
 
 	return (
 		<div
-			className={`fixed top-16 right-3 w-1/4 h-auto max-h-[50vh] border-dashed border-secondary border-2 shadow-lg z-50 p-4 rounded-md flex flex-col transition-opacity duration-300 ease-in-out bg-base-100 ${
+			className={`border-secondary bg-base-100 fixed right-3 top-16 z-50 flex h-auto max-h-[50vh] w-1/4 flex-col rounded-md border-2 border-dashed p-4 shadow-lg transition-opacity duration-300 ease-in-out ${
 				isVisible ? 'opacity-100' : 'opacity-0'
 			}`}
 			role="dialog"
 			aria-modal="true"
 			aria-labelledby="hint-pane-title"
 		>
-			<div className="flex justify-between items-start">
+			<div className="flex items-start justify-between">
 				<h2 className="text-lg font-bold">Smart Hint</h2>
 				<div className="flex space-x-2">
 					<button onClick={handleClose} className="text-gray-600 hover:text-gray-800">
-						<Icons.X className="w-6 h-6" />
+						<Icons.X className="h-6 w-6" />
 					</button>
 				</div>
 			</div>
-			<h3 className="text-sm font-semibold text-gray-600 mb-5">{question}</h3>
-			<div className="overflow-y-auto flex-grow">
+			<h3 className="mb-5 text-sm font-semibold text-gray-600">{question}</h3>
+			<div className="flex-grow overflow-y-auto">
 				{loading ? (
-					<div className="skeleton h-20 w-full mb-4"></div>
+					<div className="skeleton mb-4 h-20 w-full"></div>
 				) : (
 					<p className="text-gray-700">{hint}</p>
 				)}

@@ -22,13 +22,12 @@ export const Navbar = async () => {
 	// console.log(user);
 	return (
 		<nav
-			className={`fixed top-0 left-0 w-full z-50 transition-all duration-300
-      bg-black/90 shadow-md`}
+			className={`fixed left-0 top-0 z-50 w-full bg-black/90 shadow-md transition-all duration-300`}
 		>
 			<div>
-				<div className="flex items-center md:justify-between px-6 py-4">
+				<div className="flex items-center px-6 py-4 md:justify-between">
 					{/* 로고 */}
-					<div className="text-yellow-300 text-2xl font-bold">Ggrim</div>
+					<div className="text-2xl font-bold text-yellow-300">Ggrim</div>
 					<NavbarMenu />
 					<div id="response-spacer" className="flex-grow md:hidden" />{' '}
 					{/* 자동 확장 Spacer */}
@@ -40,7 +39,7 @@ export const Navbar = async () => {
 						{!user && (
 							<Link
 								href="/auth/sign-in"
-								className="inline-block px-6 py-2 bg-red-600 text-white font-semibold rounded hover:bg-red-700 transition duration-300 shadow-md"
+								className="inline-block rounded bg-red-600 px-6 py-2 font-semibold text-white shadow-md transition duration-300 hover:bg-red-700"
 							>
 								Sign In
 							</Link>

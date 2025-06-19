@@ -9,13 +9,13 @@ interface PreviewPaintingProps {
 
 export const PreviewPainting = ({ shortPainting }: PreviewPaintingProps) => {
 	return (
-		<div className="absolute bottom-0 right-0 mt-8 bg-gray-900 shadow-lg border-0 rounded-lg  z-10">
+		<div className="absolute bottom-0 right-0 z-10 mt-8 rounded-lg border-0 bg-gray-900 shadow-lg">
 			<Image
 				src={shortPainting.image_url}
 				alt="Preview"
 				width={shortPainting.width}
 				height={shortPainting.height}
-				className="w-screen h-auto object-cover rounded"
+				className="h-auto w-screen rounded object-cover"
 			/>
 
 			<div className="p-2">
@@ -23,7 +23,7 @@ export const PreviewPainting = ({ shortPainting }: PreviewPaintingProps) => {
 				{/* <p className="text-sm text-gray-500 mt-2">
                     Artist : {shortPainting.artist.name}
                 </p> */}
-				<p className="text-sm text-gray-500 mt-2">
+				<p className="mt-2 text-sm text-gray-500">
 					Size: {shortPainting.width}px × {shortPainting.height}px
 				</p>
 			</div>

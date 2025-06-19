@@ -79,7 +79,7 @@ export const QuizMenu = ({ quiz, isOwner }: QuizMenuProps) => {
 			<div className="relative inline-block text-left" ref={menuRef}>
 				<button
 					onClick={() => setOpen(!open)}
-					className="flex p-2 flex-row rounded-md border bg-black text-white border-black hover:bg-gray-600 "
+					className="flex flex-row rounded-md border border-black bg-black p-2 text-white hover:bg-gray-600"
 					aria-label="Menu"
 				>
 					<p className="hidden md:block">MENU</p>
@@ -87,13 +87,13 @@ export const QuizMenu = ({ quiz, isOwner }: QuizMenuProps) => {
 				</button>
 
 				{open && (
-					<div className="absolute right-0 mt-2 w-40 bg-black border border-black rounded-md shadow-lg z-10">
+					<div className="absolute right-0 z-10 mt-2 w-40 rounded-md border border-black bg-black shadow-lg">
 						<button
 							onClick={() => {
 								onDescription();
 								setOpen(false);
 							}}
-							className="w-full text-left text-white px-4 py-2 hover:bg-gray-600"
+							className="w-full px-4 py-2 text-left text-white hover:bg-gray-600"
 						>
 							Description
 						</button>
@@ -105,7 +105,7 @@ export const QuizMenu = ({ quiz, isOwner }: QuizMenuProps) => {
 										onEdit();
 										setOpen(false);
 									}}
-									className="w-full text-left text-white px-4 py-2 hover:bg-gray-600"
+									className="w-full px-4 py-2 text-left text-white hover:bg-gray-600"
 								>
 									Edit
 								</button>
@@ -114,7 +114,7 @@ export const QuizMenu = ({ quiz, isOwner }: QuizMenuProps) => {
 										onDelete();
 										setOpen(false);
 									}}
-									className="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-600"
+									className="w-full px-4 py-2 text-left text-red-600 hover:bg-gray-600"
 								>
 									Delete
 								</button>
@@ -171,30 +171,30 @@ const ShowDescription = ({ quiz, isShow, setShow }: ShowDescriptionProps) => {
 	}, [isShow, setShow]);
 
 	return (
-		<div className="relative inline-block text-left " ref={modalRef}>
-			<div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-10" />
-			<div className="fixed px-3 inset-0 my-20  bg-ggrimBeige1 border border-black rounded-md shadow-lg z-10">
-				<div className="flex justify-between mt-5 pb-3 border-b-2 border-zinc-700">
+		<div className="relative inline-block text-left" ref={modalRef}>
+			<div className="fixed inset-0 z-10 bg-black/30 backdrop-blur-sm" />
+			<div className="fixed inset-0 z-10 my-20 rounded-md border border-black bg-ggrimBeige1 px-3 shadow-lg">
+				<div className="mt-5 flex justify-between border-b-2 border-zinc-700 pb-3">
 					<div className="flex items-end">
-						<p className="text-black text-3xl font-semibold ">Description </p>
-						<p className="text-xl font-semibold text-black pl-5">
+						<p className="text-3xl font-semibold text-black">Description </p>
+						<p className="pl-5 text-xl font-semibold text-black">
 							{' '}
 							by {quiz.shortOwner.username}
 						</p>
 					</div>
 					<button onClick={() => setShow(false)}>
-						<X className="text-black w-8 h-8 hover:text-gray-600" />
+						<X className="h-8 w-8 text-black hover:text-gray-600" />
 					</button>
 				</div>
 				<div className="mt-5 border-b-2 border-zinc-700">
 					<p className="text-xl text-black">{quiz.description}</p>
-					<div className="mt-5 flex text-black text-md">
-						<p className="font-bold pr-5 font-sans"> Artist: </p>
+					<div className="text-md mt-5 flex text-black">
+						<p className="pr-5 font-sans font-bold"> Artist: </p>
 						<div className="grid grid-cols-4 text-blue-500">
 							{quiz.artists.map((a) => (
 								<p
 									key={a.name}
-									className="border-b-2 border-transparent hover:border-blue-600 hover:cursor-pointer"
+									className="border-b-2 border-transparent hover:cursor-pointer hover:border-blue-600"
 									onClick={() => handleClickArtist(a.name)}
 								>
 									#{a.name}
@@ -202,13 +202,13 @@ const ShowDescription = ({ quiz, isShow, setShow }: ShowDescriptionProps) => {
 							))}
 						</div>
 					</div>
-					<div className="mt-5 flex text-black text-md">
-						<p className="font-bold pr-5"> Styles: </p>
+					<div className="text-md mt-5 flex text-black">
+						<p className="pr-5 font-bold"> Styles: </p>
 						<div className="grid grid-cols-4 font-sans text-blue-500">
 							{quiz.styles.map((s) => (
 								<p
 									key={s.name}
-									className="border-b-2 border-transparent hover:border-blue-600 hover:cursor-pointer"
+									className="border-b-2 border-transparent hover:cursor-pointer hover:border-blue-600"
 									onClick={() => handleClickStyle(s.name)}
 								>
 									#{s.name}
@@ -216,13 +216,13 @@ const ShowDescription = ({ quiz, isShow, setShow }: ShowDescriptionProps) => {
 							))}
 						</div>
 					</div>
-					<div className="mt-5 flex text-black text-md">
-						<p className="font-bold pr-5"> Tags: </p>
+					<div className="text-md mt-5 flex text-black">
+						<p className="pr-5 font-bold"> Tags: </p>
 						<div className="flex flex-wrap gap-2 font-sans text-blue-500">
 							{quiz.tags.map((t) => (
 								<p
 									key={t.name}
-									className="border-b-2 border-transparent hover:border-blue-600 hover:cursor-pointer"
+									className="border-b-2 border-transparent hover:cursor-pointer hover:border-blue-600"
 									onClick={() => handleClickTag(t.name)}
 								>
 									#{t.name}

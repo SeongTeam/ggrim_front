@@ -60,7 +60,7 @@ export default async function Campaign() {
 			{/* <Footer /> */}
 			<div
 				id={domID}
-				className="flex justify-center bg-yellow-400 overflow-hidden transition-all duration-300"
+				className="flex justify-center overflow-hidden bg-yellow-400 transition-all duration-300"
 				style={{ height: '50px' }}
 			>
 				<p className="text-3xl text-black">Scroll and Enjoy Quiz</p>

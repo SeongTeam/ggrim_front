@@ -56,7 +56,7 @@ export const SignInForm = ({ formAction, NextRoute }: SignInFormProps) => {
 				<input
 					type="email"
 					placeholder="Email"
-					className="p-3 rounded bg-gray-800 text-white placeholder-gray-400"
+					className="rounded bg-gray-800 p-3 text-white placeholder-gray-400"
 					value={email}
 					onChange={(e) => setEmail(e.target.value)}
 					required
@@ -64,14 +64,14 @@ export const SignInForm = ({ formAction, NextRoute }: SignInFormProps) => {
 				<input
 					type="password"
 					placeholder="Password"
-					className="p-3 rounded bg-gray-800 text-white placeholder-gray-400"
+					className="rounded bg-gray-800 p-3 text-white placeholder-gray-400"
 					value={password}
 					onChange={(e) => setPassword(e.target.value)}
 					required
 				/>
 				<button
 					type="submit"
-					className="bg-red-600 hover:bg-red-700 transition p-3 rounded font-semibold"
+					className="rounded bg-red-600 p-3 font-semibold transition hover:bg-red-700"
 				>
 					Sign In
 				</button>

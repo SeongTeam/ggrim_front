@@ -57,8 +57,8 @@ export const CuratedArtworkList = ({ curatedArtworks }: CuratedArtworkListProps)
 	};
 
 	return (
-		<div className="bg-white p-6 rounded-lg shadow-md">
-			<h2 className="text-xl font-bold mb-4 text-gray-700">Curated Artwork List</h2>
+		<div className="rounded-lg bg-white p-6 shadow-md">
+			<h2 className="mb-4 text-xl font-bold text-gray-700">Curated Artwork List</h2>
 			{curatedArtworks.length === 0 ? (
 				<p className="text-gray-500">작성된 Artwork 없습니다.</p>
 			) : (
@@ -71,7 +71,7 @@ export const CuratedArtworkList = ({ curatedArtworks }: CuratedArtworkListProps)
 			{curatedArtworks.length > 0 && (
 				<button
 					onClick={handleDownloadJson}
-					className="mt-6 bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition duration-300"
+					className="mt-6 rounded-lg bg-green-500 px-4 py-2 text-white transition duration-300 hover:bg-green-600"
 				>
 					Download .json
 				</button>

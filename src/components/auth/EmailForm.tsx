@@ -50,11 +50,11 @@ export const EmailForm = ({ emailFormAction }: EmailFormProp) => {
 				value={email}
 				onChange={(e) => setEmail(e.target.value)}
 				required
-				className="w-full px-4 py-2 rounded bg-gray-800 text-white"
+				className="w-full rounded bg-gray-800 px-4 py-2 text-white"
 			/>
 			<button
 				type="submit"
-				className="w-full bg-red-600 text-white px-4 py-2 rounded font-semibold"
+				className="w-full rounded bg-red-600 px-4 py-2 font-semibold text-white"
 			>
 				Send
 			</button>

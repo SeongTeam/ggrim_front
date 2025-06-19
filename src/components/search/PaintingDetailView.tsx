@@ -23,7 +23,7 @@ export const PaintingDetailView = ({ painting }: PaintingDetailViewProps) => {
 
 	if (!painting) {
 		return (
-			<div className="bottom-0 right-0 mt-8 bg-gray-900 shadow-lg border-0 rounded-lg">
+			<div className="bottom-0 right-0 mt-8 rounded-lg border-0 bg-gray-900 shadow-lg">
 				no painting
 			</div>
 		);
@@ -34,32 +34,32 @@ export const PaintingDetailView = ({ painting }: PaintingDetailViewProps) => {
 	};
 
 	return (
-		<div className="bottom-0 right-0 mt-8 bg-gray-900 shadow-lg w-full border-0 rounded-lg">
+		<div className="bottom-0 right-0 mt-8 w-full rounded-lg border-0 bg-gray-900 shadow-lg">
 			<Image
 				src={painting.image_url}
 				alt="Detail Image View"
 				width={painting.width}
 				height={painting.height}
-				className="w-screen rounded h-auto"
+				className="h-auto w-screen rounded"
 			/>
 
 			<div className="p-2">
 				<h3 className="mb-8 text-white">{painting.title}</h3>
-				<p className="text-sm text-gray-500 mt-2">Artist : {painting.artist.name}</p>
-				<p className="text-sm text-gray-500 mt-2">
+				<p className="mt-2 text-sm text-gray-500">Artist : {painting.artist.name}</p>
+				<p className="mt-2 text-sm text-gray-500">
 					Size: {painting.width}px × {painting.height}px
 				</p>
-				<p className="text-sm text-gray-500 mt-2">
+				<p className="mt-2 text-sm text-gray-500">
 					tags: {painting.tags.map((tag) => tag.name).join(', ')}
 				</p>
-				<p className="text-sm text-gray-500 mt-2">
+				<p className="mt-2 text-sm text-gray-500">
 					Styles: {painting.styles.map((style) => style.name).join(', ')}
 				</p>
 				<div className="flex gap-2">
-					<p className="text-sm text-gray-500 mt-2">painting ID: {painting.id}</p>
+					<p className="mt-2 text-sm text-gray-500">painting ID: {painting.id}</p>
 					<CopyButton textToCopy={painting.id} />
 				</div>
-				<p className="text-base text-gray-500 mt-2">
+				<p className="mt-2 text-base text-gray-500">
 					Description:{' '}
 					{painting.description.length > 30 && !showFullDescription
 						? painting.description.substring(0, 30) + '...'
@@ -67,13 +67,13 @@ export const PaintingDetailView = ({ painting }: PaintingDetailViewProps) => {
 				</p>
 				{painting.description.length > 30 && (
 					<button
-						className="mt-2 p-1 bg-gray-700 rounded-full flex items-center justify-center hover:bg-gray-800"
+						className="mt-2 flex items-center justify-center rounded-full bg-gray-700 p-1 hover:bg-gray-800"
 						onClick={handleToggleDescription}
 					>
 						{showFullDescription ? (
-							<ChevronUp className="text-gray-300 w-4 h-4" />
+							<ChevronUp className="h-4 w-4 text-gray-300" />
 						) : (
-							<ChevronRight className="text-gray-300 w-4 h-4" />
+							<ChevronRight className="h-4 w-4 text-gray-300" />
 						)}
 					</button>
 				)}
