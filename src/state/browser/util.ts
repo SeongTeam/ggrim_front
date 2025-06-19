@@ -8,10 +8,10 @@ export function setItemWithExpiry(key: string, value: string, ttlMS: number): bo
 	return true;
 }
 
-export function getItemWithExpiry(key: string): string | null {
+export function getItemWithExpiry(key: string): string | undefined {
 	const itemStr = localStorage.getItem(key);
 	if (!itemStr) {
-		return null;
+		return undefined;
 	}
 
 	const item = JSON.parse(itemStr);
@@ -19,7 +19,7 @@ export function getItemWithExpiry(key: string): string | null {
 
 	if (now.getTime() > item.expiry) {
 		localStorage.removeItem(key); // 만료된 경우 삭제
-		return null;
+		return undefined;
 	}
 
 	return item.value;
