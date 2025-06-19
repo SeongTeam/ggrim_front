@@ -4,7 +4,6 @@
 	"printWidth": 100,
 	"tabWidth": 4,
 	"trailingComma": "all",
-	"editor.formatOnSave": false,
 	"bracketSpacing": true,
 	"arrowParens": "always",
 	"useTabs": true
