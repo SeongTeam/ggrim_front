@@ -1,7 +1,7 @@
 import { NewQuiz } from '../../components/quiz/QuizForm';
 import { QuizStatus } from '../../server-action/backend/quiz/type';
-import { localStorageUtils } from '../../util/browser';
 import { LOCAL_STORAGE_KEY } from './const';
+import { getItemWithExpiry, setItemWithExpiry } from './util';
 
 export function getQuizStatus(): undefined | QuizStatus {
 	const rawStatus = localStorage.getItem(LOCAL_STORAGE_KEY.QUIZ_STATUS);
@@ -24,7 +24,7 @@ export function saveQuizStatus(quizStatus: QuizStatus): boolean {
 const STORAGE_TTL_MS = 1800000;
 
 export function saveNewQuiz(newQuiz: NewQuiz, ttl = STORAGE_TTL_MS) {
-	localStorageUtils.setItemWithExpiry(LOCAL_STORAGE_KEY.NEW_QUIZ, JSON.stringify(newQuiz), ttl);
+	setItemWithExpiry(LOCAL_STORAGE_KEY.NEW_QUIZ, JSON.stringify(newQuiz), ttl);
 }
 
 export function removeSavedNewQuiz() {
@@ -32,11 +32,11 @@ export function removeSavedNewQuiz() {
 }
 
 export function getSavedNewQuiz(): NewQuiz | null {
-	const rawPrevNewQuiz: string | null = localStorageUtils.getItemWithExpiry(
-		LOCAL_STORAGE_KEY.NEW_QUIZ,
-	);
+	const rawPrevNewQuiz: string | null = getItemWithExpiry(LOCAL_STORAGE_KEY.NEW_QUIZ);
 	const prevNewQuiz: NewQuiz | null =
 		rawPrevNewQuiz && JSON.parse(rawPrevNewQuiz) ? JSON.parse(rawPrevNewQuiz) : undefined;
 
 	return prevNewQuiz;
-}
+} /* This util lib is for Browser Environment
+
+*/
