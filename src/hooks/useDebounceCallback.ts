@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useRef } from 'react';
-import { debounce } from '../util/optimization';
+import { useCallback, useEffect, useRef } from "react";
+import { debounce } from "../util/optimization";
 
 export function useDebounceCallback<T extends (...args: any[]) => void>(
 	callback: T,

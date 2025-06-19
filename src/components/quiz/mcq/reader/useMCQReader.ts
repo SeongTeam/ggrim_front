@@ -1,9 +1,9 @@
 // custom hook for managing mcq logic in reader mode
 
-import { MCQ } from '../type';
-import { shuffleMerge } from '@/util/shuffleMerge';
-import { useState } from 'react';
-import { Painting } from '@/server-action/backend/painting/type';
+import { MCQ } from "../type";
+import { shuffleMerge } from "@/util/shuffleMerge";
+import { useState } from "react";
+import { Painting } from "@/server-action/backend/painting/type";
 // import { submitMCQAnswer } from "@/services/mcqClientService";
 
 const useMCQReader = (attrs: MCQ, selectedAnswer: number) => {
@@ -49,9 +49,9 @@ const useMCQReader = (attrs: MCQ, selectedAnswer: number) => {
 
 			try {
 				// await submitMCQAnswer(id, selectedAnswerText, isCorrectAnswer);
-				console.log('submitMCQAnswer(id, selectedAnswerText)');
+				console.log("submitMCQAnswer(id, selectedAnswerText)");
 			} catch {
-				setErrorMessage('Failed to submit your answer. Please try again.');
+				setErrorMessage("Failed to submit your answer. Please try again.");
 			}
 		}
 	};
@@ -64,9 +64,9 @@ const useMCQReader = (attrs: MCQ, selectedAnswer: number) => {
 
 			try {
 				// await submitMCQAnswer(id, selectedAnswerText, isCorrectAnswer);
-				console.log('submitMCQAnswer(id, selectedAnswerText)');
+				console.log("submitMCQAnswer(id, selectedAnswerText)");
 			} catch {
-				setErrorMessage('Failed to submit your answer. Please try again.');
+				setErrorMessage("Failed to submit your answer. Please try again.");
 			}
 		}
 	};

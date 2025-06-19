@@ -1,8 +1,8 @@
-'use server';
-import { CondOperator, RequestQueryBuilder } from '@dataui/crud-request';
-import { Tag } from './type';
-import { getServerUrl, withErrorHandler } from '../common/lib';
-import { HttpException, IPaginationResult } from '../common/dto';
+"use server";
+import { CondOperator, RequestQueryBuilder } from "@dataui/crud-request";
+import { Tag } from "./type";
+import { getServerUrl, withErrorHandler } from "../common/lib";
+import { HttpException, IPaginationResult } from "../common/dto";
 
 const getTags = async (
 	queryBuilder: RequestQueryBuilder,
@@ -28,15 +28,15 @@ const findTags = async (
 	const qb = RequestQueryBuilder.create();
 	const searchName = name.toLocaleUpperCase();
 
-	if (searchName !== '') {
-		qb.select(['name']).setFilter({
-			field: 'search_name',
+	if (searchName !== "") {
+		qb.select(["name"]).setFilter({
+			field: "search_name",
 			operator: CondOperator.STARTS,
 			value: searchName,
 		});
 	}
-	qb.sortBy({ field: 'search_name', order: 'ASC' }).setLimit(pageCount).setPage(page);
+	qb.sortBy({ field: "search_name", order: "ASC" }).setLimit(pageCount).setPage(page);
 	return getTags(qb);
 };
 
-export const findTagsAction = withErrorHandler('findTags', findTags);
+export const findTagsAction = withErrorHandler("findTags", findTags);

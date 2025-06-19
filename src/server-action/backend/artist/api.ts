@@ -1,8 +1,8 @@
-'use server';
-import { CondOperator, RequestQueryBuilder } from '@dataui/crud-request';
-import { HttpException, IPaginationResult } from '../common/dto';
-import { getServerUrl, withErrorHandler } from '../common/lib';
-import { Artist } from './dto';
+"use server";
+import { CondOperator, RequestQueryBuilder } from "@dataui/crud-request";
+import { HttpException, IPaginationResult } from "../common/dto";
+import { getServerUrl, withErrorHandler } from "../common/lib";
+import { Artist } from "./dto";
 
 const getArtists = async (
 	queryBuilder: RequestQueryBuilder,
@@ -27,17 +27,17 @@ const findArtists = async (
 ): Promise<IPaginationResult<Artist> | HttpException> => {
 	const qb = RequestQueryBuilder.create();
 
-	qb.select(['name'])
+	qb.select(["name"])
 		.setFilter({
-			field: 'search_name',
+			field: "search_name",
 			operator: CondOperator.STARTS,
 			value: name.toLocaleUpperCase(),
 		})
-		.sortBy({ field: 'search_name', order: 'ASC' })
+		.sortBy({ field: "search_name", order: "ASC" })
 		.setLimit(pageCount)
 		.setPage(page);
 
 	return getArtists(qb);
 };
 
-export const findArtistsAction = withErrorHandler('findArtists', findArtists);
+export const findArtistsAction = withErrorHandler("findArtists", findArtists);

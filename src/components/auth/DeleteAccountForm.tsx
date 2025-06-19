@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { useState, FormEvent } from 'react';
-import { deleteUserAction } from '../../server-action/backend/user/api';
-import toast from 'react-hot-toast';
-import { isHttpException, isServerActionError } from '../../server-action/backend/common/util';
-import { HTTP_STATUS } from '../../server-action/backend/common/status';
-import { GuideModal } from '../modal/GuideModal';
-import { useRouter } from 'next/navigation';
-import { ErrorModal } from '../modal/ErrorModal';
+import { useState, FormEvent } from "react";
+import { deleteUserAction } from "../../server-action/backend/user/api";
+import toast from "react-hot-toast";
+import { isHttpException, isServerActionError } from "../../server-action/backend/common/util";
+import { HTTP_STATUS } from "../../server-action/backend/common/status";
+import { GuideModal } from "../modal/GuideModal";
+import { useRouter } from "next/navigation";
+import { ErrorModal } from "../modal/ErrorModal";
 
 interface DeleteAccountState {
 	error: string;
@@ -16,9 +16,9 @@ interface DeleteAccountState {
 }
 
 const initState: DeleteAccountState = {
-	error: '',
-	success: '',
-	input: '',
+	error: "",
+	success: "",
+	input: "",
 };
 
 export const DeleteAccountForm = () => {
@@ -35,11 +35,11 @@ export const DeleteAccountForm = () => {
 	const expectedPhrase = `Delete Account`;
 
 	const handleSuccess = () => {
-		router.push('/');
+		router.push("/");
 	};
 
 	const handleError = async () => {
-		router.push('/');
+		router.push("/");
 	};
 
 	const handleStateChange = (key: keyof DeleteAccountState, value: string) => {
@@ -50,7 +50,7 @@ export const DeleteAccountForm = () => {
 		e.preventDefault();
 
 		if (state.input !== expectedPhrase) {
-			toast.error('The phrase does not match. Please try again.');
+			toast.error("The phrase does not match. Please try again.");
 			return;
 		}
 
@@ -61,7 +61,7 @@ export const DeleteAccountForm = () => {
 		} else if (isHttpException(response)) {
 			const { statusCode } = response;
 			const errorMessage = Array.isArray(response.message)
-				? response.message.join('\n')
+				? response.message.join("\n")
 				: response.message;
 
 			switch (statusCode) {
@@ -76,7 +76,7 @@ export const DeleteAccountForm = () => {
 		} else if (response === true) {
 			setState((prev) => ({ ...prev, success: `Success Delete Account` }));
 		} else {
-			toast.error('Invalid access');
+			toast.error("Invalid access");
 		}
 	};
 
@@ -84,7 +84,7 @@ export const DeleteAccountForm = () => {
 		<div>
 			<form onSubmit={handleSubmit} className="flex flex-col gap-4">
 				<label className="text-sm text-zinc-400">
-					To confirm, type{' '}
+					To confirm, type{" "}
 					<span className="font-semibold text-red-500">{expectedPhrase}</span>
 				</label>
 				<input
@@ -92,7 +92,7 @@ export const DeleteAccountForm = () => {
 					className="rounded border border-zinc-700 bg-zinc-800 p-3 text-white focus:outline-none focus:ring-2 focus:ring-red-500"
 					placeholder="Type here..."
 					value={state.input}
-					onChange={(e) => handleStateChange('input', e.target.value)}
+					onChange={(e) => handleStateChange("input", e.target.value)}
 				/>
 				<button
 					type="submit"

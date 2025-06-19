@@ -1,19 +1,19 @@
-'use client';
-import { FormEvent, useCallback, useEffect, useReducer, useState } from 'react';
-import { Painting } from '@/server-action/backend/painting/type';
-import { Card } from '../common/Card';
-import { useRouter } from 'next/navigation';
-import { AlertModal } from '../modal/AlertModal';
-import { InsertToggleInput } from '../common/InsertToggleInput';
-import { Loading } from '../common/Loading';
-import { CheckCircle, XCircle } from 'lucide-react';
-import { getPaintingAction } from '../../server-action/backend/painting/api';
-import { isHttpException, isServerActionError } from '../../server-action/backend/common/util';
-import { CreateQuizDTO } from '../../server-action/backend/quiz/dto';
-import { addQuizAction, updateQuizAction } from '../../server-action/backend/quiz/api';
-import { Quiz } from '@/server-action/backend/quiz/type';
-import { getSavedNewQuiz, removeSavedNewQuiz, saveNewQuiz } from '../../state/browser/quiz';
-import { useDebounceCallback } from '../../hooks/useDebounceCallback';
+"use client";
+import { FormEvent, useCallback, useEffect, useReducer, useState } from "react";
+import { Painting } from "@/server-action/backend/painting/type";
+import { Card } from "../common/Card";
+import { useRouter } from "next/navigation";
+import { AlertModal } from "../modal/AlertModal";
+import { InsertToggleInput } from "../common/InsertToggleInput";
+import { Loading } from "../common/Loading";
+import { CheckCircle, XCircle } from "lucide-react";
+import { getPaintingAction } from "../../server-action/backend/painting/api";
+import { isHttpException, isServerActionError } from "../../server-action/backend/common/util";
+import { CreateQuizDTO } from "../../server-action/backend/quiz/dto";
+import { addQuizAction, updateQuizAction } from "../../server-action/backend/quiz/api";
+import { Quiz } from "@/server-action/backend/quiz/type";
+import { getSavedNewQuiz, removeSavedNewQuiz, saveNewQuiz } from "../../state/browser/quiz";
+import { useDebounceCallback } from "../../hooks/useDebounceCallback";
 
 export interface NewQuiz {
 	answer: Painting | undefined;
@@ -23,33 +23,33 @@ export interface NewQuiz {
 	title: string;
 	timeLimit: number;
 	description: string;
-	type: 'ONE_CHOICE';
+	type: "ONE_CHOICE";
 }
-type StatePaintingKey = 'answer' | 'distractor1' | 'distractor2' | 'distractor3';
-type PaintingActionType = 'SET_ANSWER' | 'SET_DISTRACTOR1' | 'SET_DISTRACTOR2' | 'SET_DISTRACTOR3';
+type StatePaintingKey = "answer" | "distractor1" | "distractor2" | "distractor3";
+type PaintingActionType = "SET_ANSWER" | "SET_DISTRACTOR1" | "SET_DISTRACTOR2" | "SET_DISTRACTOR3";
 type PaintingAction = { type: PaintingActionType; painting: Painting | undefined };
 
 type Action =
-	| { type: 'SET_TITLE'; title: string }
-	| { type: 'SET_DESCRIPTION'; description: string }
-	| { type: 'SET_ALL'; newQuiz: NewQuiz }
+	| { type: "SET_TITLE"; title: string }
+	| { type: "SET_DESCRIPTION"; description: string }
+	| { type: "SET_ALL"; newQuiz: NewQuiz }
 	| PaintingAction;
 
 function reducer(state: NewQuiz, action: Action): NewQuiz {
 	switch (action.type) {
-		case 'SET_TITLE':
+		case "SET_TITLE":
 			return { ...state, title: action.title };
-		case 'SET_DESCRIPTION':
+		case "SET_DESCRIPTION":
 			return { ...state, description: action.description };
-		case 'SET_ANSWER':
+		case "SET_ANSWER":
 			return { ...state, answer: action.painting };
-		case 'SET_DISTRACTOR1':
+		case "SET_DISTRACTOR1":
 			return { ...state, distractor1: action.painting };
-		case 'SET_DISTRACTOR2':
+		case "SET_DISTRACTOR2":
 			return { ...state, distractor2: action.painting };
-		case 'SET_DISTRACTOR3':
+		case "SET_DISTRACTOR3":
 			return { ...state, distractor3: action.painting };
-		case 'SET_ALL':
+		case "SET_ALL":
 			return { ...action.newQuiz };
 		default:
 			return state;
@@ -78,9 +78,9 @@ const initState: NewQuiz = {
 	distractor1: undefined,
 	distractor2: undefined,
 	distractor3: undefined,
-	title: '',
-	description: '',
-	type: 'ONE_CHOICE',
+	title: "",
+	description: "",
+	type: "ONE_CHOICE",
 	timeLimit: 30,
 };
 
@@ -96,13 +96,13 @@ const initializeState = (quiz?: Quiz): NewQuiz => {
 		distractor3: quiz.distractor_paintings[2],
 		title: quiz.title,
 		description: quiz.description,
-		type: 'ONE_CHOICE',
+		type: "ONE_CHOICE",
 		timeLimit: quiz.time_limit,
 	};
 };
 
 const isDuplicatedPaintingPainting = (state: NewQuiz, painting: Painting) => {
-	const keys: StatePaintingKey[] = ['answer', 'distractor1', 'distractor2', 'distractor3'];
+	const keys: StatePaintingKey[] = ["answer", "distractor1", "distractor2", "distractor3"];
 	const paintings: Painting[] = [];
 	keys.forEach((key) => (state[key] ? paintings.push(state[key]) : key));
 
@@ -111,22 +111,22 @@ const isDuplicatedPaintingPainting = (state: NewQuiz, painting: Painting) => {
 
 export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
 	const [newQuiz, dispatch] = useReducer(reducer, quiz, initializeState);
-	const [error, setError] = useState('');
+	const [error, setError] = useState("");
 	const router = useRouter();
-	const distractorKeys: StatePaintingKey[] = ['distractor1', 'distractor2', 'distractor3'];
+	const distractorKeys: StatePaintingKey[] = ["distractor1", "distractor2", "distractor3"];
 
 	function mapPaintingKeyToAction(key: StatePaintingKey, painting: Painting | undefined) {
 		switch (key) {
-			case 'answer':
-				return dispatch({ type: 'SET_ANSWER', painting });
-			case 'distractor1':
-				return dispatch({ type: 'SET_DISTRACTOR1', painting });
-			case 'distractor2':
-				return dispatch({ type: 'SET_DISTRACTOR2', painting });
-			case 'distractor3':
-				return dispatch({ type: 'SET_DISTRACTOR3', painting });
+			case "answer":
+				return dispatch({ type: "SET_ANSWER", painting });
+			case "distractor1":
+				return dispatch({ type: "SET_DISTRACTOR1", painting });
+			case "distractor2":
+				return dispatch({ type: "SET_DISTRACTOR2", painting });
+			case "distractor3":
+				return dispatch({ type: "SET_DISTRACTOR3", painting });
 			default:
-				setError('wrong handler run');
+				setError("wrong handler run");
 				return;
 		}
 	}
@@ -143,9 +143,9 @@ export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
 			throw new Error(response.message);
 		} else if (isHttpException(response)) {
 			const errorMessage = Array.isArray(response.message)
-				? response.message.join('\n')
+				? response.message.join("\n")
 				: response.message;
-			setError(errorMessage + '\n' + 'please try later');
+			setError(errorMessage + "\n" + "please try later");
 			return;
 		} else {
 			removeSavedNewQuiz();
@@ -156,12 +156,12 @@ export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
 
 	const validateBeforeSubmit = () => {
 		if (newQuiz!.title.trim().length === 0) {
-			setError('please write title');
+			setError("please write title");
 			return;
 		}
 
 		if (newQuiz!.description.trim().length === 0) {
-			setError('please write description');
+			setError("please write description");
 			return;
 		}
 	};
@@ -177,7 +177,7 @@ export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
 		const { answer, distractor1, distractor2, distractor3 } = newQuiz;
 
 		if (!answer || !distractor1 || !distractor2 || !distractor3) {
-			setError('please write description');
+			setError("please write description");
 			return;
 		}
 
@@ -209,7 +209,7 @@ export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
 			throw new Error(painting.message);
 		} else if (isHttpException(painting)) {
 			const errorMessage = Array.isArray(painting.message)
-				? painting.message.join('\n')
+				? painting.message.join("\n")
 				: painting.message;
 			setError(errorMessage);
 		} else {
@@ -239,7 +239,7 @@ export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
 			return;
 		}
 
-		dispatch({ type: 'SET_TITLE', title });
+		dispatch({ type: "SET_TITLE", title });
 	};
 
 	const handleChangeDescription = async (description: string) => {
@@ -249,7 +249,7 @@ export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
 			setError(`description can't be over ${MAX_LENGTH} characters`);
 			return;
 		}
-		dispatch({ type: 'SET_DESCRIPTION', description });
+		dispatch({ type: "SET_DESCRIPTION", description });
 	};
 
 	// TODO: 훅 로직 점검하기
@@ -265,7 +265,7 @@ export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
 	const loadNewQuiz = useCallback(() => {
 		const prevNewQuiz = getSavedNewQuiz();
 		if (prevNewQuiz) {
-			dispatch({ type: 'SET_ALL', newQuiz: prevNewQuiz });
+			dispatch({ type: "SET_ALL", newQuiz: prevNewQuiz });
 		}
 	}, []);
 
@@ -291,7 +291,7 @@ export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
 
 	return (
 		<div className="flex h-full items-center justify-center">
-			{error && <AlertModal message={error} onClose={async () => setError('')} />}
+			{error && <AlertModal message={error} onClose={async () => setError("")} />}
 			<form
 				onSubmit={(e) => handleSubmit(e)}
 				className="max-w-5xl rounded-lg text-white shadow-lg md:min-w-[600px]"
@@ -315,12 +315,12 @@ export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
 							<CheckCircle className="hidden text-green-500 md:block" />
 							<InsertToggleInput
 								handleAdd={(value: string) =>
-									handleAddQuizPainting('answer', value)
+									handleAddQuizPainting("answer", value)
 								}
-								handleDelete={() => handleDeleteQuizPainting('answer')}
-								defaultIsInserted={newQuiz['answer'] ? true : false}
-								defaultValue={newQuiz['answer']?.id}
-								placeholder={'answer'}
+								handleDelete={() => handleDeleteQuizPainting("answer")}
+								defaultIsInserted={newQuiz["answer"] ? true : false}
+								defaultValue={newQuiz["answer"]?.id}
+								placeholder={"answer"}
 							/>
 						</div>
 						{distractorKeys.map((key) => (
@@ -391,8 +391,8 @@ export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
 						type="submit"
 						className="border-b-2 border-transparent text-xl hover:border-white"
 					>
-						{' '}
-						{quiz === undefined ? 'Create' : 'Edit'}{' '}
+						{" "}
+						{quiz === undefined ? "Create" : "Edit"}{" "}
 					</button>
 				</div>
 			</form>

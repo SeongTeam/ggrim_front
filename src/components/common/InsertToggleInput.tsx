@@ -1,5 +1,5 @@
-import { Minus, Plus } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { Minus, Plus } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export interface InsertToggleInputProps {
 	handleAdd: (value: string) => Promise<boolean>;
@@ -16,7 +16,7 @@ export const InsertToggleInput = ({
 	defaultIsInserted,
 }: InsertToggleInputProps): JSX.Element => {
 	const [isInserted, setIsInserted] = useState(defaultIsInserted || false);
-	const [value, setValue] = useState(defaultValue || '');
+	const [value, setValue] = useState(defaultValue || "");
 
 	const handleClickAdd = async () => {
 		const isSuccess = await handleAdd(value);
@@ -35,7 +35,7 @@ export const InsertToggleInput = ({
 	};
 
 	useEffect(() => {
-		setValue(defaultValue || '');
+		setValue(defaultValue || "");
 	}, [defaultValue]);
 
 	useEffect(() => {
@@ -47,7 +47,7 @@ export const InsertToggleInput = ({
 			<div className="w-full">
 				<input
 					type="text"
-					placeholder={placeholder || 'input value'}
+					placeholder={placeholder || "input value"}
 					value={value}
 					onChange={(e) => setValue(e.target.value)}
 					className="w-full rounded border border-gray-700 bg-gray-800 p-3 transition focus:border-white focus:outline-none disabled:bg-gray-400"

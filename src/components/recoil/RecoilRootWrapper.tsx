@@ -1,5 +1,5 @@
-'use client';
-import { RecoilRoot } from 'recoil';
+"use client";
+import { RecoilRoot } from "recoil";
 // import { ThemeProvider } from '@material-tailwind/react';
 
 interface RecoilRootWrapperProps {

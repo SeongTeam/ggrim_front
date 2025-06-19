@@ -1,6 +1,6 @@
-import { getUrlImageSize } from '@/util/imageUtiles';
-import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { getUrlImageSize } from "@/util/imageUtiles";
+import Image from "next/image";
+import { useEffect, useState } from "react";
 
 interface HoverImagePreviewProps {
 	url: string;

@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { FeaturedImageGallery } from '@/components/home/FeaturedImageGallery';
-import React from 'react';
-import { Painting } from '@/server-action/backend/painting/type';
-import { ShortQuiz } from '@/server-action/backend/quiz/type';
-import { QuizCard } from '../quiz/QuizCard';
-import { useRouter } from 'next/navigation';
+import { FeaturedImageGallery } from "@/components/home/FeaturedImageGallery";
+import React from "react";
+import { Painting } from "@/server-action/backend/painting/type";
+import { ShortQuiz } from "@/server-action/backend/quiz/type";
+import { QuizCard } from "../quiz/QuizCard";
+import { useRouter } from "next/navigation";
 
 interface ArtworkCarouselProps {
 	curatedWorkAttributes: Painting[];

@@ -1,4 +1,4 @@
-import { DeleteAccountForm } from '../../../components/auth/DeleteAccountForm';
+import { DeleteAccountForm } from "../../../components/auth/DeleteAccountForm";
 
 export default function DeleteAccountPage() {
 	return (

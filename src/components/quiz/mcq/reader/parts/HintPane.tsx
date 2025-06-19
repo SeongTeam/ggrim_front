@@ -1,7 +1,7 @@
 // frontend for AI generated hint
 
-import React, { useEffect, useState, useCallback } from 'react';
-import * as Icons from '@/components/ui/icons';
+import React, { useEffect, useState, useCallback } from "react";
+import * as Icons from "@/components/ui/icons";
 
 interface HintPaneProps {
 	mcqId: string;
@@ -19,7 +19,7 @@ const HintPane: React.FC<HintPaneProps> = ({
 	attemptedAnswers,
 	remainingAnswers,
 }) => {
-	const [hint, setHint] = useState<string>('');
+	const [hint, setHint] = useState<string>("");
 	const [loading, setLoading] = useState(true);
 	const [isVisible, setIsVisible] = useState(false);
 	const [hasLoadedHint, setHasLoadedHint] = useState(false);
@@ -27,10 +27,10 @@ const HintPane: React.FC<HintPaneProps> = ({
 	const fetchHint = useCallback(async () => {
 		setLoading(true);
 		try {
-			const response = await fetch('/api/mcq/hint', {
-				method: 'POST',
+			const response = await fetch("/api/mcq/hint", {
+				method: "POST",
 				headers: {
-					'Content-Type': 'application/json',
+					"Content-Type": "application/json",
 				},
 				body: JSON.stringify({
 					question,
@@ -44,7 +44,7 @@ const HintPane: React.FC<HintPaneProps> = ({
 				setHasLoadedHint(true);
 			}
 		} catch (error) {
-			console.error('Error fetching hint:', error);
+			console.error("Error fetching hint:", error);
 		} finally {
 			setLoading(false);
 		}
@@ -69,7 +69,7 @@ const HintPane: React.FC<HintPaneProps> = ({
 	return (
 		<div
 			className={`border-secondary bg-base-100 fixed right-3 top-16 z-50 flex h-auto max-h-[50vh] w-1/4 flex-col rounded-md border-2 border-dashed p-4 shadow-lg transition-opacity duration-300 ease-in-out ${
-				isVisible ? 'opacity-100' : 'opacity-0'
+				isVisible ? "opacity-100" : "opacity-0"
 			}`}
 			role="dialog"
 			aria-modal="true"

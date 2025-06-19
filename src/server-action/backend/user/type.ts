@@ -1,6 +1,6 @@
-export type UserRole = 'admin' | 'user';
+export type UserRole = "admin" | "user";
 
-export type UserState = 'active' | 'inactive' | 'banned';
+export type UserState = "active" | "inactive" | "banned";
 export interface User {
 	id: string;
 	email: string;

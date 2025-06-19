@@ -1,19 +1,19 @@
-'use client';
+"use client";
 
-import { LogOut, Settings, User as UserIcon } from 'lucide-react';
-import { User } from '@/server-action/backend/user/type';
-import { useEffect, useRef, useState } from 'react';
-import { signOutAction } from '../../server-action/backend/auth/api';
-import { useRouter } from 'next/navigation';
-import { isServerActionError } from '../../server-action/backend/common/util';
+import { LogOut, Settings, User as UserIcon } from "lucide-react";
+import { User } from "@/server-action/backend/user/type";
+import { useEffect, useRef, useState } from "react";
+import { signOutAction } from "../../server-action/backend/auth/api";
+import { useRouter } from "next/navigation";
+import { isServerActionError } from "../../server-action/backend/common/util";
 import {
 	syncUserToLocalStorage,
 	getRunningUser,
 	removeRunningUser,
-} from '../../state/browser/runningUser';
-import { PROFILE_LOGIC_ROUTE } from '../../route/profile/route';
-import { AUTH_LOGIC_ROUTE } from '../../route/auth/route';
-import toast from 'react-hot-toast';
+} from "../../state/browser/runningUser";
+import { PROFILE_LOGIC_ROUTE } from "../../route/profile/route";
+import { AUTH_LOGIC_ROUTE } from "../../route/auth/route";
+import toast from "react-hot-toast";
 
 interface ProfileIconMenuProps {
 	user: User;
@@ -36,7 +36,7 @@ export const ProfileIconMenu = ({ user }: ProfileIconMenuProps) => {
 
 		removeRunningUser();
 
-		router.push('/');
+		router.push("/");
 	};
 
 	const handleSetting = () => {
@@ -51,8 +51,8 @@ export const ProfileIconMenu = ({ user }: ProfileIconMenuProps) => {
 			}
 		};
 
-		document.addEventListener('mousedown', handleClickOutside);
-		return () => document.removeEventListener('mousedown', handleClickOutside);
+		document.addEventListener("mousedown", handleClickOutside);
+		return () => document.removeEventListener("mousedown", handleClickOutside);
 	}, []);
 
 	//TODO 로그인 정보 유지 기능 개선하기
@@ -65,7 +65,7 @@ export const ProfileIconMenu = ({ user }: ProfileIconMenuProps) => {
 		// console.log(runningUser,user);
 		if (!user) {
 			if (runningUser) {
-				toast.error('Session Expired. please, sign in again');
+				toast.error("Session Expired. please, sign in again");
 				router.push(AUTH_LOGIC_ROUTE.SIGN_IN);
 				return;
 			}

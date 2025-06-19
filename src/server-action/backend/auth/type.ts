@@ -1,11 +1,11 @@
-import { User } from '../user/type';
+import { User } from "../user/type";
 
 export const ONE_TIME_TOKEN_PURPOSE = {
-	UPDATE_PASSWORD: 'update-password',
-	DELETE_ACCOUNT: 'delete-account',
-	MAGIC_LOGIN: 'magic-login',
-	EMAIL_VERIFICATION: 'email-verification',
-	RECOVER_ACCOUNT: 'recover-account',
+	UPDATE_PASSWORD: "update-password",
+	DELETE_ACCOUNT: "delete-account",
+	MAGIC_LOGIN: "magic-login",
+	EMAIL_VERIFICATION: "email-verification",
+	RECOVER_ACCOUNT: "recover-account",
 	// SET_USER_ACTIVE : 'set-user-active',
 	// RESET_PASSWORD: 'reset-password',
 } as const;

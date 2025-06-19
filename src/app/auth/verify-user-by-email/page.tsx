@@ -1,8 +1,8 @@
-import AuthFooter from '../../../components/auth/AuthFooter';
-import { EmailForm } from '../../../components/auth/EmailForm';
-import { ErrorModal } from '../../../components/modal/ErrorModal';
-import { sendSecurityTokenToEmailAction } from '../../../server-action/backend/auth/api';
-import { isOnetimeTokenPurpose } from '../../../server-action/backend/auth/util';
+import AuthFooter from "../../../components/auth/AuthFooter";
+import { EmailForm } from "../../../components/auth/EmailForm";
+import { ErrorModal } from "../../../components/modal/ErrorModal";
+import { sendSecurityTokenToEmailAction } from "../../../server-action/backend/auth/api";
+import { isOnetimeTokenPurpose } from "../../../server-action/backend/auth/util";
 
 interface verifyUserByEmailProps {
 	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -20,7 +20,7 @@ export default async function Verify({ searchParams }: verifyUserByEmailProps) {
 	}
 
 	const handleAction = async (email: string) => {
-		'use server';
+		"use server";
 		const response = await sendSecurityTokenToEmailAction({ purpose, email });
 		return response;
 	};

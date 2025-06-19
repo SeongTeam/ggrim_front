@@ -1,20 +1,20 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { requestVerificationAction, verifyEmailAction } from '../../server-action/backend/auth/api';
-import { isHttpException, isServerActionError } from '../../server-action/backend/common/util';
-import { HTTP_STATUS } from '../../server-action/backend/common/status';
-import toast from 'react-hot-toast';
-import { useRouter } from 'next/navigation';
+import { useState } from "react";
+import { requestVerificationAction, verifyEmailAction } from "../../server-action/backend/auth/api";
+import { isHttpException, isServerActionError } from "../../server-action/backend/common/util";
+import { HTTP_STATUS } from "../../server-action/backend/common/status";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 interface EmailVerificationForm {
 	nextRoute: string;
 }
 
 export const EmailVerificationForm = ({ nextRoute }: EmailVerificationForm) => {
-	const [email, setEmail] = useState('');
+	const [email, setEmail] = useState("");
 	const [isPinCodeSent, setIsPinCodeSent] = useState(false);
-	const [pin, setPin] = useState('');
+	const [pin, setPin] = useState("");
 	const router = useRouter();
 
 	const handleVerifyEmail = async (e: React.FormEvent) => {
@@ -27,7 +27,7 @@ export const EmailVerificationForm = ({ nextRoute }: EmailVerificationForm) => {
 		} else if (isHttpException(response)) {
 			const { statusCode } = response;
 			const errorMessage = Array.isArray(response.message)
-				? response.message.join('\n')
+				? response.message.join("\n")
 				: response.message;
 
 			switch (statusCode) {
@@ -41,9 +41,9 @@ export const EmailVerificationForm = ({ nextRoute }: EmailVerificationForm) => {
 			}
 		} else if (response === true) {
 			setIsPinCodeSent(true);
-			toast.success('check your email');
+			toast.success("check your email");
 		} else {
-			toast.error('invalid access');
+			toast.error("invalid access");
 		}
 	};
 
@@ -55,7 +55,7 @@ export const EmailVerificationForm = ({ nextRoute }: EmailVerificationForm) => {
 		} else if (isHttpException(response)) {
 			const { statusCode } = response;
 			const errorMessage = Array.isArray(response.message)
-				? response.message.join('\n')
+				? response.message.join("\n")
 				: response.message;
 
 			switch (statusCode) {
@@ -68,7 +68,7 @@ export const EmailVerificationForm = ({ nextRoute }: EmailVerificationForm) => {
 					throw new Error(`${response.statusCode}\n` + errorMessage);
 			}
 		} else {
-			toast.success('success verification');
+			toast.success("success verification");
 			router.push(nextRoute);
 		}
 	};

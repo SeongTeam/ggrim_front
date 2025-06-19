@@ -1,6 +1,6 @@
-import AuthFooter from '../../../components/auth/AuthFooter';
-import { EmailVerificationForm } from '../../../components/auth/EmailVerificationForm';
-import { AUTH_LOGIC_ROUTE } from '../../../route/auth/route';
+import AuthFooter from "../../../components/auth/AuthFooter";
+import { EmailVerificationForm } from "../../../components/auth/EmailVerificationForm";
+import { AUTH_LOGIC_ROUTE } from "../../../route/auth/route";
 
 // interface VerifyProps {
 //     searchParams : Promise<{ [key: string] : string | string[] | undefined }>

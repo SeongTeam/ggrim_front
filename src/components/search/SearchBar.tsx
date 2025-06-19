@@ -1,9 +1,9 @@
-'use client';
-import { Search } from 'lucide-react';
-import React, { RefObject } from 'react';
+"use client";
+import { Search } from "lucide-react";
+import React, { RefObject } from "react";
 
-import { useSearchBar } from './useSearchBar';
-import { AutocompleteList } from './AutoCompleteList';
+import { useSearchBar } from "./useSearchBar";
+import { AutocompleteList } from "./AutoCompleteList";
 
 interface SearchBarProps {
 	onSearch: (query: string) => void;
@@ -46,7 +46,7 @@ export const SearchBar = ({ onSearch, defaultValue, inputRef }: SearchBarProps) 
 					query={autoCompleteState.query}
 					highlightedIndex={autoCompleteState.selectedIndex}
 					setHighlightedIndex={(selectedIndex: number) =>
-						autoCompleteDispatch({ type: 'SET_SELECTED_INDEX', payload: selectedIndex })
+						autoCompleteDispatch({ type: "SET_SELECTED_INDEX", payload: selectedIndex })
 					}
 				/>
 			)}

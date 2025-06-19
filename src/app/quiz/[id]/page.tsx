@@ -1,7 +1,7 @@
-import { DetailQuiz } from '@/components/quiz/DetailQuiz';
-import { getQuizAction } from '../../../server-action/backend/quiz/api';
-import { isHttpException, isServerActionError } from '../../../server-action/backend/common/util';
-import { getSignInInfo } from '../../../server-action/backend/common/cookie';
+import { DetailQuiz } from "@/components/quiz/DetailQuiz";
+import { getQuizAction } from "../../../server-action/backend/quiz/api";
+import { isHttpException, isServerActionError } from "../../../server-action/backend/common/util";
+import { getSignInInfo } from "../../../server-action/backend/common/cookie";
 
 interface QuizDetailPageProps {
 	params: { id: string };
@@ -15,7 +15,7 @@ export default async function QuizDetailPage({ params }: QuizDetailPageProps) {
 		throw new Error(response.message);
 	} else if (isHttpException(response)) {
 		const errorMessage = Array.isArray(response.message)
-			? response.message.join('\n')
+			? response.message.join("\n")
 			: response.message;
 		throw new Error(errorMessage);
 	}

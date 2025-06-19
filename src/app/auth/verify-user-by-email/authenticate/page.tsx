@@ -1,20 +1,20 @@
 // app/auth/callback/page.tsx
-'use client';
+"use client";
 
-import { useReducer } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import toast from 'react-hot-toast';
-import { isOnetimeTokenPurpose } from '../../../../server-action/backend/auth/util';
-import { generateSecurityTokenByEmailVerificationAction } from '../../../../server-action/backend/auth/api';
+import { useReducer } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import toast from "react-hot-toast";
+import { isOnetimeTokenPurpose } from "../../../../server-action/backend/auth/util";
+import { generateSecurityTokenByEmailVerificationAction } from "../../../../server-action/backend/auth/api";
 import {
 	isHttpException,
 	isServerActionError,
-} from '../../../../server-action/backend/common/util';
-import { HTTP_STATUS } from '../../../../server-action/backend/common/status';
-import { ONE_TIME_TOKEN_PURPOSE } from '../../../../server-action/backend/auth/type';
-import { ErrorModal } from '../../../../components/modal/ErrorModal';
-import { GuideModal } from '../../../../components/modal/GuideModal';
-import { AUTH_LOGIC_ROUTE } from '../../../../route/auth/route';
+} from "../../../../server-action/backend/common/util";
+import { HTTP_STATUS } from "../../../../server-action/backend/common/status";
+import { ONE_TIME_TOKEN_PURPOSE } from "../../../../server-action/backend/auth/type";
+import { ErrorModal } from "../../../../components/modal/ErrorModal";
+import { GuideModal } from "../../../../components/modal/GuideModal";
+import { AUTH_LOGIC_ROUTE } from "../../../../route/auth/route";
 
 interface AuthenticateState {
 	errorMessage: string;
@@ -35,17 +35,17 @@ function isInit(state: AuthenticateState) {
 }
 
 type Action =
-	| { type: 'SUCCESS'; message: string }
-	| { type: 'ERROR'; message: string }
-	| { type: 'SET_PURPOSE'; purpose: string };
+	| { type: "SUCCESS"; message: string }
+	| { type: "ERROR"; message: string }
+	| { type: "SET_PURPOSE"; purpose: string };
 
 function reducer(state: AuthenticateState, action: Action): AuthenticateState {
 	switch (action.type) {
-		case 'SUCCESS':
-			return { ...state, successMessage: action.message, errorMessage: '' };
-		case 'ERROR':
-			return { ...state, errorMessage: action.message, successMessage: '' };
-		case 'SET_PURPOSE':
+		case "SUCCESS":
+			return { ...state, successMessage: action.message, errorMessage: "" };
+		case "ERROR":
+			return { ...state, errorMessage: action.message, successMessage: "" };
+		case "SET_PURPOSE":
 			return { ...state, purpose: action.purpose };
 		default:
 			return state;
@@ -56,11 +56,11 @@ export default function AuthCallbackPage() {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const [state, dispatch] = useReducer(reducer, {
-		errorMessage: '',
-		purpose: '',
-		successMessage: '',
+		errorMessage: "",
+		purpose: "",
+		successMessage: "",
 	});
-	const homeRoute = '/';
+	const homeRoute = "/";
 
 	const handleError = () => {
 		router.push(homeRoute);
@@ -73,20 +73,20 @@ export default function AuthCallbackPage() {
 				break;
 			case ONE_TIME_TOKEN_PURPOSE.RECOVER_ACCOUNT:
 			default:
-				toast.error('sorry. not implement ');
+				toast.error("sorry. not implement ");
 		}
 	};
 
 	const handleVerify = async () => {
-		const token = searchParams.get('token');
-		const identifier = searchParams.get('identifier');
-		const purpose = searchParams.get('purpose');
+		const token = searchParams.get("token");
+		const identifier = searchParams.get("identifier");
+		const purpose = searchParams.get("purpose");
 
 		if (!token || !identifier || !purpose || !isOnetimeTokenPurpose(purpose)) {
-			toast.error('wrong access with wrong query');
+			toast.error("wrong access with wrong query");
 			return;
 		}
-		dispatch({ type: 'SET_PURPOSE', purpose });
+		dispatch({ type: "SET_PURPOSE", purpose });
 		const response = await generateSecurityTokenByEmailVerificationAction(
 			{ purpose },
 			token,
@@ -98,20 +98,20 @@ export default function AuthCallbackPage() {
 		} else if (isHttpException(response)) {
 			const { statusCode } = response;
 			const errorMessage = Array.isArray(response.message)
-				? response.message.join('\n')
+				? response.message.join("\n")
 				: response.message;
 
 			switch (statusCode) {
 				case HTTP_STATUS.FORBIDDEN:
 				case HTTP_STATUS.UNAUTHORIZED:
 				case HTTP_STATUS.BAD_REQUEST:
-					dispatch({ type: 'ERROR', message: errorMessage });
+					dispatch({ type: "ERROR", message: errorMessage });
 					return;
 				default:
-					dispatch({ type: 'ERROR', message: `${response.statusCode}\n` + errorMessage });
+					dispatch({ type: "ERROR", message: `${response.statusCode}\n` + errorMessage });
 			}
 		} else {
-			dispatch({ type: 'SUCCESS', message: `Success ${purpose}` });
+			dispatch({ type: "SUCCESS", message: `Success ${purpose}` });
 		}
 	};
 

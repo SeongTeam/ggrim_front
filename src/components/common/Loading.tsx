@@ -1,6 +1,6 @@
-'use client';
-import { LoaderCircle } from 'lucide-react';
-import { motion } from 'framer-motion';
+"use client";
+import { LoaderCircle } from "lucide-react";
+import { motion } from "framer-motion";
 
 export const Loading = () => {
 	return (
@@ -13,7 +13,7 @@ export const Loading = () => {
 			>
 				<motion.div
 					animate={{ rotate: 360 }}
-					transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
+					transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
 				>
 					<LoaderCircle className="h-16 w-16 text-gray-300" />
 				</motion.div>

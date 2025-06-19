@@ -1,4 +1,4 @@
-import { OneTimeTokenPurpose } from './type';
+import { OneTimeTokenPurpose } from "./type";
 
 export interface requestVerificationDTO {
 	email: string;

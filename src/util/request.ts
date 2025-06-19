@@ -1,9 +1,9 @@
-import { headers } from 'next/headers';
-import { NextRequest } from 'next/server';
+import { headers } from "next/headers";
+import { NextRequest } from "next/server";
 
 export const X_HEADER_FIELD = {
-	REQUEST_ID: 'x-request-id',
-	INTERNAL_API_KEY: 'x-internal-api-key',
+	REQUEST_ID: "x-request-id",
+	INTERNAL_API_KEY: "x-internal-api-key",
 } as const;
 
 export function getRequestId(): string | undefined {

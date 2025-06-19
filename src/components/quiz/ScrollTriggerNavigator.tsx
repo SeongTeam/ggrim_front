@@ -1,6 +1,6 @@
-'use client';
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+"use client";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface Section {
 	id: string;
@@ -33,8 +33,8 @@ export const ScrollTriggerNavigator = ({
 			}
 		};
 
-		window.addEventListener('scroll', handleScroll);
-		return () => window.removeEventListener('scroll', handleScroll);
+		window.addEventListener("scroll", handleScroll);
+		return () => window.removeEventListener("scroll", handleScroll);
 	}, [section, currentSection, router, criticalRatio]);
 
 	return null;

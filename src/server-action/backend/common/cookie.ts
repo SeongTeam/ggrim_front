@@ -1,14 +1,14 @@
-'server-only';
-import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
-import { OneTimeToken, SignInResponse } from '../auth/type';
-import { ResponseCookies } from 'next/dist/compiled/@edge-runtime/cookies';
-import { AUTH_LOGIC_ROUTE } from '../../../route/auth/route';
-import { getUserAction } from '../user/api';
-import { isHttpException, isServerActionError } from './util';
+"server-only";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { OneTimeToken, SignInResponse } from "../auth/type";
+import { ResponseCookies } from "next/dist/compiled/@edge-runtime/cookies";
+import { AUTH_LOGIC_ROUTE } from "../../../route/auth/route";
+import { getUserAction } from "../user/api";
+import { isHttpException, isServerActionError } from "./util";
 const COOKIE_KEY = {
-	SIGN_IN_RESPONSE: 'SignInResponse',
-	ONE_TIME_TOKEN: 'OneTimeToken',
+	SIGN_IN_RESPONSE: "SignInResponse",
+	ONE_TIME_TOKEN: "OneTimeToken",
 } as const;
 
 export async function getOneTimeTokenOrRedirect(): Promise<OneTimeToken> {
@@ -16,7 +16,7 @@ export async function getOneTimeTokenOrRedirect(): Promise<OneTimeToken> {
 	const oneTimeToken = cookieStore.get(COOKIE_KEY.ONE_TIME_TOKEN)?.value;
 
 	if (!oneTimeToken) {
-		redirect('/');
+		redirect("/");
 	}
 
 	return JSON.parse(oneTimeToken) as OneTimeToken;
@@ -58,7 +58,7 @@ export async function setOneTimeToken(oneTimeToken: OneTimeToken): Promise<void>
 		maxAge: 15 * 60, // 확인필요
 		secure: Boolean(process.env.COOKIE_SECURE) ?? true,
 		httpOnly: Boolean(process.env.COOKIE_HTTP_ONLY) ?? true,
-		sameSite: 'lax',
+		sameSite: "lax",
 	});
 }
 
@@ -68,7 +68,7 @@ export async function setSignInResponse(signInResponse: SignInResponse): Promise
 		maxAge: 2 * 60 * 60, // 확인필요
 		secure: Boolean(process.env.COOKIE_SECURE) ?? true,
 		httpOnly: Boolean(process.env.COOKIE_HTTP_ONLY) ?? true,
-		sameSite: 'lax',
+		sameSite: "lax",
 	});
 }
 
@@ -93,9 +93,9 @@ export async function getSignInInfo() {
 
 		const response = await getUserAction(id);
 		if (isServerActionError(response)) {
-			throw new Error('unstable situation');
+			throw new Error("unstable situation");
 		} else if (isHttpException(response)) {
-			throw new Error('unstable situation');
+			throw new Error("unstable situation");
 		}
 
 		const user = response;

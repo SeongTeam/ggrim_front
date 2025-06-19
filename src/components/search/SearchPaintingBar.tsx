@@ -1,11 +1,11 @@
-'use client';
-import { ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { RefObject, useState } from 'react';
-import { SearchBar } from './SearchBar';
-import { INPUT_KEY, SEARCH_PARAM_KEY } from './const';
-import { extractValuesInsideQuoted, makeQuoted } from './util';
-import { SEARCH_LOGIC_ROUTE } from '../../route/search/route';
-import { useDebounceCallback } from '../../hooks/useDebounceCallback';
+"use client";
+import { ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from "next/navigation";
+import { RefObject, useState } from "react";
+import { SearchBar } from "./SearchBar";
+import { INPUT_KEY, SEARCH_PARAM_KEY } from "./const";
+import { extractValuesInsideQuoted, makeQuoted } from "./util";
+import { SEARCH_LOGIC_ROUTE } from "../../route/search/route";
+import { useDebounceCallback } from "../../hooks/useDebounceCallback";
 
 interface ParsedInput {
 	title: string;
@@ -21,32 +21,32 @@ function parseInput(input: string): ParsedInput {
 
 	// 'artist'는 첫 번째 값만 추출
 	const artistMatches = extractValuesInsideQuoted(input, INPUT_KEY.ARTIST);
-	const artist = artistMatches.length > 0 ? artistMatches[0] : '';
+	const artist = artistMatches.length > 0 ? artistMatches[0] : "";
 
 	// 1단계: "key:value" 형식(쌍따옴표 포함)을 제거
-	const cleaned = input.replace(/"\w+:[^"]*"/g, '').trim();
+	const cleaned = input.replace(/"\w+:[^"]*"/g, "").trim();
 
 	// 단어 추출: 따옴표나 쉼표 등 문장부호는 그대로 유지
 	// 단어 경계를 기준으로 쪼개되, 문장부호 포함된 항목도 추출되게 함
 	const parts = cleaned
 		.split(/\s+/) // 공백 기준 분리
 		.filter(Boolean); // 빈 문자열 제거
-	const title = parts.join(' ');
-	console.log('parseInput', { title, cleaned, parts });
+	const title = parts.join(" ");
+	console.log("parseInput", { title, cleaned, parts });
 
 	return { title, tags, styles, artist };
 }
 
 function getInput(searchParams: ReadonlyURLSearchParams) {
-	const title: string = searchParams.get(SEARCH_PARAM_KEY.TITLE) || '';
-	const artist: string = searchParams.get(SEARCH_PARAM_KEY.ARTIST) || '';
+	const title: string = searchParams.get(SEARCH_PARAM_KEY.TITLE) || "";
+	const artist: string = searchParams.get(SEARCH_PARAM_KEY.ARTIST) || "";
 	const tags: string[] = searchParams.getAll(SEARCH_PARAM_KEY.TAGS) || [];
 	const styles: string[] = searchParams.getAll(SEARCH_PARAM_KEY.STYLES) || [];
 
 	const inputs: string[] = [title];
-	const delimiter = ' ';
+	const delimiter = " ";
 
-	if (artist.trim() !== '') {
+	if (artist.trim() !== "") {
 		inputs.push(makeQuoted(`${INPUT_KEY.ARTIST}:${artist}`));
 	}
 
@@ -86,10 +86,10 @@ export const SearchPaintingBar = (props: SearchPaintingBarProps): React.JSX.Elem
 	const [input, setInput] = useState(getInput(searchParams));
 	// const [results, setResults] = useState<Painting[]>([]);
 	const handleSearchOrigin = async (searchTarget: string) => {
-		console.log('handleSearch');
-		if (searchTarget.trim() === '') {
-			if (pathName !== '/') {
-				router.push('/');
+		console.log("handleSearch");
+		if (searchTarget.trim() === "") {
+			if (pathName !== "/") {
+				router.push("/");
 			}
 			return;
 		}

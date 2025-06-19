@@ -1,8 +1,8 @@
-'use server';
-import { CondOperator, RequestQueryBuilder } from '@dataui/crud-request';
-import { getServerUrl, withErrorHandler } from '../common/lib';
-import { HttpException, IPaginationResult } from '../common/dto';
-import { Style } from './type';
+"use server";
+import { CondOperator, RequestQueryBuilder } from "@dataui/crud-request";
+import { getServerUrl, withErrorHandler } from "../common/lib";
+import { HttpException, IPaginationResult } from "../common/dto";
+import { Style } from "./type";
 
 const getStyles = async (
 	queryBuilder: RequestQueryBuilder,
@@ -27,17 +27,17 @@ const findStyles = async (
 ): Promise<IPaginationResult<Style> | HttpException> => {
 	const qb = RequestQueryBuilder.create();
 
-	qb.select(['name'])
+	qb.select(["name"])
 		.setFilter({
-			field: 'search_name',
+			field: "search_name",
 			operator: CondOperator.STARTS,
 			value: name.toLocaleUpperCase(),
 		})
-		.sortBy({ field: 'search_name', order: 'ASC' })
+		.sortBy({ field: "search_name", order: "ASC" })
 		.setLimit(pageCount)
 		.setPage(page);
 
 	return getStyles(qb);
 };
 
-export const findStylesAction = withErrorHandler('findStyles', findStyles);
+export const findStylesAction = withErrorHandler("findStyles", findStyles);

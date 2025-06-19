@@ -1,5 +1,5 @@
-'use client';
-import { useEffect, useRef } from 'react';
+"use client";
+import { useEffect, useRef } from "react";
 
 interface ScrollExpanderProps {
 	domId: string;
@@ -32,8 +32,8 @@ export const ScrollExpander = ({
 			lastScrollY.current = currentScrollY;
 		};
 
-		window.addEventListener('scroll', handleScroll);
-		return () => window.removeEventListener('scroll', handleScroll);
+		window.addEventListener("scroll", handleScroll);
+		return () => window.removeEventListener("scroll", handleScroll);
 	}, [domId, maxHeight, incrementAmount]);
 
 	return null;

@@ -1,12 +1,12 @@
-'use client';
-import { MutableRefObject, useEffect, useRef, useState } from 'react';
+"use client";
+import { MutableRefObject, useEffect, useRef, useState } from "react";
 
-import { throttle } from '../../util/optimization';
-import { ShortQuiz, FindQuizResult } from '@/server-action/backend/quiz/type';
-import { QuizCard } from './QuizCard';
-import { useRouter } from 'next/navigation';
-import { getQuizListAction } from '../../server-action/backend/quiz/api';
-import { isHttpException, isServerActionError } from '../../server-action/backend/common/util';
+import { throttle } from "../../util/optimization";
+import { ShortQuiz, FindQuizResult } from "@/server-action/backend/quiz/type";
+import { QuizCard } from "./QuizCard";
+import { useRouter } from "next/navigation";
+import { getQuizListAction } from "../../server-action/backend/quiz/api";
+import { isHttpException, isServerActionError } from "../../server-action/backend/common/util";
 
 interface QuizCardGridProps {
 	findResult: FindQuizResult;
@@ -30,7 +30,7 @@ export const QuizCardGrid = (props: QuizCardGridProps): React.JSX.Element => {
 			const isMore = findResultRef.current.page < findResultRef.current.pageCount;
 
 			if (!isMore || isLoadingRef.current) {
-				console.log('not load quiz');
+				console.log("not load quiz");
 				console.log(findResultRef, isLoadingRef);
 				return;
 			}
@@ -42,7 +42,7 @@ export const QuizCardGrid = (props: QuizCardGridProps): React.JSX.Element => {
 				throw new Error(response.message);
 			} else if (isHttpException(response)) {
 				const errorMessage = Array.isArray(response.message)
-					? response.message.join('\n')
+					? response.message.join("\n")
 					: response.message;
 
 				throw new Error(errorMessage);
@@ -67,14 +67,14 @@ export const QuizCardGrid = (props: QuizCardGridProps): React.JSX.Element => {
 
 		const handleScrollThrottle = throttle(handleScroll, 300);
 
-		console.log('[useEffect] : for config scroll event');
-		window.addEventListener('scroll', handleScrollThrottle);
-		return () => window.removeEventListener('scroll', handleScrollThrottle);
+		console.log("[useEffect] : for config scroll event");
+		window.addEventListener("scroll", handleScrollThrottle);
+		return () => window.removeEventListener("scroll", handleScrollThrottle);
 	}, []);
 
 	useEffect(() => {
 		setFindQuizzes(props.findResult.data);
-		console.log('[useEffect] : for init  SearchPainting');
+		console.log("[useEffect] : for init  SearchPainting");
 		findResultRef.current = props.findResult;
 		return () => {
 			setFindQuizzes((prev) => prev);

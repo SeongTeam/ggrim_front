@@ -39,7 +39,7 @@ export const AutocompleteList = ({
 					onClick={() => onSelect(suggestion)}
 					onMouseEnter={() => setHighlightedIndex(index)}
 					className={`cursor-pointer px-4 py-2 text-white ${
-						index === highlightedIndex ? 'bg-gray-600' : 'hover:bg-gray-600'
+						index === highlightedIndex ? "bg-gray-600" : "hover:bg-gray-600"
 					}`}
 				>
 					{highlightMatch(suggestion, query)}

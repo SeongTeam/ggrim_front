@@ -1,15 +1,15 @@
-'use client';
-import { MutableRefObject, useEffect, useRef, useState } from 'react';
-import { FindPaintingResult, Painting } from '@/server-action/backend/painting/type';
-import { ShortPainting } from '@/server-action/backend/painting/type';
-import { HoverCard } from '../common/HoverCard';
-import { PreviewPainting } from './PreviewPainting';
-import { Modal } from '../modal/Modal';
-import { PaintingDetailView } from './PaintingDetailView';
-import { useSearchParams } from 'next/navigation';
-import { throttle } from '../../util/optimization';
-import { findPaintingAction, getPaintingAction } from '../../server-action/backend/painting/api';
-import { isHttpException, isServerActionError } from '../../server-action/backend/common/util';
+"use client";
+import { MutableRefObject, useEffect, useRef, useState } from "react";
+import { FindPaintingResult, Painting } from "@/server-action/backend/painting/type";
+import { ShortPainting } from "@/server-action/backend/painting/type";
+import { HoverCard } from "../common/HoverCard";
+import { PreviewPainting } from "./PreviewPainting";
+import { Modal } from "../modal/Modal";
+import { PaintingDetailView } from "./PaintingDetailView";
+import { useSearchParams } from "next/navigation";
+import { throttle } from "../../util/optimization";
+import { findPaintingAction, getPaintingAction } from "../../server-action/backend/painting/api";
+import { isHttpException, isServerActionError } from "../../server-action/backend/common/util";
 
 interface PaintingCardGridProps {
 	findResult: FindPaintingResult;
@@ -28,7 +28,7 @@ export const PaintingCardGrid = (props: PaintingCardGridProps): React.JSX.Elemen
 			throw new Error(response.message);
 		} else if (isHttpException(response)) {
 			const errorMessage = Array.isArray(response.message)
-				? response.message.join('\n')
+				? response.message.join("\n")
 				: response.message;
 			console.log(`id(${paintingId} error.
                     ${errorMessage}`);
@@ -48,15 +48,15 @@ export const PaintingCardGrid = (props: PaintingCardGridProps): React.JSX.Elemen
 				!(findResultRef.current.page !== findResultRef.current.pageCount) ||
 				isLoadingRef.current
 			) {
-				console.log('not load painting');
+				console.log("not load painting");
 				console.log(findResultRef, isLoadingRef);
 				return;
 			}
 			isLoadingRef.current = true;
-			const searchTitle: string = searchParam.get('title') || '';
-			const searchArtist: string = searchParam.get('artist') || '';
-			const searchTags: string[] = searchParam.getAll('tags') || [];
-			const searchStyles: string[] = searchParam.getAll('styles') || [];
+			const searchTitle: string = searchParam.get("title") || "";
+			const searchArtist: string = searchParam.get("artist") || "";
+			const searchTags: string[] = searchParam.getAll("tags") || [];
+			const searchStyles: string[] = searchParam.getAll("styles") || [];
 			console.log(`load ${findResultRef.current.page + 1} page`);
 			const response = await findPaintingAction(
 				searchTitle,
@@ -70,7 +70,7 @@ export const PaintingCardGrid = (props: PaintingCardGridProps): React.JSX.Elemen
 				throw new Error(response.message);
 			} else if (isHttpException(response)) {
 				const errorMessage = Array.isArray(response.message)
-					? response.message.join('\n')
+					? response.message.join("\n")
 					: response.message;
 
 				throw new Error(errorMessage);
@@ -106,14 +106,14 @@ export const PaintingCardGrid = (props: PaintingCardGridProps): React.JSX.Elemen
 
 		const handleScrollThrottle = throttle(handleScroll, 300);
 
-		console.log('[useEffect] : for config scroll event');
-		window.addEventListener('scroll', handleScrollThrottle);
-		return () => window.removeEventListener('scroll', handleScrollThrottle);
+		console.log("[useEffect] : for config scroll event");
+		window.addEventListener("scroll", handleScrollThrottle);
+		return () => window.removeEventListener("scroll", handleScrollThrottle);
 	}, [searchParam]);
 
 	useEffect(() => {
 		setSearchPaintings(props.findResult.data);
-		console.log('[useEffect] : for init  SearchPainting');
+		console.log("[useEffect] : for init  SearchPainting");
 		findResultRef.current = props.findResult;
 		return () => {
 			setSearchPaintings((prev) => prev);

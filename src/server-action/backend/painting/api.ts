@@ -1,7 +1,7 @@
-'use server';
-import { getServerUrl, withErrorHandler } from '../common/lib';
-import { FindPaintingResult, Painting } from './type';
-import { HttpException } from '../common/dto';
+"use server";
+import { getServerUrl, withErrorHandler } from "../common/lib";
+import { FindPaintingResult, Painting } from "./type";
+import { HttpException } from "../common/dto";
 
 // TODO page.tsx 최소화 예정 (데이터 처리 함수 옮길 예정)
 const getWeekArtWorkData = async (): Promise<Painting[] | HttpException> => {
@@ -12,7 +12,7 @@ const getWeekArtWorkData = async (): Promise<Painting[] | HttpException> => {
 	const isS3AccessParam = `isS3Access=true`;
 	const url: string = serverUrl + `/painting/artwork-of-week?${isS3AccessParam}`;
 	const response = await fetch(url, {
-		cache: 'no-cache',
+		cache: "no-cache",
 	}); // 서버에 있는 데이터 읽어 올때 사용
 
 	if (!response.ok) {
@@ -26,8 +26,8 @@ const getWeekArtWorkData = async (): Promise<Painting[] | HttpException> => {
 };
 
 const findPainting = async (
-	title: string = '',
-	artist: string = '',
+	title: string = "",
+	artist: string = "",
 	tags: string[] = [],
 	styles: string[] = [],
 	page: number = 0,
@@ -35,8 +35,8 @@ const findPainting = async (
 	const backendUrl = getServerUrl();
 	const titleParam = `title=${title}`;
 	const artistParam = `artistName=${artist}`;
-	const tagParam = tags.map((t) => `tags[]=${t}`).join('&');
-	const styleParam = styles.map((s) => `styles[]=${s}`).join('&');
+	const tagParam = tags.map((t) => `tags[]=${t}`).join("&");
+	const styleParam = styles.map((s) => `styles[]=${s}`).join("&");
 	const isS3AccessParam = `isS3Access=true`;
 	const url = `${backendUrl}/painting?${isS3AccessParam}&${titleParam}&${artistParam}&${tagParam}&${styleParam}&page=${page}`;
 	const response = await fetch(url);
@@ -64,8 +64,8 @@ const getPainting = async (id: string): Promise<Painting | HttpException> => {
 	return painting;
 };
 
-export const getWeekArtWorkDataAction = withErrorHandler('getWeekArtWorkData', getWeekArtWorkData);
+export const getWeekArtWorkDataAction = withErrorHandler("getWeekArtWorkData", getWeekArtWorkData);
 
-export const findPaintingAction = withErrorHandler('findPainting', findPainting);
+export const findPaintingAction = withErrorHandler("findPainting", findPainting);
 
-export const getPaintingAction = withErrorHandler('getPainting', getPainting);
+export const getPaintingAction = withErrorHandler("getPainting", getPainting);

@@ -1,10 +1,10 @@
 // import { Navbar } from '@/components';
-import { ArtworkCarousel } from '@/components/home/ArtworkCarousel';
-import { ScrollTriggerNavigator } from '../components/quiz/ScrollTriggerNavigator';
-import { ScrollExpander } from '../components/home/ScrollExpander';
-import { getWeekArtWorkDataAction } from '../server-action/backend/painting/api';
-import { getQuizListAction, scheduleQuizAction } from '../server-action/backend/quiz/api';
-import { isHttpException, isServerActionError } from '../server-action/backend/common/util';
+import { ArtworkCarousel } from "@/components/home/ArtworkCarousel";
+import { ScrollTriggerNavigator } from "../components/quiz/ScrollTriggerNavigator";
+import { ScrollExpander } from "../components/home/ScrollExpander";
+import { getWeekArtWorkDataAction } from "../server-action/backend/painting/api";
+import { getQuizListAction, scheduleQuizAction } from "../server-action/backend/quiz/api";
+import { isHttpException, isServerActionError } from "../server-action/backend/common/util";
 
 // TODO: Main Page 리팩토링하기
 // - [ ] 컴포넌트 함수 이름 변경하여 기능 명확성 향상시키기
@@ -26,7 +26,7 @@ export default async function Campaign() {
 		throw new Error(responseQuizDTO.message);
 	} else if (isHttpException(responseQuizDTO)) {
 		const errorMessage = Array.isArray(responseQuizDTO.message)
-			? responseQuizDTO.message.join('\n')
+			? responseQuizDTO.message.join("\n")
 			: responseQuizDTO.message;
 
 		throw new Error(errorMessage);
@@ -36,7 +36,7 @@ export default async function Campaign() {
 		throw new Error(artworkOfWeekData.message);
 	} else if (isHttpException(artworkOfWeekData)) {
 		const errorMessage = Array.isArray(artworkOfWeekData.message)
-			? artworkOfWeekData.message.join('\n')
+			? artworkOfWeekData.message.join("\n")
 			: artworkOfWeekData.message;
 
 		throw new Error(errorMessage);
@@ -46,7 +46,7 @@ export default async function Campaign() {
 		throw new Error(quizzes.message);
 	} else if (isHttpException(quizzes)) {
 		const errorMessage = Array.isArray(quizzes.message)
-			? quizzes.message.join('\n')
+			? quizzes.message.join("\n")
 			: quizzes.message;
 
 		throw new Error(errorMessage);
@@ -61,7 +61,7 @@ export default async function Campaign() {
 			<div
 				id={domID}
 				className="flex justify-center overflow-hidden bg-yellow-400 transition-all duration-300"
-				style={{ height: '50px' }}
+				style={{ height: "50px" }}
 			>
 				<p className="text-3xl text-black">Scroll and Enjoy Quiz</p>
 				<ScrollExpander domId={domID} maxHeight={400} incrementAmount={20} />

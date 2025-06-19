@@ -4,7 +4,7 @@
  *      DB에서 인코딩한 문자를 저장, 프런트로 보내진 인토딩 문자 디코딩해서 사용
  */
 
-const SHIFT: string = process.env.CAESAR_SHIFT ?? '';
+const SHIFT: string = process.env.CAESAR_SHIFT ?? "";
 
 // TODO: 보안성 강화
 // - [ ]  추후 DB에서 정의해서 변경 예정
@@ -33,17 +33,17 @@ class CaesarCipher {
 	// 문자 변환 로직
 	private transform(text: string, shift: number): string {
 		return text
-			.split('')
+			.split("")
 			.map((char) => this.shiftChar(char, shift))
-			.join('');
+			.join("");
 	}
 
 	// 단일 문자 변환
 	private shiftChar(char: string, shift: number): string {
-		if (char >= 'a' && char <= 'z') {
+		if (char >= "a" && char <= "z") {
 			// 소문자 변환
 			return String.fromCharCode(((char.charCodeAt(0) - 97 + shift + 26) % 26) + 97);
-		} else if (char >= 'A' && char <= 'Z') {
+		} else if (char >= "A" && char <= "Z") {
 			// 대문자 변환
 			return String.fromCharCode(((char.charCodeAt(0) - 65 + shift + 26) % 26) + 65);
 		}

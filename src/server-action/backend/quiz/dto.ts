@@ -1,5 +1,5 @@
-import { Quiz, QuizType, ShortQuiz } from './type';
-import { QuizReaction, QuizStatus } from './type';
+import { Quiz, QuizType, ShortQuiz } from "./type";
+import { QuizReaction, QuizStatus } from "./type";
 export interface CreateQuizDTO {
 	answerPaintingIds: string[];
 

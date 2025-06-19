@@ -1,8 +1,8 @@
-import { PaintingModel } from './type';
-import { CuratedArtworkCard } from './CuratedArtworkCard';
-import { FormState } from './states';
-import { CuratedArtWorkAttribute } from './type';
-import { getUrlImageSize } from '@/util/imageUtiles';
+import { PaintingModel } from "./type";
+import { CuratedArtworkCard } from "./CuratedArtworkCard";
+import { FormState } from "./states";
+import { CuratedArtWorkAttribute } from "./type";
+import { getUrlImageSize } from "@/util/imageUtiles";
 
 interface CuratedArtworkListProps {
 	curatedArtworks: FormState[];
@@ -29,7 +29,7 @@ const transformCuratedArtWorkAttribute = async (
 
 			return {
 				id: formState.id,
-				type: formState.type === '' ? 'NOTHING' : formState.type,
+				type: formState.type === "" ? "NOTHING" : formState.type,
 				cldId: formState.cldId,
 				operatorDescription: formState.operatorDescription,
 				painting,
@@ -43,15 +43,15 @@ const transformCuratedArtWorkAttribute = async (
 export const CuratedArtworkList = ({ curatedArtworks }: CuratedArtworkListProps) => {
 	const handleDownloadJson = async () => {
 		const data = await transformCuratedArtWorkAttribute(curatedArtworks);
-		const jsonData = { dataName: 'artwork of week', data };
+		const jsonData = { dataName: "artwork of week", data };
 
 		const jsonBlob = new Blob([JSON.stringify(jsonData, null, 2)], {
-			type: 'application/json',
+			type: "application/json",
 		});
 		const url = URL.createObjectURL(jsonBlob);
-		const link = document.createElement('a');
+		const link = document.createElement("a");
 		link.href = url;
-		link.download = 'yyyy_mm_dd_artwork_of_week.json';
+		link.download = "yyyy_mm_dd_artwork_of_week.json";
 		link.click();
 		URL.revokeObjectURL(url); // URL 해제
 	};

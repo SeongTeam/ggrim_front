@@ -1,15 +1,15 @@
-'server-only';
-import { serverLogger } from '../../../util/serverLogger';
-import { getRequestId } from '../../../util/request';
-import { ServerActionError } from './dto';
-import { isHttpException } from './util';
+"server-only";
+import { serverLogger } from "../../../util/serverLogger";
+import { getRequestId } from "../../../util/request";
+import { ServerActionError } from "./dto";
+import { isHttpException } from "./util";
 
 serverLogger.info(`BACKEND_URL=${process.env.BACKEND_URL} `);
 export function getServerUrl(): string {
 	const url = process.env.BACKEND_URL;
 	if (url == undefined) {
 		serverLogger.error(` 'process.env.BACKEND_URL' not read`);
-		return '';
+		return "";
 	}
 	return url;
 }
@@ -32,10 +32,10 @@ export function withErrorHandler<T extends (...args: any[]) => Promise<any>>(
 ): (...args: Parameters<T>) => Promise<Awaited<ReturnType<T>> | ServerActionError> {
 	return async (...args: Parameters<T>) => {
 		const start = Date.now();
-		let status = 'success';
+		let status = "success";
 		const requestId = getRequestId();
 		try {
-			logMessage(requestId || 'undefined', `call ${actionName}()`);
+			logMessage(requestId || "undefined", `call ${actionName}()`);
 			const response = await action(...args);
 
 			if (isHttpException(response)) {
@@ -46,7 +46,7 @@ export function withErrorHandler<T extends (...args: any[]) => Promise<any>>(
 			return response;
 		} catch (err: unknown) {
 			serverLogger.error(`${actionName}() fail. Unknown server error:`, err);
-			status = 'server-error';
+			status = "server-error";
 			return handleError(err);
 		} finally {
 			const delay = Date.now() - start;
@@ -54,16 +54,16 @@ export function withErrorHandler<T extends (...args: any[]) => Promise<any>>(
 				requestId,
 				status,
 				action: actionName,
-				delay: delay + 'ms',
+				delay: delay + "ms",
 			};
-			logMessage(requestId || 'undefined', `End ${actionName}()`, info);
+			logMessage(requestId || "undefined", `End ${actionName}()`, info);
 		}
 	};
 }
 
 function handleError(err: unknown): ServerActionError {
-	let message = 'Unknown server error';
-	let stack = 'withErrorHandler()';
+	let message = "Unknown server error";
+	let stack = "withErrorHandler()";
 
 	if (err instanceof Error) {
 		message = err.message;
@@ -97,5 +97,5 @@ function logMessage(requestId: string, message: string, info?: Record<string, un
 		...info,
 	};
 
-	serverLogger.info(message + '\n' + JSON.stringify(result, null, 2));
+	serverLogger.info(message + "\n" + JSON.stringify(result, null, 2));
 }

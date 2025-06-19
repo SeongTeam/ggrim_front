@@ -22,7 +22,7 @@ import {
 	Lightbulb,
 	CornerRightUp,
 	Headphones,
-} from 'lucide-react';
+} from "lucide-react";
 
 export {
 	Bold,

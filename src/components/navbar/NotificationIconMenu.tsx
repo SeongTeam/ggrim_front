@@ -1,9 +1,9 @@
-'use client';
-import { Bell } from 'lucide-react';
+"use client";
+import { Bell } from "lucide-react";
 
 export const NotifyIconMenu = () => {
 	const handleClickBellIcon = () => {
-		alert('not implement');
+		alert("not implement");
 	};
 	return (
 		<Bell

@@ -1,22 +1,22 @@
-import React, { useReducer } from 'react';
-import { CustomInput } from '../common/CustomInput';
-import { DropdownMenu } from '../modal/DropdownMenu';
-import { FormState, getEmptyFormState } from './states';
-import { _CuratedContentType } from './type';
+import React, { useReducer } from "react";
+import { CustomInput } from "../common/CustomInput";
+import { DropdownMenu } from "../modal/DropdownMenu";
+import { FormState, getEmptyFormState } from "./states";
+import { _CuratedContentType } from "./type";
 
 interface CuratedArtworkFormProps {
 	addCuratedArtwork: (formState: FormState) => void;
 }
 
 const contentOptions = [
-	{ label: 'GIF', value: 'GIF' as _CuratedContentType },
-	{ label: 'MP4', value: 'MP4' as _CuratedContentType },
-	{ label: 'Nothing', value: 'NOTHING' as _CuratedContentType },
+	{ label: "GIF", value: "GIF" as _CuratedContentType },
+	{ label: "MP4", value: "MP4" as _CuratedContentType },
+	{ label: "Nothing", value: "NOTHING" as _CuratedContentType },
 ];
 
 type FormAction = {
 	type: keyof FormState;
-	value: string | [string, number, number] | _CuratedContentType | '';
+	value: string | [string, number, number] | _CuratedContentType | "";
 };
 
 function formReducer(state: FormState, action: FormAction): FormState {
@@ -27,12 +27,12 @@ export const CuratedArtworkForm = ({ addCuratedArtwork }: CuratedArtworkFormProp
 	const [state, dispatch] = useReducer(formReducer, getEmptyFormState());
 
 	const setState = () => {
-		dispatch({ type: 'cldId', value: '' });
-		dispatch({ type: 'operatorDescription', value: '' });
-		dispatch({ type: 'artistName', value: '' });
-		dispatch({ type: 'imageUrl', value: '' });
-		dispatch({ type: 'type', value: '' });
-		dispatch({ type: 'id', value: '' });
+		dispatch({ type: "cldId", value: "" });
+		dispatch({ type: "operatorDescription", value: "" });
+		dispatch({ type: "artistName", value: "" });
+		dispatch({ type: "imageUrl", value: "" });
+		dispatch({ type: "type", value: "" });
+		dispatch({ type: "id", value: "" });
 	};
 
 	const handleChange =
@@ -45,41 +45,41 @@ export const CuratedArtworkForm = ({ addCuratedArtwork }: CuratedArtworkFormProp
 		e.preventDefault();
 		const { cldId, operatorDescription, type } = state;
 		if (!cldId || !operatorDescription || !type) {
-			alert('filled!!');
+			alert("filled!!");
 			return;
 		}
 		setState();
 
 		addCuratedArtwork({
 			...state,
-			type: type || 'NOTHING',
+			type: type || "NOTHING",
 		});
 	};
 
 	const inputs = [
 		{
-			label: 'Painting Title',
+			label: "Painting Title",
 			value: state.id,
-			onChange: handleChange('id'),
-			placeholder: 'Painting title',
+			onChange: handleChange("id"),
+			placeholder: "Painting title",
 		},
 		{
-			label: 'Artist Name',
+			label: "Artist Name",
 			value: state.artistName,
-			onChange: handleChange('artistName'),
-			placeholder: 'Artist Name',
+			onChange: handleChange("artistName"),
+			placeholder: "Artist Name",
 		},
 		{
-			label: 'Image URL',
+			label: "Image URL",
 			value: state.imageUrl,
-			onChange: handleChange('imageUrl'),
-			placeholder: 'Image URL',
+			onChange: handleChange("imageUrl"),
+			placeholder: "Image URL",
 		},
 		{
-			label: 'Cloudinary ID',
+			label: "Cloudinary ID",
 			value: state.cldId,
-			onChange: handleChange('cldId'),
-			placeholder: 'cld ID',
+			onChange: handleChange("cldId"),
+			placeholder: "cld ID",
 		},
 	];
 
@@ -100,7 +100,7 @@ export const CuratedArtworkForm = ({ addCuratedArtwork }: CuratedArtworkFormProp
 				label="Operator Description"
 				type="textarea"
 				value={state.operatorDescription}
-				onChange={handleChange('operatorDescription')}
+				onChange={handleChange("operatorDescription")}
 				placeholder="Operator Description"
 				required
 			/>
@@ -108,7 +108,7 @@ export const CuratedArtworkForm = ({ addCuratedArtwork }: CuratedArtworkFormProp
 				label="Content Type"
 				options={contentOptions}
 				value={state.type}
-				onChange={handleChange('type')}
+				onChange={handleChange("type")}
 				placeholder="Select a content type"
 				required
 			/>

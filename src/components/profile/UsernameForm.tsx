@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import toast from 'react-hot-toast';
-import { isHttpException, isServerActionError } from '../../server-action/backend/common/util';
-import { HTTP_STATUS } from '../../server-action/backend/common/status';
-import { HttpException, ServerActionError } from '../../server-action/backend/common/dto';
-import { useRouter } from 'next/navigation';
-import { GuideModal } from '../modal/GuideModal';
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { isHttpException, isServerActionError } from "../../server-action/backend/common/util";
+import { HTTP_STATUS } from "../../server-action/backend/common/status";
+import { HttpException, ServerActionError } from "../../server-action/backend/common/dto";
+import { useRouter } from "next/navigation";
+import { GuideModal } from "../modal/GuideModal";
 
 interface UsernameFormProps {
 	NextRoute: string;
@@ -15,8 +15,8 @@ interface UsernameFormProps {
 }
 
 const UpdateUsernameForm = ({ NextRoute, submitHandler, initialValue }: UsernameFormProps) => {
-	const [username, setUsername] = useState(initialValue || '');
-	const [success, setSuccess] = useState('');
+	const [username, setUsername] = useState(initialValue || "");
+	const [success, setSuccess] = useState("");
 	const router = useRouter();
 
 	const successHandler = () => {
@@ -27,7 +27,7 @@ const UpdateUsernameForm = ({ NextRoute, submitHandler, initialValue }: Username
 		e.preventDefault();
 
 		if (initialValue?.trim() && initialValue === username) {
-			toast.error('username is not changed');
+			toast.error("username is not changed");
 			return;
 		}
 
@@ -51,15 +51,15 @@ const UpdateUsernameForm = ({ NextRoute, submitHandler, initialValue }: Username
 					}
 					break;
 				default:
-					const errorMessage = Array.isArray(message) ? message.join('\n') : message;
+					const errorMessage = Array.isArray(message) ? message.join("\n") : message;
 					throw new Error(`${response.statusCode}\n` + errorMessage);
 			}
 		} else if (response === true) {
-			setSuccess('success task');
+			setSuccess("success task");
 			router.refresh();
 			//  router.push(NextRoute);
 		} else {
-			toast.error('invalid access');
+			toast.error("invalid access");
 		}
 	};
 

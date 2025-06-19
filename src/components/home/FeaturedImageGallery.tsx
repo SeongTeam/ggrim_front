@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { Painting } from '@/server-action/backend/painting/type';
-import Image from 'next/image';
-import { PaintingDetailView } from '../search/PaintingDetailView';
-import { Modal } from '../modal/Modal';
+import React, { useState } from "react";
+import { Painting } from "@/server-action/backend/painting/type";
+import Image from "next/image";
+import { PaintingDetailView } from "../search/PaintingDetailView";
+import { Modal } from "../modal/Modal";
 
 export interface FeaturedImageGalleryProps {
 	paintings: Painting[];

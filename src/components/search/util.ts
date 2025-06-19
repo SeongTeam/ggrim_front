@@ -1,6 +1,6 @@
-import { InputKeyValue, ParamCase } from './type';
+import { InputKeyValue, ParamCase } from "./type";
 
-export const paramDelimiter = ':';
+export const paramDelimiter = ":";
 
 interface InputParam {
 	key: string;
@@ -33,8 +33,8 @@ export function extractUnquotedStrings(input: string): string[] {
 	const result: string[] = [];
 
 	// quoted 부분을 제거하고 남은 텍스트를 공백으로 나눔
-	const unquoted = input.replace(quotedRegex, '|||'); // 따옴표 영역 마커 처리
-	for (const part of unquoted.split('|||')) {
+	const unquoted = input.replace(quotedRegex, "|||"); // 따옴표 영역 마커 처리
+	for (const part of unquoted.split("|||")) {
 		const tokens = part.trim().split(/\s+/).filter(Boolean);
 		result.push(...tokens);
 	}
@@ -47,7 +47,7 @@ export function makeQuoted(str: string): string {
 }
 
 export function extractValuesInsideQuoted(str: string, key: InputKeyValue): string[] {
-	const regex = new RegExp(`"${key}:(.*?)"`, 'g');
+	const regex = new RegExp(`"${key}:(.*?)"`, "g");
 	const values: string[] = [];
 	let match;
 	while ((match = regex.exec(str)) !== null) {
@@ -57,7 +57,7 @@ export function extractValuesInsideQuoted(str: string, key: InputKeyValue): stri
 }
 
 export function extractValues(param: string, key: InputKeyValue): string[] {
-	const regex = new RegExp(`${key}:(\\S+)`, 'g');
+	const regex = new RegExp(`${key}:(\\S+)`, "g");
 	const values: string[] = [];
 	let match;
 	while ((match = regex.exec(param)) !== null) {
@@ -104,20 +104,20 @@ export function determineParamCase(input: string, cursorPosition: number): Param
 	const result = getInsideDoubleQuotes(input, cursorPosition);
 
 	if (!result) {
-		return 'NO_QUOTED';
+		return "NO_QUOTED";
 	}
 
 	const param = parseKeyValue(result);
 
 	if (!param) {
-		return 'NO_PARAM';
+		return "NO_PARAM";
 	}
 
 	if (param.key) {
-		return 'PARAM_KEY_ONLY';
+		return "PARAM_KEY_ONLY";
 	}
 
-	return 'DEFAULT';
+	return "DEFAULT";
 }
 
 export function calculateNewInput(
@@ -129,7 +129,7 @@ export function calculateNewInput(
 	const paramCase = determineParamCase(text, cursorWithoutEnter);
 
 	switch (paramCase) {
-		case 'NO_QUOTED': {
+		case "NO_QUOTED": {
 			const beforeCursor = text.slice(0, cursorWithoutEnter + 1);
 			const afterCursor = text.slice(cursorWithoutEnter + 1);
 			return {
@@ -138,7 +138,7 @@ export function calculateNewInput(
 			};
 		}
 
-		case 'NO_PARAM': {
+		case "NO_PARAM": {
 			const keyParts = getInsideDoubleQuotes(text, cursorWithoutEnter);
 			if (!keyParts) return { newInput: text, newCursor: cursorPos };
 
@@ -150,7 +150,7 @@ export function calculateNewInput(
 			};
 		}
 
-		case 'PARAM_KEY_ONLY': {
+		case "PARAM_KEY_ONLY": {
 			const quoted = getInsideDoubleQuotes(text, cursorWithoutEnter);
 			if (!quoted) return { newInput: text, newCursor: cursorPos };
 

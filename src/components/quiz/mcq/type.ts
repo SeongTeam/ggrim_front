@@ -1,6 +1,6 @@
-import { Painting } from '../../../server-action/backend/painting/type';
-import { QuizReactionCount } from '../../../server-action/backend/quiz/dto';
-import { QuizType, QuizReaction } from '../../../server-action/backend/quiz/type';
+import { Painting } from "../../../server-action/backend/painting/type";
+import { QuizReactionCount } from "../../../server-action/backend/quiz/dto";
+import { QuizType, QuizReaction } from "../../../server-action/backend/quiz/type";
 
 //Multiple-Choice-Question
 

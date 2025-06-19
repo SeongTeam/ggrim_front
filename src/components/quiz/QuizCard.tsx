@@ -11,7 +11,7 @@ export interface QuizCardProps {
 
 export const QuizCard = ({ title, onClick }: QuizCardProps) => {
 	const size = 60;
-	const uiTitle = title.length > size ? title.slice(0, size) + '...' : title;
+	const uiTitle = title.length > size ? title.slice(0, size) + "..." : title;
 	return (
 		<div className="overflow-hidden rounded-lg bg-gray-900 hover:bg-gray-700">
 			<div className="h-32 rounded-lg bg-white p-2 pt-4 md:h-40">

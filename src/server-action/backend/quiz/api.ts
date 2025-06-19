@@ -1,8 +1,8 @@
-'use server';
-import { cookieWithErrorHandler, getServerUrl, withErrorHandler } from '../common/lib';
-import { MCQ } from '@/components/quiz/mcq/type';
-import { Quiz, QuizDislike, QuizLike } from './type';
-import { getSignInResponse, getSignInResponseOrRedirect } from '../common/cookie';
+"use server";
+import { cookieWithErrorHandler, getServerUrl, withErrorHandler } from "../common/lib";
+import { MCQ } from "@/components/quiz/mcq/type";
+import { Quiz, QuizDislike, QuizLike } from "./type";
+import { getSignInResponse, getSignInResponseOrRedirect } from "../common/cookie";
 import {
 	CreateQuizDTO,
 	DetailQuizDTO,
@@ -10,13 +10,13 @@ import {
 	QuizReactionDTO,
 	QuizSubmitDTO,
 	ResponseQuizDTO,
-} from './dto';
-import { QuizReaction, QuizStatus, FindQuizResult } from './type';
-import { HttpException } from '../common/dto';
-import { SignInResponse } from '../auth/type';
-import { revalidateTag } from 'next/cache';
+} from "./dto";
+import { QuizReaction, QuizStatus, FindQuizResult } from "./type";
+import { HttpException } from "../common/dto";
+import { SignInResponse } from "../auth/type";
+import { revalidateTag } from "next/cache";
 
-const QUIZ_LIST_TAG = 'quiz_list_tag';
+const QUIZ_LIST_TAG = "quiz_list_tag";
 
 function getQuizCacheTag(quizId: string) {
 	return `quiz-${quizId}`;
@@ -37,9 +37,9 @@ const getMCQData = async (): Promise<MCQ[] | HttpException> => {
 	// });  // src/data에 파일을 읽어 올 때 사용
 	const serverUrl = getServerUrl();
 
-	const url: string = serverUrl + '/quiz/quiz_of_week';
+	const url: string = serverUrl + "/quiz/quiz_of_week";
 	const response = await fetch(url, {
-		cache: 'no-cache',
+		cache: "no-cache",
 	}); // 서버에 있는 데이터 읽어 올때 사용
 	const res = await response.json();
 
@@ -68,12 +68,12 @@ const findQuiz = async (
 	count: number = 50,
 ): Promise<FindQuizResult | HttpException> => {
 	const backendUrl = getServerUrl();
-	const artistsParam = artists.map((a) => `artists[]=${a}`).join('&');
-	const tagParam = tags.map((t) => `tags[]=${t}`).join('&');
-	const styleParam = styles.map((s) => `styles[]=${s}`).join('&');
+	const artistsParam = artists.map((a) => `artists[]=${a}`).join("&");
+	const tagParam = tags.map((t) => `tags[]=${t}`).join("&");
+	const styleParam = styles.map((s) => `styles[]=${s}`).join("&");
 	const url = `${backendUrl}/quiz?${artistsParam}&${tagParam}&${styleParam}&page=${page}&count=${count}`;
 
-	const response = await fetch(url, { cache: 'no-store' });
+	const response = await fetch(url, { cache: "no-store" });
 	if (!response.ok) {
 		const error: HttpException = await response.json();
 		return error;
@@ -99,7 +99,7 @@ const getQuizList = async (page: number = 0) => {
 const getQuiz = async (id: string): Promise<DetailQuizDTO> => {
 	const backendUrl = getServerUrl();
 	const signInResponse = await getSignInResponse();
-	const userIdParam = signInResponse ? `user-id=${signInResponse.user.id}` : '';
+	const userIdParam = signInResponse ? `user-id=${signInResponse.user.id}` : "";
 	const isS3AccessParam = `isS3Access=true`;
 	const url = `${backendUrl}/quiz/${id}?${isS3AccessParam}&${userIdParam}`;
 	const cacheTag = getQuizCacheTag(id);
@@ -116,9 +116,9 @@ const addQuiz = async (
 	const url = `${backendUrl}/quiz`;
 
 	const response = await fetch(url, {
-		method: 'POST',
+		method: "POST",
 		headers: {
-			'Content-Type': 'application/json',
+			"Content-Type": "application/json",
 			Authorization: `Bearer ${signInResponse.accessToken}`,
 		},
 		body: JSON.stringify(dto),
@@ -144,9 +144,9 @@ const updateQuiz = async (
 	const url = `${backendUrl}/quiz/${quizId}`;
 
 	const response = await fetch(url, {
-		method: 'PUT',
+		method: "PUT",
 		headers: {
-			'Content-Type': 'application/json',
+			"Content-Type": "application/json",
 			Authorization: `Bearer ${signInResponse.accessToken}`,
 		},
 		body: JSON.stringify(dto),
@@ -171,9 +171,9 @@ const deleteQuiz = async (
 	const url = `${backendUrl}/quiz/${quizId}`;
 
 	const response = await fetch(url, {
-		method: 'DELETE',
+		method: "DELETE",
 		headers: {
-			'Content-Type': 'application/json',
+			"Content-Type": "application/json",
 			Authorization: `Bearer ${signInResponse.accessToken}`,
 		},
 	});
@@ -192,9 +192,9 @@ const submitQuiz = async (quizID: string, dto: QuizSubmitDTO): Promise<boolean |
 	const url = `${backendUrl}/quiz/submit/${quizID}`;
 
 	const response = await fetch(url, {
-		method: 'POST',
+		method: "POST",
 		headers: {
-			'Content-Type': 'application/json',
+			"Content-Type": "application/json",
 		},
 		body: JSON.stringify(dto),
 	});
@@ -239,11 +239,11 @@ const addQuizReactions = async (
 	const url = `${backendUrl}/quiz/${quizID}/reaction`;
 
 	const headers = {
-		'Content-Type': 'application/json',
+		"Content-Type": "application/json",
 		Authorization: `Bearer ${signInResponse.accessToken}`,
 	};
 	const response = await fetch(url, {
-		method: 'POST',
+		method: "POST",
 		headers,
 		body: JSON.stringify(dto),
 	});
@@ -267,7 +267,7 @@ const deleteQuizReaction = async (
 		Authorization: `Bearer ${signInResponse.accessToken}`,
 	};
 	const response = await fetch(url, {
-		method: 'DELETE',
+		method: "DELETE",
 		headers,
 	});
 
@@ -283,11 +283,11 @@ const deleteQuizReaction = async (
 const scheduleQuiz = async (quizStatus?: QuizStatus): Promise<ResponseQuizDTO | HttpException> => {
 	const backendUrl = getServerUrl();
 	const url = `${backendUrl}/quiz/schedule`;
-	let param = '';
+	let param = "";
 	if (quizStatus) {
-		const currentIndexParam = `currentIndex=${quizStatus?.currentIndex || ''}`;
-		const endIndexParam = `endIndex=${quizStatus?.endIndex || ''}`;
-		const contextParam = `context=` + JSON.stringify(quizStatus?.context) || '';
+		const currentIndexParam = `currentIndex=${quizStatus?.currentIndex || ""}`;
+		const endIndexParam = `endIndex=${quizStatus?.endIndex || ""}`;
+		const contextParam = `context=` + JSON.stringify(quizStatus?.context) || "";
 		param += `?${currentIndexParam}&${endIndexParam}&${contextParam}`;
 	}
 	const response = await fetch(url + param);
@@ -304,10 +304,10 @@ const addQuizContext = async (dto: QuizContextDTO): Promise<boolean | HttpExcept
 	const backendUrl = getServerUrl();
 	const url = `${backendUrl}/quiz/schedule`;
 	const headers = {
-		'Content-Type': 'application/json',
+		"Content-Type": "application/json",
 	};
 	const response = await fetch(url, {
-		method: 'POST',
+		method: "POST",
 		headers,
 		body: JSON.stringify(dto),
 	});
@@ -320,44 +320,44 @@ const addQuizContext = async (dto: QuizContextDTO): Promise<boolean | HttpExcept
 	return result;
 };
 
-export const getMCQDataAction = withErrorHandler('getMCQData', getMCQData);
+export const getMCQDataAction = withErrorHandler("getMCQData", getMCQData);
 
-export const findQuizAction = withErrorHandler('findQuiz', findQuiz);
-export const getQuizListAction = withErrorHandler('getQuizList', getQuizList);
-export const getQuizAction = withErrorHandler('getQuiz', getQuiz);
+export const findQuizAction = withErrorHandler("findQuiz", findQuiz);
+export const getQuizListAction = withErrorHandler("getQuizList", getQuizList);
+export const getQuizAction = withErrorHandler("getQuiz", getQuiz);
 
-export const getQuizReactionsAction = withErrorHandler('getQuizReactions', getQuizReactions);
+export const getQuizReactionsAction = withErrorHandler("getQuizReactions", getQuizReactions);
 
 export const addQuizAction = cookieWithErrorHandler(
 	getSignInResponseOrRedirect,
-	'addQuiz',
+	"addQuiz",
 	addQuiz,
 );
 export const updateQuizAction = cookieWithErrorHandler(
 	getSignInResponseOrRedirect,
-	'updateQuiz',
+	"updateQuiz",
 	updateQuiz,
 );
 export const deleteQuizAction = cookieWithErrorHandler(
 	getSignInResponseOrRedirect,
-	'deleteQuiz',
+	"deleteQuiz",
 	deleteQuiz,
 );
 
-export const submitQuizAction = withErrorHandler('submitQuiz', submitQuiz);
+export const submitQuizAction = withErrorHandler("submitQuiz", submitQuiz);
 
 export const addQuizReactionsAction = cookieWithErrorHandler(
 	getSignInResponseOrRedirect,
-	'addQuizReactions',
+	"addQuizReactions",
 	addQuizReactions,
 );
 
 export const deleteQuizReactionAction = cookieWithErrorHandler(
 	getSignInResponseOrRedirect,
-	'deleteQuizReaction',
+	"deleteQuizReaction",
 	deleteQuizReaction,
 );
 
-export const scheduleQuizAction = withErrorHandler('scheduleQuiz', scheduleQuiz);
+export const scheduleQuizAction = withErrorHandler("scheduleQuiz", scheduleQuiz);
 
-export const addQuizContextAction = withErrorHandler('addQuizContext', addQuizContext);
+export const addQuizContextAction = withErrorHandler("addQuizContext", addQuizContext);

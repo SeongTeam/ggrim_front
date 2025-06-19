@@ -1,6 +1,6 @@
-import Link from 'next/link';
-import { AUTH_LOGIC_ROUTE } from '../../route/auth/route';
-import { PROFILE_LOGIC_ROUTE } from '../../route/profile/route';
+import Link from "next/link";
+import { AUTH_LOGIC_ROUTE } from "../../route/auth/route";
+import { PROFILE_LOGIC_ROUTE } from "../../route/profile/route";
 
 // TODO : Profile page 개선
 // - [ ] : 사용자가 생성한 퀴즈 목록 볼수 있는 page 추가하기
@@ -14,11 +14,11 @@ export default function ProfilePage() {
 }
 
 const menuItems = [
-	{ label: 'Update Password', href: AUTH_LOGIC_ROUTE.VERIFY_USER('update-password') },
-	{ label: 'Update Username', href: PROFILE_LOGIC_ROUTE.SETTING_ACCOUNT },
+	{ label: "Update Password", href: AUTH_LOGIC_ROUTE.VERIFY_USER("update-password") },
+	{ label: "Update Username", href: PROFILE_LOGIC_ROUTE.SETTING_ACCOUNT },
 	{
-		label: 'Delete Account',
-		href: AUTH_LOGIC_ROUTE.VERIFY_USER('delete-account'),
+		label: "Delete Account",
+		href: AUTH_LOGIC_ROUTE.VERIFY_USER("delete-account"),
 		highlight: true,
 	},
 ];
@@ -35,14 +35,14 @@ function SettingsMenu() {
 							<tr
 								key={item.href}
 								className={`} border-b border-zinc-700 transition-colors duration-200 hover:bg-zinc-600 ${
-									isFirst ? 'first:rounded-t-2xl' : ''
-								} ${isLast ? 'border-b-0 last:rounded-b-2xl' : ''}`}
+									isFirst ? "first:rounded-t-2xl" : ""
+								} ${isLast ? "border-b-0 last:rounded-b-2xl" : ""}`}
 							>
 								<td className="p-4 text-center">
 									<Link
 										href={item.href}
 										className={`text-lg font-semibold hover:underline ${
-											item.highlight ? 'text-red-400' : 'text-white'
+											item.highlight ? "text-red-400" : "text-white"
 										}`}
 									>
 										{item.label}

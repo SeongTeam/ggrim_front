@@ -1,12 +1,12 @@
-'use client';
-import { useState } from 'react';
-import { Menu, X } from 'lucide-react';
-import Link from 'next/link';
+"use client";
+import { useState } from "react";
+import { Menu, X } from "lucide-react";
+import Link from "next/link";
 
 const NavRoute = {
-	home: '/',
-	quiz: '/quiz',
-	quizCreate: '/quiz/create',
+	home: "/",
+	quiz: "/quiz",
+	quizCreate: "/quiz/create",
 };
 
 export const NavbarMenu = () => {
@@ -24,7 +24,7 @@ export const NavbarMenu = () => {
 			{/* 네비게이션 메뉴 */}
 			<ul
 				className={`absolute left-0 top-full flex w-full min-w-48 flex-col space-y-4 bg-gray-900 p-4 text-base text-white md:relative md:w-auto md:flex-row md:space-x-6 md:space-y-0 md:bg-transparent md:p-0 ${
-					isOpen ? 'block' : 'hidden md:flex'
+					isOpen ? "block" : "hidden md:flex"
 				}`}
 			>
 				<li className="cursor-pointer hover:text-gray-300">

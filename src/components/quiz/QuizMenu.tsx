@@ -1,15 +1,15 @@
 // components/PostMenu.tsx
-'use client';
+"use client";
 
-import { MoreVertical, X } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
-import { Quiz } from '@/server-action/backend/quiz/type';
-import { useRouter } from 'next/navigation';
-import { deleteQuizAction } from '../../server-action/backend/quiz/api';
-import { isHttpException, isServerActionError } from '../../server-action/backend/common/util';
-import { HTTP_STATUS } from '../../server-action/backend/common/status';
-import toast from 'react-hot-toast';
-import { SEARCH_LOGIC_ROUTE } from '../../route/search/route';
+import { MoreVertical, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Quiz } from "@/server-action/backend/quiz/type";
+import { useRouter } from "next/navigation";
+import { deleteQuizAction } from "../../server-action/backend/quiz/api";
+import { isHttpException, isServerActionError } from "../../server-action/backend/common/util";
+import { HTTP_STATUS } from "../../server-action/backend/common/status";
+import toast from "react-hot-toast";
+import { SEARCH_LOGIC_ROUTE } from "../../route/search/route";
 
 type QuizMenuProps = {
 	quiz: Quiz;
@@ -30,13 +30,13 @@ export const QuizMenu = ({ quiz, isOwner }: QuizMenuProps) => {
 		}
 
 		if (open) {
-			document.addEventListener('mousedown', handleClickOutside);
+			document.addEventListener("mousedown", handleClickOutside);
 		} else {
-			document.removeEventListener('mousedown', handleClickOutside);
+			document.removeEventListener("mousedown", handleClickOutside);
 		}
 
 		return () => {
-			document.removeEventListener('mousedown', handleClickOutside);
+			document.removeEventListener("mousedown", handleClickOutside);
 		};
 	}, [open]);
 
@@ -66,10 +66,10 @@ export const QuizMenu = ({ quiz, isOwner }: QuizMenuProps) => {
 					messages.forEach((m) => toast.error(m));
 					break;
 				default:
-					throw new Error(messages.join('\n'));
+					throw new Error(messages.join("\n"));
 			}
 		} else {
-			router.push('/quiz');
+			router.push("/quiz");
 		}
 	};
 
@@ -138,17 +138,17 @@ const ShowDescription = ({ quiz, isShow, setShow }: ShowDescriptionProps) => {
 	const modalRef = useRef<HTMLDivElement>(null);
 
 	const handleClickTag = (name: string) => {
-		const url = SEARCH_LOGIC_ROUTE.SEARCH_PAINTING('', '', [name]);
+		const url = SEARCH_LOGIC_ROUTE.SEARCH_PAINTING("", "", [name]);
 		router.push(url);
 	};
 
 	const handleClickStyle = (name: string) => {
-		const url = SEARCH_LOGIC_ROUTE.SEARCH_PAINTING('', '', [], [name]);
+		const url = SEARCH_LOGIC_ROUTE.SEARCH_PAINTING("", "", [], [name]);
 		router.push(url);
 	};
 
 	const handleClickArtist = (name: string) => {
-		const url = SEARCH_LOGIC_ROUTE.SEARCH_PAINTING('', name);
+		const url = SEARCH_LOGIC_ROUTE.SEARCH_PAINTING("", name);
 		router.push(url);
 	};
 
@@ -160,13 +160,13 @@ const ShowDescription = ({ quiz, isShow, setShow }: ShowDescriptionProps) => {
 		}
 
 		if (isShow) {
-			document.addEventListener('mousedown', handleClickOutside);
+			document.addEventListener("mousedown", handleClickOutside);
 		} else {
-			document.removeEventListener('mousedown', handleClickOutside);
+			document.removeEventListener("mousedown", handleClickOutside);
 		}
 
 		return () => {
-			document.removeEventListener('mousedown', handleClickOutside);
+			document.removeEventListener("mousedown", handleClickOutside);
 		};
 	}, [isShow, setShow]);
 
@@ -178,7 +178,7 @@ const ShowDescription = ({ quiz, isShow, setShow }: ShowDescriptionProps) => {
 					<div className="flex items-end">
 						<p className="text-3xl font-semibold text-black">Description </p>
 						<p className="pl-5 text-xl font-semibold text-black">
-							{' '}
+							{" "}
 							by {quiz.shortOwner.username}
 						</p>
 					</div>

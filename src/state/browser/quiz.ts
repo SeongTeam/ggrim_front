@@ -1,7 +1,7 @@
-import { NewQuiz } from '../../components/quiz/QuizForm';
-import { QuizStatus } from '../../server-action/backend/quiz/type';
-import { LOCAL_STORAGE_KEY } from './const';
-import { getItemWithExpiry, setItemWithExpiry } from './util';
+import { NewQuiz } from "../../components/quiz/QuizForm";
+import { QuizStatus } from "../../server-action/backend/quiz/type";
+import { LOCAL_STORAGE_KEY } from "./const";
+import { getItemWithExpiry, setItemWithExpiry } from "./util";
 
 export function getQuizStatus(): undefined | QuizStatus {
 	const rawStatus = localStorage.getItem(LOCAL_STORAGE_KEY.QUIZ_STATUS);
@@ -10,7 +10,7 @@ export function getQuizStatus(): undefined | QuizStatus {
 		const status: QuizStatus | undefined = rawStatus ? JSON.parse(rawStatus) : undefined;
 		return status;
 	} catch (e) {
-		console.warn('Failed to parse QuizStatus from localStorage', e);
+		console.warn("Failed to parse QuizStatus from localStorage", e);
 		return undefined;
 	}
 }

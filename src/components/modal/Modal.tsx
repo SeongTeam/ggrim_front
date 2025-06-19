@@ -1,5 +1,5 @@
-'use client';
-import React from 'react';
+"use client";
+import React from "react";
 
 interface ModalProps {
 	onClose: () => void;
@@ -7,7 +7,7 @@ interface ModalProps {
 }
 
 export const Modal = ({ onClose, children }: ModalProps) => {
-	const modalId = 'modal-overlay';
+	const modalId = "modal-overlay";
 
 	const handleOutsideClick = (event: React.MouseEvent<HTMLDivElement>) => {
 		if ((event.target as HTMLDivElement).id === modalId) {

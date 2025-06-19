@@ -1,12 +1,12 @@
-import { Artist } from '../../server-action/backend/artist/dto';
-import { Painting } from '../../server-action/backend/painting/type';
-import { Style } from '../../server-action/backend/style/type';
-import { Tag } from '../../server-action/backend/tag/type';
+import { Artist } from "../../server-action/backend/artist/dto";
+import { Painting } from "../../server-action/backend/painting/type";
+import { Style } from "../../server-action/backend/style/type";
+import { Tag } from "../../server-action/backend/tag/type";
 
 export const curatedContentType = {
-	GIF: 'GIF',
-	MP4: 'MP4',
-	NOTHING: 'NOTHING',
+	GIF: "GIF",
+	MP4: "MP4",
+	NOTHING: "NOTHING",
 };
 
 export type _CuratedContentType = keyof typeof curatedContentType;
@@ -49,10 +49,10 @@ export class PaintingModel implements Painting {
 	static getEmptyObject(): Painting {
 		return {
 			version: 0,
-			id: '',
-			title: '',
-			image_url: '',
-			description: '',
+			id: "",
+			title: "",
+			image_url: "",
+			description: "",
 			completition_year: 0,
 			width: 0,
 			height: 0,
@@ -60,12 +60,12 @@ export class PaintingModel implements Painting {
 			styles: [],
 			artist: {
 				version: 0,
-				id: '',
-				name: '',
-				image_url: '',
-				birth_date: '',
-				death_date: '',
-				info_url: '',
+				id: "",
+				name: "",
+				image_url: "",
+				birth_date: "",
+				death_date: "",
+				info_url: "",
 			},
 		};
 	}

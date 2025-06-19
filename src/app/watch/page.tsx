@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import VideoPlayer from '@/components/cloudinary/VideoPlayer';
-import { Suspense } from 'react';
+import VideoPlayer from "@/components/cloudinary/VideoPlayer";
+import { Suspense } from "react";
 
 // 화면 크기 고정 (412 × 732)
 function WatchPage() {

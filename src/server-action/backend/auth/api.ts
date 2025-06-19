@@ -1,15 +1,15 @@
-'use server';
-import { getServerUrl, withErrorHandler } from '../common/lib';
+"use server";
+import { getServerUrl, withErrorHandler } from "../common/lib";
 import {
 	CreateOneTimeTokenDTO,
 	requestVerificationDTO,
 	SendOneTimeTokenDTO,
 	VerifyDTO,
-} from './dto';
-import { OneTimeToken, SignInResponse } from './type';
-import { deleteSignInResponse, setOneTimeToken, setSignInResponse } from '../common/cookie';
-import { HttpException } from '../common/dto';
-import { SECURITY_TOKEN_HEADER } from './header';
+} from "./dto";
+import { OneTimeToken, SignInResponse } from "./type";
+import { deleteSignInResponse, setOneTimeToken, setSignInResponse } from "../common/cookie";
+import { HttpException } from "../common/dto";
+import { SECURITY_TOKEN_HEADER } from "./header";
 
 //TODO : 사용자 정보를 반환하도록 수정하기
 const signIn = async (id: string, password: string): Promise<boolean | HttpException> => {
@@ -18,11 +18,11 @@ const signIn = async (id: string, password: string): Promise<boolean | HttpExcep
 	const credentials = btoa(`${id}:${password}`);
 	const headers = {
 		Authorization: `Basic ${credentials}`,
-		'Content-Type': 'application/json',
+		"Content-Type": "application/json",
 	};
 
 	const response = await fetch(url, {
-		method: 'POST',
+		method: "POST",
 		headers,
 	});
 
@@ -44,11 +44,11 @@ const requestVerification = async (
 	const backendUrl = getServerUrl();
 	const url = `${backendUrl}/auth/request-verification`;
 	const headers = {
-		'Content-Type': 'application/json',
+		"Content-Type": "application/json",
 	};
 
 	const response = await fetch(url, {
-		method: 'POST',
+		method: "POST",
 		headers,
 		body: JSON.stringify(dto),
 	});
@@ -65,11 +65,11 @@ const verifyEmail = async (dto: VerifyDTO): Promise<boolean | HttpException> => 
 	const backendUrl = getServerUrl();
 	const url = `${backendUrl}/auth/verify`;
 	const headers = {
-		'Content-Type': 'application/json',
+		"Content-Type": "application/json",
 	};
 
 	const response = await fetch(url, {
-		method: 'POST',
+		method: "POST",
 		headers,
 		body: JSON.stringify(dto),
 	});
@@ -96,10 +96,10 @@ const generateSecurityToken = async (
 	const credentials = btoa(`${id}:${password}`);
 	const headers = {
 		Authorization: `Basic ${credentials}`,
-		'Content-Type': 'application/json',
+		"Content-Type": "application/json",
 	};
 	const response = await fetch(url, {
-		method: 'POST',
+		method: "POST",
 		headers,
 		body: JSON.stringify(dto),
 	});
@@ -122,11 +122,11 @@ const sendSecurityTokenToEmail = async (
 	const backendUrl = getServerUrl();
 	const url = `${backendUrl}/auth/security-token/email-verification`;
 	const headers = {
-		'Content-Type': 'application/json',
+		"Content-Type": "application/json",
 	};
 
 	const response = await fetch(url, {
-		method: 'POST',
+		method: "POST",
 		headers,
 		body: JSON.stringify(dto),
 	});
@@ -147,12 +147,12 @@ const generateSecurityTokenByEmailVerification = async (
 	const backendUrl = getServerUrl();
 	const url = `${backendUrl}/auth/security-token/from-email-verification`;
 	const headers = {
-		'Content-Type': 'application/json',
+		"Content-Type": "application/json",
 		[SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN]: accessToken,
 		[SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN_ID]: identifier,
 	};
 	const response = await fetch(url, {
-		method: 'POST',
+		method: "POST",
 		headers,
 		body: JSON.stringify(dto),
 	});
@@ -173,27 +173,27 @@ const signOut = async () => {
 	deleteSignInResponse();
 };
 
-export const signInAction = withErrorHandler('signIn', signIn);
+export const signInAction = withErrorHandler("signIn", signIn);
 
 export const requestVerificationAction = withErrorHandler(
-	'requestVerification',
+	"requestVerification",
 	requestVerification,
 );
-export const verifyEmailAction = withErrorHandler('verifyEmail', verifyEmail);
+export const verifyEmailAction = withErrorHandler("verifyEmail", verifyEmail);
 
 export const generateSecurityTokenAction = withErrorHandler(
-	'generateSecurityToken',
+	"generateSecurityToken",
 	generateSecurityToken,
 );
 
 export const sendSecurityTokenToEmailAction = withErrorHandler(
-	'sendSecurityTokenToEmail',
+	"sendSecurityTokenToEmail",
 	sendSecurityTokenToEmail,
 );
 
 export const generateSecurityTokenByEmailVerificationAction = withErrorHandler(
-	'generateSecurityTokenByEmailVerification',
+	"generateSecurityTokenByEmailVerification",
 	generateSecurityTokenByEmailVerification,
 );
 
-export const signOutAction = withErrorHandler('signOut', signOut);
+export const signOutAction = withErrorHandler("signOut", signOut);

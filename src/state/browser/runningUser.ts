@@ -1,7 +1,7 @@
-'use client';
-import { User } from '@/server-action/backend/user/type';
-import { CreateQuizDTO } from '../../server-action/backend/quiz/dto';
-import { LOCAL_STORAGE_KEY } from './const';
+"use client";
+import { User } from "@/server-action/backend/user/type";
+import { CreateQuizDTO } from "../../server-action/backend/quiz/dto";
+import { LOCAL_STORAGE_KEY } from "./const";
 
 export interface RunningUser {
 	username: string;
@@ -36,7 +36,7 @@ export function getRunningUser(): undefined | RunningUser {
 	try {
 		return JSON.parse(result) as RunningUser;
 	} catch (e) {
-		console.warn('Failed to parse runningUser from localStorage', e);
+		console.warn("Failed to parse runningUser from localStorage", e);
 		return undefined;
 	}
 }

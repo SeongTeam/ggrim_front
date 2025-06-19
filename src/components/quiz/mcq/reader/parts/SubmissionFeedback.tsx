@@ -1,8 +1,8 @@
 // displays feedback after mcq submission in reader mode
 
-import React from 'react';
-import * as Icons from '@/components/ui/icons';
-import { ArrowRightCircleIcon, ThumbsDown, ThumbsUp } from 'lucide-react';
+import React from "react";
+import * as Icons from "@/components/ui/icons";
+import { ArrowRightCircleIcon, ThumbsDown, ThumbsUp } from "lucide-react";
 
 interface SubmissionFeedbackProps {
 	isCorrect: boolean;
@@ -33,7 +33,7 @@ const SubmissionFeedback: React.FC<SubmissionFeedbackProps> = ({
 	dislikeCount,
 }) => (
 	<div className="mt-6 text-right">
-		{' '}
+		{" "}
 		{/* 오른쪽 정렬 */}
 		<FeedBackResult isCorrect={isCorrect} isSubmitted={isSubmitted} />
 		<div className="flex items-center justify-end space-x-4">
@@ -47,7 +47,7 @@ const SubmissionFeedback: React.FC<SubmissionFeedbackProps> = ({
 			<div className="flex flex-col items-center gap-1">
 				<button
 					onClick={toggleLike}
-					className={`rounded-full border-2 p-4 text-black transition-colors duration-300 ${liked ? 'border-green-500 bg-green-500' : 'border-gray-400 dark:border-gray-600'} `}
+					className={`rounded-full border-2 p-4 text-black transition-colors duration-300 ${liked ? "border-green-500 bg-green-500" : "border-gray-400 dark:border-gray-600"} `}
 				>
 					<ThumbsUp className="h-4 w-4" />
 				</button>
@@ -57,7 +57,7 @@ const SubmissionFeedback: React.FC<SubmissionFeedbackProps> = ({
 			<div className="flex flex-col items-center gap-1">
 				<button
 					onClick={toggleDislike}
-					className={`rounded-full border-2 p-4 text-black transition-colors duration-300 ${disliked ? 'border-red-500 bg-red-500' : 'border-gray-400 dark:border-gray-600'} `}
+					className={`rounded-full border-2 p-4 text-black transition-colors duration-300 ${disliked ? "border-red-500 bg-red-500" : "border-gray-400 dark:border-gray-600"} `}
 				>
 					<ThumbsDown className="h-4 w-4" />
 				</button>

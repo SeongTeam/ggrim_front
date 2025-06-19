@@ -1,11 +1,11 @@
-import { ErrorModal } from '../../../../components/modal/ErrorModal';
-import { QuizForm } from '../../../../components/quiz/QuizForm';
-import { getSignInInfo } from '../../../../server-action/backend/common/cookie';
-import { getQuizAction } from '../../../../server-action/backend/quiz/api';
+import { ErrorModal } from "../../../../components/modal/ErrorModal";
+import { QuizForm } from "../../../../components/quiz/QuizForm";
+import { getSignInInfo } from "../../../../server-action/backend/common/cookie";
+import { getQuizAction } from "../../../../server-action/backend/quiz/api";
 import {
 	isHttpException,
 	isServerActionError,
-} from '../../../../server-action/backend/common/util';
+} from "../../../../server-action/backend/common/util";
 
 interface QuizEditPageProps {
 	params: { id: string };
@@ -19,7 +19,7 @@ export default async function QuizEditPage({ params }: QuizEditPageProps) {
 	}
 
 	if (isServerActionError(response)) {
-		throw new Error('unstable Situation');
+		throw new Error("unstable Situation");
 	} else if (isHttpException(response)) {
 		return <ErrorModal message="Can't Find Quiz" />;
 	}

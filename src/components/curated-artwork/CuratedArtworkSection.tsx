@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useRecoilState } from 'recoil';
-import { CuratedArtworkList } from './CuratedArtworkList';
-import { CuratedArtworkForm } from './CuratedArtworkForm';
-import { FormState } from './states';
-import { formStateAtom } from './atom';
+import { useRecoilState } from "recoil";
+import { CuratedArtworkList } from "./CuratedArtworkList";
+import { CuratedArtworkForm } from "./CuratedArtworkForm";
+import { FormState } from "./states";
+import { formStateAtom } from "./atom";
 
 export const CuratedArtworkSection = () => {
 	const [curatedArtworkFormStates, setCuratedArtwork] = useRecoilState(formStateAtom);

@@ -1,10 +1,10 @@
-import { NavbarMenu } from './NavbarMenu';
-import { SearchPaintingIconMenu } from './SearchPaintingIconMenu';
-import { NotifyIconMenu } from './NotificationIconMenu';
-import { ProfileIconMenu } from './ProfileIconMenu';
-import { getSignInInfo } from '../../server-action/backend/common/cookie';
-import { User } from '@/server-action/backend/user/type';
-import Link from 'next/link';
+import { NavbarMenu } from "./NavbarMenu";
+import { SearchPaintingIconMenu } from "./SearchPaintingIconMenu";
+import { NotifyIconMenu } from "./NotificationIconMenu";
+import { ProfileIconMenu } from "./ProfileIconMenu";
+import { getSignInInfo } from "../../server-action/backend/common/cookie";
+import { User } from "@/server-action/backend/user/type";
+import Link from "next/link";
 
 // TODO: NavBar UI 개선
 // - [x] 검색창 생성시, NavBar 깜박이는 버그 수정
@@ -29,7 +29,7 @@ export const Navbar = async () => {
 					{/* 로고 */}
 					<div className="text-2xl font-bold text-yellow-300">Ggrim</div>
 					<NavbarMenu />
-					<div id="response-spacer" className="flex-grow md:hidden" />{' '}
+					<div id="response-spacer" className="flex-grow md:hidden" />{" "}
 					{/* 자동 확장 Spacer */}
 					{/* 아이콘 메뉴 */}
 					<div className="flex items-center space-x-4">

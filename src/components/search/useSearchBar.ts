@@ -1,24 +1,24 @@
-'use client';
-import { Dispatch, RefObject, useCallback, useEffect, useReducer, useRef } from 'react';
-import { BASE_SUGGESTIONS, QUOTED_BASE_SUGGESTIONS } from './const';
-import { findArtistsAction } from '../../server-action/backend/artist/api';
-import { findTagsAction } from '../../server-action/backend/tag/api';
-import { findStylesAction } from '../../server-action/backend/style/api';
-import { isHttpException, isServerActionError } from '../../server-action/backend/common/util';
-import toast from 'react-hot-toast';
+"use client";
+import { Dispatch, RefObject, useCallback, useEffect, useReducer, useRef } from "react";
+import { BASE_SUGGESTIONS, QUOTED_BASE_SUGGESTIONS } from "./const";
+import { findArtistsAction } from "../../server-action/backend/artist/api";
+import { findTagsAction } from "../../server-action/backend/tag/api";
+import { findStylesAction } from "../../server-action/backend/style/api";
+import { isHttpException, isServerActionError } from "../../server-action/backend/common/util";
+import toast from "react-hot-toast";
 import {
 	calculateNewInput,
 	determineParamCase,
 	getInsideDoubleQuotes,
 	parseKeyValue,
-} from './util';
+} from "./util";
 import {
 	HttpException,
 	IPaginationResult,
 	ServerActionError,
-} from '../../server-action/backend/common/dto';
-import { useDebounceCallback } from '../../hooks/useDebounceCallback';
-import { AutoCompleteAction, AutoCompleteState, InputAction, InputState } from './type';
+} from "../../server-action/backend/common/dto";
+import { useDebounceCallback } from "../../hooks/useDebounceCallback";
+import { AutoCompleteAction, AutoCompleteState, InputAction, InputState } from "./type";
 
 // Constants
 
@@ -74,23 +74,23 @@ function autoCompleteReducer(
 	action: AutoCompleteAction,
 ): AutoCompleteState {
 	switch (action.type) {
-		case 'SET_SUGGESTIONS':
+		case "SET_SUGGESTIONS":
 			return { ...state, suggestions: action.payload };
-		case 'SET_SELECTED_INDEX':
+		case "SET_SELECTED_INDEX":
 			return { ...state, selectedIndex: action.payload };
-		case 'SET_QUERY':
+		case "SET_QUERY":
 			return { ...state, query: action.payload };
-		case 'SET_LOADING':
+		case "SET_LOADING":
 			return { ...state, loading: action.payload };
-		case 'SET_ERROR':
+		case "SET_ERROR":
 			return { ...state, error: action.payload };
-		case 'SET_ALL':
+		case "SET_ALL":
 			return { ...state, ...action.payload };
-		case 'RESET':
+		case "RESET":
 			return {
 				suggestions: [],
 				selectedIndex: -1,
-				query: '',
+				query: "",
 				loading: false,
 				error: undefined,
 			};
@@ -101,11 +101,11 @@ function autoCompleteReducer(
 
 function inputReducer(state: InputState, action: InputAction): InputState {
 	switch (action.type) {
-		case 'SET_TEXT':
+		case "SET_TEXT":
 			return { ...state, text: action.payload };
-		case 'SET_CURSOR_POS':
+		case "SET_CURSOR_POS":
 			return { ...state, cursorPos: action.payload };
-		case 'SET_ALL':
+		case "SET_ALL":
 			return { ...state, ...action.payload };
 		default:
 			return state;
@@ -115,7 +115,7 @@ function inputReducer(state: InputState, action: InputAction): InputState {
 // Main hook
 export function useSearchBar({
 	onSearch,
-	defaultValue = '',
+	defaultValue = "",
 	inputRef,
 	debounceMs = 300,
 }: UseSearchBarProps): UseSearchBarReturn {
@@ -128,7 +128,7 @@ export function useSearchBar({
 	const initialAutoCompleteState: AutoCompleteState = {
 		suggestions: [],
 		selectedIndex: -1,
-		query: '',
+		query: "",
 		loading: false,
 		error: undefined,
 	};
@@ -149,7 +149,7 @@ export function useSearchBar({
 				inputRef.current.setSelectionRange(position, position);
 				inputRef.current.focus();
 			} catch (error) {
-				console.warn('Failed to move cursor:', error);
+				console.warn("Failed to move cursor:", error);
 			}
 		},
 		[inputRef],
@@ -163,7 +163,7 @@ export function useSearchBar({
 				suggestion,
 			);
 
-			inputDispatch({ type: 'SET_ALL', payload: { text: newInput, cursorPos: newCursor } });
+			inputDispatch({ type: "SET_ALL", payload: { text: newInput, cursorPos: newCursor } });
 
 			// Use setTimeout to ensure DOM update before cursor movement
 			setTimeout(() => safeMoveCursor(newCursor), 0);
@@ -175,17 +175,17 @@ export function useSearchBar({
 	const fetchSuggestions = async (value: string, cursorPosition: number) => {
 		const paramCase = determineParamCase(value, cursorPosition);
 		let suggestions: string[] = [];
-		let query = '';
+		let query = "";
 
-		autoCompleteDispatch({ type: 'SET_LOADING', payload: true });
-		autoCompleteDispatch({ type: 'SET_ERROR', payload: undefined });
+		autoCompleteDispatch({ type: "SET_LOADING", payload: true });
+		autoCompleteDispatch({ type: "SET_ERROR", payload: undefined });
 		switch (paramCase) {
-			case 'NO_QUOTED': {
+			case "NO_QUOTED": {
 				suggestions = QUOTED_BASE_SUGGESTIONS;
 				break;
 			}
 
-			case 'NO_PARAM': {
+			case "NO_PARAM": {
 				const quoted = getInsideDoubleQuotes(value, cursorPosition);
 				if (quoted) {
 					suggestions = BASE_SUGGESTIONS.filter((suggestion) =>
@@ -196,7 +196,7 @@ export function useSearchBar({
 				break;
 			}
 
-			case 'PARAM_KEY_ONLY': {
+			case "PARAM_KEY_ONLY": {
 				const quoted = getInsideDoubleQuotes(value, cursorPosition);
 				if (!quoted) break;
 
@@ -204,7 +204,7 @@ export function useSearchBar({
 				if (!param?.key) break;
 
 				const serverAction = createServerAction(param.key);
-				const response = await serverAction(param.value || '');
+				const response = await serverAction(param.value || "");
 
 				if (isServerActionError(response)) {
 					throw new Error(response.message);
@@ -212,15 +212,15 @@ export function useSearchBar({
 
 				if (isHttpException(response)) {
 					const errorMessage = Array.isArray(response.message)
-						? response.message.join('\n')
+						? response.message.join("\n")
 						: response.message;
 					toast.error(errorMessage);
-					autoCompleteDispatch({ type: 'SET_ERROR', payload: errorMessage });
+					autoCompleteDispatch({ type: "SET_ERROR", payload: errorMessage });
 					return;
 				}
 
-				suggestions = response.data.length > 0 ? response.data.map((d) => d.name) : [''];
-				query = param.value || '';
+				suggestions = response.data.length > 0 ? response.data.map((d) => d.name) : [""];
+				query = param.value || "";
 				break;
 			}
 
@@ -229,7 +229,7 @@ export function useSearchBar({
 		}
 
 		autoCompleteDispatch({
-			type: 'SET_ALL',
+			type: "SET_ALL",
 			payload: {
 				suggestions,
 				query,
@@ -245,7 +245,7 @@ export function useSearchBar({
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const text = e.target.value;
 		const cursorPos = Math.max(0, (e.target.selectionStart || 1) - 1);
-		inputDispatch({ type: 'SET_ALL', payload: { text, cursorPos } });
+		inputDispatch({ type: "SET_ALL", payload: { text, cursorPos } });
 		debouncedFetchSuggestions(text, cursorPos);
 		onSearch(text);
 	};
@@ -254,7 +254,7 @@ export function useSearchBar({
 		if (!inputRef.current) return;
 
 		const cursorPos = inputRef.current.selectionStart || 0;
-		inputDispatch({ type: 'SET_CURSOR_POS', payload: cursorPos });
+		inputDispatch({ type: "SET_CURSOR_POS", payload: cursorPos });
 	};
 
 	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -262,32 +262,32 @@ export function useSearchBar({
 		if (suggestions.length === 0) return;
 
 		switch (e.key) {
-			case 'ArrowDown':
+			case "ArrowDown":
 				e.preventDefault();
 				autoCompleteDispatch({
-					type: 'SET_SELECTED_INDEX',
+					type: "SET_SELECTED_INDEX",
 					payload: (selectedIndex + 1) % suggestions.length,
 				});
 				break;
 
-			case 'ArrowUp':
+			case "ArrowUp":
 				e.preventDefault();
 				autoCompleteDispatch({
-					type: 'SET_SELECTED_INDEX',
+					type: "SET_SELECTED_INDEX",
 					payload: (selectedIndex - 1 + suggestions.length) % suggestions.length,
 				});
 				break;
 
-			case 'Enter':
+			case "Enter":
 				e.preventDefault();
 				if (selectedIndex >= 0 && suggestions[selectedIndex]) {
 					applySuggestion(suggestions[selectedIndex]);
-					autoCompleteDispatch({ type: 'RESET' });
+					autoCompleteDispatch({ type: "RESET" });
 				}
 				break;
 
-			case 'Escape':
-				autoCompleteDispatch({ type: 'RESET' });
+			case "Escape":
+				autoCompleteDispatch({ type: "RESET" });
 				break;
 
 			default:
@@ -297,17 +297,17 @@ export function useSearchBar({
 
 	const handleSelectSuggestion = (suggestion: string) => {
 		applySuggestion(suggestion);
-		autoCompleteDispatch({ type: 'RESET' });
+		autoCompleteDispatch({ type: "RESET" });
 	};
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
 			if (suggestionsRef.current && !suggestionsRef.current.contains(event.target as Node)) {
-				autoCompleteDispatch({ type: 'RESET' });
+				autoCompleteDispatch({ type: "RESET" });
 			}
 		};
-		document.addEventListener('mousedown', handleClickOutside);
-		return () => document.removeEventListener('mousedown', handleClickOutside);
+		document.addEventListener("mousedown", handleClickOutside);
+		return () => document.removeEventListener("mousedown", handleClickOutside);
 	}, []);
 
 	return {

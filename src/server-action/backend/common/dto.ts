@@ -1,4 +1,4 @@
-import { HttpStatusValueType, ServiceExceptionValue } from './status';
+import { HttpStatusValueType, ServiceExceptionValue } from "./status";
 
 export interface IPaginationResult<T> {
 	data: T[];

@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { v4 as uuid } from 'uuid';
-import { X_HEADER_FIELD, setRequestId } from './util/request';
+import { NextRequest, NextResponse } from "next/server";
+import { v4 as uuid } from "uuid";
+import { X_HEADER_FIELD, setRequestId } from "./util/request";
 
 export function middleware(req: NextRequest) {
 	const requestId = uuid();
@@ -21,7 +21,7 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-	matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+	matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };
 
 // function logMessage(requestId: string, message: string, info?: Record<string, any>) {

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from "react";
 
 type DropdownMenuOption<T> = {
 	label: string;
@@ -19,7 +19,7 @@ export const DropdownMenu = <T,>({
 	options,
 	value,
 	onChange,
-	placeholder = 'Select an option',
+	placeholder = "Select an option",
 	required = false,
 }: DropdownMenuProps<T>) => {
 	const [isOpen, setIsOpen] = useState(false);
@@ -38,8 +38,8 @@ export const DropdownMenu = <T,>({
 				setIsOpen(false);
 			}
 		};
-		document.addEventListener('mousedown', handleOutsideClick);
-		return () => document.removeEventListener('mousedown', handleOutsideClick);
+		document.addEventListener("mousedown", handleOutsideClick);
+		return () => document.removeEventListener("mousedown", handleOutsideClick);
 	}, []);
 
 	return (
@@ -48,7 +48,7 @@ export const DropdownMenu = <T,>({
 
 			<input
 				type="text"
-				value={value ? options.find((option) => option.value === value)?.label : ''}
+				value={value ? options.find((option) => option.value === value)?.label : ""}
 				onClick={toggleMenu}
 				placeholder={placeholder}
 				readOnly

@@ -1,22 +1,22 @@
 // main component for the reader's mcq interface
 
-import React, { useReducer, useState } from 'react';
-import useMCQReader from './reader/useMCQReader';
-import { ErrorMessage } from './shared';
-import SubmissionFeedback from './reader/parts/SubmissionFeedback';
-import { motion } from 'framer-motion';
-import { MCQReaderViewProps } from './type';
-import { QuizReaction } from '../../../server-action/backend/quiz/type';
-import { QuizReactionCount } from '../../../server-action/backend/quiz/dto';
+import React, { useReducer, useState } from "react";
+import useMCQReader from "./reader/useMCQReader";
+import { ErrorMessage } from "./shared";
+import SubmissionFeedback from "./reader/parts/SubmissionFeedback";
+import { motion } from "framer-motion";
+import { MCQReaderViewProps } from "./type";
+import { QuizReaction } from "../../../server-action/backend/quiz/type";
+import { QuizReactionCount } from "../../../server-action/backend/quiz/dto";
 import {
 	addQuizReactionsAction,
 	deleteQuizReactionAction,
-} from '../../../server-action/backend/quiz/api';
-import { isHttpException, isServerActionError } from '../../../server-action/backend/common/util';
-import toast from 'react-hot-toast';
-import { HTTP_STATUS } from '../../../server-action/backend/common/status';
-import { ErrorModal } from '../../modal/ErrorModal';
-import Image from 'next/image';
+} from "../../../server-action/backend/quiz/api";
+import { isHttpException, isServerActionError } from "../../../server-action/backend/common/util";
+import toast from "react-hot-toast";
+import { HTTP_STATUS } from "../../../server-action/backend/common/status";
+import { ErrorModal } from "../../modal/ErrorModal";
+import Image from "next/image";
 
 interface ReactionState {
 	like: number;
@@ -24,28 +24,28 @@ interface ReactionState {
 	userReaction?: QuizReaction;
 }
 
-type Action = { type: 'SET_LIKE' } | { type: 'SET_DISLIKE' } | { type: 'RESET_REACTION' };
+type Action = { type: "SET_LIKE" } | { type: "SET_DISLIKE" } | { type: "RESET_REACTION" };
 
 function reducer(state: ReactionState, action: Action): ReactionState {
 	switch (action.type) {
-		case 'SET_LIKE': {
+		case "SET_LIKE": {
 			const next = { ...state };
 			next.like += 1;
-			next.userReaction = 'like';
+			next.userReaction = "like";
 			return next;
 		}
-		case 'SET_DISLIKE':
+		case "SET_DISLIKE":
 			const next = { ...state };
 			next.dislike += 1;
-			next.userReaction = 'dislike';
+			next.userReaction = "dislike";
 			return next;
 
-		case 'RESET_REACTION': {
+		case "RESET_REACTION": {
 			const next = { ...state };
-			if (state.userReaction === 'like') {
+			if (state.userReaction === "like") {
 				next.userReaction = undefined;
 				next.like -= 1;
-			} else if (state.userReaction === 'dislike') {
+			} else if (state.userReaction === "dislike") {
 				next.dislike -= 1;
 				next.userReaction = undefined;
 			}
@@ -86,15 +86,15 @@ const MCQView = ({
 	// * 참고: <관련 정보나 링크>
 	const { answerPaintings } = mcq;
 	const [reaction, dispatch] = useReducer(reducer, initializeState(reactionCount, userReaction));
-	const [error, setError] = useState('');
+	const [error, setError] = useState("");
 
 	const callReactionServerAction = async (type: QuizReaction) => {
 		const response = await addQuizReactionsAction(mcq.id, { type });
 		if (isServerActionError(response)) {
-			throw new Error('unstable situation');
+			throw new Error("unstable situation");
 		} else if (isHttpException(response)) {
 			const { statusCode, message } = response;
-			const errorMessage = Array.isArray(message) ? message.join('\n') : message;
+			const errorMessage = Array.isArray(message) ? message.join("\n") : message;
 			switch (statusCode) {
 				case HTTP_STATUS.UNAUTHORIZED:
 					toast.error(errorMessage);
@@ -112,23 +112,23 @@ const MCQView = ({
 
 	const handleLike = async () => {
 		const prevReaction: QuizReaction | undefined = reaction.userReaction;
-		dispatch({ type: 'RESET_REACTION' });
-		if (prevReaction === 'like') {
+		dispatch({ type: "RESET_REACTION" });
+		if (prevReaction === "like") {
 			await deleteQuizReactionAction(mcq.id);
 		} else {
-			dispatch({ type: 'SET_LIKE' });
-			await callReactionServerAction('like');
+			dispatch({ type: "SET_LIKE" });
+			await callReactionServerAction("like");
 		}
 	};
 
 	const handleDisLike = async () => {
 		const prevReaction: QuizReaction | undefined = reaction.userReaction;
-		dispatch({ type: 'RESET_REACTION' });
-		if (prevReaction === 'dislike') {
+		dispatch({ type: "RESET_REACTION" });
+		if (prevReaction === "dislike") {
 			await deleteQuizReactionAction(mcq.id);
 		} else {
-			dispatch({ type: 'SET_DISLIKE' });
-			await callReactionServerAction('dislike');
+			dispatch({ type: "SET_DISLIKE" });
+			await callReactionServerAction("dislike");
 		}
 	};
 
@@ -162,18 +162,18 @@ const MCQView = ({
 
 	const getCardClasses = (paintingId: string) => {
 		if (isSubmitted) {
-			return paintingId === answerKey ? 'bg-green-300' : 'bg-red-300';
+			return paintingId === answerKey ? "bg-green-300" : "bg-red-300";
 		}
-		return 'bg-white';
+		return "bg-white";
 	};
 
 	const getBorderClasses = (paintingId: string) =>
 		readerSelectedAnswer === paintingId
-			? 'border-4 border-primary'
-			: 'border-transparent border-4 ';
+			? "border-4 border-primary"
+			: "border-transparent border-4 ";
 
 	const getImageClasses = (paintingId: string) =>
-		readerSelectedAnswer === paintingId ? 'ring-4 ring-primary' : 'ring-4 ring-transparent';
+		readerSelectedAnswer === paintingId ? "ring-4 ring-primary" : "ring-4 ring-transparent";
 
 	return (
 		<div>
@@ -221,9 +221,9 @@ const MCQView = ({
 					toggleLike={handleLike}
 					likeCount={reaction.like}
 					dislikeCount={reaction.dislike}
-					liked={reaction.userReaction !== undefined && reaction.userReaction === 'like'}
+					liked={reaction.userReaction !== undefined && reaction.userReaction === "like"}
 					disliked={
-						reaction.userReaction !== undefined && reaction.userReaction === 'dislike'
+						reaction.userReaction !== undefined && reaction.userReaction === "dislike"
 					}
 				/>
 			</div>

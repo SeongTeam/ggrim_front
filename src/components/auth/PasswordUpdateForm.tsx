@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { HTTP_STATUS } from '../../server-action/backend/common/status';
-import { HttpException, ServerActionError } from '../../server-action/backend/common/dto';
-import { isHttpException, isServerActionError } from '../../server-action/backend/common/util';
-import toast from 'react-hot-toast';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { HTTP_STATUS } from "../../server-action/backend/common/status";
+import { HttpException, ServerActionError } from "../../server-action/backend/common/dto";
+import { isHttpException, isServerActionError } from "../../server-action/backend/common/util";
+import toast from "react-hot-toast";
 
 export interface PasswordUpdateFormProps {
 	formAction: (password: string) => Promise<boolean | HttpException | ServerActionError>;
@@ -13,15 +13,15 @@ export interface PasswordUpdateFormProps {
 }
 
 export const PasswordUpdateForm = ({ formAction, NextRoute }: PasswordUpdateFormProps) => {
-	const [password, setPassword] = useState('');
-	const [passwordRepeat, setPasswordRepeat] = useState('');
+	const [password, setPassword] = useState("");
+	const [passwordRepeat, setPasswordRepeat] = useState("");
 	const router = useRouter();
 
 	const handleSignIn = async (e: React.FormEvent) => {
 		e.preventDefault();
 
 		if (password.trim() !== passwordRepeat.trim()) {
-			toast.error('password is not matched');
+			toast.error("password is not matched");
 			return;
 		}
 
@@ -32,7 +32,7 @@ export const PasswordUpdateForm = ({ formAction, NextRoute }: PasswordUpdateForm
 		} else if (isHttpException(response)) {
 			const { statusCode } = response;
 			const errorMessage = Array.isArray(response.message)
-				? response.message.join('\n')
+				? response.message.join("\n")
 				: response.message;
 
 			switch (statusCode) {
@@ -45,10 +45,10 @@ export const PasswordUpdateForm = ({ formAction, NextRoute }: PasswordUpdateForm
 					throw new Error(`${response.statusCode}\n` + errorMessage);
 			}
 		} else if (response == true) {
-			toast.success('success');
+			toast.success("success");
 			router.push(NextRoute);
 		} else {
-			toast.error('invalid page');
+			toast.error("invalid page");
 		}
 	};
 

@@ -1,6 +1,6 @@
-'use client';
-import { useState } from 'react';
-import { Card, CardProps } from './Card';
+"use client";
+import { useState } from "react";
+import { Card, CardProps } from "./Card";
 
 interface HoverCardProps {
 	cardProps: CardProps;

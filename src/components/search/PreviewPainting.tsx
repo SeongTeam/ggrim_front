@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import { ShortPainting } from '@/server-action/backend/painting/type';
+import Image from "next/image";
+import { ShortPainting } from "@/server-action/backend/painting/type";
 
 interface PreviewPaintingProps {
 	shortPainting: ShortPainting;

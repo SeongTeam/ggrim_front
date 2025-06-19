@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 
 interface CustomInputProps {
 	label: string;
-	type?: 'text' | 'textarea';
+	type?: "text" | "textarea";
 	value: string | number;
 	onChange: (value: string) => void;
 	placeholder?: string;
@@ -11,10 +11,10 @@ interface CustomInputProps {
 
 export const CustomInput = ({
 	label,
-	type = 'text',
+	type = "text",
 	value,
 	onChange,
-	placeholder = '',
+	placeholder = "",
 	required = false,
 }: CustomInputProps) => {
 	const handleChange: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = (e) => {
@@ -24,7 +24,7 @@ export const CustomInput = ({
 	return (
 		<div className="mb-4">
 			<label className="mb-2 block text-gray-600">{label}</label>
-			{type === 'textarea' ? (
+			{type === "textarea" ? (
 				<textarea
 					value={value}
 					onChange={handleChange}

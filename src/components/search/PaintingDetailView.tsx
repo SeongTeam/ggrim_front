@@ -1,9 +1,9 @@
-'use client';
-import React, { useState } from 'react';
-import { Painting } from '@/server-action/backend/painting/type';
-import { ChevronRight, ChevronUp } from 'lucide-react';
-import { CopyButton } from '../common/Copybutton';
-import Image from 'next/image';
+"use client";
+import React, { useState } from "react";
+import { Painting } from "@/server-action/backend/painting/type";
+import { ChevronRight, ChevronUp } from "lucide-react";
+import { CopyButton } from "../common/Copybutton";
+import Image from "next/image";
 
 interface PaintingDetailViewProps {
 	painting: Painting | undefined;
@@ -50,19 +50,19 @@ export const PaintingDetailView = ({ painting }: PaintingDetailViewProps) => {
 					Size: {painting.width}px × {painting.height}px
 				</p>
 				<p className="mt-2 text-sm text-gray-500">
-					tags: {painting.tags.map((tag) => tag.name).join(', ')}
+					tags: {painting.tags.map((tag) => tag.name).join(", ")}
 				</p>
 				<p className="mt-2 text-sm text-gray-500">
-					Styles: {painting.styles.map((style) => style.name).join(', ')}
+					Styles: {painting.styles.map((style) => style.name).join(", ")}
 				</p>
 				<div className="flex gap-2">
 					<p className="mt-2 text-sm text-gray-500">painting ID: {painting.id}</p>
 					<CopyButton textToCopy={painting.id} />
 				</div>
 				<p className="mt-2 text-base text-gray-500">
-					Description:{' '}
+					Description:{" "}
 					{painting.description.length > 30 && !showFullDescription
-						? painting.description.substring(0, 30) + '...'
+						? painting.description.substring(0, 30) + "..."
 						: painting.description}
 				</p>
 				{painting.description.length > 30 && (

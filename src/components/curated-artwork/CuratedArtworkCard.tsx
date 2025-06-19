@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { useRecoilState } from 'recoil';
-import { FormState } from './states';
-import { formStateAtom } from './atom';
-import { HoverImagePreview } from '../common/HoverImagePreview';
+import { useState } from "react";
+import { useRecoilState } from "recoil";
+import { FormState } from "./states";
+import { formStateAtom } from "./atom";
+import { HoverImagePreview } from "../common/HoverImagePreview";
 
 interface CuratedArtworkCardProps {
 	formState: FormState;
@@ -32,19 +32,19 @@ export const CuratedArtworkCard = ({
 	const renderInputFields = () => {
 		const fields = [
 			{
-				label: 'Cloudinary ID',
+				label: "Cloudinary ID",
 				value: editableFormState.cldId,
-				field: 'cldId' as keyof typeof editableFormState,
+				field: "cldId" as keyof typeof editableFormState,
 			},
 			{
-				label: 'Image URL',
+				label: "Image URL",
 				value: editableFormState.imageUrl,
-				field: 'imageUrl' as keyof typeof editableFormState,
+				field: "imageUrl" as keyof typeof editableFormState,
 			},
 			{
-				label: 'Artist Name',
+				label: "Artist Name",
 				value: editableFormState.artistName,
-				field: 'artistName' as keyof typeof editableFormState,
+				field: "artistName" as keyof typeof editableFormState,
 			},
 		];
 
@@ -69,7 +69,7 @@ export const CuratedArtworkCard = ({
 					<input
 						type="text"
 						value={editableFormState.id}
-						onChange={handleInputChange('id')}
+						onChange={handleInputChange("id")}
 						className="mb-3 w-full rounded-md border p-1 text-xl font-extrabold text-gray-800"
 						placeholder="ID"
 					/>
@@ -82,7 +82,7 @@ export const CuratedArtworkCard = ({
 					className="rounded-lg py-1 pl-12 pr-2 font-mono text-sm text-black hover:underline"
 					onClick={() => (isEditing ? handleSave() : setIsEditing(true))}
 				>
-					{isEditing ? 'Save' : 'Edit'}
+					{isEditing ? "Save" : "Edit"}
 				</button>
 			</div>
 			{isEditing ? (
@@ -90,7 +90,7 @@ export const CuratedArtworkCard = ({
 					{renderInputFields()}
 					<textarea
 						value={editableFormState.operatorDescription}
-						onChange={handleInputChange('operatorDescription')}
+						onChange={handleInputChange("operatorDescription")}
 						className="mt-2 h-80 w-full rounded-md border p-1 text-gray-600"
 						placeholder="Operator Description"
 					/>

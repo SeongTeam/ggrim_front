@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import toast from 'react-hot-toast';
-import { signUpAction } from '../../server-action/backend/user/api';
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { signUpAction } from "../../server-action/backend/user/api";
 
-import { isHttpException, isServerActionError } from '../../server-action/backend/common/util';
-import { HTTP_STATUS } from '../../server-action/backend/common/status';
-import { useRouter } from 'next/navigation';
-import { GuideModal } from '../modal/GuideModal';
-import { ErrorModal } from '../modal/ErrorModal';
-import { AUTH_LOGIC_ROUTE } from '../../route/auth/route';
+import { isHttpException, isServerActionError } from "../../server-action/backend/common/util";
+import { HTTP_STATUS } from "../../server-action/backend/common/status";
+import { useRouter } from "next/navigation";
+import { GuideModal } from "../modal/GuideModal";
+import { ErrorModal } from "../modal/ErrorModal";
+import { AUTH_LOGIC_ROUTE } from "../../route/auth/route";
 
 interface SignUpState {
 	username: string;
@@ -20,11 +20,11 @@ interface SignUpState {
 }
 
 const initState = {
-	username: '',
-	password: '',
-	passwordRepeat: '',
-	successMessage: '',
-	errorMessage: '',
+	username: "",
+	password: "",
+	passwordRepeat: "",
+	successMessage: "",
+	errorMessage: "",
 };
 
 export const SignUpForm = () => {
@@ -36,7 +36,7 @@ export const SignUpForm = () => {
 	};
 
 	const handleSuccess = () => {
-		router.push('/');
+		router.push("/");
 	};
 
 	const handleChange = (field: keyof SignUpState) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,7 +47,7 @@ export const SignUpForm = () => {
 		e.preventDefault();
 
 		if (form.password.trim() !== form.passwordRepeat.trim()) {
-			toast.error('password is not matched');
+			toast.error("password is not matched");
 			return;
 		}
 		const toastId = toast.loading(`Signing Up`);
@@ -69,15 +69,15 @@ export const SignUpForm = () => {
 					errorMessages.forEach((msg) => toast.error(msg));
 					break;
 				case HTTP_STATUS.UNAUTHORIZED:
-					setForm({ ...initState, errorMessage: errorMessages.join('\n') });
+					setForm({ ...initState, errorMessage: errorMessages.join("\n") });
 					break;
 				default:
-					throw new Error(`${response.statusCode}\n` + errorMessages.join('\n'));
+					throw new Error(`${response.statusCode}\n` + errorMessages.join("\n"));
 			}
 		} else if (response) {
-			setForm({ ...initState, successMessage: 'Success Sign Up' });
+			setForm({ ...initState, successMessage: "Success Sign Up" });
 		} else {
-			toast.error('invalid access');
+			toast.error("invalid access");
 		}
 	};
 
@@ -93,7 +93,7 @@ export const SignUpForm = () => {
 				<input
 					type="text"
 					value={form.username}
-					onChange={handleChange('username')}
+					onChange={handleChange("username")}
 					className="w-full rounded bg-gray-800 p-2 text-white focus:outline-none focus:ring-2 focus:ring-red-500"
 					required
 				/>
@@ -104,7 +104,7 @@ export const SignUpForm = () => {
 				<input
 					type="password"
 					value={form.password}
-					onChange={handleChange('password')}
+					onChange={handleChange("password")}
 					className="w-full rounded bg-gray-800 p-2 text-white focus:outline-none focus:ring-2 focus:ring-red-500"
 					required
 				/>
@@ -112,7 +112,7 @@ export const SignUpForm = () => {
 				<input
 					type="password"
 					value={form.passwordRepeat}
-					onChange={handleChange('passwordRepeat')}
+					onChange={handleChange("passwordRepeat")}
 					className="w-full rounded bg-gray-800 p-2 text-white focus:outline-none focus:ring-2 focus:ring-red-500"
 					required
 				/>

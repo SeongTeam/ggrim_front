@@ -1,21 +1,21 @@
-'use client';
-import MCQView from '@/components/quiz/mcq/MCQView';
-import { MCQ } from './mcq/type';
+"use client";
+import MCQView from "@/components/quiz/mcq/MCQView";
+import { MCQ } from "./mcq/type";
 
-import { useRouter } from 'next/navigation';
-import { Painting } from '@/server-action/backend/painting/type';
+import { useRouter } from "next/navigation";
+import { Painting } from "@/server-action/backend/painting/type";
 import {
 	addQuizContextAction,
 	scheduleQuizAction,
 	submitQuizAction,
-} from '../../server-action/backend/quiz/api';
-import { QuizStatus } from '../../server-action/backend/quiz/type';
-import { isHttpException, isServerActionError } from '../../server-action/backend/common/util';
-import { DetailQuizDTO, QuizContextDTO } from '../../server-action/backend/quiz/dto';
-import { getPaintingAction } from '../../server-action/backend/painting/api';
-import { getQuizStatus, saveQuizStatus } from '../../state/browser/quiz';
-import { ErrorModal } from '../modal/ErrorModal';
-import { QuizMenu } from './QuizMenu';
+} from "../../server-action/backend/quiz/api";
+import { QuizStatus } from "../../server-action/backend/quiz/type";
+import { isHttpException, isServerActionError } from "../../server-action/backend/common/util";
+import { DetailQuizDTO, QuizContextDTO } from "../../server-action/backend/quiz/dto";
+import { getPaintingAction } from "../../server-action/backend/painting/api";
+import { getQuizStatus, saveQuizStatus } from "../../state/browser/quiz";
+import { ErrorModal } from "../modal/ErrorModal";
+import { QuizMenu } from "./QuizMenu";
 interface DetailQuizProps {
 	detailQuizDTO: DetailQuizDTO;
 	isOwnerAccess: boolean;
@@ -52,7 +52,7 @@ export const DetailQuiz = ({
 
 		if (isHttpException(response)) {
 			const errorMessage = Array.isArray(response.message)
-				? response.message.join('\n')
+				? response.message.join("\n")
 				: response.message;
 			throw new Error(errorMessage);
 		} else if (isServerActionError(response)) {
@@ -80,9 +80,9 @@ export const DetailQuiz = ({
 		]);
 	};
 
-	if (quiz.type === 'ONE_CHOICE') {
+	if (quiz.type === "ONE_CHOICE") {
 		return (
-			<div className="rounded-md bg-ggrimBeige2 p-4 shadow" style={{ minHeight: '744px' }}>
+			<div className="rounded-md bg-ggrimBeige2 p-4 shadow" style={{ minHeight: "744px" }}>
 				<div className="flex justify-between gap-2">
 					<p className="mb-6 text-3xl font-bold text-black">{`${quiz.title}`}</p>
 					<QuizMenu quiz={quiz} isOwner={isOwnerAccess} />
@@ -111,7 +111,7 @@ const updatePaintingContext = async (id: string) => {
 	const detailPainting = await getPaintingAction(id);
 	if (isHttpException(detailPainting)) {
 		const errorMessage = Array.isArray(detailPainting.message)
-			? detailPainting.message.join('\n')
+			? detailPainting.message.join("\n")
 			: detailPainting.message;
 		throw new Error(errorMessage);
 	} else if (isServerActionError(detailPainting)) {
@@ -121,7 +121,7 @@ const updatePaintingContext = async (id: string) => {
 	const response = await addQuizContextAction(generateQuizContextDTO(detailPainting));
 	if (isHttpException(response)) {
 		const errorMessage = Array.isArray(response.message)
-			? response.message.join('\n')
+			? response.message.join("\n")
 			: response.message;
 		if (response.statusCode < 500) {
 			alert(errorMessage);

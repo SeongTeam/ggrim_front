@@ -1,17 +1,17 @@
-import './globals.css';
-import type { Metadata } from 'next';
-import { Roboto } from 'next/font/google';
-import { RecoilRootWrapper } from '@/components/recoil/RecoilRootWrapper';
-import { Suspense } from 'react';
-import { Navbar } from '../components/navbar/Navbar';
-import { Loading } from '../components/common/Loading';
-import { Toaster } from 'react-hot-toast';
-import { WebVitals } from '../components/web-vitals/WebVitals';
+import "./globals.css";
+import type { Metadata } from "next";
+import { Roboto } from "next/font/google";
+import { RecoilRootWrapper } from "@/components/recoil/RecoilRootWrapper";
+import { Suspense } from "react";
+import { Navbar } from "../components/navbar/Navbar";
+import { Loading } from "../components/common/Loading";
+import { Toaster } from "react-hot-toast";
+import { WebVitals } from "../components/web-vitals/WebVitals";
 
 const roboto = Roboto({
-	subsets: ['latin'],
-	weight: ['300', '400', '500', '700', '900'],
-	display: 'swap',
+	subsets: ["latin"],
+	weight: ["300", "400", "500", "700", "900"],
+	display: "swap",
 });
 
 // TODO: Navibar 개선하기
@@ -22,9 +22,9 @@ const roboto = Roboto({
 // * 참고: <관련 정보나 링크>
 
 export const metadata: Metadata = {
-	title: 'NextJS Tailwind App Presentation Page',
+	title: "NextJS Tailwind App Presentation Page",
 	description:
-		'We are thrilled to offer you a Free App Presentation Template, a beautifully designed and user-friendly Tailwind CSS and Material Tailwind theme crafted specifically for app developers like you. The free app presentation template includes key features such as hero, features, FAQ, stats, and testimonial sections.',
+		"We are thrilled to offer you a Free App Presentation Template, a beautifully designed and user-friendly Tailwind CSS and Material Tailwind theme crafted specifically for app developers like you. The free app presentation template includes key features such as hero, features, FAQ, stats, and testimonial sections.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

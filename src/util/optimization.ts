@@ -13,12 +13,12 @@ export function throttle<T extends (...args: any[]) => void>(
 
 	function wrapper(this: ThisParameterType<T>, ...args: Parameters<T>) {
 		if (isThrottled) {
-			console.debug('isThrottled true');
+			console.debug("isThrottled true");
 			savedArgs = args;
 			savedThis = this;
 			return;
 		}
-		console.debug('isThrottled false');
+		console.debug("isThrottled false");
 		isThrottled = true;
 
 		func.apply(this, args);

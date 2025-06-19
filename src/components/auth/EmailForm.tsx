@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import toast from 'react-hot-toast';
-import { isHttpException, isServerActionError } from '../../server-action/backend/common/util';
-import { HTTP_STATUS } from '../../server-action/backend/common/status';
-import { HttpException, ServerActionError } from '../../server-action/backend/common/dto';
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { isHttpException, isServerActionError } from "../../server-action/backend/common/util";
+import { HTTP_STATUS } from "../../server-action/backend/common/status";
+import { HttpException, ServerActionError } from "../../server-action/backend/common/dto";
 
 interface EmailFormProp {
 	emailFormAction: (email: string) => Promise<boolean | ServerActionError | HttpException>;
 }
 
 export const EmailForm = ({ emailFormAction }: EmailFormProp) => {
-	const [email, setEmail] = useState('');
+	const [email, setEmail] = useState("");
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -23,7 +23,7 @@ export const EmailForm = ({ emailFormAction }: EmailFormProp) => {
 		} else if (isHttpException(response)) {
 			const { statusCode } = response;
 			const errorMessage = Array.isArray(response.message)
-				? response.message.join('\n')
+				? response.message.join("\n")
 				: response.message;
 
 			switch (statusCode) {
@@ -36,9 +36,9 @@ export const EmailForm = ({ emailFormAction }: EmailFormProp) => {
 					throw new Error(`${response.statusCode}\n` + errorMessage);
 			}
 		} else if (response === true) {
-			toast.success('success');
+			toast.success("success");
 		} else {
-			toast.error('invalid access');
+			toast.error("invalid access");
 		}
 	};
 

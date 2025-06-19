@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { MCQ } from '../quiz/mcq/type';
-import React from 'react';
-import MCQView from '../quiz/mcq/MCQView';
-import { QuizReactionCount } from '../../server-action/backend/quiz/dto';
+import { MCQ } from "../quiz/mcq/type";
+import React from "react";
+import MCQView from "../quiz/mcq/MCQView";
+import { QuizReactionCount } from "../../server-action/backend/quiz/dto";
 interface ArtworkQuizProps {
 	mcqAttributes: MCQ[];
 	reactionCounts: QuizReactionCount[];

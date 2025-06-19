@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useReportWebVitals } from 'next/web-vitals';
+import { useReportWebVitals } from "next/web-vitals";
 
 export const WebVitals = () => {
 	useReportWebVitals((metric) => {

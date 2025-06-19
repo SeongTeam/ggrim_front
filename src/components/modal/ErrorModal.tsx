@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
 interface ErrorModalProps {
 	message: string;
@@ -11,7 +11,7 @@ export const ErrorModal = ({ message, onClose }: ErrorModalProps) => {
 	const router = useRouter();
 
 	if (!onClose) {
-		onClose = () => router.push('/');
+		onClose = () => router.push("/");
 	}
 
 	return (
