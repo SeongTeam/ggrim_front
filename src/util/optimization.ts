@@ -8,8 +8,8 @@ export function throttle<T extends (...args: any[]) => void>(
 	ms: number,
 ): (...args: Parameters<T>) => void {
 	let isThrottled = false;
-	let savedArgs: Parameters<T> | null = null;
-	let savedThis: ThisParameterType<T> | null = null;
+	let savedArgs: Parameters<T> | undefined = undefined;
+	let savedThis: ThisParameterType<T> | undefined = undefined;
 
 	function wrapper(this: ThisParameterType<T>, ...args: Parameters<T>) {
 		if (isThrottled) {
@@ -27,7 +27,7 @@ export function throttle<T extends (...args: any[]) => void>(
 			isThrottled = false;
 			if (savedArgs) {
 				wrapper.apply(savedThis!, savedArgs);
-				savedArgs = savedThis = null;
+				savedArgs = savedThis = undefined;
 			}
 		}, ms);
 	}
