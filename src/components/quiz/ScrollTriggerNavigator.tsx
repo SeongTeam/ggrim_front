@@ -17,7 +17,7 @@ export const ScrollTriggerNavigator = ({
 	criticalRatio = 0.5,
 }: ScrollTriggerNavigatorProps) => {
 	const router = useRouter();
-	const [currentSection, setCurrentSection] = useState<string | null>(null);
+	const [currentSection, setCurrentSection] = useState<string>();
 
 	useEffect(() => {
 		const handleScroll = () => {

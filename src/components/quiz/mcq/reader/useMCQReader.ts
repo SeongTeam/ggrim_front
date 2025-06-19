@@ -10,8 +10,8 @@ const useMCQReader = (attrs: MCQ, selectedAnswer: number) => {
 	const { answerPaintings, distractorPaintings } = attrs;
 
 	// State Initialization
-	const [errorMessage, setErrorMessage] = useState<string | null>(null);
-	const [readerSelectedAnswer, setReaderSelectedAnswer] = useState<string | null>(null);
+	const [errorMessage, setErrorMessage] = useState<string>();
+	const [readerSelectedAnswer, setReaderSelectedAnswer] = useState<string>();
 	const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
 	const [isCorrect, setIsCorrect] = useState<boolean>(false);
 	const [showHint, setShowHint] = useState<boolean>(false);
@@ -38,7 +38,7 @@ const useMCQReader = (attrs: MCQ, selectedAnswer: number) => {
 
 	// Submit the selected answer
 	const handleSubmit = async (): Promise<void> => {
-		if (readerSelectedAnswer !== null) {
+		if (readerSelectedAnswer) {
 			const isCorrectAnswer = readerSelectedAnswer === answerID;
 			setIsSubmitted(true);
 			// setAttemptedAnswers((prev) => [...prev, readerSelectedAnswer]);
@@ -57,10 +57,10 @@ const useMCQReader = (attrs: MCQ, selectedAnswer: number) => {
 	};
 
 	const clearSubmitState = async (): Promise<void> => {
-		if (readerSelectedAnswer !== null) {
+		if (readerSelectedAnswer) {
 			setIsSubmitted(false);
 			setIsCorrect(false);
-			setReaderSelectedAnswer(null);
+			setReaderSelectedAnswer(undefined);
 
 			try {
 				// await submitMCQAnswer(id, selectedAnswerText, isCorrectAnswer);
@@ -79,9 +79,9 @@ const useMCQReader = (attrs: MCQ, selectedAnswer: number) => {
 	// Clear the submission state
 	const handleClearSubmission = (): void => {
 		setIsSubmitted(false);
-		setReaderSelectedAnswer(null);
+		setReaderSelectedAnswer(undefined);
 		setIsCorrect(false);
-		setErrorMessage(null);
+		setErrorMessage(undefined);
 	};
 
 	return {

@@ -8,7 +8,7 @@ type DropdownMenuOption<T> = {
 interface DropdownMenuProps<T> {
 	label: string;
 	options: DropdownMenuOption<T>[];
-	value: T | null;
+	value?: T;
 	onChange: (value: T) => void;
 	placeholder?: string;
 	required?: boolean;

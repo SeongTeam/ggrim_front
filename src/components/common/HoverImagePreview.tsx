@@ -8,7 +8,7 @@ interface HoverImagePreviewProps {
 
 export const HoverImagePreview = ({ url }: HoverImagePreviewProps) => {
 	const [isHovered, setIsHovered] = useState(false);
-	const [imageSize, setImageSize] = useState<{ width: number; height: number } | null>(null);
+	const [imageSize, setImageSize] = useState<{ width: number; height: number }>();
 
 	useEffect(() => {
 		getUrlImageSize(url).then(setImageSize);

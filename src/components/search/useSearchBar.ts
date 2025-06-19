@@ -92,7 +92,7 @@ function autoCompleteReducer(
 				selectedIndex: -1,
 				query: '',
 				loading: false,
-				error: null,
+				error: undefined,
 			};
 		default:
 			return state;
@@ -130,7 +130,7 @@ export function useSearchBar({
 		selectedIndex: -1,
 		query: '',
 		loading: false,
-		error: null,
+		error: undefined,
 	};
 
 	// State management
@@ -178,7 +178,7 @@ export function useSearchBar({
 		let query = '';
 
 		autoCompleteDispatch({ type: 'SET_LOADING', payload: true });
-		autoCompleteDispatch({ type: 'SET_ERROR', payload: null });
+		autoCompleteDispatch({ type: 'SET_ERROR', payload: undefined });
 		switch (paramCase) {
 			case 'NO_QUOTED': {
 				suggestions = QUOTED_BASE_SUGGESTIONS;
