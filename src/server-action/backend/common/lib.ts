@@ -6,12 +6,12 @@ import { isHttpException } from './util';
 
 serverLogger.info(`BACKEND_URL=${process.env.BACKEND_URL} `);
 export function getServerUrl(): string {
-    const url = process.env.BACKEND_URL;
-    if (url == undefined) {
-        serverLogger.error(` 'process.env.BACKEND_URL' not read`);
-        return '';
-    }
-    return url;
+	const url = process.env.BACKEND_URL;
+	if (url == undefined) {
+		serverLogger.error(` 'process.env.BACKEND_URL' not read`);
+		return '';
+	}
+	return url;
 }
 // TODO: HTTP API 에러 핸들링 로직 추가
 // - [ ] : fetch()가 반환한 응답 상태 확인 및 에러 핸들링 로직 추가
@@ -27,75 +27,75 @@ export function getServerUrl(): string {
 // * 참고: <관련 정보나 링크>
 
 export function withErrorHandler<T extends (...args: any[]) => Promise<any>>(
-    actionName: string,
-    action: T,
+	actionName: string,
+	action: T,
 ): (...args: Parameters<T>) => Promise<Awaited<ReturnType<T>> | ServerActionError> {
-    return async (...args: Parameters<T>) => {
-        const start = Date.now();
-        let status = 'success';
-        const requestId = getRequestId();
-        try {
-            logMessage(requestId || 'undefined', `call ${actionName}()`);
-            const response = await action(...args);
+	return async (...args: Parameters<T>) => {
+		const start = Date.now();
+		let status = 'success';
+		const requestId = getRequestId();
+		try {
+			logMessage(requestId || 'undefined', `call ${actionName}()`);
+			const response = await action(...args);
 
-            if (isHttpException(response)) {
-                serverLogger.error(
-                    `[${actionName}] response is not ok. ${JSON.stringify(response, null, 2)}`,
-                );
-            }
-            return response;
-        } catch (err: unknown) {
-            serverLogger.error(`${actionName}() fail. Unknown server error:`, err);
-            status = 'server-error';
-            return handleError(err);
-        } finally {
-            const delay = Date.now() - start;
-            const info = {
-                requestId,
-                status,
-                action: actionName,
-                delay: delay + 'ms',
-            };
-            logMessage(requestId || 'undefined', `End ${actionName}()`, info);
-        }
-    };
+			if (isHttpException(response)) {
+				serverLogger.error(
+					`[${actionName}] response is not ok. ${JSON.stringify(response, null, 2)}`,
+				);
+			}
+			return response;
+		} catch (err: unknown) {
+			serverLogger.error(`${actionName}() fail. Unknown server error:`, err);
+			status = 'server-error';
+			return handleError(err);
+		} finally {
+			const delay = Date.now() - start;
+			const info = {
+				requestId,
+				status,
+				action: actionName,
+				delay: delay + 'ms',
+			};
+			logMessage(requestId || 'undefined', `End ${actionName}()`, info);
+		}
+	};
 }
 
 function handleError(err: unknown): ServerActionError {
-    let message = 'Unknown server error';
-    let stack = 'withErrorHandler()';
+	let message = 'Unknown server error';
+	let stack = 'withErrorHandler()';
 
-    if (err instanceof Error) {
-        message = err.message;
-        stack = err.stack ?? stack;
-    }
+	if (err instanceof Error) {
+		message = err.message;
+		stack = err.stack ?? stack;
+	}
 
-    return {
-        message,
-        stack,
-    };
+	return {
+		message,
+		stack,
+	};
 }
 
 type TailParameters<T> = T extends (cookie: any, ...args: infer R) => any ? R : never;
 
 export function cookieWithErrorHandler<C, T extends (cookie: C, ...args: any[]) => Promise<any>>(
-    getCookie: () => Promise<C>,
-    actionName: string,
-    action: T,
+	getCookie: () => Promise<C>,
+	actionName: string,
+	action: T,
 ): (...args: TailParameters<T>) => Promise<Awaited<ReturnType<T>> | ServerActionError> {
-    return async (...args: TailParameters<T>) => {
-        const cookie = await getCookie();
-        return withErrorHandler(actionName, () => action(cookie, ...args))();
-    };
+	return async (...args: TailParameters<T>) => {
+		const cookie = await getCookie();
+		return withErrorHandler(actionName, () => action(cookie, ...args))();
+	};
 }
 
 function logMessage(requestId: string, message: string, info?: Record<string, unknown>) {
-    const context = `🚀server-action`;
-    const result = {
-        context,
-        requestId,
-        ...info,
-    };
+	const context = `🚀server-action`;
+	const result = {
+		context,
+		requestId,
+		...info,
+	};
 
-    serverLogger.info(message + '\n' + JSON.stringify(result, null, 2));
+	serverLogger.info(message + '\n' + JSON.stringify(result, null, 2));
 }

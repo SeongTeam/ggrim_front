@@ -14,42 +14,42 @@ const SHIFT: string = process.env.CAESAR_SHIFT ?? '';
 // ? 질문: <의문점 또는 개선 방향>
 // * 참고: <관련 정보나 링크>
 class CaesarCipher {
-    private shift: number;
+	private shift: number;
 
-    constructor() {
-        this.shift = parseInt(SHIFT, 10) % 26; // 알파벳 개수(26)로 나눈 나머지로 shift 값 제한
-    }
+	constructor() {
+		this.shift = parseInt(SHIFT, 10) % 26; // 알파벳 개수(26)로 나눈 나머지로 shift 값 제한
+	}
 
-    // 카이사르 암호 인코딩 메서드
-    encode(text: string): string {
-        return this.transform(text, this.shift);
-    }
+	// 카이사르 암호 인코딩 메서드
+	encode(text: string): string {
+		return this.transform(text, this.shift);
+	}
 
-    // 카이사르 암호 디코딩 메서드
-    decode(text: string): string {
-        return this.transform(text, -this.shift);
-    }
+	// 카이사르 암호 디코딩 메서드
+	decode(text: string): string {
+		return this.transform(text, -this.shift);
+	}
 
-    // 문자 변환 로직
-    private transform(text: string, shift: number): string {
-        return text
-            .split('')
-            .map((char) => this.shiftChar(char, shift))
-            .join('');
-    }
+	// 문자 변환 로직
+	private transform(text: string, shift: number): string {
+		return text
+			.split('')
+			.map((char) => this.shiftChar(char, shift))
+			.join('');
+	}
 
-    // 단일 문자 변환
-    private shiftChar(char: string, shift: number): string {
-        if (char >= 'a' && char <= 'z') {
-            // 소문자 변환
-            return String.fromCharCode(((char.charCodeAt(0) - 97 + shift + 26) % 26) + 97);
-        } else if (char >= 'A' && char <= 'Z') {
-            // 대문자 변환
-            return String.fromCharCode(((char.charCodeAt(0) - 65 + shift + 26) % 26) + 65);
-        }
-        // 알파벳이 아닌 문자는 그대로 반환
-        return char;
-    }
+	// 단일 문자 변환
+	private shiftChar(char: string, shift: number): string {
+		if (char >= 'a' && char <= 'z') {
+			// 소문자 변환
+			return String.fromCharCode(((char.charCodeAt(0) - 97 + shift + 26) % 26) + 97);
+		} else if (char >= 'A' && char <= 'Z') {
+			// 대문자 변환
+			return String.fromCharCode(((char.charCodeAt(0) - 65 + shift + 26) % 26) + 65);
+		}
+		// 알파벳이 아닌 문자는 그대로 반환
+		return char;
+	}
 }
 
 export default CaesarCipher;

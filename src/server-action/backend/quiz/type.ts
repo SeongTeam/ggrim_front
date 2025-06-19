@@ -7,71 +7,71 @@ import { QuizContextDTO } from './dto';
 import { IPaginationResult } from '../common/dto';
 
 export const QUIZ_REACTION = {
-    LIKE: 'like',
-    DISLIKE: 'dislike',
+	LIKE: 'like',
+	DISLIKE: 'dislike',
 } as const;
 
 export type QuizReaction = (typeof QUIZ_REACTION)[keyof typeof QUIZ_REACTION];
 
 export interface QuizStatus {
-    context: QuizContextDTO;
-    currentIndex: number;
-    endIndex: number;
+	context: QuizContextDTO;
+	currentIndex: number;
+	endIndex: number;
 }
 export type QuizType = 'ONE_CHOICE' | 'MULTIPLE_CHOICE' | 'TRUE_FALSE';
 
 export interface Quiz {
-    version: number;
-    created_date: Date;
-    updated_date: Date;
-    id: string;
-    title: string;
-    distractor_paintings: Painting[];
-    answer_paintings: Painting[];
-    example_paintings: Painting[];
-    correct_count: number;
-    incorrect_count: number;
-    time_limit: number;
-    description: string;
-    type: QuizType;
-    tags: Tag[];
-    styles: Style[];
-    artists: Artist[];
-    owner_id: string;
-    shortOwner: ShortUser;
+	version: number;
+	created_date: Date;
+	updated_date: Date;
+	id: string;
+	title: string;
+	distractor_paintings: Painting[];
+	answer_paintings: Painting[];
+	example_paintings: Painting[];
+	correct_count: number;
+	incorrect_count: number;
+	time_limit: number;
+	description: string;
+	type: QuizType;
+	tags: Tag[];
+	styles: Style[];
+	artists: Artist[];
+	owner_id: string;
+	shortOwner: ShortUser;
 }
 
 export interface ShortQuiz {
-    id: string;
-    title: string;
+	id: string;
+	title: string;
 
-    time_limit: number;
-    created_date: Date;
-    updated_date: Date;
-    shortOwner: ShortQuiz;
+	time_limit: number;
+	created_date: Date;
+	updated_date: Date;
+	shortOwner: ShortQuiz;
 }
 
 export interface QuizLike {
-    id: string;
+	id: string;
 
-    user: User;
+	user: User;
 
-    user_id: string;
+	user_id: string;
 
-    quiz: Quiz;
+	quiz: Quiz;
 
-    quiz_id: string;
+	quiz_id: string;
 }
 
 export interface QuizDislike {
-    id: string;
+	id: string;
 
-    user: User;
+	user: User;
 
-    user_id: string;
+	user_id: string;
 
-    quiz: Quiz;
+	quiz: Quiz;
 
-    quiz_id: string;
+	quiz_id: string;
 }
 export type FindQuizResult = IPaginationResult<ShortQuiz>;

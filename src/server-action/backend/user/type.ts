@@ -2,21 +2,21 @@ export type UserRole = 'admin' | 'user';
 
 export type UserState = 'active' | 'inactive' | 'banned';
 export interface User {
-    id: string;
-    email: string;
+	id: string;
+	email: string;
 
-    role: UserRole;
+	role: UserRole;
 
-    username: string;
+	username: string;
 
-    active: UserState;
+	active: UserState;
 
-    last_login_date: Date;
+	last_login_date: Date;
 }
 
 export interface ShortUser {
-    id: string;
-    username: string;
-    role: UserRole;
-    active: UserState;
+	id: string;
+	username: string;
+	role: UserRole;
+	active: UserState;
 }

@@ -1,80 +1,75 @@
-'use client'
-import { ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from "next/navigation";
-import {  RefObject, useState } from "react";
-import { SearchBar } from "./SearchBar";
-import { INPUT_KEY, SEARCH_PARAM_KEY } from "./const";
-import { extractValuesInsideQuoted, makeQuoted } from "./util";
-import { SEARCH_LOGIC_ROUTE } from "../../route/search/route";
-import { useDebounceCallback } from "../../hooks/useDebounceCallback";
+'use client';
+import { ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { RefObject, useState } from 'react';
+import { SearchBar } from './SearchBar';
+import { INPUT_KEY, SEARCH_PARAM_KEY } from './const';
+import { extractValuesInsideQuoted, makeQuoted } from './util';
+import { SEARCH_LOGIC_ROUTE } from '../../route/search/route';
+import { useDebounceCallback } from '../../hooks/useDebounceCallback';
 
 interface ParsedInput {
-    title : string;
-    artist : string; 
-    tags : string[];
-    styles : string[];
+	title: string;
+	artist: string;
+	tags: string[];
+	styles: string[];
 }
 
 function parseInput(input: string): ParsedInput {
+	// 각 필드 추출
+	const tags = extractValuesInsideQuoted(input, INPUT_KEY.TAG);
+	const styles = extractValuesInsideQuoted(input, INPUT_KEY.STYLE);
 
-  
-    // 각 필드 추출
-    const tags = extractValuesInsideQuoted(input,INPUT_KEY.TAG);
-    const styles = extractValuesInsideQuoted(input,INPUT_KEY.STYLE);
-    
-    // 'artist'는 첫 번째 값만 추출
-    const artistMatches = extractValuesInsideQuoted(input,INPUT_KEY.ARTIST);
-    const artist = artistMatches.length > 0 ? artistMatches[0] : '';
-  
+	// 'artist'는 첫 번째 값만 추출
+	const artistMatches = extractValuesInsideQuoted(input, INPUT_KEY.ARTIST);
+	const artist = artistMatches.length > 0 ? artistMatches[0] : '';
 
-    // 1단계: "key:value" 형식(쌍따옴표 포함)을 제거
-    const cleaned = input.replace(/"\w+:[^"]*"/g, '').trim();
+	// 1단계: "key:value" 형식(쌍따옴표 포함)을 제거
+	const cleaned = input.replace(/"\w+:[^"]*"/g, '').trim();
 
-    // 단어 추출: 따옴표나 쉼표 등 문장부호는 그대로 유지
-    // 단어 경계를 기준으로 쪼개되, 문장부호 포함된 항목도 추출되게 함
-    const parts = cleaned.split(/\s+/) // 공백 기준 분리
-                         .filter(Boolean); // 빈 문자열 제거
-    const title = parts.join(' ');
-    console.log('parseInput',{title,cleaned,parts});
-  
-    return { title, tags, styles, artist };
-  }
+	// 단어 추출: 따옴표나 쉼표 등 문장부호는 그대로 유지
+	// 단어 경계를 기준으로 쪼개되, 문장부호 포함된 항목도 추출되게 함
+	const parts = cleaned
+		.split(/\s+/) // 공백 기준 분리
+		.filter(Boolean); // 빈 문자열 제거
+	const title = parts.join(' ');
+	console.log('parseInput', { title, cleaned, parts });
 
-function getInput(searchParams : ReadonlyURLSearchParams) {
-    const title : string  = searchParams.get(SEARCH_PARAM_KEY.TITLE)||"";
-    const artist : string = searchParams.get(SEARCH_PARAM_KEY.ARTIST)||"";
-    const tags : string[] = searchParams.getAll(SEARCH_PARAM_KEY.TAGS)||[];
-    const styles : string[] = searchParams.getAll(SEARCH_PARAM_KEY.STYLES)||[];
-
-    const inputs : string[]  = [title];
-    const delimiter = ' ';
-
-
-    if(artist.trim() !== ""){
-        inputs.push(makeQuoted(`${INPUT_KEY.ARTIST}:${artist}`));
-    }
-
-    if(tags.length !== 0){
-        inputs.push(...tags.map(t=>makeQuoted(`${INPUT_KEY.TAG}:${t}`)));
-    }
-
-    if(styles.length !== 0){
-
-        inputs.push(...styles.map(s=>makeQuoted(`${INPUT_KEY.STYLE}:${s}`)));
-    }
-
-    return inputs.join(delimiter);
-
+	return { title, tags, styles, artist };
 }
 
-function getURL(input : string ) : string{
-    const parsed : ParsedInput = parseInput(input);
-    const {title,artist,tags,styles } = parsed;
+function getInput(searchParams: ReadonlyURLSearchParams) {
+	const title: string = searchParams.get(SEARCH_PARAM_KEY.TITLE) || '';
+	const artist: string = searchParams.get(SEARCH_PARAM_KEY.ARTIST) || '';
+	const tags: string[] = searchParams.getAll(SEARCH_PARAM_KEY.TAGS) || [];
+	const styles: string[] = searchParams.getAll(SEARCH_PARAM_KEY.STYLES) || [];
 
-    return SEARCH_LOGIC_ROUTE.SEARCH_PAINTING(title,artist,tags,styles);
+	const inputs: string[] = [title];
+	const delimiter = ' ';
+
+	if (artist.trim() !== '') {
+		inputs.push(makeQuoted(`${INPUT_KEY.ARTIST}:${artist}`));
+	}
+
+	if (tags.length !== 0) {
+		inputs.push(...tags.map((t) => makeQuoted(`${INPUT_KEY.TAG}:${t}`)));
+	}
+
+	if (styles.length !== 0) {
+		inputs.push(...styles.map((s) => makeQuoted(`${INPUT_KEY.STYLE}:${s}`)));
+	}
+
+	return inputs.join(delimiter);
+}
+
+function getURL(input: string): string {
+	const parsed: ParsedInput = parseInput(input);
+	const { title, artist, tags, styles } = parsed;
+
+	return SEARCH_LOGIC_ROUTE.SEARCH_PAINTING(title, artist, tags, styles);
 }
 
 interface SearchPaintingBarProps {
-    inputRef : RefObject<HTMLInputElement>;
+	inputRef: RefObject<HTMLInputElement>;
 }
 
 // TODO: <SearchPaintingBar /> 기능 개선
@@ -84,31 +79,27 @@ interface SearchPaintingBarProps {
 // ! 주의: <경고할 사항>
 // ? 질문: <의문점 또는 개선 방향>
 // * 참고: <관련 정보나 링크>
-export const SearchPaintingBar = (props : SearchPaintingBarProps): React.JSX.Element => {
+export const SearchPaintingBar = (props: SearchPaintingBarProps): React.JSX.Element => {
+	const router = useRouter();
+	const pathName = usePathname();
+	const searchParams = useSearchParams();
+	const [input, setInput] = useState(getInput(searchParams));
+	// const [results, setResults] = useState<Painting[]>([]);
+	const handleSearchOrigin = async (searchTarget: string) => {
+		console.log('handleSearch');
+		if (searchTarget.trim() === '') {
+			if (pathName !== '/') {
+				router.push('/');
+			}
+			return;
+		}
 
-    const router = useRouter();
-    const pathName = usePathname();
-    const searchParams = useSearchParams();
-    const [input, setInput] = useState(getInput(searchParams));
-    // const [results, setResults] = useState<Painting[]>([]);
-    const handleSearchOrigin = async (searchTarget: string) => {
-        console.log('handleSearch');
-        if(searchTarget.trim() === ""){
-            if(pathName !== '/'){
-                router.push('/');
-            }
-            return;
-        }
+		router.push(getURL(searchTarget));
+		setInput(searchTarget);
+		return;
+	};
 
-        router.push(getURL(searchTarget));
-        setInput(searchTarget);
-        return;
-    };
+	const handleSearch = useDebounceCallback(handleSearchOrigin, 500);
 
-    const handleSearch = useDebounceCallback(handleSearchOrigin,500);
-
-    return (
-            <SearchBar inputRef={props.inputRef} onSearch={handleSearch} defaultValue={input} />
-
-    );
-}
+	return <SearchBar inputRef={props.inputRef} onSearch={handleSearch} defaultValue={input} />;
+};

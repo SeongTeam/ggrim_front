@@ -1,105 +1,98 @@
 'use client';
-import { MutableRefObject, useEffect, useRef, useState } from "react";
+import { MutableRefObject, useEffect, useRef, useState } from 'react';
 
-import { throttle } from "../../util/optimization";
-import { ShortQuiz,FindQuizResult } from '@/server-action/backend/quiz/type';
-import { QuizCard } from "./QuizCard";
-import { useRouter } from "next/navigation";
-import { getQuizListAction } from "../../server-action/backend/quiz/api";
-import { isHttpException, isServerActionError } from "../../server-action/backend/common/util";
+import { throttle } from '../../util/optimization';
+import { ShortQuiz, FindQuizResult } from '@/server-action/backend/quiz/type';
+import { QuizCard } from './QuizCard';
+import { useRouter } from 'next/navigation';
+import { getQuizListAction } from '../../server-action/backend/quiz/api';
+import { isHttpException, isServerActionError } from '../../server-action/backend/common/util';
 
-interface QuizCardGridProps  {
-    findResult : FindQuizResult;
+interface QuizCardGridProps {
+	findResult: FindQuizResult;
 }
 
-export const QuizCardGrid = ( props: QuizCardGridProps ): React.JSX.Element => {
+export const QuizCardGrid = (props: QuizCardGridProps): React.JSX.Element => {
+	const [findQuizzes, setFindQuizzes] = useState<ShortQuiz[]>(props.findResult.data); // Q. 초기값은 언제 반영되지? 만약 다른 state가 갱신되면, 현재 state는 기존값 유지 Or 초기값?
+	const isLoadingRef: MutableRefObject<boolean> = useRef(false);
+	const findResultRef = useRef<FindQuizResult>(props.findResult);
+	const router = useRouter();
+	// const searchParam = useSearchParams();
 
-    const [findQuizzes,setFindQuizzes] = useState<ShortQuiz[]>(props.findResult.data); // Q. 초기값은 언제 반영되지? 만약 다른 state가 갱신되면, 현재 state는 기존값 유지 Or 초기값? 
-    const isLoadingRef : MutableRefObject<boolean>= useRef(false);
-    const findResultRef = useRef<FindQuizResult>(props.findResult);
-    const router = useRouter();
-    // const searchParam = useSearchParams();
+	const handleClickCard = (quiz: ShortQuiz) => {
+		const url: string = `/quiz/${quiz.id}`;
+		router.push(url);
+	};
 
+	// 스크롤 이벤트 핸들러
+	useEffect(() => {
+		const loadMoreQuiz = async () => {
+			const isMore = findResultRef.current.page < findResultRef.current.pageCount;
 
+			if (!isMore || isLoadingRef.current) {
+				console.log('not load quiz');
+				console.log(findResultRef, isLoadingRef);
+				return;
+			}
+			isLoadingRef.current = true;
 
-    const handleClickCard = (quiz : ShortQuiz) =>{
-        const url : string = `/quiz/${quiz.id}`;
-        router.push(url);
-    }
+			console.log(`load ${findResultRef.current.page + 1} page`);
+			const response = await getQuizListAction(findResultRef.current.page + 1);
+			if (isServerActionError(response)) {
+				throw new Error(response.message);
+			} else if (isHttpException(response)) {
+				const errorMessage = Array.isArray(response.message)
+					? response.message.join('\n')
+					: response.message;
 
-      // 스크롤 이벤트 핸들러
-    useEffect(() => {
-        const loadMoreQuiz = async ()  => {
+				throw new Error(errorMessage);
+			} else {
+				findResultRef.current = response;
+				setFindQuizzes((prev) => [...prev, ...response.data]);
 
-            const isMore = findResultRef.current.page < findResultRef.current.pageCount;
-        
-            if(!isMore || isLoadingRef.current){
-                console.log('not load quiz')
-                console.log(findResultRef,isLoadingRef);
-                return;
-            }
-            isLoadingRef.current = true;
+				isLoadingRef.current = false;
+			}
+		};
 
-            console.log(`load ${findResultRef.current.page +1} page`);
-            const response  = await getQuizListAction(findResultRef.current.page+1);
-            if(isServerActionError(response)){
-                throw new Error(response.message);
-            }
-            else if(isHttpException(response)){
-                const errorMessage = Array.isArray(response.message) ? response.message.join('\n') : response.message;
-                
-                throw new Error(errorMessage);
-            }else{
-                findResultRef.current = response;
-                setFindQuizzes(prev=> [...prev, ...response.data]);
-                
-                isLoadingRef.current = false;
-            }
-        }
+		const handleScroll = () => {
+			console.log(`[handleScroll]`);
+			if (
+				window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 &&
+				!isLoadingRef.current
+			) {
+				console.log(`[loadMoreQuiz]`);
+				loadMoreQuiz();
+			}
+		};
 
+		const handleScrollThrottle = throttle(handleScroll, 300);
 
-        const handleScroll = () => {
-            console.log(`[handleScroll]`);
-            if (
-                window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 &&
-                !isLoadingRef.current
-            ) {
-                console.log(`[loadMoreQuiz]`);
-                loadMoreQuiz();
-            }
-        };
+		console.log('[useEffect] : for config scroll event');
+		window.addEventListener('scroll', handleScrollThrottle);
+		return () => window.removeEventListener('scroll', handleScrollThrottle);
+	}, []);
 
-        const handleScrollThrottle = throttle(handleScroll,300);
+	useEffect(() => {
+		setFindQuizzes(props.findResult.data);
+		console.log('[useEffect] : for init  SearchPainting');
+		findResultRef.current = props.findResult;
+		return () => {
+			setFindQuizzes((prev) => prev);
+		};
+	}, [props.findResult]);
 
-        console.log('[useEffect] : for config scroll event');
-        window.addEventListener("scroll", handleScrollThrottle);
-        return () => window.removeEventListener("scroll", handleScrollThrottle);
-    }, []); 
+	// useEffect(() => {
+	//     console.log("findQuizzes 상태가 변경됨:", findQuizzes);
+	// }, [findQuizzes]); // findQuizzes 상태가 변경될 때마다 로그 출력
 
-    useEffect(()=>{
-        setFindQuizzes(props.findResult.data);
-        console.log('[useEffect] : for init  SearchPainting');
-        findResultRef.current = props.findResult;
-        return ()=>{
-            setFindQuizzes(prev=>prev);
-        }
-
-    },[props.findResult])
-
-    // useEffect(() => {
-    //     console.log("findQuizzes 상태가 변경됨:", findQuizzes);
-    // }, [findQuizzes]); // findQuizzes 상태가 변경될 때마다 로그 출력
-
-
-    return (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-4 mt-4">
-                {findQuizzes.map((quiz) => (
-                    <div key={`${quiz.id}`} className="max-w-xs">
-                    <QuizCard title={quiz.title} onClick={()=> handleClickCard(quiz)} />  
-
-                    </div>
-                ))}
-                {isLoadingRef.current && <p className="text-center mt-4">Loading...</p>}
-        </div>
-    );
-}
+	return (
+		<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-4 mt-4">
+			{findQuizzes.map((quiz) => (
+				<div key={`${quiz.id}`} className="max-w-xs">
+					<QuizCard title={quiz.title} onClick={() => handleClickCard(quiz)} />
+				</div>
+			))}
+			{isLoadingRef.current && <p className="text-center mt-4">Loading...</p>}
+		</div>
+	);
+};

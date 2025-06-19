@@ -3,9 +3,9 @@ import { RecoilRoot } from 'recoil';
 // import { ThemeProvider } from '@material-tailwind/react';
 
 interface RecoilRootWrapperProps {
-    children: React.ReactNode;
+	children: React.ReactNode;
 }
 
 export const RecoilRootWrapper = ({ children }: RecoilRootWrapperProps) => {
-    return <RecoilRoot>{children}</RecoilRoot>;
-}
+	return <RecoilRoot>{children}</RecoilRoot>;
+};

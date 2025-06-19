@@ -1,48 +1,48 @@
 import { Quiz, QuizType, ShortQuiz } from './type';
 import { QuizReaction, QuizStatus } from './type';
 export interface CreateQuizDTO {
-    answerPaintingIds: string[];
+	answerPaintingIds: string[];
 
-    distractorPaintingIds: string[];
+	distractorPaintingIds: string[];
 
-    examplePaintingId?: string;
+	examplePaintingId?: string;
 
-    title: string;
+	title: string;
 
-    timeLimit: number;
+	timeLimit: number;
 
-    type: QuizType;
+	type: QuizType;
 
-    description: string;
+	description: string;
 }
 
 export class QuizReactionDTO {
-    type!: QuizReaction;
+	type!: QuizReaction;
 }
 
 export interface QuizContextDTO {
-    artist?: string;
-    tag?: string;
-    style?: string;
-    page: number;
+	artist?: string;
+	tag?: string;
+	style?: string;
+	page: number;
 }
 
 export interface ResponseQuizDTO {
-    shortQuiz: ShortQuiz;
-    status: QuizStatus;
+	shortQuiz: ShortQuiz;
+	status: QuizStatus;
 }
 
 export interface QuizSubmitDTO {
-    isCorrect: boolean;
+	isCorrect: boolean;
 }
 
 export interface QuizReactionCount {
-    likeCount: number;
-    dislikeCount: number;
+	likeCount: number;
+	dislikeCount: number;
 }
 
 export interface DetailQuizDTO {
-    quiz: Quiz;
-    reactionCount: QuizReactionCount;
-    userReaction?: QuizReaction;
+	quiz: Quiz;
+	reactionCount: QuizReactionCount;
+	userReaction?: QuizReaction;
 }

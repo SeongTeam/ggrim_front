@@ -5,20 +5,20 @@ import { QuizType, QuizReaction } from '../../../server-action/backend/quiz/type
 //Multiple-Choice-Question
 
 export interface MCQ {
-    id: string;
-    distractorPaintings: Painting[];
-    answerPaintings: Painting[];
-    title: string;
-    description: string;
-    timeLimit: number;
-    type: QuizType;
+	id: string;
+	distractorPaintings: Painting[];
+	answerPaintings: Painting[];
+	title: string;
+	description: string;
+	timeLimit: number;
+	type: QuizType;
 }
 
 export interface MCQReaderViewProps {
-    mcq: MCQ;
-    // currentAttributeIndex: number;
-    handelNextMCQ: () => Promise<void>;
-    handleImageSelected?: (selectedPainting: Painting) => Promise<void>;
-    reactionCount: QuizReactionCount;
-    userReaction?: QuizReaction;
+	mcq: MCQ;
+	// currentAttributeIndex: number;
+	handelNextMCQ: () => Promise<void>;
+	handleImageSelected?: (selectedPainting: Painting) => Promise<void>;
+	reactionCount: QuizReactionCount;
+	userReaction?: QuizReaction;
 }
