@@ -31,11 +31,11 @@ export function removeSavedNewQuiz() {
 	localStorage.removeItem(LOCAL_STORAGE_KEY.NEW_QUIZ);
 }
 
-export function getSavedNewQuiz(): NewQuiz | undefined {
+export function getSavedNewQuiz(): NewQuiz | null {
 	const rawPrevNewQuiz: string | null = localStorageUtils.getItemWithExpiry(
 		LOCAL_STORAGE_KEY.NEW_QUIZ,
 	);
-	const prevNewQuiz: NewQuiz | undefined =
+	const prevNewQuiz: NewQuiz | null =
 		rawPrevNewQuiz && JSON.parse(rawPrevNewQuiz) ? JSON.parse(rawPrevNewQuiz) : undefined;
 
 	return prevNewQuiz;
