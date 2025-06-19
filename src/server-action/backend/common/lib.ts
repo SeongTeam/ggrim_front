@@ -29,7 +29,7 @@ export function getServerUrl(): string {
 export function withErrorHandler<T extends (...args: any[]) => Promise<any>>(
     actionName: string,
     action: T,
-): (...args: Parameters<T>) => Promise<ReturnType<T> | ServerActionError> {
+): (...args: Parameters<T>) => Promise<Awaited<ReturnType<T>> | ServerActionError> {
     return async (...args: Parameters<T>) => {
         const start = Date.now();
         let status = 'success';
