@@ -16,8 +16,8 @@ export interface CreateQuizDTO {
 	description: string;
 }
 
-export class QuizReactionDTO {
-	type!: QuizReaction;
+export interface QuizReactionDTO {
+	type: QuizReaction;
 }
 
 export interface QuizContextDTO {

@@ -12,9 +12,9 @@ export interface CreateOneTimeTokenDTO {
 	purpose: OneTimeTokenPurpose;
 }
 
-export class SendOneTimeTokenDTO {
-	email!: string;
+export interface SendOneTimeTokenDTO {
+	email: string;
 
 	// @IsInArray([ONE_TIME_TOKEN_PURPOSE.UPDATE_PASSWORD, ONE_TIME_TOKEN_PURPOSE.RECOVER_ACCOUNT])
-	purpose!: OneTimeTokenPurpose;
+	purpose: OneTimeTokenPurpose;
 }
