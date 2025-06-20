@@ -7,7 +7,7 @@ import { isHttpException } from "./util";
 serverLogger.info(`BACKEND_URL=${process.env.BACKEND_URL} `);
 export function getServerUrl(): string {
 	const url = process.env.BACKEND_URL;
-	if (url == undefined) {
+	if (url === undefined) {
 		serverLogger.error(` 'process.env.BACKEND_URL' not read`);
 		return "";
 	}

@@ -3,7 +3,7 @@ import DailyRotateFile from "winston-daily-rotate-file";
 
 //ref : https://pypystory.tistory.com/80
 
-const isProduction = process.env.NODE_ENV == "production";
+const isProduction = process.env.NODE_ENV === "production";
 
 const dailyOptions = (level: string) => {
 	return {

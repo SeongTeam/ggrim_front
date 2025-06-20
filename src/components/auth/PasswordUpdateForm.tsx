@@ -44,7 +44,7 @@ export const PasswordUpdateForm = ({ formAction, NextRoute }: PasswordUpdateForm
 				default:
 					throw new Error(`${response.statusCode}\n` + errorMessage);
 			}
-		} else if (response == true) {
+		} else if (response === true) {
 			toast.success("success");
 			router.push(NextRoute);
 		} else {
