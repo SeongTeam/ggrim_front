@@ -1,6 +1,6 @@
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+import path from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 
 /** @type {import('next').NextConfig} */
 
@@ -9,11 +9,11 @@ const __dirname = dirname(__filename);
 
 const nextConfig = {
 	reactStrictMode: true,
-	output: 'standalone',
+	output: "standalone",
 	images: {
 		remotePatterns: [
 			{
-				protocol: 'https',
+				protocol: "https",
 				hostname: process.env.ALLOW_IMAGE_ORIGIN,
 			},
 		],
@@ -24,9 +24,9 @@ const nextConfig = {
 	//ref : https://github.com/vercel/next.js/issues/65795#issuecomment-2439641016
 	webpack: (config, { dev, isServer }) => {
 		if (dev) {
-			config.devtool = 'eval-source-map';
+			config.devtool = "eval-source-map";
 		}
-		config.resolve.alias['@'] = path.resolve(__dirname, 'src');
+		config.resolve.alias["@"] = path.resolve(__dirname, "src");
 		return config;
 	},
 	experimental: {
@@ -34,10 +34,10 @@ const nextConfig = {
 	},
 };
 
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === "production") {
 	nextConfig.compiler = {
 		removeConsole: {
-			exclude: ['error', 'warn'],
+			exclude: ["error", "warn"],
 		},
 	};
 }
