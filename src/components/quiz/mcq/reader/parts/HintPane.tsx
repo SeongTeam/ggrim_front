@@ -64,7 +64,9 @@ const HintPane: React.FC<HintPaneProps> = ({
 		onClose();
 	};
 
-	if (!show) return null;
+	if (!show) {
+		return null;
+	}
 
 	return (
 		<div

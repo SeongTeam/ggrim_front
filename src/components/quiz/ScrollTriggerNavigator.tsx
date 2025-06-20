@@ -22,7 +22,9 @@ export const ScrollTriggerNavigator = ({
 	useEffect(() => {
 		const handleScroll = () => {
 			const element = document.getElementById(section.id);
-			if (!element) return;
+			if (!element) {
+				return;
+			}
 
 			const rect = element.getBoundingClientRect();
 			const visibleRatio = Math.max(0, (window.innerHeight - rect.top) / window.innerHeight);

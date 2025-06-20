@@ -143,8 +143,9 @@ export function useSearchBar({
 
 	const safeMoveCursor = useCallback(
 		(position: number) => {
-			if (!inputRef.current) return;
-
+			if (!inputRef.current) {
+				return;
+			}
 			try {
 				inputRef.current.setSelectionRange(position, position);
 				inputRef.current.focus();
@@ -198,11 +199,13 @@ export function useSearchBar({
 
 			case "PARAM_KEY_ONLY": {
 				const quoted = getInsideDoubleQuotes(value, cursorPosition);
-				if (!quoted) break;
-
+				if (!quoted) {
+					break;
+				}
 				const param = parseKeyValue(quoted);
-				if (!param?.key) break;
-
+				if (!param?.key) {
+					break;
+				}
 				const serverAction = createServerAction(param.key);
 				const response = await serverAction(param.value || "");
 
@@ -251,16 +254,18 @@ export function useSearchBar({
 	};
 
 	const handleClickOrKeyUp = () => {
-		if (!inputRef.current) return;
-
+		if (!inputRef.current) {
+			return;
+		}
 		const cursorPos = inputRef.current.selectionStart || 0;
 		inputDispatch({ type: "SET_CURSOR_POS", payload: cursorPos });
 	};
 
 	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
 		const { suggestions, selectedIndex } = autoCompleteState;
-		if (suggestions.length === 0) return;
-
+		if (suggestions.length === 0) {
+			return;
+		}
 		switch (e.key) {
 			case "ArrowDown":
 				e.preventDefault();

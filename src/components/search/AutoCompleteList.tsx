@@ -13,11 +13,15 @@ export const AutocompleteList = ({
 	highlightedIndex,
 	setHighlightedIndex,
 }: AutocompleteListProps) => {
-	if (suggestions.length === 0) return null;
+	if (suggestions.length === 0) {
+		return null;
+	}
 
 	const highlightMatch = (text: string, query: string) => {
 		const i = text.toLowerCase().indexOf(query.toLowerCase());
-		if (i === -1) return text;
+		if (i === -1) {
+			return text;
+		}
 		return (
 			<>
 				{text.slice(0, i)}

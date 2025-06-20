@@ -67,8 +67,9 @@ export function extractValues(param: string, key: InputKeyValue): string[] {
 }
 
 export function getInsideDoubleQuotes(text: string, cursorPosition: number): string | undefined {
-	if (cursorPosition < 0 || cursorPosition >= text.length) return undefined;
-
+	if (cursorPosition < 0 || cursorPosition >= text.length) {
+		return undefined;
+	}
 	let start = -1;
 	let end = -1;
 	let quoteCount = 0;
@@ -140,8 +141,9 @@ export function calculateNewInput(
 
 		case "NO_PARAM": {
 			const keyParts = getInsideDoubleQuotes(text, cursorWithoutEnter);
-			if (!keyParts) return { newInput: text, newCursor: cursorPos };
-
+			if (!keyParts) {
+				return { newInput: text, newCursor: cursorPos };
+			}
 			const beforeKey = text.slice(0, cursorWithoutEnter + 1 - keyParts.length);
 			const afterCursor = text.slice(cursorWithoutEnter + 1);
 			return {
@@ -152,11 +154,13 @@ export function calculateNewInput(
 
 		case "PARAM_KEY_ONLY": {
 			const quoted = getInsideDoubleQuotes(text, cursorWithoutEnter);
-			if (!quoted) return { newInput: text, newCursor: cursorPos };
-
+			if (!quoted) {
+				return { newInput: text, newCursor: cursorPos };
+			}
 			const param = parseKeyValue(quoted);
-			if (!param) return { newInput: text, newCursor: cursorPos };
-
+			if (!param) {
+				return { newInput: text, newCursor: cursorPos };
+			}
 			const beforeValue = text.slice(0, cursorWithoutEnter + 1 - param.value.length);
 			const afterCursor = text.slice(cursorWithoutEnter + 1);
 			return {

@@ -17,7 +17,9 @@ export const ScrollExpander = ({
 	useEffect(() => {
 		const handleScroll = () => {
 			const container = document.getElementById(domId);
-			if (!container) return;
+			if (!container) {
+				return;
+			}
 
 			const currentScrollY = window.scrollY;
 			const isScrollingDown = currentScrollY > lastScrollY.current;
