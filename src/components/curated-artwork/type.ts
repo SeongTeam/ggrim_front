@@ -19,7 +19,7 @@ export interface CuratedArtWorkAttribute {
 	painting: Painting;
 	aspectRatio: [string, number, number]; // 추후 필요할 수 있음
 }
-export class PaintingModel implements Painting {
+export interface PaintingModel extends Painting {
 	version: number;
 	id: string;
 	title: string;
@@ -31,59 +31,60 @@ export class PaintingModel implements Painting {
 	tags: Tag[];
 	styles: Style[];
 	artist: Artist;
+}
 
-	constructor(data: Painting) {
-		this.version = data.version;
-		this.id = data.id;
-		this.title = data.title;
-		this.image_url = data.image_url;
-		this.description = data.description;
-		this.completition_year = data.completition_year;
-		this.width = data.width;
-		this.height = data.height;
-		this.tags = data.tags;
-		this.styles = data.styles;
-		this.artist = data.artist;
-	}
+export function toPaintingModel(painting: Painting): PaintingModel {
+	return {
+		version: painting.version,
+		id: painting.id,
+		title: painting.title,
+		image_url: painting.image_url,
+		description: painting.description,
+		completition_year: painting.completition_year,
+		width: painting.width,
+		height: painting.height,
+		tags: painting.tags,
+		styles: painting.styles,
+		artist: painting.artist,
+	};
+}
 
-	static getEmptyObject(): Painting {
-		return {
+export function createPainting(): Painting {
+	return {
+		version: 0,
+		id: "",
+		title: "",
+		image_url: "",
+		description: "",
+		completition_year: 0,
+		width: 0,
+		height: 0,
+		tags: [],
+		styles: [],
+		artist: {
 			version: 0,
 			id: "",
-			title: "",
+			name: "",
 			image_url: "",
-			description: "",
-			completition_year: 0,
-			width: 0,
-			height: 0,
-			tags: [],
-			styles: [],
-			artist: {
-				version: 0,
-				id: "",
-				name: "",
-				image_url: "",
-				birth_date: "",
-				death_date: "",
-				info_url: "",
-			},
-		};
-	}
+			birth_date: "",
+			death_date: "",
+			info_url: "",
+		},
+	};
+}
 
-	// Method to return a Painting object
-	toPainting(): Painting {
-		return {
-			version: this.version,
-			id: this.id,
-			title: this.title,
-			image_url: this.image_url,
-			description: this.description,
-			completition_year: this.completition_year,
-			width: this.width,
-			height: this.height,
-			tags: this.tags,
-			styles: this.styles,
-			artist: this.artist,
-		};
-	}
+export function toPainting(model: PaintingModel): Painting {
+	return {
+		version: model.version,
+		id: model.id,
+		title: model.title,
+		image_url: model.image_url,
+		description: model.description,
+		completition_year: model.completition_year,
+		width: model.width,
+		height: model.height,
+		tags: model.tags,
+		styles: model.styles,
+		artist: model.artist,
+	};
 }

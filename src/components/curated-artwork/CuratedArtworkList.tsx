@@ -1,4 +1,4 @@
-import { PaintingModel } from "./type";
+import { createPainting } from "./type";
 import { CuratedArtworkCard } from "./CuratedArtworkCard";
 import { FormState } from "./states";
 import { CuratedArtWorkAttribute } from "./type";
@@ -16,9 +16,9 @@ const transformCuratedArtWorkAttribute = async (
 			const { width, height } = await getUrlImageSize(formState.imageUrl);
 
 			const painting = {
-				...PaintingModel.getEmptyObject(),
+				...createPainting(),
 				artist: {
-					...PaintingModel.getEmptyObject().artist,
+					...createPainting().artist,
 					name: formState.artistName,
 				},
 				image_url: formState.imageUrl,
