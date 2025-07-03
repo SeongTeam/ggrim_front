@@ -2,7 +2,7 @@
 
 ## Service
 
-- serve humor quizzes related to classic artwork
+- 고전 예술 작품 관련 퀴즈를 제공
 
 ### Demo
 
@@ -13,36 +13,34 @@
 ### next.js 14 App router
 
 - Advantage
-    1. Optimize Front Server performance
-        - nextjs provides methods which allow developer optimize SSR
-        - provide client-side and server-side data cache to decrease server load
-    2. Optimize image resource rendering
-    - nextjs provide `<Image />` component which optimize image resource
-    - `<Image />` cache resources
-    3. Provide huddle seemed to be low
-    - nextjs provide web-front method seemed to be useful
+    1. 프론트 서버 성능 최적화
+        - next.js가 제공하는 SSR API를 통해 렌더링 최척화 가능
+        - next.js가 제공하는 클라어인트 측과 서버측 캐시를 통해 프론트 서버 부하 감소 가능
+    2. 이미지 리로스 최적화
+    - next.js가 제공하는 `<Image />` 컴포넌트를 통해 이미리 리소스 렌더링 최적화 및 캐시 가능
+    3. 개발 비용 절약
+    - next.js는 웹 개발에 필요한 여러가지 메소드 및 컴포넌트를 제공한다.
         - eg : `Route` , `Instrumentation` , `Web-vital` , `Middleware`, `Error handler`, `Api Router` ...
-    - nextjs community provides and shares a lot of practices and guides
+    - next.js 커뮤니티는 다양한 정보와 템플릿 그리고 베스트 프랙티스를 제공한다.
 - DisAdvantage
-    1. Demand learning next.js-ful structure
-    - next.js runtime environment seemed to be divided into three
-        - server runtimes are `Node.js` and `Edge` runtime , client runtime is `browser`
-        - these division requires developer to manage which runtime each \*.js file will run and properly config imported module
-    2. Demand spending time to seek configuration
-    - next.js document only refer general short case
-    - configuration document has shortage info
-    - maybe need to make effort to apply 3rd-party library
+    1. next.js 구조 학습 비용
+    - next.js 런타임은 크게 3가지로 나뉘며, 각각의 런타임에 대한 이해와 동작을 알아야 개발 실수를 줄일 수 있다.
+        - 서버 런타임은 `Node.js` 그리고 `Edge` 이고 , 클라이언트 런타임은 `browser` 이다.
+    2. 개발 환경 설정 비용
+    - next.js 문서는 일반적인 케이스만 다룬다.
+    - 환경 설정 문서의 내용이 빈약하다.
+    - 3rd-party 라이브러리 사용을 위해선 next.js 환경 설정이 필요할 수 있으며, 해당 비용이 적지 않다.
 
 ### Tailwind
 
 - Advantage
-    1. Allow to quickly use css
-    - provide reusable css class
-    - document refer almost class and practice
+    1. 빠른 css 사용 가능
+    - tailwind는 재사용 가능한 여러가지 css 클래스를 제공한다.
+    - 공식문서는 대부분의 클래스 및 프렉티스를 제공한다.
 - Disadvantage
-    1. Demand learning tailwind css class
-    - tailwind provide class or variant for using css
-    2. Make code longer
+    1. tailwind css 클래스 학습 필요
+    2. 코드 가독성 저하
+    - 컨벤션 또는 린트 없이 사용한다면, css 클래스에 의해 코드 품질이 하락할 수 있다.
 
 ## Structure
 
