@@ -308,12 +308,13 @@ async login(@Body() loginDto: LoginDto) {
 ```
 <type>(<main-target-folder>): <summary>
 
-<optional body1>
-    - substance-A
-    - substance-B
-<optional body2>
-    - substance-A
-    - substance-B
+[optional body1]
+- Explanation A
+- Explanation B
+
+[optional body2]
+- Explanation A
+- Explanation B
 
 [optional footer(s)]
 ```
@@ -350,12 +351,13 @@ async login(@Body() loginDto: LoginDto) {
     ```text
     <type>(<main-target-folder>): <summary>
 
-    <optional body1>
-        - substance-A
-        - substance-B
-    <optional body2>
-        - substance-A
-        - substance-B
+    [optional body1]
+    - Explanation A
+    - Explanation B
+
+    [optional body2]
+    - Explanation A
+    - Explanation B
 
     BREAKING CHANGE: <explanation>
         <Below is optional>
@@ -392,7 +394,8 @@ async login(@Body() loginDto: LoginDto) {
     feat(app): delete middleware log logic
 
     prevent infinite loop by instrument
-        - either delete util function
+    - either delete util function
+
     allow developer to not handle middleware edge runtime
 
     ```
@@ -400,7 +403,7 @@ async login(@Body() loginDto: LoginDto) {
     - 예시: 기능 수정
 
     ```text
-    fix(auth) : fix mobile UI layout
+    fix(auth): fix mobile UI layout
 
     prevent layout from overlapping page content
 
