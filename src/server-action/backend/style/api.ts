@@ -1,43 +1,43 @@
-'use server';
-import { CondOperator, RequestQueryBuilder } from '@dataui/crud-request';
-import { getServerUrl, withErrorHandler } from '../lib';
-import { HttpException, IPaginationResult } from '../common.dto';
-import { Style } from '../../../model/interface/styles';
+"use server";
+import { CondOperator, RequestQueryBuilder } from "@dataui/crud-request";
+import { getServerUrl, withErrorHandler } from "../common/lib";
+import { HttpException, IPaginationResult } from "../common/dto";
+import { Style } from "./type";
 
 const getStyles = async (
-    queryBuilder: RequestQueryBuilder,
+	queryBuilder: RequestQueryBuilder,
 ): Promise<IPaginationResult<Style> | HttpException> => {
-    const backendUrl = getServerUrl();
-    const url = `${backendUrl}/painting/style`;
-    const response = await fetch(url + `?${queryBuilder.query()}`);
+	const backendUrl = getServerUrl();
+	const url = `${backendUrl}/painting/style`;
+	const response = await fetch(url + `?${queryBuilder.query()}`);
 
-    if (!response.ok) {
-        const error: HttpException = await response.json();
-        return error;
-    }
+	if (!response.ok) {
+		const error: HttpException = await response.json();
+		return error;
+	}
 
-    const result: IPaginationResult<Style> = await response.json();
-    return result;
+	const result: IPaginationResult<Style> = await response.json();
+	return result;
 };
 
 const findStyles = async (
-    name: string,
-    pageCount = 20,
-    page = 0,
+	name: string,
+	pageCount = 20,
+	page = 0,
 ): Promise<IPaginationResult<Style> | HttpException> => {
-    const qb = RequestQueryBuilder.create();
+	const qb = RequestQueryBuilder.create();
 
-    qb.select(['name'])
-        .setFilter({
-            field: 'search_name',
-            operator: CondOperator.STARTS,
-            value: name.toLocaleUpperCase(),
-        })
-        .sortBy({ field: 'search_name', order: 'ASC' })
-        .setLimit(pageCount)
-        .setPage(page);
+	qb.select(["name"])
+		.setFilter({
+			field: "search_name",
+			operator: CondOperator.STARTS,
+			value: name.toLocaleUpperCase(),
+		})
+		.sortBy({ field: "search_name", order: "ASC" })
+		.setLimit(pageCount)
+		.setPage(page);
 
-    return getStyles(qb);
+	return getStyles(qb);
 };
 
-export const findStylesAction = withErrorHandler('findStyles', findStyles);
+export const findStylesAction = withErrorHandler("findStyles", findStyles);

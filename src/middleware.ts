@@ -1,27 +1,27 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { v4 as uuid } from 'uuid';
-import { ENUM_HEADER_LOG } from './util/middlewareUtils';
+import { NextRequest, NextResponse } from "next/server";
+import { v4 as uuid } from "uuid";
+import { X_HEADER_FIELD, setRequestId } from "./util/request";
 
 export function middleware(req: NextRequest) {
-    const requestId = uuid();
-    req.headers.set(ENUM_HEADER_LOG.REQUEST_ID, requestId);
+	const requestId = uuid();
+	setRequestId(requestId, req);
 
-    // const requestInfo = {
-    //     time: getFormatDate(),
-    //     method: req.method,
-    //     pathName: req.nextUrl.pathname,
-    //     search: req.nextUrl.search,
-    // };
+	// const requestInfo = {
+	//     time: getFormatDate(),
+	//     method: req.method,
+	//     pathName: req.nextUrl.pathname,
+	//     search: req.nextUrl.search,
+	// };
 
-    // logMessage(requestId, `Entry.`, requestInfo);
-    const res = NextResponse.next();
-    res.headers.set(ENUM_HEADER_LOG.REQUEST_ID, requestId);
+	// logMessage(requestId, `Entry.`, requestInfo);
+	const res = NextResponse.next();
+	res.headers.set(X_HEADER_FIELD.REQUEST_ID, requestId);
 
-    return res;
+	return res;
 }
 
 export const config = {
-    matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+	matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };
 
 // function logMessage(requestId: string, message: string, info?: Record<string, any>) {
@@ -33,7 +33,7 @@ export const config = {
 //     };
 //     const headers = {
 //         'Content-Type': 'application/json',
-//         [ENUM_HEADER_LOG.INTERNAL_API_KEY]: process.env.INTERNAL_LOG_API_KEY!,
+//         [X_HEADER_FIELD.INTERNAL_API_KEY]: process.env.INTERNAL_LOG_API_KEY!,
 //     };
 //     const url = `${process.env.BASE_URL}/api/log`;
 //     fetch(url, {

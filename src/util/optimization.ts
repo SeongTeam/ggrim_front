@@ -4,41 +4,44 @@
   in result, your expectation from these wrapper is from actual result.
 */
 export function throttle<T extends (...args: any[]) => void>(
-    func: T,
-    ms: number,
+	func: T,
+	ms: number,
 ): (...args: Parameters<T>) => void {
-    let isThrottled = false;
-    let savedArgs: Parameters<T> | null = null;
-    let savedThis: ThisParameterType<T> | null = null;
+	let isThrottled = false;
+	let savedArgs: Parameters<T> | undefined = undefined;
+	let savedThis: ThisParameterType<T> | undefined = undefined;
 
-    function wrapper(this: ThisParameterType<T>, ...args: Parameters<T>) {
-        if (isThrottled) {
-            console.debug('isThrottled true');
-            savedArgs = args;
-            savedThis = this;
-            return;
-        }
-        console.debug('isThrottled false');
-        isThrottled = true;
+	function wrapper(this: ThisParameterType<T>, ...args: Parameters<T>) {
+		if (isThrottled) {
+			console.debug("isThrottled true");
+			savedArgs = args;
+			savedThis = this;
+			return;
+		}
+		console.debug("isThrottled false");
+		isThrottled = true;
 
-        func.apply(this, args);
+		func.apply(this, args);
 
-        setTimeout(() => {
-            isThrottled = false;
-            if (savedArgs) {
-                wrapper.apply(savedThis!, savedArgs);
-                savedArgs = savedThis = null;
-            }
-        }, ms);
-    }
+		setTimeout(() => {
+			isThrottled = false;
+			if (savedArgs) {
+				wrapper.apply(savedThis!, savedArgs);
+				savedArgs = savedThis = undefined;
+			}
+		}, ms);
+	}
 
-    return wrapper;
+	return wrapper;
 }
 
-export function debounce<T extends (...args: any[]) => void>(func: T, ms: number) {
-    let timeout: NodeJS.Timeout;
-    return function (this: ThisParameterType<T>, ...args: Parameters<T>) {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func.apply(this, args), ms);
-    };
+export function debounce<A extends unknown[], T extends (...args: A) => void>(
+	func: T,
+	ms: number,
+): (this: ThisParameterType<T>, ...args: A) => void {
+	let timeout: ReturnType<typeof setTimeout>;
+	return function (this: ThisParameterType<T>, ...args: A) {
+		clearTimeout(timeout);
+		timeout = setTimeout(() => func.apply(this, args), ms);
+	};
 }

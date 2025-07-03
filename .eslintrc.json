@@ -1,7 +1,58 @@
 {
-    "extends": ["next/core-web-vitals", "next/typescript", "plugin:react-hooks/recommended"],
-    "rules": {
-        "@typescript-eslint/no-explicit-any": "warn",
-        "@typescript-eslint/no-this-alias": "warn"
-    }
+	"extends": [
+		"next/core-web-vitals",
+		"next/typescript",
+		"plugin:react-hooks/recommended",
+		"plugin:react/recommended",
+		"plugin:@typescript-eslint/recommended",
+		"prettier",
+		"plugin:prettier/recommended"
+	],
+	"parser": "@typescript-eslint/parser",
+	"plugins": ["react", "react-hooks", "@typescript-eslint"],
+	"root": true,
+	"rules": {
+		"@typescript-eslint/no-explicit-any": "warn",
+		"@typescript-eslint/no-this-alias": "warn",
+		"react/react-in-jsx-scope": "off",
+		"react/function-component-definition": [
+			"error",
+			{
+				"namedComponents": "arrow-function",
+				"unnamedComponents": "arrow-function"
+			}
+		],
+		"no-restricted-syntax": [
+			"error",
+			{
+				"selector": "ClassDeclaration",
+				"message": "Class is not allowed. Use functions and objects instead."
+			},
+			{
+				"selector": "TSEnumDeclaration",
+				"message": "Enum is not allowed. Use union types or object literals instead."
+			}
+		],
+		"eqeqeq": "warn",
+		"curly": ["warn", "all"]
+	},
+	"overrides": [
+		{
+			"files": ["src/app/**/*.tsx"],
+			"rules": {
+				"react/function-component-definition": "off"
+			}
+		},
+		{
+			"files": ["src/util/otel/*.ts"],
+			"rules": {
+				"no-restricted-syntax": "off"
+			}
+		}
+	],
+	"settings": {
+		"react": {
+			"version": "detect"
+		}
+	}
 }

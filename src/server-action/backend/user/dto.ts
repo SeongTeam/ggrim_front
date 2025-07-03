@@ -1,19 +1,19 @@
 export interface CreateUserDTO {
-    // email: string;
+	// email: string;
 
-    password: string;
+	password: string;
 
-    username: string;
+	username: string;
 
-    // oauth_provider?: string;
+	// oauth_provider?: string;
 
-    // oauth_provider_id?: string;
+	// oauth_provider_id?: string;
 }
 
 export interface ReplacePassWordDTO {
-    password: string;
+	password: string;
 }
 
 export interface ReplaceUsernameDTO {
-    username: string;
+	username: string;
 }

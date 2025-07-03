@@ -1,50 +1,48 @@
-import { Quiz, QUIZ_TYPE, ShortQuiz } from '../../../model/interface/quiz';
-import { IPaginationResult } from '../common.dto';
-import { QuizReactionType, QuizStatus } from './type';
-export type FindQuizResult = IPaginationResult<ShortQuiz>;
+import { Quiz, QuizType, ShortQuiz } from "./type";
+import { QuizReaction, QuizStatus } from "./type";
 export interface CreateQuizDTO {
-    answerPaintingIds: string[];
+	answerPaintingIds: string[];
 
-    distractorPaintingIds: string[];
+	distractorPaintingIds: string[];
 
-    examplePaintingId?: string;
+	examplePaintingId?: string;
 
-    title: string;
+	title: string;
 
-    timeLimit: number;
+	timeLimit: number;
 
-    type: QUIZ_TYPE;
+	type: QuizType;
 
-    description: string;
+	description: string;
 }
 
-export class QuizReactionDTO {
-    type!: QuizReactionType;
+export interface QuizReactionDTO {
+	type: QuizReaction;
 }
 
 export interface QuizContextDTO {
-    artist?: string;
-    tag?: string;
-    style?: string;
-    page: number;
+	artist?: string;
+	tag?: string;
+	style?: string;
+	page: number;
 }
 
 export interface ResponseQuizDTO {
-    shortQuiz: ShortQuiz;
-    status: QuizStatus;
+	shortQuiz: ShortQuiz;
+	status: QuizStatus;
 }
 
 export interface QuizSubmitDTO {
-    isCorrect: boolean;
+	isCorrect: boolean;
 }
 
 export interface QuizReactionCount {
-    likeCount: number;
-    dislikeCount: number;
+	likeCount: number;
+	dislikeCount: number;
 }
 
 export interface DetailQuizDTO {
-    quiz: Quiz;
-    reactionCount: QuizReactionCount;
-    userReaction?: QuizReactionType;
+	quiz: Quiz;
+	reactionCount: QuizReactionCount;
+	userReaction?: QuizReaction;
 }
