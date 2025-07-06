@@ -1,5 +1,5 @@
 "use server";
-import { getServerUrl, withErrorHandler } from "../common/lib";
+import { getServerUrl, withErrorHandler } from "../_common/lib";
 import {
 	CreateOneTimeTokenDTO,
 	requestVerificationDTO,
@@ -7,9 +7,9 @@ import {
 	VerifyDTO,
 } from "./dto";
 import { OneTimeToken, SignInResponse } from "./type";
-import { deleteSignInResponse, setOneTimeToken, setSignInResponse } from "../common/cookie";
-import { HttpException } from "../common/dto";
-import { SECURITY_TOKEN_HEADER } from "./header";
+import { deleteSignInResponse, setOneTimeToken, setSignInResponse } from "../_common/cookie";
+import { HttpException } from "../_common/dto";
+import { ONE_TIME_TOKEN_HEADER } from "./header";
 
 //TODO : 사용자 정보를 반환하도록 수정하기
 const signIn = async (id: string, password: string): Promise<boolean | HttpException> => {
@@ -148,8 +148,8 @@ const generateSecurityTokenByEmailVerification = async (
 	const url = `${backendUrl}/auth/security-token/from-email-verification`;
 	const headers = {
 		"Content-Type": "application/json",
-		[SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN]: accessToken,
-		[SECURITY_TOKEN_HEADER.X_SECURITY_TOKEN_ID]: identifier,
+		[ONE_TIME_TOKEN_HEADER.X_ONE_TIME_TOKEN]: accessToken,
+		[ONE_TIME_TOKEN_HEADER.X_ONE_TIME_TOKEN_ID]: identifier,
 	};
 	const response = await fetch(url, {
 		method: "POST",

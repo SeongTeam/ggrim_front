@@ -4,7 +4,7 @@ import { ShortUser, User } from "../user/type";
 import { Artist } from "../artist/dto";
 import { Painting } from "../painting/type";
 import { QuizContextDTO } from "./dto";
-import { IPaginationResult } from "../common/dto";
+import { IPaginationResult } from "../_common/dto";
 
 export const QUIZ_REACTION = {
 	LIKE: "like",

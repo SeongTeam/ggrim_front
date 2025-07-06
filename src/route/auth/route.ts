@@ -2,7 +2,7 @@ import { OneTimeTokenPurpose } from "../../server-action/backend/auth/type";
 
 export const AUTH_LOGIC_ROUTE = {
 	SIGN_IN: "/auth/sign-in",
-	SIGN_UP: `/auth/verify-email`,
+	SIGN_UP: `/auth/sign-up`,
 	VERIFY_USER: (purpose: OneTimeTokenPurpose) => `/auth/verify-user?purpose=${purpose}`,
 	VERIFY_USER_BY_EMAIL: (purpose: OneTimeTokenPurpose) =>
 		`/auth/verify-user-by-email?purpose=${purpose}`,

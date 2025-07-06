@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { requestVerificationAction, verifyEmailAction } from "../../server-action/backend/auth/api";
-import { isHttpException, isServerActionError } from "../../server-action/backend/common/util";
-import { HTTP_STATUS } from "../../server-action/backend/common/status";
+import { isHttpException, isServerActionError } from "../../server-action/backend/_common/util";
+import { HTTP_STATUS } from "../../server-action/backend/_common/status";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
@@ -74,8 +74,8 @@ export const EmailVerificationForm = ({ nextRoute }: EmailVerificationForm) => {
 	};
 
 	return (
-		<div className="flex flex-col gap-4">
-			<form onSubmit={handleVerifyEmail} className="flex space-x-4">
+		<div className="flex flex-col gap-8">
+			<form onSubmit={handleVerifyEmail} className="flex flex-col gap-4">
 				<input
 					type="email"
 					placeholder="Email"
@@ -87,13 +87,13 @@ export const EmailVerificationForm = ({ nextRoute }: EmailVerificationForm) => {
 				/>
 				<button
 					type="submit"
-					className="w-full rounded bg-red-600 px-4 py-2 font-semibold text-white disabled:cursor-not-allowed disabled:bg-[#555] disabled:text-gray-300 disabled:hover:bg-[#555]"
+					className="rounded bg-red-600 px-4 py-2 font-semibold text-white disabled:cursor-not-allowed disabled:bg-[#555] disabled:text-gray-300 disabled:hover:bg-[#555]"
 					disabled={isPinCodeSent}
 				>
 					Send
 				</button>
 			</form>
-			<form onSubmit={handleVerifyPinCode} className="flex space-x-4">
+			<form onSubmit={handleVerifyPinCode} className="flex flex-col gap-4">
 				<input
 					type="text"
 					disabled={!isPinCodeSent}

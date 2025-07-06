@@ -9,7 +9,7 @@ import { PaintingDetailView } from "./PaintingDetailView";
 import { useSearchParams } from "next/navigation";
 import { throttle } from "../../util/optimization";
 import { findPaintingAction, getPaintingAction } from "../../server-action/backend/painting/api";
-import { isHttpException, isServerActionError } from "../../server-action/backend/common/util";
+import { isHttpException, isServerActionError } from "../../server-action/backend/_common/util";
 
 interface PaintingCardGridProps {
 	findResult: FindPaintingResult;
@@ -55,8 +55,8 @@ export const PaintingCardGrid = (props: PaintingCardGridProps): React.JSX.Elemen
 			isLoadingRef.current = true;
 			const searchTitle: string = searchParam.get("title") || "";
 			const searchArtist: string = searchParam.get("artist") || "";
-			const searchTags: string[] = searchParam.getAll("tags") || [];
-			const searchStyles: string[] = searchParam.getAll("styles") || [];
+			const searchTags: string[] = searchParam.getAll("tags[]") || [];
+			const searchStyles: string[] = searchParam.getAll("styles[]") || [];
 			console.log(`load ${findResultRef.current.page + 1} page`);
 			const response = await findPaintingAction(
 				searchTitle,

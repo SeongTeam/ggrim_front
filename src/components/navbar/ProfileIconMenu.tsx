@@ -5,7 +5,7 @@ import { User } from "@/server-action/backend/user/type";
 import { useEffect, useRef, useState } from "react";
 import { signOutAction } from "../../server-action/backend/auth/api";
 import { useRouter } from "next/navigation";
-import { isServerActionError } from "../../server-action/backend/common/util";
+import { isServerActionError } from "../../server-action/backend/_common/util";
 import {
 	syncUserToLocalStorage,
 	getRunningUser,

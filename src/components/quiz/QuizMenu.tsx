@@ -6,8 +6,8 @@ import { useEffect, useRef, useState } from "react";
 import { Quiz } from "@/server-action/backend/quiz/type";
 import { useRouter } from "next/navigation";
 import { deleteQuizAction } from "../../server-action/backend/quiz/api";
-import { isHttpException, isServerActionError } from "../../server-action/backend/common/util";
-import { HTTP_STATUS } from "../../server-action/backend/common/status";
+import { isHttpException, isServerActionError } from "../../server-action/backend/_common/util";
+import { HTTP_STATUS } from "../../server-action/backend/_common/status";
 import toast from "react-hot-toast";
 import { SEARCH_LOGIC_ROUTE } from "../../route/search/route";
 

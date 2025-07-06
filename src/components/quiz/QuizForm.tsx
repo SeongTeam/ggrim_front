@@ -8,7 +8,7 @@ import { InsertToggleInput } from "../common/InsertToggleInput";
 import { Loading } from "../common/Loading";
 import { CheckCircle, XCircle } from "lucide-react";
 import { getPaintingAction } from "../../server-action/backend/painting/api";
-import { isHttpException, isServerActionError } from "../../server-action/backend/common/util";
+import { isHttpException, isServerActionError } from "../../server-action/backend/_common/util";
 import { CreateQuizDTO } from "../../server-action/backend/quiz/dto";
 import { addQuizAction, updateQuizAction } from "../../server-action/backend/quiz/api";
 import { Quiz } from "@/server-action/backend/quiz/type";

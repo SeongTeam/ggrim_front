@@ -9,8 +9,8 @@ import { generateSecurityTokenByEmailVerificationAction } from "../../../../serv
 import {
 	isHttpException,
 	isServerActionError,
-} from "../../../../server-action/backend/common/util";
-import { HTTP_STATUS } from "../../../../server-action/backend/common/status";
+} from "../../../../server-action/backend/_common/util";
+import { HTTP_STATUS } from "../../../../server-action/backend/_common/status";
 import { ONE_TIME_TOKEN_PURPOSE } from "../../../../server-action/backend/auth/type";
 import { ErrorModal } from "../../../../components/modal/ErrorModal";
 import { GuideModal } from "../../../../components/modal/GuideModal";
