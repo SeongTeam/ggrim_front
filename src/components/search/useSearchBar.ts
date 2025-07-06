@@ -4,7 +4,7 @@ import { BASE_SUGGESTIONS, QUOTED_BASE_SUGGESTIONS } from "./const";
 import { findArtistsAction } from "../../server-action/backend/artist/api";
 import { findTagsAction } from "../../server-action/backend/tag/api";
 import { findStylesAction } from "../../server-action/backend/style/api";
-import { isHttpException, isServerActionError } from "../../server-action/backend/common/util";
+import { isHttpException, isServerActionError } from "../../server-action/backend/_common/util";
 import toast from "react-hot-toast";
 import {
 	calculateNewInput,
@@ -16,7 +16,7 @@ import {
 	HttpException,
 	IPaginationResult,
 	ServerActionError,
-} from "../../server-action/backend/common/dto";
+} from "../../server-action/backend/_common/dto";
 import { useDebounceCallback } from "../../hooks/useDebounceCallback";
 import { AutoCompleteAction, AutoCompleteState, InputAction, InputState } from "./type";
 

@@ -2,7 +2,7 @@ import { NavbarMenu } from "./NavbarMenu";
 import { SearchPaintingIconMenu } from "./SearchPaintingIconMenu";
 import { NotifyIconMenu } from "./NotificationIconMenu";
 import { ProfileIconMenu } from "./ProfileIconMenu";
-import { getSignInInfo } from "../../server-action/backend/common/cookie";
+import { getSignInInfo } from "../../server-action/backend/_common/cookie";
 import { User } from "@/server-action/backend/user/type";
 import Link from "next/link";
 

@@ -1,6 +1,6 @@
 import { QuizCardGrid } from "../../components/quiz/QuizCardGrid";
 import { getQuizListAction } from "../../server-action/backend/quiz/api";
-import { isHttpException, isServerActionError } from "../../server-action/backend/common/util";
+import { isHttpException, isServerActionError } from "../../server-action/backend/_common/util";
 
 export default async function QuizListPage() {
 	const response = await getQuizListAction();

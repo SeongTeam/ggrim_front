@@ -1,7 +1,7 @@
 import { DetailQuiz } from "@/components/quiz/DetailQuiz";
 import { getQuizAction } from "../../../server-action/backend/quiz/api";
-import { isHttpException, isServerActionError } from "../../../server-action/backend/common/util";
-import { getSignInInfo } from "../../../server-action/backend/common/cookie";
+import { isHttpException, isServerActionError } from "../../../server-action/backend/_common/util";
+import { getSignInInfo } from "../../../server-action/backend/_common/cookie";
 
 interface QuizDetailPageProps {
 	params: { id: string };

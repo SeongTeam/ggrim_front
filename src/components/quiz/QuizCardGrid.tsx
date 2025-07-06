@@ -6,7 +6,7 @@ import { ShortQuiz, FindQuizResult } from "@/server-action/backend/quiz/type";
 import { QuizCard } from "./QuizCard";
 import { useRouter } from "next/navigation";
 import { getQuizListAction } from "../../server-action/backend/quiz/api";
-import { isHttpException, isServerActionError } from "../../server-action/backend/common/util";
+import { isHttpException, isServerActionError } from "../../server-action/backend/_common/util";
 
 interface QuizCardGridProps {
 	findResult: FindQuizResult;

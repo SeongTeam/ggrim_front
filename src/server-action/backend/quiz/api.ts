@@ -1,8 +1,8 @@
 "use server";
-import { cookieWithErrorHandler, getServerUrl, withErrorHandler } from "../common/lib";
+import { cookieWithErrorHandler, getServerUrl, withErrorHandler } from "../_common/lib";
 import { MCQ } from "@/components/quiz/mcq/type";
 import { Quiz, QuizDislike, QuizLike } from "./type";
-import { getSignInResponse, getSignInResponseOrRedirect } from "../common/cookie";
+import { getSignInResponse, getSignInResponseOrRedirect } from "../_common/cookie";
 import {
 	CreateQuizDTO,
 	DetailQuizDTO,
@@ -12,7 +12,7 @@ import {
 	ResponseQuizDTO,
 } from "./dto";
 import { QuizReaction, QuizStatus, FindQuizResult } from "./type";
-import { HttpException } from "../common/dto";
+import { HttpException } from "../_common/dto";
 import { SignInResponse } from "../auth/type";
 import { revalidateTag } from "next/cache";
 

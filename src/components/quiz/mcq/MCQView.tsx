@@ -12,9 +12,9 @@ import {
 	addQuizReactionsAction,
 	deleteQuizReactionAction,
 } from "../../../server-action/backend/quiz/api";
-import { isHttpException, isServerActionError } from "../../../server-action/backend/common/util";
+import { isHttpException, isServerActionError } from "../../../server-action/backend/_common/util";
 import toast from "react-hot-toast";
-import { HTTP_STATUS } from "../../../server-action/backend/common/status";
+import { HTTP_STATUS } from "../../../server-action/backend/_common/status";
 import { ErrorModal } from "../../modal/ErrorModal";
 import Image from "next/image";
 

@@ -10,7 +10,7 @@ import {
 	submitQuizAction,
 } from "../../server-action/backend/quiz/api";
 import { QuizStatus } from "../../server-action/backend/quiz/type";
-import { isHttpException, isServerActionError } from "../../server-action/backend/common/util";
+import { isHttpException, isServerActionError } from "../../server-action/backend/_common/util";
 import { DetailQuizDTO, QuizContextDTO } from "../../server-action/backend/quiz/dto";
 import { getPaintingAction } from "../../server-action/backend/painting/api";
 import { getQuizStatus, saveQuizStatus } from "../../state/browser/quiz";
