@@ -44,7 +44,7 @@
 			}
 		},
 		{
-			"files": ["src/util/otel/*.ts"],
+			"files": ["src/util/otel/*.ts", "src/generated/**/*.ts"],
 			"rules": {
 				"no-restricted-syntax": "off"
 			}
