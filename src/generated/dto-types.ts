@@ -617,6 +617,20 @@ export type paths = {
 export type webhooks = Record<string, never>;
 export type components = {
 	schemas: {
+		HttpException: {
+			statusCode: number;
+			message: string;
+			error?: string;
+		};
+		ServiceException: {
+			statusCode: number;
+			message: string;
+			error?: string;
+			timestamp: string;
+			/** @enum {string} */
+			errorCode: ServiceExceptionErrorCode;
+			path: string;
+		};
 		ShowPainting: {
 			id: string;
 			title: string;
@@ -985,6 +999,8 @@ export type components = {
 	headers: never;
 	pathItems: never;
 };
+export type HttpException = components["schemas"]["HttpException"];
+export type ServiceException = components["schemas"]["ServiceException"];
 export type ShowPainting = components["schemas"]["ShowPainting"];
 export type ShowTagResponse = components["schemas"]["ShowTagResponse"];
 export type Pagination = components["schemas"]["Pagination"];
@@ -1050,14 +1066,27 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
+			};
+			/** @description when request have no authentication or authorization */
+			401: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			/** @description when server logic throw unexpected exception */
 			500: {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -1083,14 +1112,27 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
+			};
+			/** @description when request have no authentication or authorization */
+			401: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			/** @description when server logic throw unexpected exception */
 			500: {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -1114,14 +1156,27 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
+			};
+			/** @description when request have no authentication or authorization */
+			401: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			/** @description when server logic throw unexpected exception */
 			500: {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -1145,14 +1200,27 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
+			};
+			/** @description when request have no authentication or authorization */
+			401: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			/** @description when server logic throw unexpected exception */
 			500: {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -1186,14 +1254,27 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
+			};
+			/** @description when request have no authentication or authorization */
+			401: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			/** @description when server logic throw unexpected exception */
 			500: {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -1230,7 +1311,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
 			};
 			/** @description Not Authorized Token */
 			401: {
@@ -1251,7 +1334,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -1308,14 +1393,27 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
+			};
+			/** @description when request have no authentication or authorization */
+			401: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			/** @description when server logic throw unexpected exception */
 			500: {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -1358,7 +1456,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
 			};
 			/** @description Not Authorized Token */
 			401: {
@@ -1379,7 +1479,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -1420,7 +1522,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
 			};
 			/** @description Not Authorized Token */
 			401: {
@@ -1441,7 +1545,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -1478,7 +1584,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
 			};
 			/** @description Not Authorized Account */
 			401: {
@@ -1492,7 +1600,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -1530,14 +1640,27 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
+			};
+			/** @description when request have no authentication or authorization */
+			401: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			/** @description when server logic throw unexpected exception */
 			500: {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -1575,14 +1698,27 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
+			};
+			/** @description when request have no authentication or authorization */
+			401: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			/** @description when server logic throw unexpected exception */
 			500: {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -1623,7 +1759,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
 			};
 			/** @description Not Authorized Account */
 			401: {
@@ -1637,7 +1775,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -1673,14 +1813,27 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
+			};
+			/** @description when request have no authentication or authorization */
+			401: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			/** @description when server logic throw unexpected exception */
 			500: {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -1721,7 +1874,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
 			};
 			/** @description Not Authorized oneTimeToken */
 			401: {
@@ -1735,7 +1890,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -1774,7 +1931,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
 			};
 			/** @description Not Authorized Account */
 			401: {
@@ -1795,7 +1954,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -1831,14 +1992,27 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
+			};
+			/** @description when request have no authentication or authorization */
+			401: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			/** @description when server logic throw unexpected exception */
 			500: {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -1897,14 +2071,27 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
+			};
+			/** @description when request have no authentication or authorization */
+			401: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			/** @description when server logic throw unexpected exception */
 			500: {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -1949,7 +2136,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
 			};
 			/** @description Not Authorized oneTimeToken for temp user */
 			401: {
@@ -1963,7 +2152,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -2000,7 +2191,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
 			};
 			/** @description Not Authorized oneTimeToken */
 			401: {
@@ -2021,7 +2214,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -2054,7 +2249,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
 			};
 			/** @description Not Authorized Token */
 			401: {
@@ -2075,7 +2272,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -2108,7 +2307,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
 			};
 			/** @description Not Authorized Token */
 			401: {
@@ -2129,7 +2330,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -2160,7 +2363,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
 			};
 			/** @description Not Authorized oneTimeToken */
 			401: {
@@ -2181,7 +2386,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -2210,7 +2417,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
 			};
 			/** @description Not Authorized oneTimeToken */
 			401: {
@@ -2231,7 +2440,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -2265,14 +2476,27 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
+			};
+			/** @description when request have no authentication or authorization */
+			401: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			/** @description when server logic throw unexpected exception */
 			500: {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -2315,7 +2539,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
 			};
 			/** @description Not Authorized Token */
 			401: {
@@ -2336,7 +2562,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -2373,7 +2601,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
 			};
 			/** @description Not Authorized Token */
 			401: {
@@ -2394,7 +2624,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -2451,14 +2683,27 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
+			};
+			/** @description when request have no authentication or authorization */
+			401: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			/** @description when server logic throw unexpected exception */
 			500: {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -2501,7 +2746,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
 			};
 			/** @description Not Authorized Token */
 			401: {
@@ -2522,7 +2769,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -2559,14 +2808,27 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
+			};
+			/** @description when request have no authentication or authorization */
+			401: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			/** @description when server logic throw unexpected exception */
 			500: {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -2602,14 +2864,27 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
+			};
+			/** @description when request have no authentication or authorization */
+			401: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			/** @description when server logic throw unexpected exception */
 			500: {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -2647,14 +2922,27 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
+			};
+			/** @description when request have no authentication or authorization */
+			401: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			/** @description when server logic throw unexpected exception */
 			500: {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -2697,7 +2985,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
 			};
 			/** @description Not Authorized Token */
 			401: {
@@ -2718,7 +3008,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -2749,7 +3041,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
 			};
 			/** @description Not Authorized Token */
 			401: {
@@ -2770,7 +3064,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -2811,14 +3107,27 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
+			};
+			/** @description when request have no authentication or authorization */
+			401: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			/** @description when server logic throw unexpected exception */
 			500: {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -2861,7 +3170,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
 			};
 			/** @description Not Authorized Token */
 			401: {
@@ -2882,7 +3193,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -2910,14 +3223,27 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
+			};
+			/** @description when request have no authentication or authorization */
+			401: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			/** @description when server logic throw unexpected exception */
 			500: {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -2960,7 +3286,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
 			};
 			/** @description Not Authorized Token */
 			401: {
@@ -2981,7 +3309,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -3018,7 +3348,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
 			};
 			/** @description Not Authorized Token */
 			401: {
@@ -3039,7 +3371,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -3096,14 +3430,27 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
+			};
+			/** @description when request have no authentication or authorization */
+			401: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			/** @description when server logic throw unexpected exception */
 			500: {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -3146,7 +3493,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
 			};
 			/** @description Not Authorized Token */
 			401: {
@@ -3167,7 +3516,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -3201,7 +3552,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
 			};
 			/** @description Not Authorized Token */
 			401: {
@@ -3222,7 +3575,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -3252,14 +3607,27 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
+			};
+			/** @description when request have no authentication or authorization */
+			401: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			/** @description when server logic throw unexpected exception */
 			500: {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -3295,14 +3663,27 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
+			};
+			/** @description when request have no authentication or authorization */
+			401: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			/** @description when server logic throw unexpected exception */
 			500: {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -3337,7 +3718,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
 			};
 			/** @description Not Authorized Token */
 			401: {
@@ -3351,7 +3734,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -3380,7 +3765,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
 			};
 			/** @description Not Authorized Token */
 			401: {
@@ -3394,7 +3781,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -3432,14 +3821,27 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
+			};
+			/** @description when request have no authentication or authorization */
+			401: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			/** @description when server logic throw unexpected exception */
 			500: {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -3469,14 +3871,27 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
+			};
+			/** @description when request have no authentication or authorization */
+			401: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			/** @description when server logic throw unexpected exception */
 			500: {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -3531,14 +3946,27 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
+			};
+			/** @description when request have no authentication or authorization */
+			401: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			/** @description when server logic throw unexpected exception */
 			500: {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -3581,7 +4009,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
 			};
 			/** @description Not Authorized Token */
 			401: {
@@ -3595,7 +4025,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -3635,14 +4067,27 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
+			};
+			/** @description when request have no authentication or authorization */
+			401: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			/** @description when server logic throw unexpected exception */
 			500: {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -3685,7 +4130,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
 			};
 			/** @description Not Authorized Token */
 			401: {
@@ -3706,7 +4153,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -3737,7 +4186,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
 			};
 			/** @description Not Authorized Token */
 			401: {
@@ -3758,7 +4209,9 @@ export interface operations {
 				headers: {
 					[name: string]: unknown;
 				};
-				content?: never;
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
 			};
 			default: {
 				headers: {
@@ -3768,6 +4221,26 @@ export interface operations {
 			};
 		};
 	};
+}
+export enum ServiceExceptionErrorCode {
+	BASE = "BASE",
+	NOT_IMPLEMENTED = "NOT_IMPLEMENTED",
+	ENTITY_NOT_FOUND = "ENTITY_NOT_FOUND",
+	ENTITY_CREATE_FAILED = "ENTITY_CREATE_FAILED",
+	ENTITY_UPDATE_FAILED = "ENTITY_UPDATE_FAILED",
+	ENTITY_DELETE_FAILED = "ENTITY_DELETE_FAILED",
+	ENTITY_RESTORE_FAILED = "ENTITY_RESTORE_FAILED",
+	ENTITY_DUPLICATED = "ENTITY_DUPLICATED",
+	SERVICE_RUN_ERROR = "SERVICE_RUN_ERROR",
+	SERVICE_RUN_TIMEOUT = "SERVICE_RUN_TIMEOUT",
+	EXTERNAL_SERVICE_FAILED = "EXTERNAL_SERVICE_FAILED",
+	DEPENDENCY_UNAVAILABLE = "DEPENDENCY_UNAVAILABLE",
+	RATE_LIMIT_EXCEEDED = "RATE_LIMIT_EXCEEDED",
+	DB_CONFLICT = "DB_CONFLICT",
+	DB_INCONSISTENCY = "DB_INCONSISTENCY",
+	UNAUTHENTICATED = "UNAUTHENTICATED",
+	UNAUTHORIZED = "UNAUTHORIZED",
+	UNEXPECTED_JWT_ERROR = "UNEXPECTED_JWT_ERROR",
 }
 export enum USER_ROLE {
 	admin = "admin",
