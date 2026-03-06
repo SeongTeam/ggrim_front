@@ -119,14 +119,14 @@ export type paths = {
 		};
 		get?: never;
 		put?: never;
-		post: operations["AuthController_signin"];
+		post: operations["AuthController_signIn"];
 		delete?: never;
 		options?: never;
 		head?: never;
 		patch?: never;
 		trace?: never;
 	};
-	"/auth/request-verification": {
+	"/auth/send-pin-code": {
 		parameters: {
 			query?: never;
 			header?: never;
@@ -135,14 +135,14 @@ export type paths = {
 		};
 		get?: never;
 		put?: never;
-		post: operations["AuthController_register"];
+		post: operations["AuthController_sendPinCode"];
 		delete?: never;
 		options?: never;
 		head?: never;
 		patch?: never;
 		trace?: never;
 	};
-	"/auth/verify": {
+	"/auth/verify-pin-code": {
 		parameters: {
 			query?: never;
 			header?: never;
@@ -151,7 +151,7 @@ export type paths = {
 		};
 		get?: never;
 		put?: never;
-		post: operations["AuthController_verify"];
+		post: operations["AuthController_verifyPinCode"];
 		delete?: never;
 		options?: never;
 		head?: never;
@@ -168,7 +168,24 @@ export type paths = {
 		get?: never;
 		put?: never;
 		/** @description 민감한 동작에 사용되는 1회용 jwt를 발급한다 */
-		post: operations["AuthController_generateSecurityActionToken"];
+		post: operations["AuthController_createSecurityToken"];
+		delete?: never;
+		options?: never;
+		head?: never;
+		patch?: never;
+		trace?: never;
+	};
+	"/auth/security-token/email": {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		get?: never;
+		put?: never;
+		/** @description 사용자 인증을 위한 1회용 jwt 발급 한 뒤, 인증 url을 사용자 이메일로 전송한다. */
+		post: operations["AuthController_emailSecurityToken"];
 		delete?: never;
 		options?: never;
 		head?: never;
@@ -184,25 +201,8 @@ export type paths = {
 		};
 		get?: never;
 		put?: never;
-		/** @description 사용자 인증을 위한 1회용 jwt와 사용될 domain url을 이메일로 전송한다. */
-		post: operations["AuthController_sendSecurityActionToken"];
-		delete?: never;
-		options?: never;
-		head?: never;
-		patch?: never;
-		trace?: never;
-	};
-	"/auth/security-token/from-email-verification": {
-		parameters: {
-			query?: never;
-			header?: never;
-			path?: never;
-			cookie?: never;
-		};
-		get?: never;
-		put?: never;
 		/** @description 사용자 이메일로 전송된 1회용 jwt와 사용될 domain url을 검증하여, 새로운 jwt를 발급한다. */
-		post: operations["AuthController_generateSecurityTokenByEmailVerification"];
+		post: operations["AuthController_createSecurityTokenByEmailVerification"];
 		delete?: never;
 		options?: never;
 		head?: never;
@@ -235,7 +235,7 @@ export type paths = {
 		get: operations["UserController_getOne"];
 		put?: never;
 		post?: never;
-		delete?: never;
+		delete: operations["UserController_deleteUser"];
 		options?: never;
 		head?: never;
 		patch?: never;
@@ -259,7 +259,7 @@ export type paths = {
 		patch?: never;
 		trace?: never;
 	};
-	"/user/{email}/password": {
+	"/user/{id}/password": {
 		parameters: {
 			query?: never;
 			header?: never;
@@ -275,7 +275,7 @@ export type paths = {
 		patch?: never;
 		trace?: never;
 	};
-	"/user/{email}/username": {
+	"/user/{id}/username": {
 		parameters: {
 			query?: never;
 			header?: never;
@@ -291,7 +291,7 @@ export type paths = {
 		patch?: never;
 		trace?: never;
 	};
-	"/user/{email}/role": {
+	"/user/{id}/role": {
 		parameters: {
 			query?: never;
 			header?: never;
@@ -307,7 +307,7 @@ export type paths = {
 		patch?: never;
 		trace?: never;
 	};
-	"/user/{email}": {
+	"/user/recover/{id}": {
 		parameters: {
 			query?: never;
 			header?: never;
@@ -315,28 +315,12 @@ export type paths = {
 			cookie?: never;
 		};
 		get?: never;
-		put?: never;
-		post?: never;
-		delete: operations["UserController_deleteUser"];
-		options?: never;
-		head?: never;
-		patch?: never;
-		trace?: never;
-	};
-	"/user/recover/{email}": {
-		parameters: {
-			query?: never;
-			header?: never;
-			path?: never;
-			cookie?: never;
-		};
-		get?: never;
-		put?: never;
+		put: operations["UserController_recoverUser"];
 		post?: never;
 		delete?: never;
 		options?: never;
 		head?: never;
-		patch: operations["UserController_recoverUser"];
+		patch?: never;
 		trace?: never;
 	};
 	"/painting/style/{id}": {
@@ -674,7 +658,6 @@ export type components = {
 			role: components["schemas"]["USER_ROLE"];
 			active: components["schemas"]["USER_STATE"];
 			id: string;
-			email: string;
 			username: string;
 			/**
 			 * @description @format IsoDateTime
@@ -732,6 +715,10 @@ export type components = {
 		SendOneTimeTokenDTO: {
 			purpose: components["schemas"]["SEND_ONE_TIME_TOKEN_PURPOSE"];
 			email: string;
+		};
+		EmailVerificationTokenResponse: {
+			oneTimeToken: components["schemas"]["ShowOneTimeTokenResponse"];
+			user: components["schemas"]["ShowUserResponse"];
 		};
 		HashedOneTimeTokenResponse: {
 			purpose: components["schemas"]["ONE_TIME_TOKEN_PURPOSE"];
@@ -1016,6 +1003,8 @@ export type VerifyDto = components["schemas"]["VerifyDTO"];
 export type ShowOneTimeTokenResponse = components["schemas"]["ShowOneTimeTokenResponse"];
 export type CreateOneTimeTokenDto = components["schemas"]["CreateOneTimeTokenDTO"];
 export type SendOneTimeTokenDto = components["schemas"]["SendOneTimeTokenDTO"];
+export type EmailVerificationTokenResponse =
+	components["schemas"]["EmailVerificationTokenResponse"];
 export type HashedOneTimeTokenResponse = components["schemas"]["HashedOneTimeTokenResponse"];
 export type CreateUserDto = components["schemas"]["CreateUserDTO"];
 export type ReplacePassWordDto = components["schemas"]["ReplacePassWordDTO"];
@@ -1559,7 +1548,7 @@ export interface operations {
 			};
 		};
 	};
-	AuthController_signin: {
+	AuthController_signIn: {
 		parameters: {
 			query?: never;
 			header: {
@@ -1614,7 +1603,7 @@ export interface operations {
 			};
 		};
 	};
-	AuthController_register: {
+	AuthController_sendPinCode: {
 		parameters: {
 			query?: never;
 			header?: never;
@@ -1672,7 +1661,7 @@ export interface operations {
 			};
 		};
 	};
-	AuthController_verify: {
+	AuthController_verifyPinCode: {
 		parameters: {
 			query?: never;
 			header?: never;
@@ -1730,7 +1719,7 @@ export interface operations {
 			};
 		};
 	};
-	AuthController_generateSecurityActionToken: {
+	AuthController_createSecurityToken: {
 		parameters: {
 			query?: never;
 			header: {
@@ -1789,7 +1778,7 @@ export interface operations {
 			};
 		};
 	};
-	AuthController_sendSecurityActionToken: {
+	AuthController_emailSecurityToken: {
 		parameters: {
 			query?: never;
 			header?: never;
@@ -1843,7 +1832,7 @@ export interface operations {
 			};
 		};
 	};
-	AuthController_generateSecurityTokenByEmailVerification: {
+	AuthController_createSecurityTokenByEmailVerification: {
 		parameters: {
 			query?: never;
 			header: {
@@ -1866,7 +1855,7 @@ export interface operations {
 					[name: string]: unknown;
 				};
 				content: {
-					"application/json": components["schemas"]["ShowOneTimeTokenResponse"];
+					"application/json": components["schemas"]["EmailVerificationTokenResponse"];
 				};
 			};
 			/** @description when invalid path(route) or url query or dto body */
@@ -1899,7 +1888,7 @@ export interface operations {
 					[name: string]: unknown;
 				};
 				content: {
-					"application/json": components["schemas"]["ShowOneTimeTokenResponse"];
+					"application/json": components["schemas"]["EmailVerificationTokenResponse"];
 				};
 			};
 		};
@@ -2021,6 +2010,60 @@ export interface operations {
 				content: {
 					"application/json": components["schemas"]["ShowUserResponse"];
 				};
+			};
+		};
+	};
+	UserController_deleteUser: {
+		parameters: {
+			query?: never;
+			header: {
+				/** @description oneTimeToken issued for security purpose */
+				"x-one-time-token-value": string;
+				/** @description oneTimeToken identifier */
+				"x-one-time-token-identifier": string;
+			};
+			path?: never;
+			cookie?: never;
+		};
+		requestBody?: never;
+		responses: {
+			/** @description when invalid path(route) or url query or dto body */
+			400: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"application/json": components["schemas"]["HttpException"];
+				};
+			};
+			/** @description Not Authorized oneTimeToken */
+			401: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content?: never;
+			};
+			/** @description User does not own the resource. */
+			403: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content?: never;
+			};
+			/** @description when server logic throw unexpected exception */
+			500: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content: {
+					"application/json": components["schemas"]["ServiceException"];
+				};
+			};
+			default: {
+				headers: {
+					[name: string]: unknown;
+				};
+				content?: never;
 			};
 		};
 	};
@@ -2175,9 +2218,7 @@ export interface operations {
 				/** @description oneTimeToken identifier */
 				"x-one-time-token-identifier": string;
 			};
-			path: {
-				email: string;
-			};
+			path?: never;
 			cookie?: never;
 		};
 		requestBody: {
@@ -2233,9 +2274,7 @@ export interface operations {
 				/** @description bear authorization header */
 				authorization: string;
 			};
-			path: {
-				email: string;
-			};
+			path?: never;
 			cookie?: never;
 		};
 		requestBody: {
@@ -2292,7 +2331,7 @@ export interface operations {
 				authorization: string;
 			};
 			path: {
-				email: string;
+				id: string;
 			};
 			cookie?: never;
 		};
@@ -2319,62 +2358,6 @@ export interface operations {
 				content?: never;
 			};
 			/** @description Not allowed User's role */
-			403: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content?: never;
-			};
-			/** @description when server logic throw unexpected exception */
-			500: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					"application/json": components["schemas"]["ServiceException"];
-				};
-			};
-			default: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content?: never;
-			};
-		};
-	};
-	UserController_deleteUser: {
-		parameters: {
-			query?: never;
-			header: {
-				/** @description oneTimeToken issued for security purpose */
-				"x-one-time-token-value": string;
-				/** @description oneTimeToken identifier */
-				"x-one-time-token-identifier": string;
-			};
-			path: {
-				email: string;
-			};
-			cookie?: never;
-		};
-		requestBody?: never;
-		responses: {
-			/** @description when invalid path(route) or url query or dto body */
-			400: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					"application/json": components["schemas"]["HttpException"];
-				};
-			};
-			/** @description Not Authorized oneTimeToken */
-			401: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content?: never;
-			};
-			/** @description User does not own the resource. */
 			403: {
 				headers: {
 					[name: string]: unknown;
