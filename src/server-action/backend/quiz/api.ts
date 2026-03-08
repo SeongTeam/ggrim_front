@@ -1,55 +1,21 @@
 "use server";
-import { cookieWithErrorHandler, getServerUrl, withErrorHandler } from "../_common/lib";
-import { MCQ } from "@/components/quiz/mcq/type";
-import { Quiz, QuizDislike, QuizLike } from "./type";
-import { getSignInResponse, getSignInResponseOrRedirect } from "../_common/cookie";
+import { withErrorHandler } from "../_common/middleware";
+import { getSignInResponse } from "../_common/cookie";
+import { QuizStatus } from "./type";
 import {
-	CreateQuizDTO,
-	DetailQuizDTO,
-	QuizContextDTO,
-	QuizReactionDTO,
-	QuizSubmitDTO,
-	ResponseQuizDTO,
-} from "./dto";
-import { QuizReaction, QuizStatus, FindQuizResult } from "./type";
-import { HttpException } from "../_common/dto";
-import { SignInResponse } from "../auth/type";
-import { revalidateTag } from "next/cache";
-
-const QUIZ_LIST_TAG = "quiz_list_tag";
-
-function getQuizCacheTag(quizId: string) {
-	return `quiz-${quizId}`;
-}
-
-function revalidateQuizTag(id: string) {
-	const tag = getQuizCacheTag(id);
-	revalidateTag(tag);
-}
-
-function revalidateQuizList() {
-	revalidateTag(QUIZ_LIST_TAG);
-}
-
-const getMCQData = async (): Promise<MCQ[] | HttpException> => {
-	// const response = await fetch('http://localhost:4000/api/mcq', {
-	//     cache: 'no-cache',
-	// });  // src/data에 파일을 읽어 올 때 사용
-	const serverUrl = getServerUrl();
-
-	const url: string = serverUrl + "/quiz/quiz_of_week";
-	const response = await fetch(url, {
-		cache: "no-cache",
-	}); // 서버에 있는 데이터 읽어 올때 사용
-	const res = await response.json();
-
-	if (!res.ok) {
-		const error: HttpException = await response.json();
-		return error;
-	}
-
-	return res.data;
-};
+	getQuizCacheTag,
+	getQuizListCacheTag,
+	revalidateQuizList,
+	revalidateQuizTag,
+} from "./util";
+import {
+	CreateQuizDto,
+	CreateQuizReactionDto,
+	QuizContextDto,
+	SubmitQuizDto,
+} from "../../../generated/dto-types";
+import { getBearerAuth } from "../auth/util";
+import { client, createServerActionError } from "../_common/util";
 
 // TODO 빌드 오류 개선하기
 // - 해당 API를 사용하는 SSR page는 빌드시, 다음 오류가 발생한다.
@@ -66,261 +32,252 @@ const findQuiz = async (
 	styles: string[] = [],
 	page: number = 0,
 	count: number = 50,
-): Promise<FindQuizResult | HttpException> => {
-	const backendUrl = getServerUrl();
-	const artistsParam = artists.map((a) => `artists[]=${a}`).join("&");
-	const tagParam = tags.map((t) => `tags[]=${t}`).join("&");
-	const styleParam = styles.map((s) => `styles[]=${s}`).join("&");
-	const url = `${backendUrl}/quiz?${artistsParam}&${tagParam}&${styleParam}&page=${page}&count=${count}`;
+) => {
+	const { data, error } = await client.GET("/quiz", {
+		params: {
+			query: {
+				artists,
+				tags,
+				styles,
+				page,
+				count,
+			},
+		},
+		cache: "no-store",
+	});
 
-	const response = await fetch(url, { cache: "no-store" });
-	if (!response.ok) {
-		const error: HttpException = await response.json();
-		return error;
+	if (!data) {
+		throw error;
 	}
-	const result: FindQuizResult = await response.json();
-	return result;
+
+	return data;
 };
 
-const getQuizList = async (page: number = 0) => {
-	const backendUrl = getServerUrl();
-	const count = 50;
-	const url = `${backendUrl}/quiz?page=${page}&count=${count}`;
+const getQuizList = async (page: number = 0, count: number = 50) => {
+	const { data, error } = await client.GET("/quiz", {
+		params: {
+			query: {
+				page,
+				count,
+			},
+		},
+		next: { tags: [getQuizListCacheTag()] },
+	});
 
-	const response = await fetch(url, { next: { tags: [QUIZ_LIST_TAG] } });
-	if (!response.ok) {
-		const error: HttpException = await response.json();
-		return error;
+	if (!data) {
+		throw error;
 	}
-	const result: FindQuizResult = await response.json();
-	return result;
+
+	return data;
 };
 
-const getQuiz = async (id: string): Promise<DetailQuizDTO> => {
-	const backendUrl = getServerUrl();
+const getQuiz = async (id: string) => {
 	const signInResponse = await getSignInResponse();
-	const userIdParam = signInResponse ? `user-id=${signInResponse.user.id}` : "";
-	const isS3AccessParam = `isS3Access=true`;
-	const url = `${backendUrl}/quiz/${id}?${isS3AccessParam}&${userIdParam}`;
-	const cacheTag = getQuizCacheTag(id);
-	const response = await fetch(url, { next: { tags: [cacheTag] } });
-	const result: DetailQuizDTO = await response.json();
-	return result;
-};
-
-const addQuiz = async (
-	signInResponse: SignInResponse,
-	dto: CreateQuizDTO,
-): Promise<Quiz | HttpException> => {
-	const backendUrl = getServerUrl();
-	const url = `${backendUrl}/quiz`;
-
-	const response = await fetch(url, {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json",
-			Authorization: `Bearer ${signInResponse.accessToken}`,
+	const { data, error } = await client.GET("/quiz/{id}", {
+		params: {
+			path: { id },
+			query: {
+				isS3Access: true,
+				userId: signInResponse?.user.id || "",
+			},
 		},
-		body: JSON.stringify(dto),
+		next: { tags: [getQuizCacheTag(id)] },
 	});
 
-	if (!response.ok) {
-		const error: HttpException = await response.json();
-		return error;
+	if (!data) {
+		throw error;
 	}
 
-	revalidateQuizList();
-	const result: Quiz = await response.json();
-
-	return result;
+	return data;
 };
 
-const updateQuiz = async (
-	signInResponse: SignInResponse,
-	quizId: string,
-	dto: CreateQuizDTO,
-): Promise<Quiz | HttpException> => {
-	const backendUrl = getServerUrl();
-	const url = `${backendUrl}/quiz/${quizId}`;
+const addQuiz = async (dto: CreateQuizDto) => {
+	const signInResponse = await getSignInResponse();
 
-	const response = await fetch(url, {
-		method: "PUT",
-		headers: {
-			"Content-Type": "application/json",
-			Authorization: `Bearer ${signInResponse.accessToken}`,
-		},
-		body: JSON.stringify(dto),
-	});
-
-	if (!response.ok) {
-		const error: HttpException = await response.json();
-		return error;
+	if (!signInResponse) {
+		const serverActionError = createServerActionError("unauthenticated");
+		throw serverActionError;
 	}
-	const result: Quiz = await response.json();
-	revalidateQuizTag(quizId);
-	revalidateQuizList();
 
-	return result;
-};
-
-const deleteQuiz = async (
-	signInResponse: SignInResponse,
-	quizId: string,
-): Promise<void | HttpException> => {
-	const backendUrl = getServerUrl();
-	const url = `${backendUrl}/quiz/${quizId}`;
-
-	const response = await fetch(url, {
-		method: "DELETE",
-		headers: {
-			"Content-Type": "application/json",
-			Authorization: `Bearer ${signInResponse.accessToken}`,
+	const { data, error } = await client.POST("/quiz", {
+		params: {
+			header: {
+				authorization: getBearerAuth(signInResponse),
+			},
 		},
+		body: dto,
 	});
 
-	if (!response.ok) {
-		const error: HttpException = await response.json();
-		return error;
+	if (!data) {
+		throw error;
+	}
+
+	return data;
+};
+
+const updateQuiz = async (quizId: string, dto: CreateQuizDto) => {
+	const signInResponse = await getSignInResponse();
+
+	if (!signInResponse) {
+		const serverActionError = createServerActionError("unauthenticated");
+		throw serverActionError;
+	}
+
+	const { data, error } = await client.PUT("/quiz/{id}", {
+		params: {
+			path: { id: quizId },
+			header: {
+				authorization: getBearerAuth(signInResponse),
+			},
+		},
+		body: dto,
+	});
+
+	if (!data) {
+		throw error;
 	}
 
 	revalidateQuizTag(quizId);
 	revalidateQuizList();
+
+	return data;
 };
 
-const submitQuiz = async (quizID: string, dto: QuizSubmitDTO): Promise<boolean | HttpException> => {
-	const backendUrl = getServerUrl();
-	const url = `${backendUrl}/quiz/submit/${quizID}`;
+const deleteQuiz = async (quizId: string) => {
+	const signInResponse = await getSignInResponse();
 
-	const response = await fetch(url, {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json",
+	if (!signInResponse) {
+		const serverActionError = createServerActionError("unauthenticated");
+		throw serverActionError;
+	}
+
+	const { data, error } = await client.DELETE("/quiz/{id}", {
+		params: {
+			path: { id: quizId },
+			header: {
+				authorization: getBearerAuth(signInResponse),
+			},
 		},
-		body: JSON.stringify(dto),
 	});
 
-	if (!response.ok) {
-		const error: HttpException = await response.json();
-		return error;
+	if (!data) {
+		throw error;
 	}
 
-	const result: boolean = await response.json();
-	return result;
+	revalidateQuizTag(quizId);
+	revalidateQuizList();
 };
 
-const getQuizReactions = async (
-	quizID: string,
-	type: QuizReaction,
-	page?: number,
-	findUserId?: string,
-): Promise<QuizDislike[] | QuizLike[] | HttpException> => {
-	const backendUrl = getServerUrl();
-	const url = `${backendUrl}/quiz/${quizID}/reactions`;
-	const typeParam = `type=${type}`;
-	const pageParam = `page=${page}`;
-	const userIdParam = `user_id=${findUserId}`;
-	const response = await fetch(url + `?${typeParam}&${pageParam}&${userIdParam}`);
-
-	if (!response.ok) {
-		const result = await response.json();
-		return result;
-	}
-
-	const result: QuizDislike[] | QuizLike[] = await response.json();
-	return result;
-};
-
-const addQuizReactions = async (
-	signInResponse: SignInResponse,
-	quizID: string,
-	dto: QuizReactionDTO,
-): Promise<boolean | HttpException> => {
-	const backendUrl = getServerUrl();
-	const url = `${backendUrl}/quiz/${quizID}/reaction`;
-
-	const headers = {
-		"Content-Type": "application/json",
-		Authorization: `Bearer ${signInResponse.accessToken}`,
-	};
-	const response = await fetch(url, {
-		method: "POST",
-		headers,
-		body: JSON.stringify(dto),
+const submitQuiz = async (quizId: string, dto: SubmitQuizDto) => {
+	const { data, error } = await client.POST("/quiz/submit/{id}", {
+		params: {
+			path: { id: quizId },
+		},
+		body: dto,
 	});
 
-	if (!response.ok) {
-		const error: HttpException = await response.json();
-		return error;
+	if (!data) {
+		throw error;
 	}
-	revalidateQuizTag(quizID);
-	return true;
+
+	return data;
 };
 
-const deleteQuizReaction = async (
-	signInResponse: SignInResponse,
-	quizID: string,
-): Promise<boolean | HttpException> => {
-	const backendUrl = getServerUrl();
-	const url = `${backendUrl}/quiz/${quizID}/reaction`;
-
-	const headers = {
-		Authorization: `Bearer ${signInResponse.accessToken}`,
-	};
-	const response = await fetch(url, {
-		method: "DELETE",
-		headers,
+const getQuizReactions = async (quizId: string, page?: number) => {
+	const { data, error } = await client.GET("/quiz/{id}/reactions", {
+		params: {
+			path: { id: quizId },
+			query: {
+				page,
+			},
+		},
 	});
 
-	if (!response.ok) {
-		const error: HttpException = await response.json();
-		return error;
+	if (!data) {
+		throw error;
 	}
 
-	revalidateQuizTag(quizID);
-	return true;
+	return data;
 };
 
-const scheduleQuiz = async (quizStatus?: QuizStatus): Promise<ResponseQuizDTO | HttpException> => {
-	const backendUrl = getServerUrl();
-	const url = `${backendUrl}/quiz/schedule`;
-	let param = "";
-	if (quizStatus) {
-		const currentIndexParam = `currentIndex=${quizStatus?.currentIndex || ""}`;
-		const endIndexParam = `endIndex=${quizStatus?.endIndex || ""}`;
-		const contextParam = `context=` + JSON.stringify(quizStatus?.context) || "";
-		param += `?${currentIndexParam}&${endIndexParam}&${contextParam}`;
-	}
-	const response = await fetch(url + param);
+const addQuizReactions = async (quizId: string, dto: CreateQuizReactionDto) => {
+	const signInResponse = await getSignInResponse();
 
-	if (!response.ok) {
-		const error: HttpException = await response.json();
-		return error;
+	if (!signInResponse) {
+		const serverActionError = createServerActionError("unauthenticated");
+		throw serverActionError;
 	}
-	const result: ResponseQuizDTO = await response.json();
-	return result;
-};
 
-const addQuizContext = async (dto: QuizContextDTO): Promise<boolean | HttpException> => {
-	const backendUrl = getServerUrl();
-	const url = `${backendUrl}/quiz/schedule`;
-	const headers = {
-		"Content-Type": "application/json",
-	};
-	const response = await fetch(url, {
-		method: "POST",
-		headers,
-		body: JSON.stringify(dto),
+	const { data, error } = await client.POST("/quiz/{id}/reaction", {
+		params: {
+			path: { id: quizId },
+			header: {
+				authorization: getBearerAuth(signInResponse),
+			},
+		},
+		body: dto,
 	});
 
-	if (!response.ok) {
-		const error: HttpException = await response.json();
-		return error;
+	if (!data) {
+		throw error;
 	}
-	const result: boolean = await response.json();
-	return result;
+
+	revalidateQuizTag(quizId);
 };
 
-export const getMCQDataAction = withErrorHandler("getMCQData", getMCQData);
+const deleteQuizReaction = async (quizId: string) => {
+	const signInResponse = await getSignInResponse();
+
+	if (!signInResponse) {
+		const serverActionError = createServerActionError("unauthenticated");
+		throw serverActionError;
+	}
+
+	const { data, error } = await client.DELETE("/quiz/{id}/reaction", {
+		params: {
+			path: { id: quizId },
+			header: {
+				authorization: getBearerAuth(signInResponse),
+			},
+		},
+	});
+
+	if (!data) {
+		throw error;
+	}
+
+	revalidateQuizTag(quizId);
+};
+
+const scheduleQuiz = async (quizStatus?: QuizStatus) => {
+	const { data, error } = await client.GET("/quiz/schedule", {
+		params: {
+			query: {
+				currentIndex: quizStatus?.currentIndex,
+				endIndex: quizStatus?.endIndex,
+				context: quizStatus?.context,
+			},
+		},
+	});
+
+	if (!data) {
+		throw error;
+	}
+
+	return data;
+};
+
+const addQuizContext = async (dto: QuizContextDto) => {
+	const { data, error } = await client.POST("/quiz/schedule", {
+		body: dto,
+	});
+
+	if (!data) {
+		throw error;
+	}
+
+	return data;
+};
 
 export const findQuizAction = withErrorHandler("findQuiz", findQuiz);
 export const getQuizListAction = withErrorHandler("getQuizList", getQuizList);
@@ -328,35 +285,15 @@ export const getQuizAction = withErrorHandler("getQuiz", getQuiz);
 
 export const getQuizReactionsAction = withErrorHandler("getQuizReactions", getQuizReactions);
 
-export const addQuizAction = cookieWithErrorHandler(
-	getSignInResponseOrRedirect,
-	"addQuiz",
-	addQuiz,
-);
-export const updateQuizAction = cookieWithErrorHandler(
-	getSignInResponseOrRedirect,
-	"updateQuiz",
-	updateQuiz,
-);
-export const deleteQuizAction = cookieWithErrorHandler(
-	getSignInResponseOrRedirect,
-	"deleteQuiz",
-	deleteQuiz,
-);
+export const addQuizAction = withErrorHandler("addQuiz", addQuiz);
+export const updateQuizAction = withErrorHandler("updateQuiz", updateQuiz);
+export const deleteQuizAction = withErrorHandler("deleteQuiz", deleteQuiz);
 
 export const submitQuizAction = withErrorHandler("submitQuiz", submitQuiz);
 
-export const addQuizReactionsAction = cookieWithErrorHandler(
-	getSignInResponseOrRedirect,
-	"addQuizReactions",
-	addQuizReactions,
-);
+export const addQuizReactionsAction = withErrorHandler("addQuizReactions", addQuizReactions);
 
-export const deleteQuizReactionAction = cookieWithErrorHandler(
-	getSignInResponseOrRedirect,
-	"deleteQuizReaction",
-	deleteQuizReaction,
-);
+export const deleteQuizReactionAction = withErrorHandler("deleteQuizReaction", deleteQuizReaction);
 
 export const scheduleQuizAction = withErrorHandler("scheduleQuiz", scheduleQuiz);
 

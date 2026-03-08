@@ -1,198 +1,225 @@
 "use server";
 import { RequestQueryBuilder } from "@dataui/crud-request";
-import { cookieWithErrorHandler, getServerUrl, withErrorHandler } from "../_common/lib";
-import { User } from "./type";
-import { ONE_TIME_TOKEN_HEADER } from "../auth/header";
-import { CreateUserDTO, ReplacePassWordDTO, ReplaceUsernameDTO } from "./dto";
-import { HttpException } from "../_common/dto";
-import { OneTimeToken, SignInResponse } from "../auth/type";
+import { withErrorHandler } from "../_common/middleware";
 import {
+	deleteEmailVerificationToken,
 	deleteOneTimeToken,
 	deleteSignInResponse,
-	getOneTimeTokenOrRedirect,
-	getSignInResponseOrRedirect,
+	getEmailVerificationToken,
+	getOneTimeToken,
+	getSignInResponse,
 } from "../_common/cookie";
+import {
+	CreateUserDto,
+	ReplacePassWordDto,
+	ReplaceUsernameDto,
+} from "../../../generated/dto-types";
+import { getBearerAuth } from "../auth/util";
+import { serverLogger } from "../../../util/serverLogger";
+import { client, createServerActionError, isServerActionError } from "../_common/util";
 
-const signUp = async (
-	oneTimeToken: OneTimeToken,
-	dto: CreateUserDTO,
-): Promise<User | HttpException> => {
-	const backendUrl = getServerUrl();
-	const url = `${backendUrl}/user`;
+const signUp = async (dto: CreateUserDto) => {
+	const oneTimeToken = await getOneTimeToken();
 
-	const headers = {
-		"Content-Type": "application/json",
-		[ONE_TIME_TOKEN_HEADER.X_ONE_TIME_TOKEN]: oneTimeToken.token,
-		[ONE_TIME_TOKEN_HEADER.X_ONE_TIME_TOKEN_ID]: oneTimeToken.id,
-	};
-	const response = await fetch(url, {
-		method: "POST",
-		headers,
-		body: JSON.stringify(dto),
+	if (!oneTimeToken) {
+		const serverActionError = createServerActionError("unauthorized");
+		throw serverActionError;
+	}
+
+	const { data, error } = await client.POST("/user", {
+		body: dto,
+		params: {
+			header: {
+				"x-one-time-token-identifier": oneTimeToken.id,
+				"x-one-time-token-value": oneTimeToken.token,
+			},
+		},
 	});
 
-	if (!response.ok) {
-		const error: HttpException = await response.json();
-		return error;
+	if (!data) {
+		throw error;
 	}
 
-	const result: User = await response.json();
-	return result;
+	return data;
 };
 
-const getUser = async (id: string): Promise<User | HttpException> => {
-	const backendUrl = getServerUrl();
-	const url = `${backendUrl}/user/${id}`;
-	const response = await fetch(url);
-
-	if (!response.ok) {
-		const error: HttpException = await response.json();
-		return error;
-	}
-
-	const result: User = await response.json();
-	return result;
-};
-
-const findUsers = async (queryBuilder: RequestQueryBuilder): Promise<User[] | HttpException> => {
-	const backendUrl = getServerUrl();
-	const url = `${backendUrl}/user/`;
-	const response = await fetch(url + `?${queryBuilder.query()}`);
-
-	if (!response.ok) {
-		const error: HttpException = await response.json();
-		return error;
-	}
-
-	const result: User[] = await response.json();
-	return result;
-};
-
-const updateUserPW = async (
-	oneTimeToken: OneTimeToken,
-	dto: ReplacePassWordDTO,
-): Promise<boolean | HttpException> => {
-	const backendUrl = getServerUrl();
-	const url = `${backendUrl}/user/${oneTimeToken.email}/password`;
-
-	const headers = {
-		"Content-Type": "application/json",
-		[ONE_TIME_TOKEN_HEADER.X_ONE_TIME_TOKEN_ID]: oneTimeToken.id,
-		[ONE_TIME_TOKEN_HEADER.X_ONE_TIME_TOKEN]: oneTimeToken.token,
-	};
-	const response = await fetch(url, {
-		method: "PUT",
-		headers,
-		body: JSON.stringify(dto),
+const getUser = async (id: string) => {
+	const { data, error } = await client.GET("/user/{id}", {
+		params: {
+			path: { id },
+		},
 	});
 
-	if (!response.ok) {
-		const error: HttpException = await response.json();
-		return error;
+	if (!data) {
+		throw error;
 	}
 
-	return true;
+	return data;
 };
 
-const updateUserUsername = async (
-	signInResponse: SignInResponse,
-	dto: ReplaceUsernameDTO,
-): Promise<boolean | HttpException> => {
-	const backendUrl = getServerUrl();
-	const url = `${backendUrl}/user/${signInResponse.user.email}/username`;
-
-	const headers: HeadersInit = {
-		"Content-Type": "application/json",
-		Authorization: `Bearer ${signInResponse.accessToken}`,
-	};
-	const response = await fetch(url, {
-		method: "PUT",
-		headers,
-		body: JSON.stringify(dto),
+const findUsers = async (queryBuilder: RequestQueryBuilder) => {
+	const { data, error } = await client.GET("/user", {
+		params: {
+			query: queryBuilder.queryObject,
+		},
 	});
 
-	if (!response.ok) {
-		const error: HttpException = await response.json();
-		return error;
+	if (!data) {
+		throw error;
 	}
 
-	return true;
+	return data;
 };
 
-const deleteUser = async (oneTimeToken: OneTimeToken): Promise<boolean | HttpException> => {
-	const backendUrl = getServerUrl();
-	const url = `${backendUrl}/user/${oneTimeToken.email}`;
-
-	const headers = {
-		"Content-Type": "application/json",
-		[ONE_TIME_TOKEN_HEADER.X_ONE_TIME_TOKEN_ID]: oneTimeToken.id,
-		[ONE_TIME_TOKEN_HEADER.X_ONE_TIME_TOKEN]: oneTimeToken.token,
+const updateUserPW = async (dto: ReplacePassWordDto) => {
+	const DEFAULT = "default";
+	const params = {
+		path: {
+			id: DEFAULT,
+		},
+		header: {
+			"x-one-time-token-identifier": DEFAULT,
+			"x-one-time-token-value": DEFAULT,
+		},
 	};
-	const response = await fetch(url, {
-		method: "DELETE",
-		headers,
+
+	try {
+		const [signInResponse, oneTimeToken, emailVerificationToken] = await Promise.all([
+			getSignInResponse(),
+			getOneTimeToken(),
+			getEmailVerificationToken(),
+		]);
+		if (signInResponse && oneTimeToken) {
+			params.path.id = signInResponse.user.id;
+			params.header["x-one-time-token-identifier"] = oneTimeToken.id;
+			params.header["x-one-time-token-value"] = oneTimeToken.token;
+		} else if (emailVerificationToken) {
+			params.path.id = emailVerificationToken.user.id;
+			params.header["x-one-time-token-identifier"] = emailVerificationToken.oneTimeToken.id;
+			params.header["x-one-time-token-value"] = emailVerificationToken.oneTimeToken.token;
+		} else {
+			throw createServerActionError("unauthenticated");
+		}
+	} catch (err) {
+		if (!isServerActionError(err)) {
+			serverLogger.error(err);
+			const serverActionError = createServerActionError("serverError");
+			throw serverActionError;
+		}
+
+		throw err;
+	}
+
+	const { data, error } = await client.PUT(`/user/{id}/password`, {
+		body: dto,
+		params,
 	});
 
-	if (!response.ok) {
-		const error: HttpException = await response.json();
-		return error;
+	if (!data) {
+		throw error;
+	}
+
+	await deleteOneTimeToken();
+	await deleteEmailVerificationToken();
+
+	return data;
+};
+
+const updateUserUsername = async (dto: ReplaceUsernameDto) => {
+	const signInResponse = await getSignInResponse();
+
+	if (!signInResponse) {
+		const serverActionError = createServerActionError("unauthenticated");
+		throw serverActionError;
+	}
+
+	const { data, error } = await client.PUT(`/user/{id}/username`, {
+		body: dto,
+		params: {
+			path: {
+				id: signInResponse.user.id,
+			},
+			header: {
+				authorization: getBearerAuth(signInResponse),
+			},
+		},
+	});
+
+	if (!data) {
+		throw error;
+	}
+};
+
+const deleteUser = async () => {
+	const signInResponse = await getSignInResponse();
+
+	if (!signInResponse) {
+		const serverActionError = createServerActionError("unauthenticated");
+		throw serverActionError;
+	}
+
+	const oneTimeToken = await getOneTimeToken();
+
+	if (!oneTimeToken) {
+		const serverActionError = createServerActionError("unauthorized");
+		throw serverActionError;
+	}
+
+	const { data, error } = await client.DELETE("/user/{id}", {
+		params: {
+			path: {
+				id: signInResponse.user.id,
+			},
+			header: {
+				"x-one-time-token-identifier": oneTimeToken.id,
+				"x-one-time-token-value": oneTimeToken.token,
+			},
+		},
+	});
+
+	if (!data) {
+		throw error;
 	}
 
 	await deleteSignInResponse();
 	await deleteOneTimeToken();
-
-	return true;
 };
 
-const recoverUser = async (
-	oneTimeToken: OneTimeToken,
-	email: string,
-): Promise<boolean | HttpException> => {
-	const backendUrl = getServerUrl();
-	const url = `${backendUrl}/user/recover/${email}`;
-	const headers = {
-		"Content-Type": "application/json",
-		[ONE_TIME_TOKEN_HEADER.X_ONE_TIME_TOKEN_ID]: oneTimeToken.id,
-		[ONE_TIME_TOKEN_HEADER.X_ONE_TIME_TOKEN]: oneTimeToken.token,
-	};
-	const response = await fetch(url, {
-		method: "PATCH",
-		headers,
+const recoverUser = async () => {
+	const emailVerificationToken = await getEmailVerificationToken();
+
+	if (!emailVerificationToken) {
+		const serverActionError = createServerActionError("unauthorized");
+		throw serverActionError;
+	}
+	const { oneTimeToken, user } = emailVerificationToken;
+
+	const { data, error } = await client.PUT("/user/recover/{id}", {
+		params: {
+			path: {
+				id: user.id,
+			},
+			header: {
+				"x-one-time-token-identifier": oneTimeToken.id,
+				"x-one-time-token-value": oneTimeToken.token,
+			},
+		},
 	});
 
-	if (!response.ok) {
-		const error: HttpException = await response.json();
-		return error;
+	if (!data) {
+		throw error;
 	}
-
-	return true;
 };
 
-export const signUpAction = cookieWithErrorHandler(getOneTimeTokenOrRedirect, "signUp", signUp);
+export const signUpAction = withErrorHandler("signUp", signUp);
 
 export const getUserAction = withErrorHandler("getUser", getUser);
 
 export const findUsersAction = withErrorHandler("findUsers", findUsers);
 
-export const updateUserPWAction = cookieWithErrorHandler(
-	getOneTimeTokenOrRedirect,
-	"updateUserPW",
-	updateUserPW,
-);
+export const updateUserPWAction = withErrorHandler("updateUserPW", updateUserPW);
 
-export const updateUserUsernameAction = cookieWithErrorHandler(
-	getSignInResponseOrRedirect,
-	"updateUserUsername",
-	updateUserUsername,
-);
+export const updateUserUsernameAction = withErrorHandler("updateUserUsername", updateUserUsername);
 
-export const deleteUserAction = cookieWithErrorHandler(
-	getOneTimeTokenOrRedirect,
-	"deleteUser",
-	deleteUser,
-);
-export const recoverUserAction = cookieWithErrorHandler(
-	getOneTimeTokenOrRedirect,
-	"recoverUser",
-	recoverUser,
-);
+export const deleteUserAction = withErrorHandler("deleteUser", deleteUser);
+export const recoverUserAction = withErrorHandler("recoverUser", recoverUser);

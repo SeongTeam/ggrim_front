@@ -1,30 +1,27 @@
 "use server";
 import { CondOperator, RequestQueryBuilder } from "@dataui/crud-request";
-import { getServerUrl, withErrorHandler } from "../_common/lib";
-import { HttpException, IPaginationResult } from "../_common/dto";
-import { Style } from "./type";
+import { withErrorHandler } from "../_common/middleware";
+import { PaginationResponse } from "../_common/type";
+import { ShowStyle } from "../../../generated/dto-types";
+import { client } from "../_common/util";
 
 const getStyles = async (
 	queryBuilder: RequestQueryBuilder,
-): Promise<IPaginationResult<Style> | HttpException> => {
-	const backendUrl = getServerUrl();
-	const url = `${backendUrl}/painting/style`;
-	const response = await fetch(url + `?${queryBuilder.query()}`);
+): Promise<PaginationResponse<ShowStyle>> => {
+	const { data, error } = await client.GET("/painting/style", {
+		params: {
+			query: queryBuilder.queryObject,
+		},
+	});
 
-	if (!response.ok) {
-		const error: HttpException = await response.json();
-		return error;
+	if (!data) {
+		throw error;
 	}
 
-	const result: IPaginationResult<Style> = await response.json();
-	return result;
+	return data;
 };
 
-const findStyles = async (
-	name: string,
-	pageCount = 20,
-	page = 0,
-): Promise<IPaginationResult<Style> | HttpException> => {
+const findStyles = async (name: string, pageCount = 20, page = 0) => {
 	const qb = RequestQueryBuilder.create();
 
 	qb.select(["name"])

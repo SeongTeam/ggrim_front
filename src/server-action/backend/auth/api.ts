@@ -1,195 +1,128 @@
 "use server";
-import { getServerUrl, withErrorHandler } from "../_common/lib";
+import { withErrorHandler } from "../_common/middleware";
 import {
-	CreateOneTimeTokenDTO,
-	requestVerificationDTO,
-	SendOneTimeTokenDTO,
-	VerifyDTO,
-} from "./dto";
-import { OneTimeToken, SignInResponse } from "./type";
-import { deleteSignInResponse, setOneTimeToken, setSignInResponse } from "../_common/cookie";
-import { HttpException } from "../_common/dto";
-import { ONE_TIME_TOKEN_HEADER } from "./header";
+	deleteOneTimeToken,
+	deleteSignInResponse,
+	getOneTimeToken,
+	setEmailVerificationToken,
+	setOneTimeToken,
+	setSignInResponse,
+} from "../_common/cookie";
+import {
+	CreateOneTimeTokenDto,
+	RequestVerificationDto,
+	SendOneTimeTokenDto,
+	VerifyDto,
+} from "../../../generated/dto-types";
+import { getBasicAuth } from "./util";
+import { client, createServerActionError } from "../_common/util";
 
-//TODO : 사용자 정보를 반환하도록 수정하기
-const signIn = async (id: string, password: string): Promise<boolean | HttpException> => {
-	const backendUrl = getServerUrl();
-	const url = `${backendUrl}/auth/sign-in`;
-	const credentials = btoa(`${id}:${password}`);
-	const headers = {
-		Authorization: `Basic ${credentials}`,
-		"Content-Type": "application/json",
-	};
-
-	const response = await fetch(url, {
-		method: "POST",
-		headers,
+const signIn = async (id: string, password: string) => {
+	const { data, error } = await client.POST("/auth/sign-in", {
+		params: {
+			header: {
+				authorization: getBasicAuth(id, password),
+			},
+		},
 	});
 
-	if (!response.ok) {
-		const error: HttpException = await response.json();
-		return error;
+	if (!data) {
+		throw error;
 	}
 
-	const result: SignInResponse = await response.json();
+	setSignInResponse(data);
 
-	setSignInResponse(result);
-
-	return true;
+	return data;
 };
 
-const requestVerification = async (
-	dto: requestVerificationDTO,
-): Promise<boolean | HttpException> => {
-	const backendUrl = getServerUrl();
-	const url = `${backendUrl}/auth/request-verification`;
-	const headers = {
-		"Content-Type": "application/json",
-	};
-
-	const response = await fetch(url, {
-		method: "POST",
-		headers,
-		body: JSON.stringify(dto),
+const sendPinCode = async (dto: RequestVerificationDto) => {
+	const { data, error } = await client.POST("/auth/send-pin-code", {
+		body: dto,
 	});
 
-	if (!response.ok) {
-		const error: HttpException = await response.json();
-		return error;
+	if (!data) {
+		throw error;
 	}
-
-	return true;
 };
 
-const verifyEmail = async (dto: VerifyDTO): Promise<boolean | HttpException> => {
-	const backendUrl = getServerUrl();
-	const url = `${backendUrl}/auth/verify`;
-	const headers = {
-		"Content-Type": "application/json",
-	};
-
-	const response = await fetch(url, {
-		method: "POST",
-		headers,
-		body: JSON.stringify(dto),
+const verifyPinCode = async (dto: VerifyDto) => {
+	const { data, error } = await client.POST("/auth/verify-pin-code", {
+		body: dto,
 	});
 
-	if (!response.ok) {
-		const error: HttpException = await response.json();
-		return error;
+	if (!data) {
+		throw error;
 	}
 
-	const result: OneTimeToken = await response.json();
-
-	await setOneTimeToken(result);
-
-	return true;
+	await setOneTimeToken(data);
 };
 
-const generateSecurityToken = async (
-	id: string,
-	password: string,
-	dto: CreateOneTimeTokenDTO,
-): Promise<boolean | HttpException> => {
-	const backendUrl = getServerUrl();
-	const url = `${backendUrl}/auth/security-token`;
-	const credentials = btoa(`${id}:${password}`);
-	const headers = {
-		Authorization: `Basic ${credentials}`,
-		"Content-Type": "application/json",
-	};
-	const response = await fetch(url, {
-		method: "POST",
-		headers,
-		body: JSON.stringify(dto),
+const generateSecurityToken = async (id: string, password: string, dto: CreateOneTimeTokenDto) => {
+	const { data, error } = await client.POST("/auth/security-token", {
+		params: {
+			header: {
+				authorization: getBasicAuth(id, password),
+			},
+		},
+		body: dto,
 	});
 
-	if (!response.ok) {
-		const error: HttpException = await response.json();
-		return error;
+	if (!data) {
+		throw error;
 	}
 
-	const result: OneTimeToken = await response.json();
-
-	await setOneTimeToken(result);
-
-	return true;
+	await setOneTimeToken(data);
 };
 
-const sendSecurityTokenToEmail = async (
-	dto: SendOneTimeTokenDTO,
-): Promise<boolean | HttpException> => {
-	const backendUrl = getServerUrl();
-	const url = `${backendUrl}/auth/security-token/email-verification`;
-	const headers = {
-		"Content-Type": "application/json",
-	};
-
-	const response = await fetch(url, {
-		method: "POST",
-		headers,
-		body: JSON.stringify(dto),
+const mailSecurityToken = async (dto: SendOneTimeTokenDto) => {
+	const { data, error } = await client.POST("/auth/security-token/email", {
+		body: dto,
 	});
 
-	if (!response.ok) {
-		const error: HttpException = await response.json();
-		return error;
+	if (!data) {
+		throw error;
 	}
-
-	return true;
 };
 
-const generateSecurityTokenByEmailVerification = async (
-	dto: CreateOneTimeTokenDTO,
-	accessToken: string,
-	identifier: string,
-): Promise<boolean | HttpException> => {
-	const backendUrl = getServerUrl();
-	const url = `${backendUrl}/auth/security-token/from-email-verification`;
-	const headers = {
-		"Content-Type": "application/json",
-		[ONE_TIME_TOKEN_HEADER.X_ONE_TIME_TOKEN]: accessToken,
-		[ONE_TIME_TOKEN_HEADER.X_ONE_TIME_TOKEN_ID]: identifier,
-	};
-	const response = await fetch(url, {
-		method: "POST",
-		headers,
-		body: JSON.stringify(dto),
+const generateSecurityTokenByEmailVerification = async (dto: CreateOneTimeTokenDto) => {
+	const oneTimeToken = await getOneTimeToken();
+
+	if (!oneTimeToken) {
+		const serverActionError = createServerActionError("unauthorized");
+		throw serverActionError;
+	}
+	const { data, error } = await client.POST("/auth/security-token/email-verification", {
+		params: {
+			header: {
+				"x-one-time-token-identifier": oneTimeToken.id,
+				"x-one-time-token-value": oneTimeToken.token,
+			},
+		},
+		body: dto,
 	});
 
-	if (!response.ok) {
-		const error: HttpException = await response.json();
-		return error;
+	if (!data) {
+		throw error;
 	}
 
-	const result: OneTimeToken = await response.json();
-
-	await setOneTimeToken(result);
-
-	return true;
+	await setEmailVerificationToken(data);
 };
 
 const signOut = async () => {
-	deleteSignInResponse();
+	await Promise.allSettled([deleteSignInResponse(), deleteOneTimeToken()]);
 };
 
 export const signInAction = withErrorHandler("signIn", signIn);
 
-export const requestVerificationAction = withErrorHandler(
-	"requestVerification",
-	requestVerification,
-);
-export const verifyEmailAction = withErrorHandler("verifyEmail", verifyEmail);
+export const sendPinCodeAction = withErrorHandler("sendPinCode", sendPinCode);
+export const verifyPinCodeAction = withErrorHandler("verifyPinCode", verifyPinCode);
 
 export const generateSecurityTokenAction = withErrorHandler(
 	"generateSecurityToken",
 	generateSecurityToken,
 );
 
-export const sendSecurityTokenToEmailAction = withErrorHandler(
-	"sendSecurityTokenToEmail",
-	sendSecurityTokenToEmail,
-);
+export const mailSecurityTokenAction = withErrorHandler("mailSecurityToken", mailSecurityToken);
 
 export const generateSecurityTokenByEmailVerificationAction = withErrorHandler(
 	"generateSecurityTokenByEmailVerification",

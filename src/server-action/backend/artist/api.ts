@@ -1,30 +1,26 @@
 "use server";
 import { CondOperator, RequestQueryBuilder } from "@dataui/crud-request";
-import { HttpException, IPaginationResult } from "../_common/dto";
-import { getServerUrl, withErrorHandler } from "../_common/lib";
-import { Artist } from "./dto";
+import { PaginationResponse } from "../_common/type";
+import { client, withErrorHandler } from "../_common/middleware";
+import { ShowArtistResponse } from "../../../generated/dto-types";
 
 const getArtists = async (
 	queryBuilder: RequestQueryBuilder,
-): Promise<IPaginationResult<Artist> | HttpException> => {
-	const backendUrl = getServerUrl();
-	const url = `${backendUrl}/artist`;
-	const response = await fetch(url + `?${queryBuilder.query()}`);
+): Promise<PaginationResponse<ShowArtistResponse>> => {
+	const { data, error } = await client.GET("/artist", {
+		params: {
+			query: queryBuilder.queryObject,
+		},
+	});
 
-	if (!response.ok) {
-		const error: HttpException = await response.json();
-		return error;
+	if (!data) {
+		throw error;
 	}
 
-	const result: IPaginationResult<Artist> = await response.json();
-	return result;
+	return data;
 };
 
-const findArtists = async (
-	name: string,
-	pageCount = 20,
-	page = 0,
-): Promise<IPaginationResult<Artist> | HttpException> => {
+const findArtists = async (name: string, pageCount = 20, page = 0) => {
 	const qb = RequestQueryBuilder.create();
 
 	qb.select(["name"])
