@@ -2022,7 +2022,9 @@ export interface operations {
 				/** @description oneTimeToken identifier */
 				"x-one-time-token-identifier": string;
 			};
-			path?: never;
+			path: {
+				id: string;
+			};
 			cookie?: never;
 		};
 		requestBody?: never;
@@ -2218,7 +2220,9 @@ export interface operations {
 				/** @description oneTimeToken identifier */
 				"x-one-time-token-identifier": string;
 			};
-			path?: never;
+			path: {
+				id: string;
+			};
 			cookie?: never;
 		};
 		requestBody: {
@@ -2274,7 +2278,9 @@ export interface operations {
 				/** @description bear authorization header */
 				authorization: string;
 			};
-			path?: never;
+			path: {
+				id: string;
+			};
 			cookie?: never;
 		};
 		requestBody: {
@@ -2390,7 +2396,9 @@ export interface operations {
 				/** @description oneTimeToken identifier */
 				"x-one-time-token-identifier": string;
 			};
-			path?: never;
+			path: {
+				id: string;
+			};
 			cookie?: never;
 		};
 		requestBody?: never;
