@@ -26,7 +26,7 @@ import { HttpException } from "../../../generated/dto-types";
 export function withErrorHandler<T extends (...args: any[]) => Promise<any>>(
 	actionName: string,
 	action: T,
-): (...args: Parameters<T>) => Promise<Awaited<ReturnType<T>> | ServerActionError> {
+): (...args: Parameters<T>) => Promise<Awaited<ReturnType<T>>> {
 	return async (...args: Parameters<T>) => {
 		const requestId = getRequestId();
 		try {
@@ -37,28 +37,15 @@ export function withErrorHandler<T extends (...args: any[]) => Promise<any>>(
 			if (isServerActionError(err)) {
 				handleServerActionError(requestId, actionName, err);
 			} else if (isServerException(err)) {
-				return handleBackendServerException(requestId, actionName, err);
+				handleBackendServerException(requestId, actionName, err);
 			} else if (isHttpException(err)) {
-				return handleHttpException(requestId, actionName, err);
+				handleHttpException(requestId, actionName, err);
 			}
 
-			return handleUnexpectedError(requestId, actionName, err);
+			handleUnexpectedError(requestId, actionName, err);
 		}
 	};
 }
-
-// type TailParameters<T> = T extends (cookie: any, ...args: infer R) => any ? R : never;
-
-// export function cookieWithErrorHandler<C, T extends (cookie: C, ...args: any[]) => Promise<any>>(
-// 	getCookie: () => Promise<C>,
-// 	actionName: string,
-// 	action: T,
-// ): (...args: TailParameters<T>) => Promise<Awaited<ReturnType<T>> | ServerActionError> {
-// 	return async (...args: TailParameters<T>) => {
-// 		const cookie = await getCookie();
-// 		return withErrorHandler(actionName, () => action(cookie, ...args))();
-// 	};
-// }
 
 function handleServerActionError(
 	requestId: string | undefined,
@@ -68,14 +55,10 @@ function handleServerActionError(
 	serverLogger.error(
 		`[${requestId}] ${actionName}() fail. ServerActionError: ${JSON.stringify(err, null, 2)}`,
 	);
-	return err;
+	throw err;
 }
 
-function handleUnexpectedError(
-	requestId: string | undefined,
-	actionName: string,
-	err: unknown,
-): ServerActionError {
+function handleUnexpectedError(requestId: string | undefined, actionName: string, err: unknown) {
 	let message = "Unknown server error";
 	let stack = "handleUnexpectedError() stack trace not available";
 
@@ -86,7 +69,7 @@ function handleUnexpectedError(
 	serverLogger.error(`[${requestId}] ${actionName}() fail. UnexpectedError: ${message}
 		Stack: ${stack}`);
 
-	return createServerActionError("serverError");
+	throw createServerActionError("serverError");
 }
 
 function handleHttpException(
@@ -95,7 +78,12 @@ function handleHttpException(
 	err: HttpException,
 ): ServerActionError {
 	serverLogger.error(`[${requestId}] ${actionName}() fail. HttpException: ${err.message}`);
-	return createServerActionError("backendError");
+
+	if (err.statusCode >= 400 && err.statusCode < 500) {
+		throw createServerActionError("clientError", err);
+	}
+
+	throw createServerActionError("backendError");
 }
 
 function handleBackendServerException(
@@ -106,5 +94,5 @@ function handleBackendServerException(
 	serverLogger.error(
 		`[${requestId}] ${actionName}() fail. ServerException: ${JSON.stringify(err, null, 2)}`,
 	);
-	return createServerActionError("backendError");
+	throw createServerActionError("backendError");
 }

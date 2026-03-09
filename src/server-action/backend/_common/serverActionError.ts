@@ -1,6 +1,8 @@
 export const SERVER_ACTION_ERROR_MSG = {
 	unauthorized: "Unauthorized: You do not have permission to perform this action.",
 	unauthenticated: "Unauthenticated: You need to be authenticated to perform this action.",
+	clientError:
+		"Client Error: An error occurred while processing your request. Please check your input and try again.",
 	backendError: "Backend Error: An unexpected error occurred on the backend server.",
 	serverError: "Server Error: An unexpected error occurred while processing your request.",
 } as const;
