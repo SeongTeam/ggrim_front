@@ -6,7 +6,7 @@ import { isServerActionError } from "@/server-action/backend/_common/serverActio
 import toast from "react-hot-toast";
 
 export interface PasswordUpdateFormProps {
-	formAction: (password: string) => Promise<boolean>;
+	formAction: (password: string) => Promise<void>;
 	NextRoute: string;
 }
 
