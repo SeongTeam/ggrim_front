@@ -8,7 +8,7 @@ import { AutocompleteList } from "./AutoCompleteList";
 interface SearchBarProps {
 	onSearch: (query: string) => void;
 	defaultValue?: string;
-	inputRef: RefObject<HTMLInputElement>;
+	inputRef: RefObject<HTMLInputElement | null>;
 }
 export const SearchBar = ({ onSearch, defaultValue, inputRef }: SearchBarProps) => {
 	const { inputState, autoCompleteState, suggestionsRef, autoCompleteDispatch, handlers } =

@@ -1,5 +1,5 @@
 import { Minus, Plus } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type JSX } from "react";
 
 export interface InsertToggleInputProps {
 	handleAdd: (value: string) => Promise<boolean>;

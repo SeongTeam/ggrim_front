@@ -21,14 +21,14 @@ import { isServerActionError } from "@/server-action/backend/_common/serverActio
 interface UseSearchBarProps {
 	onSearch: (query: string) => void;
 	defaultValue?: string;
-	inputRef: RefObject<HTMLInputElement>;
+	inputRef: RefObject<HTMLInputElement | null>;
 	debounceMs?: number;
 }
 
 interface UseSearchBarReturn {
 	inputState: InputState;
 	autoCompleteState: AutoCompleteState;
-	suggestionsRef: RefObject<HTMLDivElement>;
+	suggestionsRef: RefObject<HTMLDivElement | null>;
 	autoCompleteDispatch: Dispatch<AutoCompleteAction>;
 	handlers: {
 		onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;

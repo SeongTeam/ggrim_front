@@ -17,7 +17,7 @@ export interface SignInInfo {
 }
 
 export async function getOneTimeToken(): Promise<ShowOneTimeTokenResponse | undefined> {
-	const cookieStore = cookies();
+	const cookieStore = await cookies();
 	const oneTimeToken = cookieStore.get(COOKIE_KEY.ONE_TIME_TOKEN)?.value;
 
 	if (!oneTimeToken) {
@@ -28,7 +28,7 @@ export async function getOneTimeToken(): Promise<ShowOneTimeTokenResponse | unde
 }
 
 export async function getSignInResponse(): Promise<SignInResponse | undefined> {
-	const cookieStore = cookies();
+	const cookieStore = await cookies();
 	const signInResponse = cookieStore.get(COOKIE_KEY.SIGN_IN_RESPONSE)?.value;
 
 	if (!signInResponse) {
@@ -39,7 +39,7 @@ export async function getSignInResponse(): Promise<SignInResponse | undefined> {
 }
 
 export async function setOneTimeToken(oneTimeToken: ShowOneTimeTokenResponse): Promise<void> {
-	const cookieStore = cookies();
+	const cookieStore = await cookies();
 	cookieStore.set(COOKIE_KEY.ONE_TIME_TOKEN, JSON.stringify(oneTimeToken), {
 		maxAge: 15 * 60, // 확인필요
 		secure: Boolean(process.env.COOKIE_SECURE) ?? true,
@@ -49,7 +49,7 @@ export async function setOneTimeToken(oneTimeToken: ShowOneTimeTokenResponse): P
 }
 
 export async function setSignInResponse(signInResponse: SignInResponse): Promise<void> {
-	const cookieStore = cookies();
+	const cookieStore = await cookies();
 	cookieStore.set(COOKIE_KEY.SIGN_IN_RESPONSE, JSON.stringify(signInResponse), {
 		maxAge: 2 * 60 * 60, // 확인필요
 		secure: Boolean(process.env.COOKIE_SECURE) ?? true,
@@ -58,7 +58,7 @@ export async function setSignInResponse(signInResponse: SignInResponse): Promise
 	});
 }
 export async function getEmailVerificationToken() {
-	const cookieStore = cookies();
+	const cookieStore = await cookies();
 	const emailVerificationToken = cookieStore.get(COOKIE_KEY.EMAIL_VERIFICATION_TOKEN)?.value;
 
 	if (!emailVerificationToken) {
@@ -71,7 +71,7 @@ export async function getEmailVerificationToken() {
 export async function setEmailVerificationToken(
 	emailVerificationToken: EmailVerificationTokenResponse,
 ) {
-	const cookieStore = cookies();
+	const cookieStore = await cookies();
 	cookieStore.set(COOKIE_KEY.EMAIL_VERIFICATION_TOKEN, JSON.stringify(emailVerificationToken), {
 		maxAge: 15 * 60, // 확인필요
 		secure: Boolean(process.env.COOKIE_SECURE) ?? true,
@@ -81,19 +81,19 @@ export async function setEmailVerificationToken(
 }
 
 export async function deleteSignInResponse(): Promise<ResponseCookies> {
-	const cookieStore = cookies();
+	const cookieStore = await cookies();
 	const result = cookieStore.delete(COOKIE_KEY.SIGN_IN_RESPONSE);
 	return result;
 }
 //TODO oneTimeToken 사용 성공시, 반드시 삭제하자.
 export async function deleteOneTimeToken(): Promise<ResponseCookies> {
-	const cookieStore = cookies();
+	const cookieStore = await cookies();
 	const result = cookieStore.delete(COOKIE_KEY.ONE_TIME_TOKEN);
 	return result;
 }
 
 export async function deleteEmailVerificationToken(): Promise<ResponseCookies> {
-	const cookieStore = cookies();
+	const cookieStore = await cookies();
 	const result = cookieStore.delete(COOKIE_KEY.EMAIL_VERIFICATION_TOKEN);
 	return result;
 }

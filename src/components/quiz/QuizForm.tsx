@@ -1,5 +1,5 @@
 "use client";
-import { FormEvent, useCallback, useEffect, useReducer, useState } from "react";
+import { FormEvent, useCallback, useEffect, useReducer, useState, type JSX } from "react";
 import { Card } from "../common/Card";
 import { useRouter } from "next/navigation";
 import { AlertModal } from "../modal/AlertModal";

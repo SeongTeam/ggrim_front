@@ -8,17 +8,18 @@ import {
 } from "@/server-action/backend/_common/serverActionError";
 
 interface QuizEditPageProps {
-	params: { id: string };
+	params: Promise<{ id: string }>;
 }
 
-export default async function QuizEditPage({ params }: QuizEditPageProps) {
-	const { quiz, message } = await fetchQuizEditData(params.id);
+export default async function QuizEditPage(props: QuizEditPageProps) {
+    const params = await props.params;
+    const { quiz, message } = await fetchQuizEditData(params.id);
 
-	if (message) {
+    if (message) {
 		return <ErrorModal message={message} />;
 	}
 
-	return (
+    return (
 		<div className="mt-10 px-40 pt-10">
 			<div className="rounded-lg bg-zinc-800 pt-10">
 				<h2 className="mb-6 text-center text-2xl font-bold text-white">Edit Quiz</h2>

@@ -69,7 +69,7 @@ function getURL(input: string): string {
 }
 
 interface SearchPaintingBarProps {
-	inputRef: RefObject<HTMLInputElement>;
+	inputRef: RefObject<HTMLInputElement | null>;
 }
 
 // TODO: <SearchPaintingBar /> 기능 개선
