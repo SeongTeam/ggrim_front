@@ -3,7 +3,6 @@ import { withErrorHandler } from "../_common/middleware";
 import {
 	deleteOneTimeToken,
 	deleteSignInResponse,
-	getOneTimeToken,
 	setEmailVerificationToken,
 	setOneTimeToken,
 	setSignInResponse,
@@ -15,13 +14,13 @@ import {
 	VerifyDto,
 } from "../../../generated/dto-types";
 import { getBasicAuth } from "./util";
-import { client, createServerActionError } from "../_common/util";
+import { client } from "../_common/util";
 
-const signIn = async (id: string, password: string) => {
+const signIn = async (email: string, password: string) => {
 	const { data, error } = await client.POST("/auth/sign-in", {
 		params: {
 			header: {
-				authorization: getBasicAuth(id, password),
+				authorization: getBasicAuth(email, password),
 			},
 		},
 	});
@@ -31,8 +30,6 @@ const signIn = async (id: string, password: string) => {
 	}
 
 	setSignInResponse(data);
-
-	return data;
 };
 
 const sendPinCode = async (dto: RequestVerificationDto) => {
@@ -84,18 +81,16 @@ const mailSecurityToken = async (dto: SendOneTimeTokenDto) => {
 	}
 };
 
-const generateSecurityTokenByEmailVerification = async (dto: CreateOneTimeTokenDto) => {
-	const oneTimeToken = await getOneTimeToken();
-
-	if (!oneTimeToken) {
-		const serverActionError = createServerActionError("unauthorized");
-		throw serverActionError;
-	}
+const generateSecurityTokenByEmailVerification = async (
+	dto: CreateOneTimeTokenDto,
+	tokenId: string,
+	tokenValue: string,
+) => {
 	const { data, error } = await client.POST("/auth/security-token/email-verification", {
 		params: {
 			header: {
-				"x-one-time-token-identifier": oneTimeToken.id,
-				"x-one-time-token-value": oneTimeToken.token,
+				"x-one-time-token-identifier": tokenId,
+				"x-one-time-token-value": tokenValue,
 			},
 		},
 		body: dto,
