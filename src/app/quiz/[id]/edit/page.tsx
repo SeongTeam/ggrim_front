@@ -5,7 +5,7 @@ import { getSignInResponse } from "../../../../server-action/backend/_common/coo
 import {
 	createServerActionError,
 	isServerActionError,
-} from "../../../../server-action/backend/_common/util";
+} from "@/server-action/backend/_common/serverActionError";
 
 interface QuizEditPageProps {
 	params: { id: string };

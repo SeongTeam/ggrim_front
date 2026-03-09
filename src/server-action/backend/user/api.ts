@@ -16,7 +16,8 @@ import {
 } from "../../../generated/dto-types";
 import { getBearerAuth } from "../auth/util";
 import { serverLogger } from "../../../util/serverLogger";
-import { client, createServerActionError, isServerActionError } from "../_common/util";
+import { client } from "../_common/util";
+import { createServerActionError, isServerActionError } from "../_common/serverActionError";
 
 const signUp = async (dto: CreateUserDto) => {
 	const oneTimeToken = await getOneTimeToken();

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { isServerActionError } from "../../server-action/backend/_common/util";
+import { isServerActionError } from "@/server-action/backend/_common/serverActionError";
 
 interface EmailFormProp {
 	emailFormAction: (email: string) => Promise<void>;

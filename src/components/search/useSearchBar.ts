@@ -14,7 +14,7 @@ import {
 import { useDebounceCallback } from "../../hooks/useDebounceCallback";
 import { AutoCompleteAction, AutoCompleteState, InputAction, InputState } from "./type";
 import { PaginationResponse } from "../../server-action/backend/_common/type";
-import { isServerActionError } from "../../server-action/backend/_common/util";
+import { isServerActionError } from "@/server-action/backend/_common/serverActionError";
 
 // Constants
 

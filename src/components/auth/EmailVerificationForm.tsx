@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { sendPinCodeAction, verifyPinCodeAction } from "../../server-action/backend/auth/api";
-import { isServerActionError } from "../../server-action/backend/_common/util";
+import { isServerActionError } from "@/server-action/backend/_common/serverActionError";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 

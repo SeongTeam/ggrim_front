@@ -7,7 +7,7 @@ import { PaintingDetailView } from "./PaintingDetailView";
 import { useSearchParams } from "next/navigation";
 import { throttle } from "../../util/optimization";
 import { findPaintingAction, getPaintingAction } from "../../server-action/backend/painting/api";
-import { isHttpException, isServerActionError } from "../../server-action/backend/_common/util";
+import { isServerActionError } from "@/server-action/backend/_common/serverActionError";
 import { PaginationResponse } from "../../server-action/backend/_common/type";
 import { ShowPainting, ShowPaintingResponse } from "../../generated/dto-types";
 import toast from "react-hot-toast";
@@ -63,29 +63,33 @@ export const PaintingCardGrid = (props: PaintingCardGridProps): React.JSX.Elemen
 			const searchArtist: string = searchParam.get("artist") || "";
 			const searchTags: string[] = searchParam.getAll("tags[]") || [];
 			const searchStyles: string[] = searchParam.getAll("styles[]") || [];
+
 			console.log(`load ${findResultRef.current.page + 1} page`);
-			const response = await findPaintingAction(
-				searchTitle,
-				searchArtist,
-				searchTags,
-				searchStyles,
-				findResultRef.current.page + 1,
-			);
+			try {
+				const response = await findPaintingAction(
+					searchTitle,
+					searchArtist,
+					searchTags,
+					searchStyles,
+					findResultRef.current.page + 1,
+				);
 
-			if (isServerActionError(response)) {
-				throw new Error(response.message);
-			} else if (isHttpException(response)) {
-				const errorMessage = Array.isArray(response.message)
-					? response.message.join("\n")
-					: response.message;
+				findResultRef.current = response;
+				setSearchPaintings((prev) => [...prev, ...response.data]);
 
-				throw new Error(errorMessage);
+				isLoadingRef.current = false;
+			} catch (error) {
+				if (!isServerActionError(error)) {
+					toast.error("An unexpected error occurred. Please try again later.");
+					throw error;
+				}
+
+				if (error.status === "clientError") {
+					toast.error(JSON.stringify(error.cause, null, 2));
+				} else {
+					toast.error(error.message);
+				}
 			}
-
-			findResultRef.current = response;
-			setSearchPaintings((prev) => [...prev, ...response.data]);
-
-			isLoadingRef.current = false;
 		};
 
 		const handleScroll = () => {

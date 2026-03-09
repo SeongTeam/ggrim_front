@@ -15,7 +15,8 @@ import {
 	SubmitQuizDto,
 } from "../../../generated/dto-types";
 import { getBearerAuth } from "../auth/util";
-import { client, createServerActionError } from "../_common/util";
+import { client } from "../_common/util";
+import { createServerActionError } from "../_common/serverActionError";
 
 // TODO 빌드 오류 개선하기
 // - 해당 API를 사용하는 SSR page는 빌드시, 다음 오류가 발생한다.

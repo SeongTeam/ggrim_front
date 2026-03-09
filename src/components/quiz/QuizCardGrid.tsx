@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { getQuizListAction } from "../../server-action/backend/quiz/api";
 import { PaginationResponse } from "../../server-action/backend/_common/type";
 import { ShowQuiz } from "../../generated/dto-types";
-import { isServerActionError } from "../../server-action/backend/_common/util";
+import { isServerActionError } from "@/server-action/backend/_common/serverActionError";
 import toast from "react-hot-toast";
 
 interface QuizCardGridProps {

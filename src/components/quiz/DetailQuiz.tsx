@@ -9,7 +9,7 @@ import {
 	submitQuizAction,
 } from "../../server-action/backend/quiz/api";
 import { QuizStatus } from "../../server-action/backend/quiz/type";
-import { isServerActionError } from "../../server-action/backend/_common/util";
+import { isServerActionError } from "@/server-action/backend/_common/serverActionError";
 import { getPaintingAction } from "../../server-action/backend/painting/api";
 import { getQuizStatus, saveQuizStatus } from "../../state/browser/quiz";
 import { ErrorModal } from "../modal/ErrorModal";

@@ -10,7 +10,7 @@ import {
 	addQuizReactionsAction,
 	deleteQuizReactionAction,
 } from "../../../server-action/backend/quiz/api";
-import { isServerActionError } from "../../../server-action/backend/_common/util";
+import { isServerActionError } from "@/server-action/backend/_common/serverActionError";
 import toast from "react-hot-toast";
 import { ErrorModal } from "../../modal/ErrorModal";
 import Image from "next/image";

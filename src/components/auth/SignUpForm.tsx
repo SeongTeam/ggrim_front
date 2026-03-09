@@ -4,7 +4,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { signUpAction } from "../../server-action/backend/user/api";
 
-import { isServerActionError } from "../../server-action/backend/_common/util";
+import { isServerActionError } from "@/server-action/backend/_common/serverActionError";
 import { useRouter } from "next/navigation";
 import { GuideModal } from "../modal/GuideModal";
 import { ErrorModal } from "../modal/ErrorModal";

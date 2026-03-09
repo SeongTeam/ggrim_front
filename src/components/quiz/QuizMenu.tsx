@@ -8,7 +8,7 @@ import { deleteQuizAction } from "../../server-action/backend/quiz/api";
 import toast from "react-hot-toast";
 import { SEARCH_LOGIC_ROUTE } from "../../route/search/route";
 import { ShowQuizResponse } from "../../generated/dto-types";
-import { isServerActionError } from "../../server-action/backend/_common/util";
+import { isServerActionError } from "@/server-action/backend/_common/serverActionError";
 
 type QuizMenuProps = {
 	quiz: ShowQuizResponse;

@@ -3,7 +3,7 @@
 import { useState, FormEvent } from "react";
 import { deleteUserAction } from "../../server-action/backend/user/api";
 import toast from "react-hot-toast";
-import { isServerActionError } from "../../server-action/backend/_common/util";
+import { isServerActionError } from "@/server-action/backend/_common/serverActionError";
 import { GuideModal } from "../modal/GuideModal";
 import { useRouter } from "next/navigation";
 import { ErrorModal } from "../modal/ErrorModal";

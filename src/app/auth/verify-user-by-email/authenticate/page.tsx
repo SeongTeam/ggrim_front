@@ -10,7 +10,7 @@ import { ErrorModal } from "../../../../components/modal/ErrorModal";
 import { GuideModal } from "../../../../components/modal/GuideModal";
 import { AUTH_LOGIC_ROUTE } from "../../../../route/auth/route";
 import { ONE_TIME_TOKEN_PURPOSE } from "../../../../generated/dto-types";
-import { isServerActionError } from "../../../../server-action/backend/_common/util";
+import { isServerActionError } from "@/server-action/backend/_common/serverActionError";
 
 interface AuthenticateState {
 	errorMessage: string;

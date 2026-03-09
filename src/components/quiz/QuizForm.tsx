@@ -16,7 +16,7 @@ import {
 	ShowPainting,
 	ShowQuizResponse,
 } from "../../generated/dto-types";
-import { isServerActionError } from "../../server-action/backend/_common/util";
+import { isServerActionError } from "@/server-action/backend/_common/serverActionError";
 import toast from "react-hot-toast";
 
 export interface NewQuiz {
