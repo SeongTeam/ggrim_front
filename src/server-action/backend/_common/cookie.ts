@@ -1,8 +1,6 @@
 "server-only";
 import { cookies } from "next/headers";
 import { ResponseCookies } from "next/dist/compiled/@edge-runtime/cookies";
-import { getUserAction } from "../user/api";
-import { isHttpException, isServerActionError } from "./util";
 import {
 	EmailVerificationTokenResponse,
 	ShowOneTimeTokenResponse,
@@ -98,29 +96,4 @@ export async function deleteEmailVerificationToken(): Promise<ResponseCookies> {
 	const cookieStore = cookies();
 	const result = cookieStore.delete(COOKIE_KEY.EMAIL_VERIFICATION_TOKEN);
 	return result;
-}
-
-//해당 함수가 필요한가? 다른 getSignInResponse 함수면 충분하지 않은가?
-export async function getSignInInfo() {
-	const cookieStore = cookies();
-	const rawSignInResponse = cookieStore.get(COOKIE_KEY.SIGN_IN_RESPONSE)?.value;
-	if (rawSignInResponse) {
-		const signInResponse: SignInResponse = JSON.parse(rawSignInResponse);
-		const { id } = signInResponse.user;
-
-		//TODO: try catch 로직으로 변경하여 예외상황 처리하기
-		//TODO: 에러 로그는 백엔드 응답 로그를 전달하기.
-		const response = await getUserAction(id);
-		if (isServerActionError(response)) {
-			throw new Error("unstable situation");
-		} else if (isHttpException(response)) {
-			throw new Error("unstable situation");
-		}
-
-		const user = response;
-
-		return user;
-	}
-
-	return undefined;
 }
