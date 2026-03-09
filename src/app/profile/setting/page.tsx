@@ -1,22 +1,23 @@
 import AuthFooter from "../../../components/auth/AuthFooter";
 import UpdateUsernameForm from "../../../components/profile/UsernameForm";
-import { getSignInInfo } from "../../../server-action/backend/_common/cookie";
 import { AUTH_LOGIC_ROUTE } from "../../../route/auth/route";
 import { redirect } from "next/navigation";
 import { updateUserUsernameAction } from "../../../server-action/backend/user/api";
+import { getSignInResponse } from "../../../server-action/backend/_common/cookie";
 
 //TODO : 로그인 페이지 개선
 // - [ ] 회원가입 및 비밀번호 찾기 라우팅 로직 적용하기
 export default async function UpdateUsername() {
-	const userInfo = await getSignInInfo();
+	const signInResponse = await getSignInResponse();
 
-	if (!userInfo) {
+	if (!signInResponse) {
 		redirect(AUTH_LOGIC_ROUTE.SIGN_IN);
 	}
+	const { user } = signInResponse;
 
 	const submitHandler = async (username: string) => {
 		"use server";
-		return updateUserUsernameAction({ username });
+		await updateUserUsernameAction({ username });
 	};
 
 	return (
@@ -26,7 +27,7 @@ export default async function UpdateUsername() {
 				<UpdateUsernameForm
 					NextRoute={"/"}
 					submitHandler={submitHandler}
-					initialValue={userInfo.username}
+					initialValue={user.username}
 				/>
 				<AuthFooter state="UPDATE_PASSWORD" />
 			</div>

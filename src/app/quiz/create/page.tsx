@@ -1,11 +1,11 @@
 import { ErrorModal } from "../../../components/modal/ErrorModal";
 import { QuizForm } from "../../../components/quiz/QuizForm";
-import { getSignInInfo } from "../../../server-action/backend/_common/cookie";
+import { getSignInResponse } from "../../../server-action/backend/_common/cookie";
 
 export default async function QuizCreatePage() {
-	const user = await getSignInInfo();
+	const signInResponse = await getSignInResponse();
 
-	if (!user) {
+	if (!signInResponse) {
 		return <ErrorModal message="Need to Sign In" />;
 	}
 

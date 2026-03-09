@@ -3,21 +3,26 @@ import MCQView from "@/components/quiz/mcq/MCQView";
 import { MCQ } from "./mcq/type";
 
 import { useRouter } from "next/navigation";
-import { Painting } from "@/server-action/backend/painting/type";
 import {
 	addQuizContextAction,
 	scheduleQuizAction,
 	submitQuizAction,
 } from "../../server-action/backend/quiz/api";
 import { QuizStatus } from "../../server-action/backend/quiz/type";
-import { isHttpException, isServerActionError } from "../../server-action/backend/_common/util";
-import { DetailQuizDTO, QuizContextDTO } from "../../server-action/backend/quiz/dto";
+import { isServerActionError } from "@/server-action/backend/_common/serverActionError";
 import { getPaintingAction } from "../../server-action/backend/painting/api";
 import { getQuizStatus, saveQuizStatus } from "../../state/browser/quiz";
 import { ErrorModal } from "../modal/ErrorModal";
 import { QuizMenu } from "./QuizMenu";
+import {
+	DetailQuizResponse,
+	QuizContextDto,
+	ShowPainting,
+	ShowPaintingResponse,
+} from "../../generated/dto-types";
+import toast from "react-hot-toast";
 interface DetailQuizProps {
-	detailQuizDTO: DetailQuizDTO;
+	detailQuizDTO: DetailQuizResponse;
 	isOwnerAccess: boolean;
 }
 
@@ -48,18 +53,20 @@ export const DetailQuiz = ({
 
 	const handelNextMCQ = async () => {
 		const status: QuizStatus | undefined = getQuizStatus();
-		const response = await scheduleQuizAction(status);
-
-		if (isHttpException(response)) {
-			const errorMessage = Array.isArray(response.message)
-				? response.message.join("\n")
-				: response.message;
-			throw new Error(errorMessage);
-		} else if (isServerActionError(response)) {
-			throw new Error(response.message);
-		} else {
-			saveQuizStatus(response.status);
-			router.push(`/quiz/${response.shortQuiz.id}`);
+		try {
+			const { endIndex, currentIndex, context, shortQuiz } = await scheduleQuizAction(status);
+			saveQuizStatus({ endIndex, currentIndex, context });
+			router.push(`/quiz/${shortQuiz.id}`);
+		} catch (error) {
+			if (!isServerActionError(error)) {
+				toast.error("An unexpected error occurred. Please try again later.");
+				throw error;
+			}
+			if (error.status === "clientError") {
+				toast.error(JSON.stringify(error.cause, null, 2));
+			} else {
+				toast.error(error.message);
+			}
 		}
 	};
 
@@ -72,7 +79,7 @@ export const DetailQuiz = ({
 	// ! 주의: <경고할 사항>
 	// ? 질문: <의문점 또는 개선 방향>
 	// * 참고: <관련 정보나 링크>
-	const handleImageSelected = async (selectedPainting: Painting) => {
+	const handleImageSelected = async (selectedPainting: ShowPainting) => {
 		const isCorrect = mcq.answerPaintings[0].id === selectedPainting.id;
 		await Promise.all([
 			updatePaintingContext(selectedPainting.id),
@@ -102,33 +109,24 @@ export const DetailQuiz = ({
 	return <ErrorModal message="Not implemented page" />;
 };
 
-const generateQuizContextDTO = (painting: Painting): QuizContextDTO => {
-	const contextDTO: QuizContextDTO = { artist: painting.artist.name, page: 0 };
+const generateQuizContextDTO = (painting: ShowPaintingResponse): QuizContextDto => {
+	const contextDTO: QuizContextDto = { artist: painting.showArtist.name, page: 0 };
 	return contextDTO;
 };
 
 const updatePaintingContext = async (id: string) => {
-	const detailPainting = await getPaintingAction(id);
-	if (isHttpException(detailPainting)) {
-		const errorMessage = Array.isArray(detailPainting.message)
-			? detailPainting.message.join("\n")
-			: detailPainting.message;
-		throw new Error(errorMessage);
-	} else if (isServerActionError(detailPainting)) {
-		throw new Error(detailPainting.message);
-	}
-
-	const response = await addQuizContextAction(generateQuizContextDTO(detailPainting));
-	if (isHttpException(response)) {
-		const errorMessage = Array.isArray(response.message)
-			? response.message.join("\n")
-			: response.message;
-		if (response.statusCode < 500) {
-			alert(errorMessage);
-		} else {
-			throw new Error(errorMessage);
+	try {
+		const detailPainting = await getPaintingAction(id);
+		await addQuizContextAction(generateQuizContextDTO(detailPainting));
+	} catch (error) {
+		if (!isServerActionError(error)) {
+			toast.error("An unexpected error occurred. Please try again later.");
+			throw error;
 		}
-	} else if (isServerActionError(response)) {
-		throw new Error(response.message);
+		if (error.status === "clientError") {
+			toast.error(JSON.stringify(error.cause, null, 2));
+		} else {
+			toast.error(error.message);
+		}
 	}
 };

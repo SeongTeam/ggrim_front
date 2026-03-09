@@ -1,35 +1,25 @@
 import { ErrorModal } from "../../../../components/modal/ErrorModal";
 import { QuizForm } from "../../../../components/quiz/QuizForm";
-import { getSignInInfo } from "../../../../server-action/backend/_common/cookie";
 import { getQuizAction } from "../../../../server-action/backend/quiz/api";
+import { getSignInResponse } from "../../../../server-action/backend/_common/cookie";
 import {
-	isHttpException,
+	createServerActionError,
 	isServerActionError,
-} from "../../../../server-action/backend/_common/util";
+} from "@/server-action/backend/_common/serverActionError";
 
 interface QuizEditPageProps {
-	params: { id: string };
+	params: Promise<{ id: string }>;
 }
 
-export default async function QuizEditPage({ params }: QuizEditPageProps) {
-	const [user, response] = await Promise.all([getSignInInfo(), getQuizAction(params.id)]);
+export default async function QuizEditPage(props: QuizEditPageProps) {
+    const params = await props.params;
+    const { quiz, message } = await fetchQuizEditData(params.id);
 
-	if (!user) {
-		return <ErrorModal message="Need to Sign In" />;
+    if (message) {
+		return <ErrorModal message={message} />;
 	}
 
-	if (isServerActionError(response)) {
-		throw new Error("unstable Situation");
-	} else if (isHttpException(response)) {
-		return <ErrorModal message="Can't Find Quiz" />;
-	}
-	const quiz = response.quiz;
-
-	if (quiz.owner_id !== user.id) {
-		return <ErrorModal message="No Authorized to edit" />;
-	}
-
-	return (
+    return (
 		<div className="mt-10 px-40 pt-10">
 			<div className="rounded-lg bg-zinc-800 pt-10">
 				<h2 className="mb-6 text-center text-2xl font-bold text-white">Edit Quiz</h2>
@@ -38,3 +28,33 @@ export default async function QuizEditPage({ params }: QuizEditPageProps) {
 		</div>
 	);
 }
+
+const fetchQuizEditData = async (id: string) => {
+	try {
+		const [signInResponse, quizActionResponse] = await Promise.all([
+			getSignInResponse(),
+			getQuizAction(id),
+		]);
+
+		if (!signInResponse) {
+			throw createServerActionError("clientError", "Need to Sign In");
+		}
+		const { quiz } = quizActionResponse;
+		const { user } = signInResponse;
+
+		if (quiz.owner.id !== user.id) {
+			throw createServerActionError("clientError", "No Authorized to edit");
+		}
+		return { quiz };
+	} catch (error) {
+		if (!isServerActionError(error)) {
+			throw error;
+		}
+
+		if (error.status === "clientError") {
+			return { message: JSON.stringify(error.cause) };
+		} else {
+			return { message: error.message };
+		}
+	}
+};

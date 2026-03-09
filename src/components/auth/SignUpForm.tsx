@@ -4,8 +4,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { signUpAction } from "../../server-action/backend/user/api";
 
-import { isHttpException, isServerActionError } from "../../server-action/backend/_common/util";
-import { HTTP_STATUS } from "../../server-action/backend/_common/status";
+import { isServerActionError } from "@/server-action/backend/_common/serverActionError";
 import { useRouter } from "next/navigation";
 import { GuideModal } from "../modal/GuideModal";
 import { ErrorModal } from "../modal/ErrorModal";
@@ -50,34 +49,32 @@ export const SignUpForm = () => {
 			toast.error("password is not matched");
 			return;
 		}
-		const toastId = toast.loading(`Signing Up`);
 
-		const response = await signUpAction({
-			username: form.username,
-			password: form.password.trim(),
-		});
-		toast.dismiss(toastId);
-
-		if (isServerActionError(response)) {
-			throw new Error(response.message);
-		} else if (isHttpException(response)) {
-			const { message, statusCode } = response;
-			const errorMessages: string[] = Array.isArray(message) ? message : [message];
-			switch (statusCode) {
-				case HTTP_STATUS.FORBIDDEN:
-				case HTTP_STATUS.BAD_REQUEST:
-					errorMessages.forEach((msg) => toast.error(msg));
-					break;
-				case HTTP_STATUS.UNAUTHORIZED:
-					setForm({ ...initState, errorMessage: errorMessages.join("\n") });
-					break;
-				default:
-					throw new Error(`${response.statusCode}\n` + errorMessages.join("\n"));
-			}
-		} else if (response) {
+		try {
+			await toast.promise(
+				signUpAction({
+					username: form.username,
+					password: form.password.trim(),
+				}),
+				{
+					loading: `Signing Up`,
+				},
+			);
 			setForm({ ...initState, successMessage: "Success Sign Up" });
-		} else {
-			toast.error("invalid access");
+		} catch (error) {
+			if (!isServerActionError(error)) {
+				toast.error("An unexpected error occurred. Please try again later.");
+				throw error;
+			}
+
+			if (error.status === "clientError") {
+				setForm((prev) => ({
+					...prev,
+					errorMessage: JSON.stringify(error.cause, null, 2),
+				}));
+			} else {
+				toast.error(error.message);
+			}
 		}
 	};
 

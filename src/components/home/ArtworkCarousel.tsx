@@ -2,21 +2,20 @@
 
 import { FeaturedImageGallery } from "@/components/home/FeaturedImageGallery";
 import React from "react";
-import { Painting } from "@/server-action/backend/painting/type";
-import { ShortQuiz } from "@/server-action/backend/quiz/type";
 import { QuizCard } from "../quiz/QuizCard";
 import { useRouter } from "next/navigation";
+import { ShowPaintingResponse, ShowQuiz } from "../../generated/dto-types";
 
 interface ArtworkCarouselProps {
-	curatedWorkAttributes: Painting[];
-	quizzes: ShortQuiz[];
+	curatedWorkAttributes: ShowPaintingResponse[];
+	quizzes: ShowQuiz[];
 }
 
 export const ArtworkCarousel = (props: ArtworkCarouselProps) => {
 	const { curatedWorkAttributes, quizzes } = props;
 	const router = useRouter();
 
-	const handleClickCard = (quiz: ShortQuiz) => {
+	const handleClickCard = (quiz: ShowQuiz) => {
 		const url: string = `/quiz/${quiz.id}`;
 		router.push(url);
 	};

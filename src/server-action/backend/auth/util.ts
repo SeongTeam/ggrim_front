@@ -1,5 +1,21 @@
-import { OneTimeTokenPurpose, ONE_TIME_TOKEN_PURPOSE } from "./type";
+import {
+	ONE_TIME_TOKEN_PURPOSE,
+	SEND_ONE_TIME_TOKEN_PURPOSE,
+	SignInResponse,
+} from "../../../generated/dto-types";
 
-export const isOnetimeTokenPurpose = (value: string): value is OneTimeTokenPurpose => {
+export const isOnetimeTokenPurpose = (value: string): value is ONE_TIME_TOKEN_PURPOSE => {
 	return Object.values(ONE_TIME_TOKEN_PURPOSE).some((v) => v === value);
+};
+
+export const isSendOneTimeTokenPurpose = (value: string): value is SEND_ONE_TIME_TOKEN_PURPOSE => {
+	return Object.values(SEND_ONE_TIME_TOKEN_PURPOSE).some((v) => v === value);
+};
+
+export const getBasicAuth = (id: string, password: string) => {
+	return `Basic ${btoa(`${id}:${password}`)}`;
+};
+
+export const getBearerAuth = (signInResponse: SignInResponse) => {
+	return `Bearer ${signInResponse.accessToken}`;
 };

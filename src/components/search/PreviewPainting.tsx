@@ -1,10 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { ShortPainting } from "@/server-action/backend/painting/type";
+import { ShowPainting } from "../../generated/dto-types";
 
 interface PreviewPaintingProps {
-	shortPainting: ShortPainting;
+	shortPainting: ShowPainting;
 }
 
 export const PreviewPainting = ({ shortPainting }: PreviewPaintingProps) => {

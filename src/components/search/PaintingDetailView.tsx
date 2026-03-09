@@ -1,12 +1,12 @@
 "use client";
 import React, { useState } from "react";
-import { Painting } from "@/server-action/backend/painting/type";
 import { ChevronRight, ChevronUp } from "lucide-react";
 import { CopyButton } from "../common/Copybutton";
 import Image from "next/image";
+import { ShowPaintingResponse } from "../../generated/dto-types";
 
 interface PaintingDetailViewProps {
-	painting: Painting | undefined;
+	painting: ShowPaintingResponse | undefined;
 }
 
 // TODO: <PaintingDetailView /> 성능 개선
@@ -45,15 +45,15 @@ export const PaintingDetailView = ({ painting }: PaintingDetailViewProps) => {
 
 			<div className="p-2">
 				<h3 className="mb-8 text-white">{painting.title}</h3>
-				<p className="mt-2 text-sm text-gray-500">Artist : {painting.artist.name}</p>
+				<p className="mt-2 text-sm text-gray-500">Artist : {painting.showArtist.name}</p>
 				<p className="mt-2 text-sm text-gray-500">
 					Size: {painting.width}px × {painting.height}px
 				</p>
 				<p className="mt-2 text-sm text-gray-500">
-					tags: {painting.tags.map((tag) => tag.name).join(", ")}
+					tags: {painting.showTags.map((tag) => tag.name).join(", ")}
 				</p>
 				<p className="mt-2 text-sm text-gray-500">
-					Styles: {painting.styles.map((style) => style.name).join(", ")}
+					Styles: {painting.showStyles.map((style) => style.name).join(", ")}
 				</p>
 				<div className="flex gap-2">
 					<p className="mt-2 text-sm text-gray-500">painting ID: {painting.id}</p>

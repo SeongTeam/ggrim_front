@@ -2,9 +2,9 @@ import { NavbarMenu } from "./NavbarMenu";
 import { SearchPaintingIconMenu } from "./SearchPaintingIconMenu";
 import { NotifyIconMenu } from "./NotificationIconMenu";
 import { ProfileIconMenu } from "./ProfileIconMenu";
-import { getSignInInfo } from "../../server-action/backend/_common/cookie";
-import { User } from "@/server-action/backend/user/type";
 import Link from "next/link";
+import { ShowUserResponse } from "../../generated/dto-types";
+import { getSignInResponse } from "../../server-action/backend/_common/cookie";
 
 // TODO: NavBar UI 개선
 // - [x] 검색창 생성시, NavBar 깜박이는 버그 수정
@@ -17,9 +17,9 @@ import Link from "next/link";
 // * 참고: <관련 정보나 링크>
 
 export const Navbar = async () => {
-	const user: User | undefined = await getSignInInfo();
+	const signInResponse = await getSignInResponse();
+	const user = signInResponse?.user as ShowUserResponse | undefined;
 
-	// console.log(user);
 	return (
 		<nav
 			className={`fixed left-0 top-0 z-50 w-full bg-black/90 shadow-md transition-all duration-300`}

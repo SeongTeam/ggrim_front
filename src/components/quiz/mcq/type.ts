@@ -1,24 +1,27 @@
-import { Painting } from "../../../server-action/backend/painting/type";
-import { QuizReactionCount } from "../../../server-action/backend/quiz/dto";
-import { QuizType, QuizReaction } from "../../../server-action/backend/quiz/type";
+import {
+	QUIZ_REACTION,
+	QUIZ_TYPE,
+	ShowPainting,
+	ShowQuizReactionCount,
+} from "../../../generated/dto-types";
 
 //Multiple-Choice-Question
 
 export interface MCQ {
 	id: string;
-	distractorPaintings: Painting[];
-	answerPaintings: Painting[];
+	distractorPaintings: ShowPainting[];
+	answerPaintings: ShowPainting[];
 	title: string;
 	description: string;
 	timeLimit: number;
-	type: QuizType;
+	type: QUIZ_TYPE;
 }
 
 export interface MCQReaderViewProps {
 	mcq: MCQ;
 	// currentAttributeIndex: number;
 	handelNextMCQ: () => Promise<void>;
-	handleImageSelected?: (selectedPainting: Painting) => Promise<void>;
-	reactionCount: QuizReactionCount;
-	userReaction?: QuizReaction;
+	handleImageSelected?: (selectedPainting: ShowPainting) => Promise<void>;
+	reactionCount: ShowQuizReactionCount;
+	userReaction?: QUIZ_REACTION;
 }

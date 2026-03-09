@@ -1,26 +1,16 @@
-import { BackendHttpException, HttpException, ServerActionError } from "./dto";
+"server-only";
+import createClient from "openapi-fetch";
+import { paths } from "../../../generated/dto-types";
+import { serverLogger } from "../../../util/serverLogger";
 
-export function isHttpException(response: unknown): response is HttpException {
-	const uniqueKey: keyof HttpException = "statusCode";
-
-	return response !== null && typeof response === "object" && uniqueKey in response;
+serverLogger.info(`BACKEND_URL=${process.env.BACKEND_URL} `);
+export function getServerUrl(): string {
+	const url = process.env.BACKEND_URL;
+	if (url === undefined) {
+		serverLogger.error(` 'process.env.BACKEND_URL' not read`);
+		return "";
+	}
+	return url;
 }
 
-export function isBackendHttpException(response: unknown): response is BackendHttpException {
-	const uniqueKeys: (keyof BackendHttpException)[] = ["errorCode", "path", "timeStamp"];
-
-	return (
-		response !== null &&
-		typeof response === "object" &&
-		uniqueKeys.every((key) => key in response)
-	);
-}
-
-export function isServerActionError(response: unknown): response is ServerActionError {
-	const uniqueKeys: (keyof ServerActionError)[] = ["message", "stack"];
-	return (
-		response !== null &&
-		typeof response === "object" &&
-		uniqueKeys.every((key) => key in response)
-	);
-}
+export const client = createClient<paths>({ baseUrl: getServerUrl() });

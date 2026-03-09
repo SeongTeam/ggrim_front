@@ -4,7 +4,6 @@ import { BASE_SUGGESTIONS, QUOTED_BASE_SUGGESTIONS } from "./const";
 import { findArtistsAction } from "../../server-action/backend/artist/api";
 import { findTagsAction } from "../../server-action/backend/tag/api";
 import { findStylesAction } from "../../server-action/backend/style/api";
-import { isHttpException, isServerActionError } from "../../server-action/backend/_common/util";
 import toast from "react-hot-toast";
 import {
 	calculateNewInput,
@@ -12,27 +11,24 @@ import {
 	getInsideDoubleQuotes,
 	parseKeyValue,
 } from "./util";
-import {
-	HttpException,
-	IPaginationResult,
-	ServerActionError,
-} from "../../server-action/backend/_common/dto";
 import { useDebounceCallback } from "../../hooks/useDebounceCallback";
 import { AutoCompleteAction, AutoCompleteState, InputAction, InputState } from "./type";
+import { PaginationResponse } from "../../server-action/backend/_common/type";
+import { isServerActionError } from "@/server-action/backend/_common/serverActionError";
 
 // Constants
 
 interface UseSearchBarProps {
 	onSearch: (query: string) => void;
 	defaultValue?: string;
-	inputRef: RefObject<HTMLInputElement>;
+	inputRef: RefObject<HTMLInputElement | null>;
 	debounceMs?: number;
 }
 
 interface UseSearchBarReturn {
 	inputState: InputState;
 	autoCompleteState: AutoCompleteState;
-	suggestionsRef: RefObject<HTMLDivElement>;
+	suggestionsRef: RefObject<HTMLDivElement | null>;
 	autoCompleteDispatch: Dispatch<AutoCompleteAction>;
 	handlers: {
 		onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -47,9 +43,7 @@ interface UseSearchBarReturn {
 function createServerAction(key: string) {
 	const actionMap: Record<
 		string,
-		(
-			value: string,
-		) => Promise<IPaginationResult<{ name: string }> | HttpException | ServerActionError>
+		(value: string) => Promise<PaginationResponse<{ name: string }>>
 	> = {
 		artist: (value: string) => findArtistsAction(value),
 		style: (value: string) => findStylesAction(value),
@@ -58,7 +52,7 @@ function createServerAction(key: string) {
 
 	return (
 		actionMap[key] ||
-		(async (value: string): Promise<IPaginationResult<{ name: string }>> => ({
+		(async (value: string): Promise<PaginationResponse<{ name: string }>> => ({
 			data: [{ name: value }],
 			count: 0,
 			page: 0,
@@ -207,24 +201,24 @@ export function useSearchBar({
 					break;
 				}
 				const serverAction = createServerAction(param.key);
-				const response = await serverAction(param.value || "");
-
-				if (isServerActionError(response)) {
-					throw new Error(response.message);
+				try {
+					const response = await serverAction(param.value || "");
+					suggestions =
+						response.data.length > 0 ? response.data.map((d) => d.name) : [""];
+					query = param.value || "";
+					break;
+				} catch (error) {
+					if (!isServerActionError(error)) {
+						toast.error("An unexpected error occurred. Please try again later.");
+						throw error;
+					}
+					if (error.status === "clientError") {
+						const message = JSON.stringify(error.cause, null, 2);
+						autoCompleteDispatch({ type: "SET_ERROR", payload: message });
+					} else {
+						toast.error(error.message);
+					}
 				}
-
-				if (isHttpException(response)) {
-					const errorMessage = Array.isArray(response.message)
-						? response.message.join("\n")
-						: response.message;
-					toast.error(errorMessage);
-					autoCompleteDispatch({ type: "SET_ERROR", payload: errorMessage });
-					return;
-				}
-
-				suggestions = response.data.length > 0 ? response.data.map((d) => d.name) : [""];
-				query = param.value || "";
-				break;
 			}
 
 			default:

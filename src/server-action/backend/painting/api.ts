@@ -1,67 +1,70 @@
 "use server";
-import { getServerUrl, withErrorHandler } from "../_common/lib";
-import { FindPaintingResult, Painting } from "./type";
-import { HttpException } from "../_common/dto";
+import { withErrorHandler } from "../_common/middleware";
+import { PaginationResponse } from "../_common/type";
+import { ShowPainting } from "../../../generated/dto-types";
+import { client } from "../_common/util";
 
 // TODO page.tsx 최소화 예정 (데이터 처리 함수 옮길 예정)
-const getWeekArtWorkData = async (): Promise<Painting[] | HttpException> => {
-	// const response = await fetch('http://localhost:4000/api/artwork_week', {
-	//     cache: 'no-cache',
-	// });  // src/data에 파일을 읽어 올 때 사용
-	const serverUrl = getServerUrl();
-	const isS3AccessParam = `isS3Access=true`;
-	const url: string = serverUrl + `/painting/artwork-of-week?${isS3AccessParam}`;
-	const response = await fetch(url, {
-		cache: "no-cache",
-	}); // 서버에 있는 데이터 읽어 올때 사용
+const getWeekArtWorkData = async () => {
+	const { data, error } = await client.GET("/painting/artwork-of-week", {
+		params: {
+			query: {
+				isS3Access: true,
+			},
+		},
+	});
 
-	if (!response.ok) {
-		const error: HttpException = await response.json();
-		return error;
+	if (!data) {
+		throw error;
 	}
 
-	const result = await response.json();
-
-	return result;
+	return data;
 };
 
 const findPainting = async (
 	title: string = "",
-	artist: string = "",
+	artistName: string = "",
 	tags: string[] = [],
 	styles: string[] = [],
 	page: number = 0,
-): Promise<FindPaintingResult | HttpException> => {
-	const backendUrl = getServerUrl();
-	const titleParam = `title=${title}`;
-	const artistParam = `artistName=${artist}`;
-	const tagParam = tags.map((t) => `tags[]=${t}`).join("&");
-	const styleParam = styles.map((s) => `styles[]=${s}`).join("&");
-	const isS3AccessParam = `isS3Access=true`;
-	const url = `${backendUrl}/painting?${isS3AccessParam}&${titleParam}&${artistParam}&${tagParam}&${styleParam}&page=${page}`;
-	const response = await fetch(url);
-	if (!response.ok) {
-		const error: HttpException = await response.json();
-		return error;
+): Promise<PaginationResponse<ShowPainting>> => {
+	const { data, error } = await client.GET("/painting", {
+		params: {
+			query: {
+				artistName: artistName,
+				title: title,
+				tags: tags,
+				styles: styles,
+				page: page,
+				isS3Access: true,
+			},
+		},
+	});
+
+	if (!data) {
+		throw error;
 	}
 
-	const result: FindPaintingResult = await response.json();
-	return result;
+	return data;
 };
 
-const getPainting = async (id: string): Promise<Painting | HttpException> => {
-	const backendUrl = getServerUrl();
-	const isS3AccessParam = `isS3Access=true`;
-	const url = `${backendUrl}/painting/${id}?${isS3AccessParam}`;
-	const response = await fetch(url);
-	const painting: Painting = await response.json();
+const getPainting = async (id: string) => {
+	const { data, error } = await client.GET("/painting/{id}", {
+		params: {
+			path: {
+				id,
+			},
+			query: {
+				isS3Access: true,
+			},
+		},
+	});
 
-	if (!response.ok) {
-		const error: HttpException = await response.json();
-		return error;
+	if (!data) {
+		throw error;
 	}
 
-	return painting;
+	return data;
 };
 
 export const getWeekArtWorkDataAction = withErrorHandler("getWeekArtWorkData", getWeekArtWorkData);

@@ -1,30 +1,25 @@
 "use server";
 import { CondOperator, RequestQueryBuilder } from "@dataui/crud-request";
-import { Tag } from "./type";
-import { getServerUrl, withErrorHandler } from "../_common/lib";
-import { HttpException, IPaginationResult } from "../_common/dto";
+import { withErrorHandler } from "../_common/middleware";
+import { PaginationResponse } from "../_common/type";
+import { ShowTag } from "../../../generated/dto-types";
+import { client } from "../_common/util";
 
-const getTags = async (
-	queryBuilder: RequestQueryBuilder,
-): Promise<IPaginationResult<Tag> | HttpException> => {
-	const backendUrl = getServerUrl();
-	const url = `${backendUrl}/painting/tag`;
-	const response = await fetch(url + `?${queryBuilder.query()}`);
+const getTags = async (queryBuilder: RequestQueryBuilder): Promise<PaginationResponse<ShowTag>> => {
+	const { data, error } = await client.GET("/painting/tag", {
+		params: {
+			query: queryBuilder.queryObject,
+		},
+	});
 
-	if (!response.ok) {
-		const error: HttpException = await response.json();
-		return error;
+	if (!data) {
+		throw error;
 	}
 
-	const result: IPaginationResult<Tag> = await response.json();
-	return result;
+	return data;
 };
 
-const findTags = async (
-	name: string,
-	pageCount = 20,
-	page = 0,
-): Promise<IPaginationResult<Tag> | HttpException> => {
+const findTags = async (name: string, pageCount = 20, page = 0) => {
 	const qb = RequestQueryBuilder.create();
 	const searchName = name.toLocaleUpperCase();
 

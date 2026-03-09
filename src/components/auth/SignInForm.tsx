@@ -2,16 +2,11 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { HTTP_STATUS } from "../../server-action/backend/_common/status";
-import { HttpException, ServerActionError } from "../../server-action/backend/_common/dto";
-import { isHttpException, isServerActionError } from "../../server-action/backend/_common/util";
+import { isServerActionError } from "@/server-action/backend/_common/serverActionError";
 import toast from "react-hot-toast";
 
 export interface SignInFormProps {
-	formAction: (
-		email: string,
-		password: string,
-	) => Promise<boolean | HttpException | ServerActionError>;
+	formAction: (email: string, password: string) => Promise<void>;
 	NextRoute: string;
 }
 
@@ -23,30 +18,20 @@ export const SignInForm = ({ formAction, NextRoute }: SignInFormProps) => {
 	const handleSignIn = async (e: React.FormEvent) => {
 		e.preventDefault();
 
-		const response = await formAction(email, password);
-
-		if (isServerActionError(response)) {
-			throw new Error(response.message);
-		} else if (isHttpException(response)) {
-			const { statusCode } = response;
-			const errorMessage = Array.isArray(response.message)
-				? response.message.join("\n")
-				: response.message;
-
-			switch (statusCode) {
-				case HTTP_STATUS.FORBIDDEN:
-				case HTTP_STATUS.UNAUTHORIZED:
-				case HTTP_STATUS.BAD_REQUEST:
-					toast.error(errorMessage);
-					break;
-				default:
-					throw new Error(`${response.statusCode}\n` + errorMessage);
-			}
-		} else if (response === true) {
+		try {
+			await formAction(email, password);
 			toast.success("success");
 			router.push(NextRoute);
-		} else {
-			toast.error("invalid access");
+		} catch (error) {
+			if (!isServerActionError(error)) {
+				toast.error("An unexpected error occurred. Please try again later.");
+				throw error;
+			}
+			if (error.status === "clientError") {
+				toast.error(JSON.stringify(error.cause, null, 2));
+			} else {
+				toast.error(error.message);
+			}
 		}
 	};
 
