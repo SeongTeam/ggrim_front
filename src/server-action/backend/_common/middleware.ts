@@ -1,6 +1,5 @@
 "server-only";
 import { serverLogger } from "../../../util/serverLogger";
-import { getRequestId } from "../../../util/request";
 import { createServerActionError, ServerActionError } from "./serverActionError";
 import { isServerActionError } from "./serverActionError";
 import { HttpException, ServiceException } from "../../../generated/dto-types";
@@ -23,37 +22,30 @@ export function withErrorHandler<T extends (...args: any[]) => Promise<any>>(
 	action: T,
 ): (...args: Parameters<T>) => Promise<Awaited<ReturnType<T>>> {
 	return async (...args: Parameters<T>) => {
-		const requestId = getRequestId();
 		try {
 			const data = await action(...args);
 
 			return data;
 		} catch (err: unknown) {
 			if (isServerActionError(err)) {
-				handleServerActionError(requestId, actionName, err);
+				handleServerActionError(actionName, err);
 			} else if (isServerException(err)) {
-				handleBackendServerException(requestId, actionName, err);
+				handleBackendServerException(actionName, err);
 			} else if (isHttpException(err)) {
-				handleHttpException(requestId, actionName, err);
+				handleHttpException(actionName, err);
 			}
 
-			handleUnexpectedError(requestId, actionName, err);
+			handleUnexpectedError(actionName, err);
 		}
 	};
 }
 
-function handleServerActionError(
-	requestId: string | undefined,
-	actionName: string,
-	err: ServerActionError,
-): ServerActionError {
-	serverLogger.error(
-		`[${requestId}] ${actionName}() fail. ServerActionError: ${JSON.stringify(err, null, 2)}`,
-	);
+function handleServerActionError(actionName: string, err: ServerActionError): ServerActionError {
+	serverLogger.error(`${actionName}() fail. ServerActionError: ${JSON.stringify(err, null, 2)}`);
 	throw err;
 }
 
-function handleUnexpectedError(requestId: string | undefined, actionName: string, err: unknown) {
+function handleUnexpectedError(actionName: string, err: unknown) {
 	let message = "Unknown server error";
 	let stack = "handleUnexpectedError() stack trace not available";
 
@@ -61,18 +53,14 @@ function handleUnexpectedError(requestId: string | undefined, actionName: string
 		message = err.message;
 		stack = err.stack ?? stack;
 	}
-	serverLogger.error(`[${requestId}] ${actionName}() fail. UnexpectedError: ${message}
+	serverLogger.error(`${actionName}() fail. UnexpectedError: ${message}
 		Stack: ${stack}`);
 
 	throw createServerActionError("serverError");
 }
 
-function handleHttpException(
-	requestId: string | undefined,
-	actionName: string,
-	err: HttpException,
-): ServerActionError {
-	serverLogger.error(`[${requestId}] ${actionName}() fail. HttpException: ${err.message}`);
+function handleHttpException(actionName: string, err: HttpException): ServerActionError {
+	serverLogger.error(`${actionName}() fail. HttpException: ${err.message}`);
 
 	if (err.statusCode >= 400 && err.statusCode < 500) {
 		throw createServerActionError("clientError", err);
@@ -81,14 +69,8 @@ function handleHttpException(
 	throw createServerActionError("backendError");
 }
 
-function handleBackendServerException(
-	requestId: string | undefined,
-	actionName: string,
-	err: HttpException,
-): ServerActionError {
-	serverLogger.error(
-		`[${requestId}] ${actionName}() fail. ServerException: ${JSON.stringify(err, null, 2)}`,
-	);
+function handleBackendServerException(actionName: string, err: HttpException): ServerActionError {
+	serverLogger.error(` ${actionName}() fail. ServerException: ${JSON.stringify(err, null, 2)}`);
 	throw createServerActionError("backendError");
 }
 
