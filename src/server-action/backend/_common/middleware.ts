@@ -1,14 +1,9 @@
 "server-only";
 import { serverLogger } from "../../../util/serverLogger";
 import { getRequestId } from "../../../util/request";
-import { ServerActionError } from "./serverActionError";
-import {
-	createServerActionError,
-	isHttpException,
-	isServerActionError,
-	isServerException,
-} from "./util";
-import { HttpException } from "../../../generated/dto-types";
+import { createServerActionError, ServerActionError } from "./serverActionError";
+import { isServerActionError } from "./serverActionError";
+import { HttpException, ServiceException } from "../../../generated/dto-types";
 
 // TODO: HTTP API 에러 핸들링 로직 추가
 // - [ ] : fetch()가 반환한 응답 상태 확인 및 에러 핸들링 로직 추가
@@ -95,4 +90,22 @@ function handleBackendServerException(
 		`[${requestId}] ${actionName}() fail. ServerException: ${JSON.stringify(err, null, 2)}`,
 	);
 	throw createServerActionError("backendError");
+}
+
+function isHttpException(err: unknown): err is HttpException {
+	const keys: (keyof HttpException)[] = ["statusCode", "message"];
+
+	return err !== null && typeof err === "object" && keys.every((key) => key in (err as object));
+}
+
+function isServerException(err: unknown): err is ServiceException {
+	const keys: (keyof ServiceException)[] = [
+		"errorCode",
+		"path",
+		"timestamp",
+		"message",
+		"statusCode",
+	];
+
+	return err !== null && typeof err === "object" && keys.every((key) => key in err);
 }

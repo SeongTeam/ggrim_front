@@ -17,3 +17,27 @@ export interface ServerActionError extends Error {
 	status: ServerActionErrorMessageKey;
 	cause?: unknown;
 }
+
+export function createServerActionError(
+	messageKey: ServerActionErrorMessageKey,
+	cause?: unknown,
+): ServerActionError {
+	const message = SERVER_ACTION_ERROR_MSG[messageKey];
+	const serverActionError = {
+		name: "serverActionError" as const,
+		message,
+		stack: "",
+		status: messageKey,
+		cause,
+	};
+	Error.captureStackTrace(serverActionError, createServerActionError);
+	return serverActionError;
+}
+export function isServerActionError(response: unknown): response is ServerActionError {
+	const uniqueKeys: (keyof ServerActionError)[] = ["message", "stack"];
+	return (
+		response !== null &&
+		typeof response === "object" &&
+		uniqueKeys.every((key) => key in response)
+	);
+}
