@@ -1,8 +1,9 @@
 "use server";
 import { CondOperator, RequestQueryBuilder } from "@dataui/crud-request";
 import { PaginationResponse } from "../_common/type";
-import { client, withErrorHandler } from "../_common/middleware";
+import { withErrorHandler } from "../_common/middleware";
 import { ShowArtistResponse } from "../../../generated/dto-types";
+import { client } from "../_common/util";
 
 const getArtists = async (
 	queryBuilder: RequestQueryBuilder,
