@@ -111,19 +111,17 @@ const updateUserPW = async (dto: ReplacePassWordDto) => {
 		throw err;
 	}
 
-	const { data, error } = await client.PUT(`/user/{id}/password`, {
+	const { error, response } = await client.PUT(`/user/{id}/password`, {
 		body: dto,
 		params,
 	});
 
-	if (!data) {
+	if (!response.ok) {
 		throw error;
 	}
 
 	await deleteOneTimeToken();
 	await deleteEmailVerificationToken();
-
-	return data;
 };
 
 const updateUserUsername = async (dto: ReplaceUsernameDto) => {
@@ -134,7 +132,7 @@ const updateUserUsername = async (dto: ReplaceUsernameDto) => {
 		throw serverActionError;
 	}
 
-	const { data, error } = await client.PUT(`/user/{id}/username`, {
+	const { error, response } = await client.PUT(`/user/{id}/username`, {
 		body: dto,
 		params: {
 			path: {
@@ -146,7 +144,7 @@ const updateUserUsername = async (dto: ReplaceUsernameDto) => {
 		},
 	});
 
-	if (!data) {
+	if (!response.ok) {
 		throw error;
 	}
 };
@@ -166,7 +164,7 @@ const deleteUser = async () => {
 		throw serverActionError;
 	}
 
-	const { data, error } = await client.DELETE("/user/{id}", {
+	const { error, response } = await client.DELETE("/user/{id}", {
 		params: {
 			path: {
 				id: signInResponse.user.id,
@@ -178,7 +176,7 @@ const deleteUser = async () => {
 		},
 	});
 
-	if (!data) {
+	if (!response.ok) {
 		throw error;
 	}
 
@@ -195,7 +193,7 @@ const recoverUser = async () => {
 	}
 	const { oneTimeToken, user } = emailVerificationToken;
 
-	const { data, error } = await client.PUT("/user/recover/{id}", {
+	const { error, response } = await client.PUT("/user/recover/{id}", {
 		params: {
 			path: {
 				id: user.id,
@@ -207,7 +205,7 @@ const recoverUser = async () => {
 		},
 	});
 
-	if (!data) {
+	if (!response.ok) {
 		throw error;
 	}
 };

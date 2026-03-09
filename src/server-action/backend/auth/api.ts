@@ -72,11 +72,11 @@ const generateSecurityToken = async (id: string, password: string, dto: CreateOn
 };
 
 const mailSecurityToken = async (dto: SendOneTimeTokenDto) => {
-	const { data, error } = await client.POST("/auth/security-token/email", {
+	const { error, response } = await client.POST("/auth/security-token/email", {
 		body: dto,
 	});
 
-	if (!data) {
+	if (!response.ok) {
 		throw error;
 	}
 };

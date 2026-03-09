@@ -34,7 +34,7 @@ const findQuiz = async (
 	page: number = 0,
 	count: number = 50,
 ) => {
-	const { data, error } = await client.GET("/quiz", {
+	const { data, error, response } = await client.GET("/quiz", {
 		params: {
 			query: {
 				artists,
@@ -47,7 +47,7 @@ const findQuiz = async (
 		cache: "no-store",
 	});
 
-	if (!data) {
+	if (!response.ok) {
 		throw error;
 	}
 
@@ -79,7 +79,7 @@ const getQuiz = async (id: string) => {
 			path: { id },
 			query: {
 				isS3Access: true,
-				userId: signInResponse?.user.id || "",
+				userId: signInResponse?.user.id || undefined,
 			},
 		},
 		next: { tags: [getQuizCacheTag(id)] },
@@ -152,7 +152,7 @@ const deleteQuiz = async (quizId: string) => {
 		throw serverActionError;
 	}
 
-	const { data, error } = await client.DELETE("/quiz/{id}", {
+	const { error, response } = await client.DELETE("/quiz/{id}", {
 		params: {
 			path: { id: quizId },
 			header: {
@@ -161,7 +161,7 @@ const deleteQuiz = async (quizId: string) => {
 		},
 	});
 
-	if (!data) {
+	if (!response.ok) {
 		throw error;
 	}
 
@@ -170,18 +170,16 @@ const deleteQuiz = async (quizId: string) => {
 };
 
 const submitQuiz = async (quizId: string, dto: SubmitQuizDto) => {
-	const { data, error } = await client.POST("/quiz/submit/{id}", {
+	const { error, response } = await client.POST("/quiz/submit/{id}", {
 		params: {
 			path: { id: quizId },
 		},
 		body: dto,
 	});
 
-	if (!data) {
+	if (!response.ok) {
 		throw error;
 	}
-
-	return data;
 };
 
 const getQuizReactions = async (quizId: string, page?: number) => {
@@ -209,7 +207,7 @@ const addQuizReactions = async (quizId: string, dto: CreateQuizReactionDto) => {
 		throw serverActionError;
 	}
 
-	const { data, error } = await client.POST("/quiz/{id}/reaction", {
+	const { error, response } = await client.POST("/quiz/{id}/reaction", {
 		params: {
 			path: { id: quizId },
 			header: {
@@ -219,7 +217,7 @@ const addQuizReactions = async (quizId: string, dto: CreateQuizReactionDto) => {
 		body: dto,
 	});
 
-	if (!data) {
+	if (!response.ok) {
 		throw error;
 	}
 
@@ -234,7 +232,7 @@ const deleteQuizReaction = async (quizId: string) => {
 		throw serverActionError;
 	}
 
-	const { data, error } = await client.DELETE("/quiz/{id}/reaction", {
+	const { error, response } = await client.DELETE("/quiz/{id}/reaction", {
 		params: {
 			path: { id: quizId },
 			header: {
@@ -243,7 +241,7 @@ const deleteQuizReaction = async (quizId: string) => {
 		},
 	});
 
-	if (!data) {
+	if (!response.ok) {
 		throw error;
 	}
 
@@ -269,15 +267,13 @@ const scheduleQuiz = async (quizStatus?: QuizStatus) => {
 };
 
 const addQuizContext = async (dto: QuizContextDto) => {
-	const { data, error } = await client.POST("/quiz/schedule", {
+	const { error, response } = await client.POST("/quiz/schedule", {
 		body: dto,
 	});
 
-	if (!data) {
+	if (!response.ok) {
 		throw error;
 	}
-
-	return data;
 };
 
 export const findQuizAction = withErrorHandler("findQuiz", findQuiz);
