@@ -2,24 +2,26 @@
 import { MutableRefObject, useEffect, useRef, useState } from "react";
 
 import { throttle } from "../../util/optimization";
-import { ShortQuiz, FindQuizResult } from "@/server-action/backend/quiz/type";
 import { QuizCard } from "./QuizCard";
 import { useRouter } from "next/navigation";
 import { getQuizListAction } from "../../server-action/backend/quiz/api";
-import { isHttpException, isServerActionError } from "../../server-action/backend/_common/util";
+import { PaginationResponse } from "../../server-action/backend/_common/type";
+import { ShowQuiz } from "../../generated/dto-types";
+import { isServerActionError } from "../../server-action/backend/_common/util";
+import toast from "react-hot-toast";
 
 interface QuizCardGridProps {
-	findResult: FindQuizResult;
+	findResult: PaginationResponse<ShowQuiz>;
 }
 
 export const QuizCardGrid = (props: QuizCardGridProps): React.JSX.Element => {
-	const [findQuizzes, setFindQuizzes] = useState<ShortQuiz[]>(props.findResult.data); // Q. 초기값은 언제 반영되지? 만약 다른 state가 갱신되면, 현재 state는 기존값 유지 Or 초기값?
+	const [findQuizzes, setFindQuizzes] = useState<ShowQuiz[]>(props.findResult.data); // Q. 초기값은 언제 반영되지? 만약 다른 state가 갱신되면, 현재 state는 기존값 유지 Or 초기값?
 	const isLoadingRef: MutableRefObject<boolean> = useRef(false);
-	const findResultRef = useRef<FindQuizResult>(props.findResult);
+	const findResultRef = useRef<PaginationResponse<ShowQuiz>>(props.findResult);
 	const router = useRouter();
 	// const searchParam = useSearchParams();
 
-	const handleClickCard = (quiz: ShortQuiz) => {
+	const handleClickCard = (quiz: ShowQuiz) => {
 		const url: string = `/quiz/${quiz.id}`;
 		router.push(url);
 	};
@@ -37,20 +39,22 @@ export const QuizCardGrid = (props: QuizCardGridProps): React.JSX.Element => {
 			isLoadingRef.current = true;
 
 			console.log(`load ${findResultRef.current.page + 1} page`);
-			const response = await getQuizListAction(findResultRef.current.page + 1);
-			if (isServerActionError(response)) {
-				throw new Error(response.message);
-			} else if (isHttpException(response)) {
-				const errorMessage = Array.isArray(response.message)
-					? response.message.join("\n")
-					: response.message;
-
-				throw new Error(errorMessage);
-			} else {
+			try {
+				const response = await getQuizListAction(findResultRef.current.page + 1);
+				isLoadingRef.current = false;
 				findResultRef.current = response;
 				setFindQuizzes((prev) => [...prev, ...response.data]);
+			} catch (error) {
+				if (!isServerActionError(error)) {
+					toast.error("An unexpected error occurred. Please try again later.");
+					throw error;
+				}
 
-				isLoadingRef.current = false;
+				if (error.status === "clientError") {
+					toast.error(JSON.stringify(error.cause, null, 2));
+				} else {
+					toast.error(error.message);
+				}
 			}
 		};
 

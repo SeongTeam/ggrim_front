@@ -3,8 +3,7 @@
 import { useState, FormEvent } from "react";
 import { deleteUserAction } from "../../server-action/backend/user/api";
 import toast from "react-hot-toast";
-import { isHttpException, isServerActionError } from "../../server-action/backend/_common/util";
-import { HTTP_STATUS } from "../../server-action/backend/_common/status";
+import { isServerActionError } from "../../server-action/backend/_common/util";
 import { GuideModal } from "../modal/GuideModal";
 import { useRouter } from "next/navigation";
 import { ErrorModal } from "../modal/ErrorModal";
@@ -53,30 +52,20 @@ export const DeleteAccountForm = () => {
 			toast.error("The phrase does not match. Please try again.");
 			return;
 		}
-
-		const response = await deleteUserAction();
-
-		if (isServerActionError(response)) {
-			throw new Error(response.message);
-		} else if (isHttpException(response)) {
-			const { statusCode } = response;
-			const errorMessage = Array.isArray(response.message)
-				? response.message.join("\n")
-				: response.message;
-
-			switch (statusCode) {
-				case HTTP_STATUS.FORBIDDEN:
-				case HTTP_STATUS.UNAUTHORIZED:
-				case HTTP_STATUS.BAD_REQUEST:
-					setState((prev) => ({ ...prev, error: errorMessage }));
-					break;
-				default:
-					throw new Error(`${response.statusCode}\n` + errorMessage);
-			}
-		} else if (response === true) {
+		try {
+			await deleteUserAction();
 			setState((prev) => ({ ...prev, success: `Success Delete Account` }));
-		} else {
-			toast.error("Invalid access");
+		} catch (error) {
+			if (!isServerActionError(error)) {
+				toast.error("An unexpected error occurred. Please try again.");
+				throw error;
+			}
+
+			if (error.status === "clientError") {
+				setState((prev) => ({ ...prev, error: JSON.stringify(error.cause) }));
+			} else {
+				toast.error(error.message);
+			}
 		}
 	};
 

@@ -2,15 +2,13 @@
 
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { isHttpException, isServerActionError } from "../../server-action/backend/_common/util";
-import { HTTP_STATUS } from "../../server-action/backend/_common/status";
-import { HttpException, ServerActionError } from "../../server-action/backend/_common/dto";
 import { useRouter } from "next/navigation";
 import { GuideModal } from "../modal/GuideModal";
+import { isServerActionError } from "../../server-action/backend/_common/util";
 
 interface UsernameFormProps {
 	NextRoute: string;
-	submitHandler: (username: string) => Promise<ServerActionError | HttpException | boolean>;
+	submitHandler: (username: string) => Promise<void>;
 	initialValue?: string;
 }
 
@@ -31,35 +29,23 @@ const UpdateUsernameForm = ({ NextRoute, submitHandler, initialValue }: Username
 			return;
 		}
 
-		const response = await toast.promise(submitHandler(username), {
-			loading: `Verifying ...`,
-		});
-		if (isServerActionError(response)) {
-			throw new Error(response.message);
-		} else if (isHttpException(response)) {
-			const { statusCode } = response;
-			const { message } = response;
-
-			switch (statusCode) {
-				case HTTP_STATUS.FORBIDDEN:
-				case HTTP_STATUS.UNAUTHORIZED:
-				case HTTP_STATUS.BAD_REQUEST:
-					if (Array.isArray(message)) {
-						message.forEach((m) => toast.error(m));
-					} else {
-						toast.error(message);
-					}
-					break;
-				default:
-					const errorMessage = Array.isArray(message) ? message.join("\n") : message;
-					throw new Error(`${response.statusCode}\n` + errorMessage);
-			}
-		} else if (response === true) {
+		try {
+			await toast.promise(submitHandler(username), {
+				loading: `Verifying ...`,
+			});
 			setSuccess("success task");
 			router.refresh();
-			//  router.push(NextRoute);
-		} else {
-			toast.error("invalid access");
+		} catch (error) {
+			if (!isServerActionError(error)) {
+				toast.error("An unexpected error occurred. Please try again later.");
+				throw error;
+			}
+
+			if (error.status === "clientError") {
+				toast.error(JSON.stringify(error.cause, null, 2));
+			} else {
+				toast.error(error.message);
+			}
 		}
 	};
 

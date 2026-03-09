@@ -6,15 +6,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 import { isOnetimeTokenPurpose } from "../../../../server-action/backend/auth/util";
 import { generateSecurityTokenByEmailVerificationAction } from "../../../../server-action/backend/auth/api";
-import {
-	isHttpException,
-	isServerActionError,
-} from "../../../../server-action/backend/_common/util";
-import { HTTP_STATUS } from "../../../../server-action/backend/_common/status";
-import { ONE_TIME_TOKEN_PURPOSE } from "../../../../server-action/backend/auth/type";
 import { ErrorModal } from "../../../../components/modal/ErrorModal";
 import { GuideModal } from "../../../../components/modal/GuideModal";
 import { AUTH_LOGIC_ROUTE } from "../../../../route/auth/route";
+import { ONE_TIME_TOKEN_PURPOSE } from "../../../../generated/dto-types";
+import { isServerActionError } from "../../../../server-action/backend/_common/util";
 
 interface AuthenticateState {
 	errorMessage: string;
@@ -68,10 +64,10 @@ export default function AuthCallbackPage() {
 
 	const handleSuccess = () => {
 		switch (state.purpose) {
-			case ONE_TIME_TOKEN_PURPOSE.UPDATE_PASSWORD:
+			case ONE_TIME_TOKEN_PURPOSE.update_password:
 				router.push(AUTH_LOGIC_ROUTE.UPDATE_PASSWORD);
 				break;
-			case ONE_TIME_TOKEN_PURPOSE.RECOVER_ACCOUNT:
+			case ONE_TIME_TOKEN_PURPOSE.recover_account:
 			default:
 				toast.error("sorry. not implement ");
 		}
@@ -87,31 +83,22 @@ export default function AuthCallbackPage() {
 			return;
 		}
 		dispatch({ type: "SET_PURPOSE", purpose });
-		const response = await generateSecurityTokenByEmailVerificationAction(
-			{ purpose },
-			token,
-			identifier,
-		);
+		try {
+			await generateSecurityTokenByEmailVerificationAction({ purpose }, identifier, token);
 
-		if (isServerActionError(response)) {
-			throw new Error(response.message);
-		} else if (isHttpException(response)) {
-			const { statusCode } = response;
-			const errorMessage = Array.isArray(response.message)
-				? response.message.join("\n")
-				: response.message;
-
-			switch (statusCode) {
-				case HTTP_STATUS.FORBIDDEN:
-				case HTTP_STATUS.UNAUTHORIZED:
-				case HTTP_STATUS.BAD_REQUEST:
-					dispatch({ type: "ERROR", message: errorMessage });
-					return;
-				default:
-					dispatch({ type: "ERROR", message: `${response.statusCode}\n` + errorMessage });
-			}
-		} else {
 			dispatch({ type: "SUCCESS", message: `Success ${purpose}` });
+		} catch (err: unknown) {
+			if (!isServerActionError(err)) {
+				toast.error("Unknown error occurred");
+				throw err;
+			}
+
+			if (err.status === "clientError") {
+				dispatch({ type: "ERROR", message: JSON.stringify(err.cause) });
+			} else {
+				toast.error(err.message);
+				throw err;
+			}
 		}
 	};
 

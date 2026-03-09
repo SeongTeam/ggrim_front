@@ -3,7 +3,7 @@
 import { MCQ } from "../type";
 import { shuffleMerge } from "@/util/shuffleMerge";
 import { useState } from "react";
-import { Painting } from "@/server-action/backend/painting/type";
+import { ShowPainting } from "../../../../generated/dto-types";
 // import { submitMCQAnswer } from "@/services/mcqClientService";
 
 const useMCQReader = (attrs: MCQ, selectedAnswer: number) => {
@@ -15,7 +15,7 @@ const useMCQReader = (attrs: MCQ, selectedAnswer: number) => {
 	const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
 	const [isCorrect, setIsCorrect] = useState<boolean>(false);
 	const [showHint, setShowHint] = useState<boolean>(false);
-	const [displayPaintings] = useState<Painting[]>(
+	const [displayPaintings] = useState<ShowPainting[]>(
 		shuffleMerge(distractorPaintings, answerPaintings),
 	);
 

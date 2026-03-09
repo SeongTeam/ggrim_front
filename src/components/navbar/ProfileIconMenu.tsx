@@ -1,7 +1,6 @@
 "use client";
 
 import { LogOut, Settings, User as UserIcon } from "lucide-react";
-import { User } from "@/server-action/backend/user/type";
 import { useEffect, useRef, useState } from "react";
 import { signOutAction } from "../../server-action/backend/auth/api";
 import { useRouter } from "next/navigation";
@@ -14,9 +13,10 @@ import {
 import { PROFILE_LOGIC_ROUTE } from "../../route/profile/route";
 import { AUTH_LOGIC_ROUTE } from "../../route/auth/route";
 import toast from "react-hot-toast";
+import { ShowUserResponse } from "../../generated/dto-types";
 
 interface ProfileIconMenuProps {
-	user: User;
+	user: ShowUserResponse;
 }
 
 export const ProfileIconMenu = ({ user }: ProfileIconMenuProps) => {
@@ -88,7 +88,7 @@ export const ProfileIconMenu = ({ user }: ProfileIconMenuProps) => {
 				<div className="absolute right-0 z-50 mt-2 w-48 rounded-lg bg-zinc-900 text-white shadow-lg">
 					<div className="border-b border-zinc-700 px-4 py-3">
 						<p className="text-sm font-medium">{user.username}</p>
-						<p className="text-xs text-zinc-400">{user.email}</p>
+						{/* <p className="text-xs text-zinc-400">{user.email}</p> */}
 					</div>
 					<ul className="py-1">
 						<li

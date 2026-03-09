@@ -6,22 +6,20 @@ import { ErrorMessage } from "./shared";
 import SubmissionFeedback from "./reader/parts/SubmissionFeedback";
 import { motion } from "framer-motion";
 import { MCQReaderViewProps } from "./type";
-import { QuizReaction } from "../../../server-action/backend/quiz/type";
-import { QuizReactionCount } from "../../../server-action/backend/quiz/dto";
 import {
 	addQuizReactionsAction,
 	deleteQuizReactionAction,
 } from "../../../server-action/backend/quiz/api";
-import { isHttpException, isServerActionError } from "../../../server-action/backend/_common/util";
+import { isServerActionError } from "../../../server-action/backend/_common/util";
 import toast from "react-hot-toast";
-import { HTTP_STATUS } from "../../../server-action/backend/_common/status";
 import { ErrorModal } from "../../modal/ErrorModal";
 import Image from "next/image";
+import { QUIZ_REACTION, ShowQuizReactionCount } from "../../../generated/dto-types";
 
 interface ReactionState {
 	like: number;
 	dislike: number;
-	userReaction?: QuizReaction;
+	userReaction?: QUIZ_REACTION;
 }
 
 type Action = { type: "SET_LIKE" } | { type: "SET_DISLIKE" } | { type: "RESET_REACTION" };
@@ -31,21 +29,21 @@ function reducer(state: ReactionState, action: Action): ReactionState {
 		case "SET_LIKE": {
 			const next = { ...state };
 			next.like += 1;
-			next.userReaction = "like";
+			next.userReaction = QUIZ_REACTION.like;
 			return next;
 		}
 		case "SET_DISLIKE":
 			const next = { ...state };
 			next.dislike += 1;
-			next.userReaction = "dislike";
+			next.userReaction = QUIZ_REACTION.dislike;
 			return next;
 
 		case "RESET_REACTION": {
 			const next = { ...state };
-			if (state.userReaction === "like") {
+			if (state.userReaction === QUIZ_REACTION.like) {
 				next.userReaction = undefined;
 				next.like -= 1;
-			} else if (state.userReaction === "dislike") {
+			} else if (state.userReaction === QUIZ_REACTION.dislike) {
 				next.dislike -= 1;
 				next.userReaction = undefined;
 			}
@@ -56,7 +54,7 @@ function reducer(state: ReactionState, action: Action): ReactionState {
 	}
 }
 
-const initializeState = (reactionCount: QuizReactionCount, userReaction?: QuizReaction) => {
+const initializeState = (reactionCount: ShowQuizReactionCount, userReaction?: QUIZ_REACTION) => {
 	return {
 		like: reactionCount.likeCount,
 		dislike: reactionCount.dislikeCount,
@@ -88,47 +86,42 @@ const MCQView = ({
 	const [reaction, dispatch] = useReducer(reducer, initializeState(reactionCount, userReaction));
 	const [error, setError] = useState("");
 
-	const callReactionServerAction = async (type: QuizReaction) => {
-		const response = await addQuizReactionsAction(mcq.id, { type });
-		if (isServerActionError(response)) {
-			throw new Error("unstable situation");
-		} else if (isHttpException(response)) {
-			const { statusCode, message } = response;
-			const errorMessage = Array.isArray(message) ? message.join("\n") : message;
-			switch (statusCode) {
-				case HTTP_STATUS.UNAUTHORIZED:
-					toast.error(errorMessage);
-					break;
-				case HTTP_STATUS.BAD_REQUEST:
-				case HTTP_STATUS.FORBIDDEN:
-					setError(errorMessage);
-					break;
-				default:
-					throw new Error(errorMessage);
+	const callReactionServerAction = async (type: QUIZ_REACTION) => {
+		try {
+			await addQuizReactionsAction(mcq.id, { type });
+		} catch (error) {
+			if (!isServerActionError(error)) {
+				toast.error("An unexpected error occurred. Please try again later.");
+				throw error;
 			}
-		} else if (response === true) {
+
+			if (error.status === "clientError") {
+				setError(JSON.stringify(error.cause, null, 2));
+			} else {
+				toast.error(error.message);
+			}
 		}
 	};
 
 	const handleLike = async () => {
-		const prevReaction: QuizReaction | undefined = reaction.userReaction;
+		const prevReaction: QUIZ_REACTION | undefined = reaction.userReaction;
 		dispatch({ type: "RESET_REACTION" });
 		if (prevReaction === "like") {
 			await deleteQuizReactionAction(mcq.id);
 		} else {
 			dispatch({ type: "SET_LIKE" });
-			await callReactionServerAction("like");
+			await callReactionServerAction(QUIZ_REACTION.like);
 		}
 	};
 
 	const handleDisLike = async () => {
-		const prevReaction: QuizReaction | undefined = reaction.userReaction;
+		const prevReaction: QUIZ_REACTION | undefined = reaction.userReaction;
 		dispatch({ type: "RESET_REACTION" });
 		if (prevReaction === "dislike") {
 			await deleteQuizReactionAction(mcq.id);
 		} else {
 			dispatch({ type: "SET_DISLIKE" });
-			await callReactionServerAction("dislike");
+			await callReactionServerAction(QUIZ_REACTION.dislike);
 		}
 	};
 

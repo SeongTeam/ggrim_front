@@ -1,6 +1,5 @@
 "use client";
 import { FormEvent, useCallback, useEffect, useReducer, useState } from "react";
-import { Painting } from "@/server-action/backend/painting/type";
 import { Card } from "../common/Card";
 import { useRouter } from "next/navigation";
 import { AlertModal } from "../modal/AlertModal";
@@ -8,26 +7,31 @@ import { InsertToggleInput } from "../common/InsertToggleInput";
 import { Loading } from "../common/Loading";
 import { CheckCircle, XCircle } from "lucide-react";
 import { getPaintingAction } from "../../server-action/backend/painting/api";
-import { isHttpException, isServerActionError } from "../../server-action/backend/_common/util";
-import { CreateQuizDTO } from "../../server-action/backend/quiz/dto";
 import { addQuizAction, updateQuizAction } from "../../server-action/backend/quiz/api";
-import { Quiz } from "@/server-action/backend/quiz/type";
 import { getSavedNewQuiz, removeSavedNewQuiz, saveNewQuiz } from "../../state/browser/quiz";
 import { useDebounceCallback } from "../../hooks/useDebounceCallback";
+import {
+	CreateQuizDto,
+	QUIZ_TYPE,
+	ShowPainting,
+	ShowQuizResponse,
+} from "../../generated/dto-types";
+import { isServerActionError } from "../../server-action/backend/_common/util";
+import toast from "react-hot-toast";
 
 export interface NewQuiz {
-	answer: Painting | undefined;
-	distractor1: Painting | undefined;
-	distractor2: Painting | undefined;
-	distractor3: Painting | undefined;
+	answer: ShowPainting | undefined;
+	distractor1: ShowPainting | undefined;
+	distractor2: ShowPainting | undefined;
+	distractor3: ShowPainting | undefined;
 	title: string;
 	timeLimit: number;
 	description: string;
-	type: "ONE_CHOICE";
+	type: QUIZ_TYPE.ONE_CHOICE;
 }
 type StatePaintingKey = "answer" | "distractor1" | "distractor2" | "distractor3";
 type PaintingActionType = "SET_ANSWER" | "SET_DISTRACTOR1" | "SET_DISTRACTOR2" | "SET_DISTRACTOR3";
-type PaintingAction = { type: PaintingActionType; painting: Painting | undefined };
+type PaintingAction = { type: PaintingActionType; painting: ShowPainting | undefined };
 
 type Action =
 	| { type: "SET_TITLE"; title: string }
@@ -70,7 +74,7 @@ function reducer(state: NewQuiz, action: Action): NewQuiz {
 // * 참고: <관련 정보나 링크>
 
 interface QuizFormProps {
-	quiz?: Quiz;
+	quiz?: ShowQuizResponse;
 }
 
 const initState: NewQuiz = {
@@ -80,11 +84,11 @@ const initState: NewQuiz = {
 	distractor3: undefined,
 	title: "",
 	description: "",
-	type: "ONE_CHOICE",
+	type: QUIZ_TYPE.ONE_CHOICE,
 	timeLimit: 30,
 };
 
-const initializeState = (quiz?: Quiz): NewQuiz => {
+const initializeState = (quiz?: ShowQuizResponse): NewQuiz => {
 	if (!quiz) {
 		return initState;
 	}
@@ -96,14 +100,14 @@ const initializeState = (quiz?: Quiz): NewQuiz => {
 		distractor3: quiz.distractor_paintings[2],
 		title: quiz.title,
 		description: quiz.description,
-		type: "ONE_CHOICE",
+		type: QUIZ_TYPE.ONE_CHOICE,
 		timeLimit: quiz.time_limit,
 	};
 };
 
-const isDuplicatedPaintingPainting = (state: NewQuiz, painting: Painting) => {
+const isDuplicatedPaintingPainting = (state: NewQuiz, painting: ShowPainting) => {
 	const keys: StatePaintingKey[] = ["answer", "distractor1", "distractor2", "distractor3"];
-	const paintings: Painting[] = [];
+	const paintings: ShowPainting[] = [];
 	keys.forEach((key) => (state[key] ? paintings.push(state[key]) : key));
 
 	return paintings.some((p) => painting.id === p.id);
@@ -115,7 +119,7 @@ export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
 	const router = useRouter();
 	const distractorKeys: StatePaintingKey[] = ["distractor1", "distractor2", "distractor3"];
 
-	function mapPaintingKeyToAction(key: StatePaintingKey, painting: Painting | undefined) {
+	function mapPaintingKeyToAction(key: StatePaintingKey, painting: ShowPainting | undefined) {
 		switch (key) {
 			case "answer":
 				return dispatch({ type: "SET_ANSWER", painting });
@@ -131,26 +135,28 @@ export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
 		}
 	}
 
-	const callServerAction = async (dto: CreateQuizDTO, quiz: Quiz | undefined) => {
+	const callServerAction = async (dto: CreateQuizDto, quiz: ShowQuizResponse | undefined) => {
 		const serverAction =
 			quiz === undefined
 				? addQuizAction
-				: (dto: CreateQuizDTO) => updateQuizAction(quiz.id, dto);
+				: (dto: CreateQuizDto) => updateQuizAction(quiz.id, dto);
 
-		const response = await serverAction(dto);
-
-		if (isServerActionError(response)) {
-			throw new Error(response.message);
-		} else if (isHttpException(response)) {
-			const errorMessage = Array.isArray(response.message)
-				? response.message.join("\n")
-				: response.message;
-			setError(errorMessage + "\n" + "please try later");
-			return;
-		} else {
+		try {
+			const response = await serverAction(dto);
 			removeSavedNewQuiz();
 			router.push(`/quiz/${response.id}`);
 			return;
+		} catch (error) {
+			if (!isServerActionError(error)) {
+				toast.error("An unexpected error occurred. Please try again later.");
+				throw error;
+			}
+
+			if (error.status === "clientError") {
+				setError(JSON.stringify(error.cause, null, 2));
+			} else {
+				toast.error(error.message);
+			}
 		}
 	};
 
@@ -181,7 +187,7 @@ export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
 			return;
 		}
 
-		const dto: CreateQuizDTO = {
+		const dto: CreateQuizDto = {
 			answerPaintingIds: [answer?.id],
 			distractorPaintingIds: [distractor1?.id, distractor2?.id, distractor3?.id],
 			title: newQuiz!.title,
@@ -204,17 +210,8 @@ export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
 			return false;
 		}
 
-		const painting = await getPaintingAction(id);
-		if (isServerActionError(painting)) {
-			throw new Error(painting.message);
-		} else if (isHttpException(painting)) {
-			const errorMessage = Array.isArray(painting.message)
-				? painting.message.join("\n")
-				: painting.message;
-			setError(errorMessage);
-		} else {
-			//id 중복 금지..
-
+		try {
+			const painting = await getPaintingAction(id);
 			if (isDuplicatedPaintingPainting(newQuiz, painting)) {
 				setError(`Can't Add painting. ${id} is already exist. `);
 				return false;
@@ -223,8 +220,19 @@ export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
 			mapPaintingKeyToAction(key, painting);
 
 			return true;
+		} catch (error) {
+			if (!isServerActionError(error)) {
+				toast.error("An unexpected error occurred. Please try again later.");
+				throw error;
+			}
+			if (error.status === "clientError") {
+				setError(JSON.stringify(error.cause, null, 2));
+			} else {
+				toast.error(error.message);
+			}
+
+			return false;
 		}
-		return false;
 	};
 
 	const handleDeleteQuizPainting = async (key: StatePaintingKey): Promise<boolean> => {
@@ -347,7 +355,7 @@ export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
 									<Card
 										imageProps={{
 											src: newQuiz.answer.image_url,
-											alt: newQuiz.answer.description,
+											alt: newQuiz.answer.title,
 											width: newQuiz.answer.width,
 											height: newQuiz.answer.height,
 										}}
@@ -366,7 +374,7 @@ export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
 										<Card
 											imageProps={{
 												src: p.image_url,
-												alt: p.description,
+												alt: p.title,
 												width: p.width,
 												height: p.height,
 											}}

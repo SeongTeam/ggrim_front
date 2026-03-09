@@ -1,9 +1,9 @@
 import { SignInForm } from "../../../components/auth/SignInForm";
 import { generateSecurityTokenAction } from "../../../server-action/backend/auth/api";
-import { ONE_TIME_TOKEN_PURPOSE } from "../../../server-action/backend/auth/type";
 import { ErrorModal } from "../../../components/modal/ErrorModal";
 import AuthFooter from "../../../components/auth/AuthFooter";
 import { AUTH_LOGIC_ROUTE } from "../../../route/auth/route";
+import { ONE_TIME_TOKEN_PURPOSE } from "../../../generated/dto-types";
 
 interface VerifyUserProps {
 	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -19,10 +19,10 @@ export default async function VerifyUser({ searchParams }: VerifyUserProps) {
 	}
 
 	switch (purpose) {
-		case ONE_TIME_TOKEN_PURPOSE.UPDATE_PASSWORD:
+		case ONE_TIME_TOKEN_PURPOSE.update_password:
 			nextRoute = AUTH_LOGIC_ROUTE.UPDATE_PASSWORD;
 			break;
-		case ONE_TIME_TOKEN_PURPOSE.DELETE_ACCOUNT:
+		case ONE_TIME_TOKEN_PURPOSE.delete_account:
 			nextRoute = AUTH_LOGIC_ROUTE.DELETE_ACCOUNT;
 			break;
 		default:

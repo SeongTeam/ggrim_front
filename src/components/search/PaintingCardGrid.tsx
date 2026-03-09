@@ -1,7 +1,5 @@
 "use client";
 import { MutableRefObject, useEffect, useRef, useState } from "react";
-import { FindPaintingResult, Painting } from "@/server-action/backend/painting/type";
-import { ShortPainting } from "@/server-action/backend/painting/type";
 import { HoverCard } from "../common/HoverCard";
 import { PreviewPainting } from "./PreviewPainting";
 import { Modal } from "../modal/Modal";
@@ -10,30 +8,38 @@ import { useSearchParams } from "next/navigation";
 import { throttle } from "../../util/optimization";
 import { findPaintingAction, getPaintingAction } from "../../server-action/backend/painting/api";
 import { isHttpException, isServerActionError } from "../../server-action/backend/_common/util";
+import { PaginationResponse } from "../../server-action/backend/_common/type";
+import { ShowPainting, ShowPaintingResponse } from "../../generated/dto-types";
+import toast from "react-hot-toast";
 
 interface PaintingCardGridProps {
-	findResult: FindPaintingResult;
+	findResult: PaginationResponse<ShowPainting>;
 }
 
 export const PaintingCardGrid = (props: PaintingCardGridProps): React.JSX.Element => {
-	const [selectedPainting, setSelectedPainting] = useState<Painting | undefined>(undefined);
-	const [searchPaintings, setSearchPaintings] = useState<ShortPainting[]>(props.findResult.data); // Q. 초기값은 언제 반영되지? 만약 다른 state가 갱신되면, 현재 state는 기존값 유지 Or 초기값?
+	const [selectedPainting, setSelectedPainting] = useState<ShowPaintingResponse | undefined>(
+		undefined,
+	);
+	const [searchPaintings, setSearchPaintings] = useState<ShowPainting[]>(props.findResult.data); // Q. 초기값은 언제 반영되지? 만약 다른 state가 갱신되면, 현재 state는 기존값 유지 Or 초기값?
 	const isLoadingRef: MutableRefObject<boolean> = useRef(false);
-	const findResultRef = useRef<FindPaintingResult>(props.findResult);
+	const findResultRef = useRef<PaginationResponse<ShowPainting>>(props.findResult);
 	const searchParam = useSearchParams();
 
 	const openModal = async (paintingId: string) => {
-		const response = await getPaintingAction(paintingId);
-		if (isServerActionError(response)) {
-			throw new Error(response.message);
-		} else if (isHttpException(response)) {
-			const errorMessage = Array.isArray(response.message)
-				? response.message.join("\n")
-				: response.message;
-			console.log(`id(${paintingId} error.
-                    ${errorMessage}`);
-		} else {
-			setSelectedPainting(response);
+		try {
+			const painting = await getPaintingAction(paintingId);
+			setSelectedPainting(painting);
+		} catch (error) {
+			if (!isServerActionError(error)) {
+				toast.error("An unexpected error occurred. Please try again later.");
+				throw error;
+			}
+
+			if (error.status === "clientError") {
+				toast.error(JSON.stringify(error.cause, null, 2));
+			} else {
+				toast.error(error.message);
+			}
 		}
 	};
 

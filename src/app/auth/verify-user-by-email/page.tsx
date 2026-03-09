@@ -1,28 +1,27 @@
 import AuthFooter from "../../../components/auth/AuthFooter";
 import { EmailForm } from "../../../components/auth/EmailForm";
 import { ErrorModal } from "../../../components/modal/ErrorModal";
-import { sendSecurityTokenToEmailAction } from "../../../server-action/backend/auth/api";
-import { isOnetimeTokenPurpose } from "../../../server-action/backend/auth/util";
+import { mailSecurityTokenAction } from "../../../server-action/backend/auth/api";
+import { isSendOneTimeTokenPurpose } from "../../../server-action/backend/auth/util";
 
 interface verifyUserByEmailProps {
 	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default async function Verify({ searchParams }: verifyUserByEmailProps) {
+export default async function VerifyUserByEmail({ searchParams }: verifyUserByEmailProps) {
 	const purpose = (await searchParams).purpose;
 
 	if (!purpose || Array.isArray(purpose)) {
 		return <ErrorModal message="wrong access" />;
 	}
 
-	if (!isOnetimeTokenPurpose(purpose)) {
+	if (!isSendOneTimeTokenPurpose(purpose)) {
 		return <ErrorModal message="wrong access with wrong purpose" />;
 	}
 
 	const handleAction = async (email: string) => {
 		"use server";
-		const response = await sendSecurityTokenToEmailAction({ purpose, email });
-		return response;
+		await mailSecurityTokenAction({ purpose, email });
 	};
 
 	return (

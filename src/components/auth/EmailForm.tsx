@@ -2,12 +2,10 @@
 
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { isHttpException, isServerActionError } from "../../server-action/backend/_common/util";
-import { HTTP_STATUS } from "../../server-action/backend/_common/status";
-import { HttpException, ServerActionError } from "../../server-action/backend/_common/dto";
+import { isServerActionError } from "../../server-action/backend/_common/util";
 
 interface EmailFormProp {
-	emailFormAction: (email: string) => Promise<boolean | ServerActionError | HttpException>;
+	emailFormAction: (email: string) => Promise<void>;
 }
 
 export const EmailForm = ({ emailFormAction }: EmailFormProp) => {
@@ -15,30 +13,24 @@ export const EmailForm = ({ emailFormAction }: EmailFormProp) => {
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		const response = await toast.promise(emailFormAction(email), {
-			loading: `Verifying ...`,
-		});
-		if (isServerActionError(response)) {
-			throw new Error(response.message);
-		} else if (isHttpException(response)) {
-			const { statusCode } = response;
-			const errorMessage = Array.isArray(response.message)
-				? response.message.join("\n")
-				: response.message;
 
-			switch (statusCode) {
-				case HTTP_STATUS.FORBIDDEN:
-				case HTTP_STATUS.UNAUTHORIZED:
-				case HTTP_STATUS.BAD_REQUEST:
-					toast.error(errorMessage);
-					break;
-				default:
-					throw new Error(`${response.statusCode}\n` + errorMessage);
-			}
-		} else if (response === true) {
+		try {
+			await toast.promise(emailFormAction(email), {
+				loading: `Verifying ...`,
+			});
+
 			toast.success("success");
-		} else {
-			toast.error("invalid access");
+		} catch (error) {
+			if (!isServerActionError(error)) {
+				toast.error("An unexpected error occurred. Please try again later.");
+				throw error;
+			}
+
+			if (error.status === "clientError") {
+				toast.error(JSON.stringify(error.cause, null, 2));
+			} else {
+				toast.error(error.message);
+			}
 		}
 	};
 

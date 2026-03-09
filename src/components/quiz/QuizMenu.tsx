@@ -3,16 +3,15 @@
 
 import { MoreVertical, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { Quiz } from "@/server-action/backend/quiz/type";
 import { useRouter } from "next/navigation";
 import { deleteQuizAction } from "../../server-action/backend/quiz/api";
-import { isHttpException, isServerActionError } from "../../server-action/backend/_common/util";
-import { HTTP_STATUS } from "../../server-action/backend/_common/status";
 import toast from "react-hot-toast";
 import { SEARCH_LOGIC_ROUTE } from "../../route/search/route";
+import { ShowQuizResponse } from "../../generated/dto-types";
+import { isServerActionError } from "../../server-action/backend/_common/util";
 
 type QuizMenuProps = {
-	quiz: Quiz;
+	quiz: ShowQuizResponse;
 	isOwner: boolean;
 };
 
@@ -49,27 +48,20 @@ export const QuizMenu = ({ quiz, isOwner }: QuizMenuProps) => {
 	};
 
 	const onDelete = async () => {
-		const response = await deleteQuizAction(quiz.id);
-
-		if (isServerActionError(response)) {
-			throw new Error(response.message);
-		} else if (isHttpException(response)) {
-			const { statusCode } = response;
-			const messages: string[] = Array.isArray(response.message)
-				? response.message
-				: [response.message];
-
-			switch (statusCode) {
-				case HTTP_STATUS.BAD_REQUEST:
-				case HTTP_STATUS.FORBIDDEN:
-				case HTTP_STATUS.UNAUTHORIZED:
-					messages.forEach((m) => toast.error(m));
-					break;
-				default:
-					throw new Error(messages.join("\n"));
-			}
-		} else {
+		try {
+			await deleteQuizAction(quiz.id);
 			router.push("/quiz");
+		} catch (error) {
+			if (!isServerActionError(error)) {
+				toast.error("An unexpected error occurred. Please try again later.");
+				throw error;
+			}
+
+			if (error.status === "clientError") {
+				toast.error(JSON.stringify(error.cause));
+			} else {
+				toast.error(error.message);
+			}
 		}
 	};
 
@@ -128,7 +120,7 @@ export const QuizMenu = ({ quiz, isOwner }: QuizMenuProps) => {
 };
 
 interface ShowDescriptionProps {
-	quiz: Quiz;
+	quiz: ShowQuizResponse;
 	isShow: boolean;
 	setShow: (v: boolean) => void;
 }
@@ -179,7 +171,7 @@ const ShowDescription = ({ quiz, isShow, setShow }: ShowDescriptionProps) => {
 						<p className="text-3xl font-semibold text-black">Description </p>
 						<p className="pl-5 text-xl font-semibold text-black">
 							{" "}
-							by {quiz.shortOwner.username}
+							by {quiz.showOwner.username}
 						</p>
 					</div>
 					<button onClick={() => setShow(false)}>

@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { Painting } from "@/server-action/backend/painting/type";
 import Image from "next/image";
 import { PaintingDetailView } from "../search/PaintingDetailView";
 import { Modal } from "../modal/Modal";
+import { ShowPaintingResponse } from "../../generated/dto-types";
 
 export interface FeaturedImageGalleryProps {
-	paintings: Painting[];
+	paintings: ShowPaintingResponse[];
 }
 
 export const FeaturedImageGallery: React.FC<FeaturedImageGalleryProps> = ({ paintings }) => {
@@ -66,7 +66,7 @@ export const FeaturedImageGallery: React.FC<FeaturedImageGalleryProps> = ({ pain
 				{/* Thumbnail Navigation */}
 				<div className="flex w-full flex-col rounded-lg bg-black py-5 pl-2 text-gray-200">
 					<h3 className="text-2xl font-semibold"> {painting.title}</h3>
-					<p className="text-sm"> by {painting.artist.name}</p>
+					<p className="text-sm"> by {painting.showArtist.name}</p>
 				</div>
 			</section>
 			{isOpen && (

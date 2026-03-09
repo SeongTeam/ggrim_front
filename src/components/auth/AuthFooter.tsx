@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { AUTH_LOGIC_ROUTE } from "../../route/auth/route";
+import { ONE_TIME_TOKEN_PURPOSE } from "../../generated/dto-types";
 
 type FooterState = keyof typeof AUTH_LOGIC_ROUTE;
 export interface AuthFooterProps {
@@ -13,7 +14,7 @@ interface LinkInfo {
 
 const forgotPassWordLinkInfo = {
 	text: `Forget Password?`,
-	authRoute: AUTH_LOGIC_ROUTE.VERIFY_USER_BY_EMAIL("update-password"),
+	authRoute: AUTH_LOGIC_ROUTE.VERIFY_USER_BY_EMAIL(ONE_TIME_TOKEN_PURPOSE.update_password),
 };
 const haveAccountLinkInfo = { text: `Have Account`, authRoute: AUTH_LOGIC_ROUTE.SIGN_IN };
 const createAccountLinkInfo = { text: `Create Account`, authRoute: AUTH_LOGIC_ROUTE.VERIFY_EMAIL };

@@ -1,6 +1,5 @@
 "use client";
-import { User } from "@/server-action/backend/user/type";
-import { CreateQuizDTO } from "../../server-action/backend/quiz/dto";
+import { CreateQuizDto, ShowUserResponse } from "../../generated/dto-types";
 import { LOCAL_STORAGE_KEY } from "./const";
 
 export interface RunningUser {
@@ -11,7 +10,7 @@ export interface RunningUser {
 }
 
 export interface QuizDraft {
-	dto: CreateQuizDTO;
+	dto: CreateQuizDto;
 }
 
 function saveRunningUser(runningUser: RunningUser): boolean {
@@ -19,7 +18,7 @@ function saveRunningUser(runningUser: RunningUser): boolean {
 	return true;
 }
 
-export function syncUserToLocalStorage(user: User): boolean {
+export function syncUserToLocalStorage(user: ShowUserResponse): boolean {
 	const { username, id } = user;
 	const runningUser: RunningUser = { username, id };
 
