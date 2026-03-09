@@ -4,7 +4,6 @@ import { ScrollTriggerNavigator } from "../components/quiz/ScrollTriggerNavigato
 import { ScrollExpander } from "../components/home/ScrollExpander";
 import { getWeekArtWorkDataAction } from "../server-action/backend/painting/api";
 import { getQuizListAction, scheduleQuizAction } from "../server-action/backend/quiz/api";
-import { isHttpException, isServerActionError } from "../server-action/backend/_common/util";
 
 // TODO: Main Page 리팩토링하기
 // - [ ] 컴포넌트 함수 이름 변경하여 기능 명확성 향상시키기
@@ -16,41 +15,7 @@ import { isHttpException, isServerActionError } from "../server-action/backend/_
 export default async function Campaign() {
 	const domID = `main`;
 
-	const [artworkOfWeekData, quizzes, responseQuizDTO] = await Promise.all([
-		getWeekArtWorkDataAction(),
-		getQuizListAction(),
-		scheduleQuizAction(),
-	]);
-
-	if (isServerActionError(responseQuizDTO)) {
-		throw new Error(responseQuizDTO.message);
-	} else if (isHttpException(responseQuizDTO)) {
-		const errorMessage = Array.isArray(responseQuizDTO.message)
-			? responseQuizDTO.message.join("\n")
-			: responseQuizDTO.message;
-
-		throw new Error(errorMessage);
-	}
-
-	if (isServerActionError(artworkOfWeekData)) {
-		throw new Error(artworkOfWeekData.message);
-	} else if (isHttpException(artworkOfWeekData)) {
-		const errorMessage = Array.isArray(artworkOfWeekData.message)
-			? artworkOfWeekData.message.join("\n")
-			: artworkOfWeekData.message;
-
-		throw new Error(errorMessage);
-	}
-
-	if (isServerActionError(quizzes)) {
-		throw new Error(quizzes.message);
-	} else if (isHttpException(quizzes)) {
-		const errorMessage = Array.isArray(quizzes.message)
-			? quizzes.message.join("\n")
-			: quizzes.message;
-
-		throw new Error(errorMessage);
-	}
+	const { artworkOfWeekData, quizzes, responseQuizDTO } = await fetchCampaignData();
 
 	return (
 		<div>
@@ -73,3 +38,17 @@ export default async function Campaign() {
 		</div>
 	);
 }
+
+const fetchCampaignData = async () => {
+	try {
+		const [artworkOfWeekData, quizzes, responseQuizDTO] = await Promise.all([
+			getWeekArtWorkDataAction(),
+			getQuizListAction(),
+			scheduleQuizAction(),
+		]);
+
+		return { artworkOfWeekData, quizzes, responseQuizDTO };
+	} catch (error) {
+		throw error;
+	}
+};

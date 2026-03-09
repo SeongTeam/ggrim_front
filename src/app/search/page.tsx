@@ -1,7 +1,6 @@
 import React, { Suspense } from "react";
 import { PaintingCardGrid } from "../../components/search/PaintingCardGrid";
 import { findPaintingAction } from "../../server-action/backend/painting/api";
-import { isHttpException, isServerActionError } from "../../server-action/backend/_common/util";
 import { ErrorModal } from "../../components/modal/ErrorModal";
 import { SEARCH_PARAM_KEY } from "../../components/search/const";
 
@@ -35,16 +34,6 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 		Array.isArray(tags) ? tags : [tags],
 		Array.isArray(styles) ? styles : [styles],
 	);
-
-	if (isServerActionError(response)) {
-		throw new Error(response.message);
-	} else if (isHttpException(response)) {
-		const errorMessage = Array.isArray(response.message)
-			? response.message.join("\n")
-			: response.message;
-
-		throw new Error(errorMessage);
-	}
 
 	return (
 		<Suspense>
