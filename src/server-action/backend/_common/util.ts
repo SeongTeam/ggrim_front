@@ -47,7 +47,7 @@ export const client = createClient<paths>({ baseUrl: getServerUrl() });
 
 export function createServerActionError(
 	messageKey: ServerActionErrorMessageKey,
-	options?: unknown,
+	cause?: unknown,
 ): ServerActionError {
 	const message = SERVER_ACTION_ERROR_MSG[messageKey];
 	const serverActionError = {
@@ -55,7 +55,7 @@ export function createServerActionError(
 		message,
 		stack: "",
 		status: messageKey,
-		options,
+		cause,
 	};
 	Error.captureStackTrace(serverActionError, createServerActionError);
 	return serverActionError;
