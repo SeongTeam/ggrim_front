@@ -29,9 +29,6 @@ const nextConfig = {
 		config.resolve.alias["@"] = path.resolve(__dirname, "src");
 		return config;
 	},
-	experimental: {
-		instrumentationHook: true,
-	},
 };
 
 if (process.env.NODE_ENV === "production") {
