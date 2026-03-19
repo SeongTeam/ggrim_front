@@ -21,7 +21,7 @@ export default async function VerifyUserByEmail({ searchParams }: verifyUserByEm
 
 	const handleAction = async (email: string) => {
 		"use server";
-		await mailSecurityTokenAction({ purpose, email });
+		return mailSecurityTokenAction({ purpose, email });
 	};
 
 	return (

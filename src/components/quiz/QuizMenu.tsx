@@ -48,20 +48,11 @@ export const QuizMenu = ({ quiz, isOwner }: QuizMenuProps) => {
 	};
 
 	const onDelete = async () => {
-		try {
-			await deleteQuizAction(quiz.id);
+		const result = await deleteQuizAction(quiz.id);
+		if (result.ok) {
 			router.push("/quiz");
-		} catch (error) {
-			if (!isServerActionError(error)) {
-				toast.error("An unexpected error occurred. Please try again later.");
-				throw error;
-			}
-
-			if (error.status === "clientError") {
-				toast.error(JSON.stringify(error.cause));
-			} else {
-				toast.error(error.message);
-			}
+		} else {
+			toast.error(result.message);
 		}
 	};
 

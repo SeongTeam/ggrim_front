@@ -87,19 +87,9 @@ const MCQView = ({
 	const [error, setError] = useState("");
 
 	const callReactionServerAction = async (type: QUIZ_REACTION) => {
-		try {
-			await addQuizReactionsAction(mcq.id, { type });
-		} catch (error) {
-			if (!isServerActionError(error)) {
-				toast.error("An unexpected error occurred. Please try again later.");
-				throw error;
-			}
-
-			if (error.status === "clientError") {
-				setError(JSON.stringify(error.cause, null, 2));
-			} else {
-				toast.error(error.message);
-			}
+		const result = await addQuizReactionsAction(mcq.id, { type });
+		if (!result.ok) {
+			toast(result.message);
 		}
 	};
 
@@ -107,7 +97,10 @@ const MCQView = ({
 		const prevReaction: QUIZ_REACTION | undefined = reaction.userReaction;
 		dispatch({ type: "RESET_REACTION" });
 		if (prevReaction === "like") {
-			await deleteQuizReactionAction(mcq.id);
+			const result = await deleteQuizReactionAction(mcq.id);
+			if (!result.ok) {
+				toast.error(result.message);
+			}
 		} else {
 			dispatch({ type: "SET_LIKE" });
 			await callReactionServerAction(QUIZ_REACTION.like);
@@ -118,7 +111,10 @@ const MCQView = ({
 		const prevReaction: QUIZ_REACTION | undefined = reaction.userReaction;
 		dispatch({ type: "RESET_REACTION" });
 		if (prevReaction === "dislike") {
-			await deleteQuizReactionAction(mcq.id);
+			const result = await deleteQuizReactionAction(mcq.id);
+			if (!result.ok) {
+				toast.error(result.message);
+			}
 		} else {
 			dispatch({ type: "SET_DISLIKE" });
 			await callReactionServerAction(QUIZ_REACTION.dislike);

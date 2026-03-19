@@ -5,10 +5,11 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { GuideModal } from "../modal/GuideModal";
 import { isServerActionError } from "@/server-action/backend/_common/serverActionError";
+import { ServerActionResult } from "../../server-action/client/type";
 
 interface UsernameFormProps {
 	NextRoute: string;
-	submitHandler: (username: string) => Promise<void>;
+	submitHandler: (username: string) => Promise<ServerActionResult<void>>;
 	initialValue?: string;
 }
 
@@ -29,23 +30,14 @@ const UpdateUsernameForm = ({ NextRoute, submitHandler, initialValue }: Username
 			return;
 		}
 
-		try {
-			await toast.promise(submitHandler(username), {
-				loading: `Verifying ...`,
-			});
+		const result = await toast.promise(submitHandler(username), {
+			loading: `Verifying ...`,
+		});
+		if (result.ok) {
 			setSuccess("success task");
 			router.refresh();
-		} catch (error) {
-			if (!isServerActionError(error)) {
-				toast.error("An unexpected error occurred. Please try again later.");
-				throw error;
-			}
-
-			if (error.status === "clientError") {
-				toast.error(JSON.stringify(error.cause, null, 2));
-			} else {
-				toast.error(error.message);
-			}
+		} else {
+			toast.error(result.message);
 		}
 	};
 

@@ -3,9 +3,10 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { isServerActionError } from "@/server-action/backend/_common/serverActionError";
+import { ServerActionResult } from "../../server-action/client/type";
 
 interface EmailFormProp {
-	emailFormAction: (email: string) => Promise<void>;
+	emailFormAction: (email: string) => Promise<ServerActionResult<void>>;
 }
 
 export const EmailForm = ({ emailFormAction }: EmailFormProp) => {
@@ -14,23 +15,13 @@ export const EmailForm = ({ emailFormAction }: EmailFormProp) => {
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 
-		try {
-			await toast.promise(emailFormAction(email), {
-				loading: `Verifying ...`,
-			});
-
+		const result = await toast.promise(emailFormAction(email), {
+			loading: `Verifying ...`,
+		});
+		if (result.ok) {
 			toast.success("success");
-		} catch (error) {
-			if (!isServerActionError(error)) {
-				toast.error("An unexpected error occurred. Please try again later.");
-				throw error;
-			}
-
-			if (error.status === "clientError") {
-				toast.error(JSON.stringify(error.cause, null, 2));
-			} else {
-				toast.error(error.message);
-			}
+		} else {
+			toast.error(result.message);
 		}
 	};
 

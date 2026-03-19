@@ -17,7 +17,7 @@ export default async function UpdateUsername() {
 
 	const submitHandler = async (username: string) => {
 		"use server";
-		await updateUserUsernameAction({ username });
+		return await updateUserUsernameAction({ username });
 	};
 
 	return (

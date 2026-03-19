@@ -26,20 +26,11 @@ export const PaintingCardGrid = (props: PaintingCardGridProps): React.JSX.Elemen
 	const searchParam = useSearchParams();
 
 	const openModal = async (paintingId: string) => {
-		try {
-			const painting = await getPaintingAction(paintingId);
-			setSelectedPainting(painting);
-		} catch (error) {
-			if (!isServerActionError(error)) {
-				toast.error("An unexpected error occurred. Please try again later.");
-				throw error;
-			}
-
-			if (error.status === "clientError") {
-				toast.error(JSON.stringify(error.cause, null, 2));
-			} else {
-				toast.error(error.message);
-			}
+		const result = await getPaintingAction(paintingId);
+		if (result.ok) {
+			setSelectedPainting(result.data);
+		} else {
+			toast.error(result.message);
 		}
 	};
 
@@ -65,30 +56,20 @@ export const PaintingCardGrid = (props: PaintingCardGridProps): React.JSX.Elemen
 			const searchStyles: string[] = searchParam.getAll("styles[]") || [];
 
 			console.log(`load ${findResultRef.current.page + 1} page`);
-			try {
-				const response = await findPaintingAction(
-					searchTitle,
-					searchArtist,
-					searchTags,
-					searchStyles,
-					findResultRef.current.page + 1,
-				);
-
-				findResultRef.current = response;
-				setSearchPaintings((prev) => [...prev, ...response.data]);
-
-				isLoadingRef.current = false;
-			} catch (error) {
-				if (!isServerActionError(error)) {
-					toast.error("An unexpected error occurred. Please try again later.");
-					throw error;
-				}
-
-				if (error.status === "clientError") {
-					toast.error(JSON.stringify(error.cause, null, 2));
-				} else {
-					toast.error(error.message);
-				}
+			const result = await findPaintingAction(
+				searchTitle,
+				searchArtist,
+				searchTags,
+				searchStyles,
+				findResultRef.current.page + 1,
+			);
+			isLoadingRef.current = false;
+			if (result.ok) {
+				const { data: pagination } = result;
+				findResultRef.current = pagination;
+				setSearchPaintings((prev) => [...prev, ...pagination.data]);
+			} else {
+				toast.error(result.message);
 			}
 		};
 

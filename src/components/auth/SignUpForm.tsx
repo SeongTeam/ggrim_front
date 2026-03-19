@@ -50,31 +50,22 @@ export const SignUpForm = () => {
 			return;
 		}
 
-		try {
-			await toast.promise(
-				signUpAction({
-					username: form.username,
-					password: form.password.trim(),
-				}),
-				{
-					loading: `Signing Up`,
-				},
-			);
+		const result = await toast.promise(
+			signUpAction({
+				username: form.username,
+				password: form.password.trim(),
+			}),
+			{
+				loading: `Signing Up`,
+			},
+		);
+		if (result.ok) {
 			setForm({ ...initState, successMessage: "Success Sign Up" });
-		} catch (error) {
-			if (!isServerActionError(error)) {
-				toast.error("An unexpected error occurred. Please try again later.");
-				throw error;
-			}
-
-			if (error.status === "clientError") {
-				setForm((prev) => ({
-					...prev,
-					errorMessage: JSON.stringify(error.cause, null, 2),
-				}));
-			} else {
-				toast.error(error.message);
-			}
+		} else {
+			setForm((prev) => ({
+				...prev,
+				errorMessage: result.message,
+			}));
 		}
 	};
 

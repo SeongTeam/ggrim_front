@@ -4,7 +4,6 @@ import { LogOut, Settings, User as UserIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { signOutAction } from "../../server-action/backend/auth/api";
 import { useRouter } from "next/navigation";
-import { isServerActionError } from "@/server-action/backend/_common/serverActionError";
 import {
 	syncUserToLocalStorage,
 	getRunningUser,
@@ -30,13 +29,13 @@ export const ProfileIconMenu = ({ user }: ProfileIconMenuProps) => {
 
 	const handleSignOut = async () => {
 		const result = await signOutAction();
-		if (isServerActionError(result)) {
-			throw new Error(result.message);
+		if (result.ok) {
+			removeRunningUser();
+
+			router.push("/");
+		} else {
+			toast.error(result.message);
 		}
-
-		removeRunningUser();
-
-		router.push("/");
 	};
 
 	const handleSetting = () => {

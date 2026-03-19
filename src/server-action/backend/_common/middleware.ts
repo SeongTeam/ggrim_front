@@ -1,8 +1,9 @@
 "server-only";
 import { serverLogger } from "../../../util/serverLogger";
-import { createServerActionError, ServerActionError } from "./serverActionError";
+import { SERVER_ACTION_ERROR_MSG, ServerActionError } from "./serverActionError";
 import { isServerActionError } from "./serverActionError";
 import { HttpException, ServiceException } from "../../../generated/dto-types";
+import { ServerActionFailure, ServerActionResult } from "../../client/type";
 
 // TODO: HTTP API 에러 핸들링 로직 추가
 // - [ ] : fetch()가 반환한 응답 상태 확인 및 에러 핸들링 로직 추가
@@ -17,35 +18,40 @@ import { HttpException, ServiceException } from "../../../generated/dto-types";
 // ? 질문: <의문점 또는 개선 방향>
 // * 참고: <관련 정보나 링크>
 
-export function withErrorHandler<T extends (...args: any[]) => Promise<any>>(
-	actionName: string,
-	action: T,
-): (...args: Parameters<T>) => Promise<Awaited<ReturnType<T>>> {
+type Action = (...args: any[]) => Promise<any>;
+
+type ActionResult<T extends Action> = Awaited<ReturnType<T>>;
+
+type ServerAction<T extends Action> = (
+	...args: Parameters<T>
+) => Promise<ServerActionResult<ActionResult<T>>>;
+
+export function withErrorHandler<T extends Action>(actionName: string, action: T): ServerAction<T> {
 	return async (...args: Parameters<T>) => {
 		try {
 			const data = await action(...args);
 
-			return data;
+			return { data, ok: true };
 		} catch (err: unknown) {
 			if (isServerActionError(err)) {
-				handleServerActionError(actionName, err);
+				return handleServerActionError(actionName, err);
 			} else if (isServerException(err)) {
-				handleBackendServerException(actionName, err);
+				return handleBackendServerException(actionName, err);
 			} else if (isHttpException(err)) {
-				handleHttpException(actionName, err);
+				return handleHttpException(actionName, err);
 			}
 
-			handleUnexpectedError(actionName, err);
+			return handleUnexpectedError(actionName, err);
 		}
 	};
 }
 
-function handleServerActionError(actionName: string, err: ServerActionError): ServerActionError {
+function handleServerActionError(actionName: string, err: ServerActionError): ServerActionFailure {
 	serverLogger.error(`${actionName}() fail. ServerActionError: ${JSON.stringify(err, null, 2)}`);
-	throw err;
+	return { ok: false, message: err.message };
 }
 
-function handleUnexpectedError(actionName: string, err: unknown) {
+function handleUnexpectedError(actionName: string, err: unknown): ServerActionFailure {
 	let message = "Unknown server error";
 	let stack = "handleUnexpectedError() stack trace not available";
 
@@ -56,22 +62,18 @@ function handleUnexpectedError(actionName: string, err: unknown) {
 	serverLogger.error(`${actionName}() fail. UnexpectedError: ${message}
 		Stack: ${stack}`);
 
-	throw createServerActionError("serverError");
+	return { ok: false, message: SERVER_ACTION_ERROR_MSG.backendError };
 }
 
-function handleHttpException(actionName: string, err: HttpException): ServerActionError {
+function handleHttpException(actionName: string, err: HttpException): ServerActionFailure {
 	serverLogger.error(`${actionName}() fail. HttpException: ${err.message}`);
 
-	if (err.statusCode >= 400 && err.statusCode < 500) {
-		throw createServerActionError("clientError", err);
-	}
-
-	throw createServerActionError("backendError");
+	return { ok: false, message: err.message };
 }
 
-function handleBackendServerException(actionName: string, err: HttpException): ServerActionError {
+function handleBackendServerException(actionName: string, err: HttpException): ServerActionFailure {
 	serverLogger.error(` ${actionName}() fail. ServerException: ${JSON.stringify(err, null, 2)}`);
-	throw createServerActionError("backendError");
+	return { ok: false, message: err.message };
 }
 
 function isHttpException(err: unknown): err is HttpException {

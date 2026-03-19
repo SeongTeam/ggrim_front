@@ -7,19 +7,24 @@ interface QuizDetailPageProps {
 }
 
 export default async function QuizDetailPage(props: QuizDetailPageProps) {
-    const params = await props.params;
-    const quizID = params.id;
+	const params = await props.params;
+	const quizID = params.id;
 
-    const [quizActionResponse, signInResponse] = await Promise.all([
+	const [quizActionResult, signInResponse] = await Promise.all([
 		getQuizAction(quizID),
 		getSignInResponse(),
 	]);
 
-    const isOwnerAccess = signInResponse?.user
+	if (!quizActionResult.ok) {
+		throw new Error(quizActionResult.message);
+	}
+	const quizActionResponse = quizActionResult.data;
+
+	const isOwnerAccess = signInResponse?.user
 		? quizActionResponse.quiz.owner.id === signInResponse.user.id
 		: false;
 
-    return (
+	return (
 		<div>
 			<DetailQuiz detailQuizDTO={quizActionResponse} isOwnerAccess={isOwnerAccess} />
 		</div>

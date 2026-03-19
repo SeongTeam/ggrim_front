@@ -15,6 +15,7 @@ import { useDebounceCallback } from "../../hooks/useDebounceCallback";
 import { AutoCompleteAction, AutoCompleteState, InputAction, InputState } from "./type";
 import { PaginationResponse } from "../../server-action/backend/_common/type";
 import { isServerActionError } from "@/server-action/backend/_common/serverActionError";
+import { ServerActionFailure, ServerActionSuccess } from "../../server-action/client/type";
 
 // Constants
 
@@ -41,13 +42,29 @@ interface UseSearchBarReturn {
 // Utility functions
 
 function createServerAction(key: string) {
+	const runAction = async (
+		value: string,
+		action: (
+			value: string,
+		) => Promise<
+			ServerActionSuccess<PaginationResponse<{ name: string }>> | ServerActionFailure
+		>,
+	): Promise<PaginationResponse<{ name: string }>> => {
+		const result = await action(value);
+		if (result.ok) {
+			return result.data;
+		}
+
+		throw new Error(result.message);
+	};
+
 	const actionMap: Record<
 		string,
 		(value: string) => Promise<PaginationResponse<{ name: string }>>
 	> = {
-		artist: (value: string) => findArtistsAction(value),
-		style: (value: string) => findStylesAction(value),
-		tag: (value: string) => findTagsAction(value),
+		artist: (value: string) => runAction(value, findArtistsAction),
+		style: (value: string) => runAction(value, findStylesAction),
+		tag: (value: string) => runAction(value, findTagsAction),
 	};
 
 	return (
