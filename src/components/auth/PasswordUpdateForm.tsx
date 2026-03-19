@@ -4,9 +4,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { isServerActionError } from "@/server-action/backend/_common/serverActionError";
 import toast from "react-hot-toast";
+import { ServerActionResult } from "../../server-action/client/type";
 
 export interface PasswordUpdateFormProps {
-	formAction: (password: string) => Promise<void>;
+	formAction: (password: string) => Promise<ServerActionResult<void>>;
 	NextRoute: string;
 }
 
@@ -23,20 +24,12 @@ export const PasswordUpdateForm = ({ formAction, NextRoute }: PasswordUpdateForm
 			return;
 		}
 
-		try {
-			await formAction(password);
+		const result = await formAction(password);
+		if (result.ok) {
 			toast.success("success");
 			router.push(NextRoute);
-		} catch (error) {
-			if (!isServerActionError(error)) {
-				toast.error("An unexpected error occurred. Please try again later.");
-				throw error;
-			}
-			if (error.status === "clientError") {
-				toast.error(JSON.stringify(error.cause, null, 2));
-			} else {
-				toast.error(error.message);
-			}
+		} else {
+			toast.error(result.message);
 		}
 	};
 

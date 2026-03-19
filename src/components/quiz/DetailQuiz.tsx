@@ -53,20 +53,14 @@ export const DetailQuiz = ({
 
 	const handelNextMCQ = async () => {
 		const status: QuizStatus | undefined = getQuizStatus();
-		try {
-			const { endIndex, currentIndex, context, shortQuiz } = await scheduleQuizAction(status);
+
+		const result = await scheduleQuizAction(status);
+		if (result.ok) {
+			const { endIndex, currentIndex, context, shortQuiz } = result.data;
 			saveQuizStatus({ endIndex, currentIndex, context });
 			router.push(`/quiz/${shortQuiz.id}`);
-		} catch (error) {
-			if (!isServerActionError(error)) {
-				toast.error("An unexpected error occurred. Please try again later.");
-				throw error;
-			}
-			if (error.status === "clientError") {
-				toast.error(JSON.stringify(error.cause, null, 2));
-			} else {
-				toast.error(error.message);
-			}
+		} else {
+			toast.error(result.message);
 		}
 	};
 
@@ -81,10 +75,12 @@ export const DetailQuiz = ({
 	// * 참고: <관련 정보나 링크>
 	const handleImageSelected = async (selectedPainting: ShowPainting) => {
 		const isCorrect = mcq.answerPaintings[0].id === selectedPainting.id;
-		await Promise.all([
-			updatePaintingContext(selectedPainting.id),
-			submitQuizAction(quiz.id, { isCorrect }),
-		]);
+
+		await updatePaintingContext(selectedPainting.id);
+		const submitQuizResult = await submitQuizAction(quiz.id, { isCorrect });
+		if (!submitQuizResult.ok) {
+			toast.error(submitQuizResult.message);
+		}
 	};
 
 	if (quiz.type === "ONE_CHOICE") {
@@ -115,18 +111,11 @@ const generateQuizContextDTO = (painting: ShowPaintingResponse): QuizContextDto 
 };
 
 const updatePaintingContext = async (id: string) => {
-	try {
-		const detailPainting = await getPaintingAction(id);
+	const result = await getPaintingAction(id);
+	if (result.ok) {
+		const detailPainting = result.data;
 		await addQuizContextAction(generateQuizContextDTO(detailPainting));
-	} catch (error) {
-		if (!isServerActionError(error)) {
-			toast.error("An unexpected error occurred. Please try again later.");
-			throw error;
-		}
-		if (error.status === "clientError") {
-			toast.error(JSON.stringify(error.cause, null, 2));
-		} else {
-			toast.error(error.message);
-		}
+	} else {
+		toast.error(result.message);
 	}
 };

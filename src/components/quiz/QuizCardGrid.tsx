@@ -39,22 +39,15 @@ export const QuizCardGrid = (props: QuizCardGridProps): React.JSX.Element => {
 			isLoadingRef.current = true;
 
 			console.log(`load ${findResultRef.current.page + 1} page`);
-			try {
-				const response = await getQuizListAction(findResultRef.current.page + 1);
-				isLoadingRef.current = false;
+
+			const result = await getQuizListAction(findResultRef.current.page + 1);
+			isLoadingRef.current = false;
+			if (result.ok) {
+				const response = result.data;
 				findResultRef.current = response;
 				setFindQuizzes((prev) => [...prev, ...response.data]);
-			} catch (error) {
-				if (!isServerActionError(error)) {
-					toast.error("An unexpected error occurred. Please try again later.");
-					throw error;
-				}
-
-				if (error.status === "clientError") {
-					toast.error(JSON.stringify(error.cause, null, 2));
-				} else {
-					toast.error(error.message);
-				}
+			} else {
+				toast.error(result.message);
 			}
 		};
 

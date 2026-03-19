@@ -4,9 +4,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { isServerActionError } from "@/server-action/backend/_common/serverActionError";
 import toast from "react-hot-toast";
+import { ServerActionResult } from "../../server-action/client/type";
 
 export interface SignInFormProps {
-	formAction: (email: string, password: string) => Promise<void>;
+	formAction: (email: string, password: string) => Promise<ServerActionResult<void>>;
 	NextRoute: string;
 }
 
@@ -15,23 +16,15 @@ export const SignInForm = ({ formAction, NextRoute }: SignInFormProps) => {
 	const [password, setPassword] = useState("");
 	const router = useRouter();
 
-	const handleSignIn = async (e: React.FormEvent) => {
+	const handleSignIn = async (e: React.SubmitEvent) => {
 		e.preventDefault();
 
-		try {
-			await formAction(email, password);
+		const result = await formAction(email, password);
+		if (result.ok) {
 			toast.success("success");
 			router.push(NextRoute);
-		} catch (error) {
-			if (!isServerActionError(error)) {
-				toast.error("An unexpected error occurred. Please try again later.");
-				throw error;
-			}
-			if (error.status === "clientError") {
-				toast.error(JSON.stringify(error.cause, null, 2));
-			} else {
-				toast.error(error.message);
-			}
+		} else {
+			toast.error(result.message);
 		}
 	};
 

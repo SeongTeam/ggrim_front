@@ -52,20 +52,12 @@ export const DeleteAccountForm = () => {
 			toast.error("The phrase does not match. Please try again.");
 			return;
 		}
-		try {
-			await deleteUserAction();
-			setState((prev) => ({ ...prev, success: `Success Delete Account` }));
-		} catch (error) {
-			if (!isServerActionError(error)) {
-				toast.error("An unexpected error occurred. Please try again.");
-				throw error;
-			}
 
-			if (error.status === "clientError") {
-				setState((prev) => ({ ...prev, error: JSON.stringify(error.cause) }));
-			} else {
-				toast.error(error.message);
-			}
+		const result = await deleteUserAction();
+		if (result.ok) {
+			setState((prev) => ({ ...prev, success: `Success Delete Account` }));
+		} else {
+			setState((prev) => ({ ...prev, error: result.message }));
 		}
 	};
 

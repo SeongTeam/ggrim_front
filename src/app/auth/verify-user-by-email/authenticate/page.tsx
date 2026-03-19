@@ -83,22 +83,16 @@ export default function AuthCallbackPage() {
 			return;
 		}
 		dispatch({ type: "SET_PURPOSE", purpose });
-		try {
-			await generateSecurityTokenByEmailVerificationAction({ purpose }, identifier, token);
 
+		const result = await generateSecurityTokenByEmailVerificationAction(
+			{ purpose },
+			identifier,
+			token,
+		);
+		if (result.ok) {
 			dispatch({ type: "SUCCESS", message: `Success ${purpose}` });
-		} catch (err: unknown) {
-			if (!isServerActionError(err)) {
-				toast.error("Unknown error occurred");
-				throw err;
-			}
-
-			if (err.status === "clientError") {
-				dispatch({ type: "ERROR", message: JSON.stringify(err.cause) });
-			} else {
-				toast.error(err.message);
-				throw err;
-			}
+		} else {
+			dispatch({ type: "ERROR", message: result.message });
 		}
 	};
 

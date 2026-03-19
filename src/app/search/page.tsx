@@ -34,11 +34,14 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 		Array.isArray(tags) ? tags : [tags],
 		Array.isArray(styles) ? styles : [styles],
 	);
+	if (!response.ok) {
+		return <ErrorModal message={response.message} />;
+	}
 
 	return (
 		<Suspense>
 			<div className="mt-20">
-				<PaintingCardGrid findResult={response} />
+				<PaintingCardGrid findResult={response.data} />
 			</div>
 		</Suspense>
 	);

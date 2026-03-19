@@ -141,23 +141,14 @@ export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
 				? addQuizAction
 				: (dto: CreateQuizDto) => updateQuizAction(quiz.id, dto);
 
-		try {
-			const response = await serverAction(dto);
+		const result = await serverAction(dto);
+		if (result.ok) {
 			removeSavedNewQuiz();
-			router.push(`/quiz/${response.id}`);
-			return;
-		} catch (error) {
-			if (!isServerActionError(error)) {
-				toast.error("An unexpected error occurred. Please try again later.");
-				throw error;
-			}
-
-			if (error.status === "clientError") {
-				setError(JSON.stringify(error.cause, null, 2));
-			} else {
-				toast.error(error.message);
-			}
+			router.push(`/quiz/${result.data.id}`);
+		} else {
+			setError(result.message);
 		}
+		return;
 	};
 
 	const validateBeforeSubmit = () => {
@@ -210,29 +201,21 @@ export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
 			return false;
 		}
 
-		try {
-			const painting = await getPaintingAction(id);
-			if (isDuplicatedPaintingPainting(newQuiz, painting)) {
-				setError(`Can't Add painting. ${id} is already exist. `);
-				return false;
-			}
+		const result = await getPaintingAction(id);
 
-			mapPaintingKeyToAction(key, painting);
-
-			return true;
-		} catch (error) {
-			if (!isServerActionError(error)) {
-				toast.error("An unexpected error occurred. Please try again later.");
-				throw error;
-			}
-			if (error.status === "clientError") {
-				setError(JSON.stringify(error.cause, null, 2));
-			} else {
-				toast.error(error.message);
-			}
-
+		if (!result.ok) {
+			setError(result.message);
 			return false;
 		}
+		const painting = result.data;
+		if (isDuplicatedPaintingPainting(newQuiz, painting)) {
+			setError(`Can't Add painting. ${id} is already exist. `);
+			return false;
+		}
+
+		mapPaintingKeyToAction(key, painting);
+
+		return true;
 	};
 
 	const handleDeleteQuizPainting = async (key: StatePaintingKey): Promise<boolean> => {

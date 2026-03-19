@@ -40,15 +40,23 @@ export default async function Campaign() {
 }
 
 const fetchCampaignData = async () => {
-	try {
-		const [artworkOfWeekData, quizzes, responseQuizDTO] = await Promise.all([
-			getWeekArtWorkDataAction(),
-			getQuizListAction(),
-			scheduleQuizAction(),
-		]);
+	const [artworkOfWeekDataResult, quizzesResult, responseQuizDTOResult] = await Promise.all([
+		getWeekArtWorkDataAction(),
+		getQuizListAction(),
+		scheduleQuizAction(),
+	]);
 
-		return { artworkOfWeekData, quizzes, responseQuizDTO };
-	} catch (error) {
-		throw error;
+	if (artworkOfWeekDataResult.ok && quizzesResult.ok && responseQuizDTOResult.ok) {
+		return {
+			artworkOfWeekData: artworkOfWeekDataResult.data,
+			quizzes: quizzesResult.data,
+			responseQuizDTO: responseQuizDTOResult.data,
+		};
+	} else {
+		const errorMessages = [artworkOfWeekDataResult, quizzesResult, responseQuizDTOResult]
+			.map((result, idx) => (result.ok ? "fetch success" : result.message))
+			.join(", ");
+
+		throw new Error(`Failed to fetch campaign data: ${errorMessages}`);
 	}
 };

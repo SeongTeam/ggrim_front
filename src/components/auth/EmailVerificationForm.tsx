@@ -19,37 +19,26 @@ export const EmailVerificationForm = ({ nextRoute }: EmailVerificationForm) => {
 	const handleVerifyEmail = async (e: React.FormEvent) => {
 		e.preventDefault();
 
-		try {
-			await toast.promise(sendPinCodeAction({ email }), {
-				loading: `Verifying ...`,
-			});
+		const result = await toast.promise(sendPinCodeAction({ email }), {
+			loading: `Verifying ...`,
+		});
+		if (result.ok) {
 			setIsPinCodeSent(true);
 			toast.success("check your email");
-		} catch (error) {
-			if (!isServerActionError(error)) {
-				toast.error("An unexpected error occurred. Please try again later.");
-				throw error;
-			}
-			toast.error(error.message);
+		} else {
+			toast.error(result.message);
 		}
 	};
 
 	const handleVerifyPinCode = async (e: React.FormEvent) => {
 		e.preventDefault();
-		try {
-			await verifyPinCodeAction({ email, pinCode: pin });
+
+		const result = await verifyPinCodeAction({ email, pinCode: pin });
+		if (result.ok) {
 			toast.success("success verification");
 			router.push(nextRoute);
-		} catch (error) {
-			if (!isServerActionError(error)) {
-				toast.error("An unexpected error occurred. Please try again later.");
-				throw error;
-			}
-			if (error.status === "clientError") {
-				toast.error(JSON.stringify(error.cause, null, 2));
-			} else {
-				toast.error(error.message);
-			}
+		} else {
+			toast.error(result.message);
 		}
 	};
 

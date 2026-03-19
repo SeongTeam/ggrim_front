@@ -2,24 +2,20 @@ import { ErrorModal } from "../../../../components/modal/ErrorModal";
 import { QuizForm } from "../../../../components/quiz/QuizForm";
 import { getQuizAction } from "../../../../server-action/backend/quiz/api";
 import { getSignInResponse } from "../../../../server-action/backend/_common/cookie";
-import {
-	createServerActionError,
-	isServerActionError,
-} from "@/server-action/backend/_common/serverActionError";
 
 interface QuizEditPageProps {
 	params: Promise<{ id: string }>;
 }
 
 export default async function QuizEditPage(props: QuizEditPageProps) {
-    const params = await props.params;
-    const { quiz, message } = await fetchQuizEditData(params.id);
+	const params = await props.params;
+	const { quiz, message } = await fetchQuizEditData(params.id);
 
-    if (message) {
+	if (message) {
 		return <ErrorModal message={message} />;
 	}
 
-    return (
+	return (
 		<div className="mt-10 px-40 pt-10">
 			<div className="rounded-lg bg-zinc-800 pt-10">
 				<h2 className="mb-6 text-center text-2xl font-bold text-white">Edit Quiz</h2>
@@ -30,31 +26,22 @@ export default async function QuizEditPage(props: QuizEditPageProps) {
 }
 
 const fetchQuizEditData = async (id: string) => {
-	try {
-		const [signInResponse, quizActionResponse] = await Promise.all([
-			getSignInResponse(),
-			getQuizAction(id),
-		]);
+	const [signInResponse, quizActionResult] = await Promise.all([
+		getSignInResponse(),
+		getQuizAction(id),
+	]);
 
-		if (!signInResponse) {
-			throw createServerActionError("clientError", "Need to Sign In");
-		}
-		const { quiz } = quizActionResponse;
-		const { user } = signInResponse;
-
-		if (quiz.owner.id !== user.id) {
-			throw createServerActionError("clientError", "No Authorized to edit");
-		}
-		return { quiz };
-	} catch (error) {
-		if (!isServerActionError(error)) {
-			throw error;
-		}
-
-		if (error.status === "clientError") {
-			return { message: JSON.stringify(error.cause) };
-		} else {
-			return { message: error.message };
-		}
+	if (!signInResponse) {
+		return { message: "Need to Sign In" };
 	}
+	if (!quizActionResult.ok) {
+		return { message: quizActionResult.message };
+	}
+	const { quiz } = quizActionResult.data;
+	const { user } = signInResponse;
+
+	if (quiz.owner.id !== user.id) {
+		return { message: "No Authorized to edit" };
+	}
+	return { quiz };
 };
