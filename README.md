@@ -6,17 +6,17 @@
 
 ### Demo
 
-- https://port-0-ggrim-front-m4i5o7t86f50fb45.sel4.cloudtype.app/
+- https://ggrim.shop/
 
 ## Tech Stack
 
-### next.js 14 App router
+### next.js 15 App router
 
 - Advantage
     1. 프론트 서버 성능 최적화
         - next.js가 제공하는 SSR API를 통해 렌더링 최척화 가능
         - next.js가 제공하는 클라어인트 측과 서버측 캐시를 통해 프론트 서버 부하 감소 가능
-    2. 이미지 리로스 최적화
+    2. 이미지 리소스 최적화
     - next.js가 제공하는 `<Image />` 컴포넌트를 통해 이미리 리소스 렌더링 최적화 및 캐시 가능
     3. 개발 비용 절약
     - next.js는 웹 개발에 필요한 여러가지 메소드 및 컴포넌트를 제공한다.
