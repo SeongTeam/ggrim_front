@@ -11,5 +11,14 @@ export const SEARCH_PARAM_KEY = {
 	TITLE: "title",
 } as const;
 
-export const BASE_SUGGESTIONS = Object.values(INPUT_KEY).map((str) => `${str}:`);
-export const QUOTED_BASE_SUGGESTIONS = BASE_SUGGESTIONS.map((str) => `"${str}"`);
+export const BASE_SUGGESTIONS = ["tag:", "artist:", "style:"] as const;
+export const AUTOCOMPLETE_CASE = {
+	BASE: "BASE",
+	EMPTY: "EMPTY",
+	KEY_VALUE: "KEY_VALUE",
+} as const;
+export const DELIMITER = {
+	SPACE: " ",
+	COLON: ":",
+	UNDER_BAR: "_",
+};

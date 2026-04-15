@@ -1,16 +1,18 @@
 "use client";
 import { Dispatch, RefObject, useCallback, useEffect, useReducer, useRef } from "react";
-import { BASE_SUGGESTIONS, QUOTED_BASE_SUGGESTIONS } from "./const";
+import { BASE_SUGGESTIONS } from "./const";
 import { findArtistsAction } from "../../server-action/backend/artist/api";
 import { findTagsAction } from "../../server-action/backend/tag/api";
 import { findStylesAction } from "../../server-action/backend/style/api";
 import toast from "react-hot-toast";
 import {
 	calculateNewInput,
-	determineParamCase,
-	getInsideDoubleQuotes,
-	parseKeyValue,
+	getAutoCompleteCase,
+	readCurrentWord,
+	parseWord,
+	transformToInput,
 } from "./util";
+import { AUTOCOMPLETE_CASE } from "./const";
 import { useDebounceCallback } from "../../hooks/useDebounceCallback";
 import { AutoCompleteAction, AutoCompleteState, InputAction, InputState } from "./type";
 import { PaginationResponse } from "../../server-action/backend/_common/type";
@@ -185,44 +187,29 @@ export function useSearchBar({
 	);
 
 	const fetchSuggestions = async (value: string, cursorPosition: number) => {
-		const paramCase = determineParamCase(value, cursorPosition);
+		const word = readCurrentWord(value, cursorPosition);
+		const keyValue = parseWord(word);
+		const wordCase = getAutoCompleteCase(keyValue);
 		let suggestions: string[] = [];
 		let query = "";
 
 		autoCompleteDispatch({ type: "SET_LOADING", payload: true });
 		autoCompleteDispatch({ type: "SET_ERROR", payload: undefined });
-		switch (paramCase) {
-			case "NO_QUOTED": {
-				suggestions = QUOTED_BASE_SUGGESTIONS;
+		switch (wordCase) {
+			case AUTOCOMPLETE_CASE.BASE: {
+				suggestions = [...BASE_SUGGESTIONS];
 				break;
 			}
 
-			case "NO_PARAM": {
-				const quoted = getInsideDoubleQuotes(value, cursorPosition);
-				if (quoted) {
-					suggestions = BASE_SUGGESTIONS.filter((suggestion) =>
-						suggestion.startsWith(quoted),
-					);
-					query = quoted;
-				}
-				break;
-			}
-
-			case "PARAM_KEY_ONLY": {
-				const quoted = getInsideDoubleQuotes(value, cursorPosition);
-				if (!quoted) {
-					break;
-				}
-				const param = parseKeyValue(quoted);
-				if (!param?.key) {
-					break;
-				}
-				const serverAction = createServerAction(param.key);
+			case AUTOCOMPLETE_CASE.KEY_VALUE: {
+				const serverAction = createServerAction(keyValue.key);
 				try {
-					const response = await serverAction(param.value || "");
+					const response = await serverAction(keyValue.value || "");
 					suggestions =
-						response.data.length > 0 ? response.data.map((d) => d.name) : [""];
-					query = param.value || "";
+						response.data.length > 0
+							? response.data.map((d) => transformToInput(d.name))
+							: [""];
+					query = keyValue.value || "";
 					break;
 				} catch (error) {
 					if (!isServerActionError(error)) {
@@ -258,7 +245,7 @@ export function useSearchBar({
 	// Event handlers
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const text = e.target.value;
-		const cursorPos = Math.max(0, (e.target.selectionStart || 1) - 1);
+		const cursorPos = Math.max(0, e.target.selectionStart || 1);
 		inputDispatch({ type: "SET_ALL", payload: { text, cursorPos } });
 		debouncedFetchSuggestions(text, cursorPos);
 		onSearch(text);

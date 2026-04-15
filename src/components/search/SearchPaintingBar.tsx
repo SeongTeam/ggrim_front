@@ -3,9 +3,9 @@ import { ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from
 import { RefObject, useState } from "react";
 import { SearchBar } from "./SearchBar";
 import { INPUT_KEY, SEARCH_PARAM_KEY } from "./const";
-import { extractValuesInsideQuoted, makeQuoted } from "./util";
 import { SEARCH_LOGIC_ROUTE } from "../../route/search/route";
 import { useDebounceCallback } from "../../hooks/useDebounceCallback";
+import { parseWord, transformToInput, transformToUrlParam } from "./util";
 
 interface ParsedInput {
 	title: string;
@@ -15,24 +15,33 @@ interface ParsedInput {
 }
 
 function parseInput(input: string): ParsedInput {
+	const delimiter = " ";
+	const words = input.split(delimiter);
+	const map = new Map<string, string[]>();
+	const TITLE = "title";
+	const keys = [TITLE, ...Object.values(INPUT_KEY)];
+
+	for (const word of words) {
+		const keyValue = parseWord(word);
+		if (keys.includes(keyValue.key)) {
+			const existing = map.get(keyValue.key) || [];
+			existing.push(keyValue.value);
+			map.set(keyValue.key, existing);
+		} else {
+			const existing = map.get(TITLE) || [];
+			existing.push(word);
+			map.set(TITLE, existing);
+		}
+	}
+
 	// 각 필드 추출
-	const tags = extractValuesInsideQuoted(input, INPUT_KEY.TAG);
-	const styles = extractValuesInsideQuoted(input, INPUT_KEY.STYLE);
+	const tags = map.get(INPUT_KEY.TAG) || [];
+	const styles = map.get(INPUT_KEY.STYLE) || [];
 
 	// 'artist'는 첫 번째 값만 추출
-	const artistMatches = extractValuesInsideQuoted(input, INPUT_KEY.ARTIST);
-	const artist = artistMatches.length > 0 ? artistMatches[0] : "";
+	const artist = (map.get(INPUT_KEY.ARTIST) || [])[0] || "";
 
-	// 1단계: "key:value" 형식(쌍따옴표 포함)을 제거
-	const cleaned = input.replace(/"\w+:[^"]*"/g, "").trim();
-
-	// 단어 추출: 따옴표나 쉼표 등 문장부호는 그대로 유지
-	// 단어 경계를 기준으로 쪼개되, 문장부호 포함된 항목도 추출되게 함
-	const parts = cleaned
-		.split(/\s+/) // 공백 기준 분리
-		.filter(Boolean); // 빈 문자열 제거
-	const title = parts.join(" ");
-	console.log("parseInput", { title, cleaned, parts });
+	const title = (map.get(TITLE) || []).join(" ");
 
 	return { title, tags, styles, artist };
 }
@@ -47,15 +56,16 @@ function getInput(searchParams: ReadonlyURLSearchParams) {
 	const delimiter = " ";
 
 	if (artist.trim() !== "") {
-		inputs.push(makeQuoted(`${INPUT_KEY.ARTIST}:${artist}`));
+		const value = transformToInput(artist);
+		inputs.push(`${INPUT_KEY.ARTIST}:${value}`);
 	}
 
 	if (tags.length !== 0) {
-		inputs.push(...tags.map((t) => makeQuoted(`${INPUT_KEY.TAG}:${t}`)));
+		inputs.push(...tags.map((t) => `${INPUT_KEY.TAG}:${transformToInput(t)}`));
 	}
 
 	if (styles.length !== 0) {
-		inputs.push(...styles.map((s) => makeQuoted(`${INPUT_KEY.STYLE}:${s}`)));
+		inputs.push(...styles.map((s) => `${INPUT_KEY.STYLE}:${transformToInput(s)}`));
 	}
 
 	return inputs.join(delimiter);
@@ -65,7 +75,12 @@ function getURL(input: string): string {
 	const parsed: ParsedInput = parseInput(input);
 	const { title, artist, tags, styles } = parsed;
 
-	return SEARCH_LOGIC_ROUTE.SEARCH_PAINTING(title, artist, tags, styles);
+	return SEARCH_LOGIC_ROUTE.SEARCH_PAINTING(
+		title,
+		transformToUrlParam(artist),
+		tags.map((t) => transformToUrlParam(t)),
+		styles.map((s) => transformToUrlParam(s)),
+	);
 }
 
 interface SearchPaintingBarProps {
