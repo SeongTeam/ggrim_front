@@ -8,26 +8,22 @@ import { findPaintingAction } from "../../../server-action/backend/painting/api"
 import { PaginationResponse } from "../../../server-action/backend/_common/type";
 import { ShowPainting } from "../../../generated/dto-types";
 import toast from "react-hot-toast";
-import { PAINTING_PARAM_KEY } from "../searchBar/const";
-import { getSearchParams } from "../searchBar/util";
-import { useRouter } from "next/navigation";
-import { PAINTING_LOGIC_ROUTE } from "../../../route/painting/route";
 
 interface PaintingCardGridProps {
 	findResult: PaginationResponse<ShowPainting>;
+	loadQuery: { title: string; artist: string; tags: string[]; styles: string[] };
+	onClickCard: (painting: ShowPainting) => void;
 }
 
-export const PaintingCardGrid = (props: PaintingCardGridProps): React.JSX.Element => {
-	const [searchPaintings, setSearchPaintings] = useState<ShowPainting[]>(props.findResult.data); // Q. 초기값은 언제 반영되지? 만약 다른 state가 갱신되면, 현재 state는 기존값 유지 Or 초기값?
+export const PaintingCardGrid = ({
+	findResult,
+	loadQuery,
+	onClickCard,
+}: PaintingCardGridProps): React.JSX.Element => {
+	const [searchPaintings, setSearchPaintings] = useState<ShowPainting[]>(findResult.data); // Q. 초기값은 언제 반영되지? 만약 다른 state가 갱신되면, 현재 state는 기존값 유지 Or 초기값?
 	const isLoadingRef: RefObject<boolean> = useRef(false);
-	const findResultRef = useRef<PaginationResponse<ShowPainting>>(props.findResult);
+	const findResultRef = useRef<PaginationResponse<ShowPainting>>(findResult);
 	const searchParam = useSearchParams();
-	const router = useRouter();
-
-	const routeDetailPainting = async (paintingId: string) => {
-		const url = PAINTING_LOGIC_ROUTE.DETAIL_PAINTING(paintingId);
-		router.push(url);
-	};
 
 	// 스크롤 이벤트 핸들러
 	useEffect(() => {
@@ -41,8 +37,8 @@ export const PaintingCardGrid = (props: PaintingCardGridProps): React.JSX.Elemen
 				return;
 			}
 			isLoadingRef.current = true;
-			const keyword = searchParam.get(PAINTING_PARAM_KEY.KEYWORD) || "";
-			const { title, artist, tags, styles } = getSearchParams(keyword);
+
+			const { title, artist, tags, styles } = loadQuery;
 
 			console.log(`load ${findResultRef.current.page + 1} page`);
 			const result = await findPaintingAction(
@@ -92,13 +88,13 @@ export const PaintingCardGrid = (props: PaintingCardGridProps): React.JSX.Elemen
 	}, [searchParam]);
 
 	useEffect(() => {
-		setSearchPaintings(props.findResult.data);
+		setSearchPaintings(findResult.data);
 		console.log("[useEffect] : for init  SearchPainting");
-		findResultRef.current = props.findResult;
+		findResultRef.current = findResult;
 		return () => {
 			setSearchPaintings((prev) => prev);
 		};
-	}, [props.findResult]);
+	}, [findResult]);
 
 	// useEffect(() => {
 	//     console.log("searchPaintings 상태가 변경됨:", searchPaintings);
@@ -118,7 +114,7 @@ export const PaintingCardGrid = (props: PaintingCardGridProps): React.JSX.Elemen
 							},
 							title: item.title,
 						}}
-						onClick={() => routeDetailPainting(item.id)}
+						onClick={() => onClickCard(item)}
 					>
 						<PreviewPainting shortPainting={item} />
 					</HoverCard>
