@@ -17,7 +17,7 @@ export const SearchKeywordProvider = ({ children }: SearchKeywordProviderProps) 
 	return <SearchKeywordContext.Provider value={store}>{children}</SearchKeywordContext.Provider>;
 };
 
-export const userSearchKeywordStore = <T,>(selector: (store: SearchKeyWordStore) => T): T => {
+export const useSearchKeywordStore = <T,>(selector: (store: SearchKeyWordStore) => T): T => {
 	const searchKeywordStoreContext = useContext(SearchKeywordContext);
 	if (!searchKeywordStoreContext) {
 		throw new Error("SearchKeywordContext is not provided");
