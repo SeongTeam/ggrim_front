@@ -1,5 +1,4 @@
 import { NavbarMenu } from "./NavbarMenu";
-import { SearchPaintingIconMenu } from "./SearchPaintingIconMenu";
 import { NotifyIconMenu } from "./NotificationIconMenu";
 import { ProfileIconMenu } from "./ProfileIconMenu";
 import Link from "next/link";
@@ -33,9 +32,6 @@ export const Navbar = async () => {
 					{/* 자동 확장 Spacer */}
 					{/* 아이콘 메뉴 */}
 					<div className="flex items-center space-x-4">
-						<div className="hidden sm:block">
-							<SearchPaintingIconMenu />
-						</div>
 						{!user && (
 							<Link
 								href="/auth/sign-in"

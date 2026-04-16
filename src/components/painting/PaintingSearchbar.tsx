@@ -1,15 +1,13 @@
 "use client";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { RefObject, useState } from "react";
+import { RefObject, useEffect, useRef, useState } from "react";
 import { useDebounceCallback } from "../../hooks/useDebounceCallback";
 import { getInput, getURL, transformToInput } from "./util";
 import { AutocompleteList } from "./AutoCompleteList";
 import { Search } from "lucide-react";
 import { useSearchBar } from "./useSearchBar";
 
-interface SearchPaintingBarProps {
-	inputRef: RefObject<HTMLInputElement | null>;
-}
+interface SearchPaintingBarProps {}
 
 // TODO: <PaintingSearchBar /> 기능 개선
 // - [ ] 여러번 검색 후, 뒤로가기 버튼 클릭시, URL searchParams은 변경되지만, 검색창의 값이 동기화되지않음.
@@ -18,10 +16,11 @@ interface SearchPaintingBarProps {
 // ! 주의: <경고할 사항>
 // ? 질문: <의문점 또는 개선 방향>
 // * 참고: <관련 정보나 링크>
-export const PaintingSearchBar = ({ inputRef }: SearchPaintingBarProps): React.JSX.Element => {
+export const PaintingSearchBar = ({}: SearchPaintingBarProps): React.JSX.Element => {
 	const router = useRouter();
 	const pathName = usePathname();
 	const searchParams = useSearchParams();
+	const inputRef = useRef<HTMLInputElement>(null);
 	const [input, setInput] = useState(getInput(searchParams));
 	// const [results, setResults] = useState<Painting[]>([]);
 	const saveRouteHandler = async (searchTarget: string) => {
@@ -47,6 +46,12 @@ export const PaintingSearchBar = ({ inputRef }: SearchPaintingBarProps): React.J
 			inputRef,
 		});
 
+	useEffect(() => {
+		if (inputRef.current) {
+			inputRef.current.focus();
+		}
+	}, []);
+
 	return (
 		<div className="relative" ref={suggestionsRef}>
 			<Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
@@ -56,7 +61,8 @@ export const PaintingSearchBar = ({ inputRef }: SearchPaintingBarProps): React.J
 				type="text"
 				placeholder="Search Painting..."
 				onChange={handlers.onChange}
-				className="w-full rounded-lg bg-gray-800 py-2 pl-10 pr-4 text-white outline-none focus:ring-2 focus:ring-red-500"
+				className="w-full rounded-lg bg-gray-800 py-2 pl-10 pr-4 text-lg text-white outline-none focus:ring-2 focus:ring-red-500"
+				spellCheck={false}
 				onKeyUp={handlers.onClickOrKeyUp}
 				onClick={handlers.onClickOrKeyUp}
 				onKeyDown={handlers.onKeyDown}

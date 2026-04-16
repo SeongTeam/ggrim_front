@@ -27,7 +27,7 @@ export const SearchPaintingIconMenu = () => {
 			}}
 		>
 			{isSearching ? (
-				<PaintingSearchBar inputRef={inputRef} />
+				<PaintingSearchBar />
 			) : (
 				<Search
 					className="h-6 w-6 cursor-pointer text-white hover:opacity-80"

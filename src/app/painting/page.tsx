@@ -4,6 +4,7 @@ import { findPaintingAction } from "../../server-action/backend/painting/api";
 import { ErrorModal } from "../../components/modal/ErrorModal";
 import { getSearchParams } from "../../components/painting/util";
 import { PAINTING_PARAM_KEY } from "../../components/painting/const";
+import { PaintingSearchBar } from "../../components/painting/PaintingSearchbar";
 
 // TODO: Search Page 개선
 // - [x] '/'page에 search bar 추가
@@ -38,7 +39,8 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
 	return (
 		<Suspense>
-			<div className="mt-20">
+			<div className="mx-4 mt-20">
+				<PaintingSearchBar />
 				<PaintingCardGrid findResult={response.data} />
 			</div>
 		</Suspense>
