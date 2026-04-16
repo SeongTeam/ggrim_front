@@ -1,7 +1,7 @@
 "use client";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { RefObject, useEffect, useRef, useState } from "react";
-import { useDebounceCallback } from "../../hooks/useDebounceCallback";
+import { useDebounceCallback } from "../../../hooks/useDebounceCallback";
 import { getInput, getURL, transformToInput } from "./util";
 import { AutocompleteList } from "./AutoCompleteList";
 import { Search } from "lucide-react";

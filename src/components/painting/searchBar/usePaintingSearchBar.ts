@@ -1,9 +1,9 @@
 "use client";
 import { Dispatch, RefObject, useCallback, useEffect, useReducer, useRef } from "react";
 import { BASE_SUGGESTIONS } from "./const";
-import { findArtistsAction } from "../../server-action/backend/artist/api";
-import { findTagsAction } from "../../server-action/backend/tag/api";
-import { findStylesAction } from "../../server-action/backend/style/api";
+import { findArtistsAction } from "../../../server-action/backend/artist/api";
+import { findTagsAction } from "../../../server-action/backend/tag/api";
+import { findStylesAction } from "../../../server-action/backend/style/api";
 import toast from "react-hot-toast";
 import {
 	calculateNewInput,
@@ -13,11 +13,11 @@ import {
 	transformToInput,
 } from "./util";
 import { AUTOCOMPLETE_CASE } from "./const";
-import { useDebounceCallback } from "../../hooks/useDebounceCallback";
+import { useDebounceCallback } from "../../../hooks/useDebounceCallback";
 import { AutoCompleteAction, AutoCompleteState, InputAction, InputState } from "./type";
-import { PaginationResponse } from "../../server-action/backend/_common/type";
+import { PaginationResponse } from "../../../server-action/backend/_common/type";
 import { isServerActionError } from "@/server-action/backend/_common/serverActionError";
-import { ServerActionFailure, ServerActionSuccess } from "../../server-action/client/type";
+import { ServerActionFailure, ServerActionSuccess } from "../../../server-action/client/type";
 
 // Constants
 

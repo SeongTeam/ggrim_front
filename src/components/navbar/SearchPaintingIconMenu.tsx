@@ -1,7 +1,7 @@
 "use client";
 import { Search } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { PaintingSearchBar } from "../painting/PaintingSearchbar";
+import { PaintingSearchBar } from "../painting/searchBar/PaintingSearchbar";
 
 export const SearchPaintingIconMenu = () => {
 	const [isSearching, setIsSearching] = useState(false);
