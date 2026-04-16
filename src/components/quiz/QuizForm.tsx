@@ -1,5 +1,5 @@
 "use client";
-import { FormEvent, useCallback, useEffect, useReducer, useState, type JSX } from "react";
+import { SubmitEvent, useCallback, useEffect, useReducer, useState, type JSX } from "react";
 import { Card } from "../common/Card";
 import { useRouter } from "next/navigation";
 import { AlertModal } from "../modal/AlertModal";
@@ -16,8 +16,6 @@ import {
 	ShowPainting,
 	ShowQuizResponse,
 } from "../../generated/dto-types";
-import { isServerActionError } from "@/server-action/backend/_common/serverActionError";
-import toast from "react-hot-toast";
 
 export interface NewQuiz {
 	answer: ShowPainting | undefined;
@@ -163,7 +161,7 @@ export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
 		}
 	};
 
-	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+	const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
 		//server action 추가하기.
 		// 그림 개수, 정답 그림 등 검증하기
 		e.preventDefault();
