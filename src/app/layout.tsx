@@ -6,6 +6,7 @@ import { Navbar } from "../components/navbar/Navbar";
 import { Loading } from "../components/common/Loading";
 import { Toaster } from "react-hot-toast";
 import { WebVitals } from "../components/web-vitals/WebVitals";
+import { SearchKeywordProvider } from "../state/global/searchKeywordProvider";
 
 const roboto = Roboto({
 	subsets: ["latin"],
@@ -32,11 +33,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 			<body className={roboto.className}>
 				<Toaster position="top-center" />
 				<Suspense fallback={<Loading />}>
-					<div className="mb-16">
-						<Navbar />
-					</div>
-					<WebVitals />
-					{children}
+					<SearchKeywordProvider>
+						<div className="mb-16">
+							<Navbar />
+						</div>
+						<WebVitals />
+						{children}
+					</SearchKeywordProvider>
 				</Suspense>
 			</body>
 		</html>
