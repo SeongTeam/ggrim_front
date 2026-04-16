@@ -2,6 +2,7 @@ import React, { Suspense } from "react";
 import { PaintingCardGrid } from "../../components/search/PaintingCardGrid";
 import { findPaintingAction } from "../../server-action/backend/painting/api";
 import { ErrorModal } from "../../components/modal/ErrorModal";
+import { getSearchParams } from "../../components/search/util";
 import { SEARCH_PARAM_KEY } from "../../components/search/const";
 
 // TODO: Search Page 개선
@@ -19,15 +20,12 @@ interface SearchPageProps {
 }
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {
-	const title = (await searchParams)[SEARCH_PARAM_KEY.TITLE] || "";
-	const artist = (await searchParams)[SEARCH_PARAM_KEY.ARTIST] || "";
-	const tags = (await searchParams)[SEARCH_PARAM_KEY.TAGS] || [];
-	const styles = (await searchParams)[SEARCH_PARAM_KEY.STYLES] || [];
-
-	if (Array.isArray(title) || Array.isArray(artist)) {
+	const keyword = (await searchParams)[SEARCH_PARAM_KEY.KEYWORD] || "";
+	if (Array.isArray(keyword)) {
 		return <ErrorModal message="wrong access with invalid parameter" />;
 	}
 
+	const { title, artist, tags, styles } = getSearchParams(keyword);
 	const response = await findPaintingAction(
 		title,
 		artist,

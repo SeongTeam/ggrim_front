@@ -8,7 +8,7 @@ export function transformToInput(urlParam: string) {
 	return urlParam.split(DELIMITER.SPACE).join(DELIMITER.UNDER_BAR);
 }
 
-export function transformToUrlParam(input: string) {
+export function transformToSearchParam(input: string) {
 	return input.split(DELIMITER.UNDER_BAR).join(DELIMITER.SPACE);
 }
 
@@ -119,37 +119,22 @@ export function parseInput(input: string): ParsedInput {
 }
 
 export function getInput(searchParams: ReadonlyURLSearchParams) {
-	const title: string = searchParams.get(SEARCH_PARAM_KEY.TITLE) || "";
-	const artist: string = searchParams.get(SEARCH_PARAM_KEY.ARTIST) || "";
-	const tags: string[] = searchParams.getAll(SEARCH_PARAM_KEY.TAGS) || [];
-	const styles: string[] = searchParams.getAll(SEARCH_PARAM_KEY.STYLES) || [];
+	const input = searchParams.get(SEARCH_PARAM_KEY.KEYWORD) || "";
 
-	const inputs: string[] = [title];
-	const delimiter = " ";
-
-	if (artist.trim() !== "") {
-		const value = transformToInput(artist);
-		inputs.push(`${INPUT_KEY.ARTIST}:${value}`);
-	}
-
-	if (tags.length !== 0) {
-		inputs.push(...tags.map((t) => `${INPUT_KEY.TAG}:${transformToInput(t)}`));
-	}
-
-	if (styles.length !== 0) {
-		inputs.push(...styles.map((s) => `${INPUT_KEY.STYLE}:${transformToInput(s)}`));
-	}
-
-	return inputs.join(delimiter);
+	return input;
 }
 export function getURL(input: string): string {
-	const parsed: ParsedInput = parseInput(input);
-	const { title, artist, tags, styles } = parsed;
+	return SEARCH_LOGIC_ROUTE.SEARCH_PAINTING(input);
+}
 
-	return SEARCH_LOGIC_ROUTE.SEARCH_PAINTING(
-		title,
-		transformToUrlParam(artist),
-		tags.map((t) => transformToUrlParam(t)),
-		styles.map((s) => transformToUrlParam(s)),
-	);
+export function getSearchParams(input: string) {
+	const parsed = parseInput(input);
+	const params = {
+		title: transformToSearchParam(parsed.title),
+		artist: transformToSearchParam(parsed.artist),
+		tags: parsed.tags.map(transformToSearchParam),
+		styles: parsed.styles.map(transformToSearchParam),
+	};
+
+	return params;
 }

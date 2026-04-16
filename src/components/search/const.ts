@@ -5,10 +5,7 @@ export const INPUT_KEY = {
 } as const;
 
 export const SEARCH_PARAM_KEY = {
-	ARTIST: "artist",
-	TAGS: "tags[]",
-	STYLES: "styles[]",
-	TITLE: "title",
+	KEYWORD: "keyword",
 } as const;
 
 export const BASE_SUGGESTIONS = ["tag:", "artist:", "style:"] as const;
