@@ -5,7 +5,7 @@ import { useDebounceCallback } from "../../hooks/useDebounceCallback";
 import { getInput, getURL, transformToInput } from "./util";
 import { AutocompleteList } from "./AutoCompleteList";
 import { Search } from "lucide-react";
-import { useSearchBar } from "./useSearchBar";
+import { usePaintingSearchBar } from "./usePaintingSearchBar";
 
 interface SearchPaintingBarProps {}
 
@@ -40,7 +40,7 @@ export const PaintingSearchBar = ({}: SearchPaintingBarProps): React.JSX.Element
 	const onSearch = useDebounceCallback(saveRouteHandler, 500);
 
 	const { inputState, autoCompleteState, suggestionsRef, autoCompleteDispatch, handlers } =
-		useSearchBar({
+		usePaintingSearchBar({
 			onSearch,
 			defaultValue: input,
 			inputRef,

@@ -126,7 +126,7 @@ function inputReducer(state: InputState, action: InputAction): InputState {
 }
 
 // Main hook
-export function useSearchBar({
+export function usePaintingSearchBar({
 	onSearch,
 	defaultValue = "",
 	inputRef,
