@@ -15,7 +15,7 @@ const roboto = Roboto({
 });
 
 // TODO: Navibar 개선하기
-// - [ ] <SearchPaintingBar /> 컴포넌트 On/Off 상태 만들기
+// - [ ] <PaintingSearchBar /> 컴포넌트 On/Off 상태 만들기
 // - [ ] Home route 추가하기
 // ! 주의: <경고할 사항>
 // ? 질문: <의문점 또는 개선 방향>

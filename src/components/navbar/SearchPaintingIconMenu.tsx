@@ -1,7 +1,7 @@
 "use client";
 import { Search } from "lucide-react";
-import { SearchPaintingBar } from "../painting/SearchPaintingBar";
 import { useEffect, useRef, useState } from "react";
+import { PaintingSearchBar } from "../painting/PaintingSearchbar";
 
 export const SearchPaintingIconMenu = () => {
 	const [isSearching, setIsSearching] = useState(false);
@@ -27,7 +27,7 @@ export const SearchPaintingIconMenu = () => {
 			}}
 		>
 			{isSearching ? (
-				<SearchPaintingBar inputRef={inputRef} />
+				<PaintingSearchBar inputRef={inputRef} />
 			) : (
 				<Search
 					className="h-6 w-6 cursor-pointer text-white hover:opacity-80"

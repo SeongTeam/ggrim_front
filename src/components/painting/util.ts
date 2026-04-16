@@ -1,8 +1,8 @@
 import { ReadonlyURLSearchParams } from "next/navigation";
 import { AUTOCOMPLETE_CASE, DELIMITER, INPUT_KEY, PAINTING_PARAM_KEY } from "./const";
-import { ParsedInput } from "./SearchPaintingBar";
 import { InputKeyValue, ParamCase } from "./type";
 import { PAINTING_LOGIC_ROUTE } from "../../route/painting/route";
+import { ParsedInput } from "./type";
 
 export function transformToInput(urlParam: string) {
 	return urlParam.split(DELIMITER.SPACE).join(DELIMITER.UNDER_BAR);

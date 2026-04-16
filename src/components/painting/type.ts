@@ -32,3 +32,9 @@ export type InputAction =
 
 export type InputKeyValue = (typeof INPUT_KEY)[keyof typeof INPUT_KEY];
 export type SearchParamKeyValue = (typeof PAINTING_PARAM_KEY)[keyof typeof PAINTING_PARAM_KEY];
+export interface ParsedInput {
+	title: string;
+	artist: string;
+	tags: string[];
+	styles: string[];
+}
