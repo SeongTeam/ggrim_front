@@ -1,5 +1,5 @@
 "use client";
-import { MutableRefObject, useEffect, useRef, useState } from "react";
+import { RefObject, useEffect, useRef, useState } from "react";
 import { HoverCard } from "../common/HoverCard";
 import { PreviewPainting } from "./PreviewPainting";
 import { Modal } from "../modal/Modal";
@@ -21,7 +21,7 @@ export const PaintingCardGrid = (props: PaintingCardGridProps): React.JSX.Elemen
 		undefined,
 	);
 	const [searchPaintings, setSearchPaintings] = useState<ShowPainting[]>(props.findResult.data); // Q. 초기값은 언제 반영되지? 만약 다른 state가 갱신되면, 현재 state는 기존값 유지 Or 초기값?
-	const isLoadingRef: MutableRefObject<boolean> = useRef(false);
+	const isLoadingRef: RefObject<boolean> = useRef(false);
 	const findResultRef = useRef<PaginationResponse<ShowPainting>>(props.findResult);
 	const searchParam = useSearchParams();
 
