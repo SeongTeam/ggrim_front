@@ -1,9 +1,9 @@
 import React, { Suspense } from "react";
-import { PaintingCardGrid } from "../../components/search/PaintingCardGrid";
+import { PaintingCardGrid } from "../../components/painting/PaintingCardGrid";
 import { findPaintingAction } from "../../server-action/backend/painting/api";
 import { ErrorModal } from "../../components/modal/ErrorModal";
-import { getSearchParams } from "../../components/search/util";
-import { SEARCH_PARAM_KEY } from "../../components/search/const";
+import { getSearchParams } from "../../components/painting/util";
+import { PAINTING_PARAM_KEY } from "../../components/painting/const";
 
 // TODO: Search Page 개선
 // - [x] '/'page에 search bar 추가
@@ -20,7 +20,7 @@ interface SearchPageProps {
 }
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {
-	const keyword = (await searchParams)[SEARCH_PARAM_KEY.KEYWORD] || "";
+	const keyword = (await searchParams)[PAINTING_PARAM_KEY.KEYWORD] || "";
 	if (Array.isArray(keyword)) {
 		return <ErrorModal message="wrong access with invalid parameter" />;
 	}

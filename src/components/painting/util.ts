@@ -1,8 +1,8 @@
 import { ReadonlyURLSearchParams } from "next/navigation";
-import { AUTOCOMPLETE_CASE, DELIMITER, INPUT_KEY, SEARCH_PARAM_KEY } from "./const";
+import { AUTOCOMPLETE_CASE, DELIMITER, INPUT_KEY, PAINTING_PARAM_KEY } from "./const";
 import { ParsedInput } from "./SearchPaintingBar";
 import { InputKeyValue, ParamCase } from "./type";
-import { SEARCH_LOGIC_ROUTE } from "../../route/search/route";
+import { PAINTING_LOGIC_ROUTE } from "../../route/painting/route";
 
 export function transformToInput(urlParam: string) {
 	return urlParam.split(DELIMITER.SPACE).join(DELIMITER.UNDER_BAR);
@@ -119,12 +119,12 @@ export function parseInput(input: string): ParsedInput {
 }
 
 export function getInput(searchParams: ReadonlyURLSearchParams) {
-	const input = searchParams.get(SEARCH_PARAM_KEY.KEYWORD) || "";
+	const input = searchParams.get(PAINTING_PARAM_KEY.KEYWORD) || "";
 
 	return input;
 }
 export function getURL(input: string): string {
-	return SEARCH_LOGIC_ROUTE.SEARCH_PAINTING(input);
+	return PAINTING_LOGIC_ROUTE.SEARCH_PAINTING(input);
 }
 
 export function getSearchParams(input: string) {

@@ -4,7 +4,7 @@ export const INPUT_KEY = {
 	STYLE: "style",
 } as const;
 
-export const SEARCH_PARAM_KEY = {
+export const PAINTING_PARAM_KEY = {
 	KEYWORD: "keyword",
 } as const;
 
