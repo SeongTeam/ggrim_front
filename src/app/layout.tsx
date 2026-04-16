@@ -1,7 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
-import { RecoilRootWrapper } from "@/components/recoil/RecoilRootWrapper";
 import { Suspense } from "react";
 import { Navbar } from "../components/navbar/Navbar";
 import { Loading } from "../components/common/Loading";
@@ -31,16 +30,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 		<html lang="en">
 			<head></head>
 			<body className={roboto.className}>
-				<RecoilRootWrapper>
-					<Toaster position="top-center" />
-					<Suspense fallback={<Loading />}>
-						<div className="mb-16">
-							<Navbar />
-						</div>
-						<WebVitals />
-						{children}
-					</Suspense>
-				</RecoilRootWrapper>
+				<Toaster position="top-center" />
+				<Suspense fallback={<Loading />}>
+					<div className="mb-16">
+						<Navbar />
+					</div>
+					<WebVitals />
+					{children}
+				</Suspense>
 			</body>
 		</html>
 	);
