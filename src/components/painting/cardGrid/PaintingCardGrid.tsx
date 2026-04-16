@@ -1,47 +1,39 @@
 "use client";
 import { RefObject, useEffect, useRef, useState } from "react";
-import { HoverCard } from "../common/HoverCard";
-import { PreviewPainting } from "./PreviewPainting";
-import { Modal } from "../modal/Modal";
-import { PaintingDetailView } from "./PaintingDetailView";
+import { HoverCard } from "../../common/HoverCard";
+import { PreviewPainting } from "../PreviewPainting";
 import { useSearchParams } from "next/navigation";
-import { throttle } from "../../util/optimization";
-import { findPaintingAction, getPaintingAction } from "../../server-action/backend/painting/api";
-import { PaginationResponse } from "../../server-action/backend/_common/type";
-import { ShowPainting, ShowPaintingResponse } from "../../generated/dto-types";
+import { throttle } from "../../../util/optimization";
+import { findPaintingAction } from "../../../server-action/backend/painting/api";
+import { PaginationResponse } from "../../../server-action/backend/_common/type";
+import { ShowPainting } from "../../../generated/dto-types";
 import toast from "react-hot-toast";
+import { PAINTING_PARAM_KEY } from "../searchBar/const";
+import { getSearchParams } from "../searchBar/util";
+import { useRouter } from "next/navigation";
+import { PAINTING_LOGIC_ROUTE } from "../../../route/painting/route";
 
 interface PaintingCardGridProps {
 	findResult: PaginationResponse<ShowPainting>;
 }
 
 export const PaintingCardGrid = (props: PaintingCardGridProps): React.JSX.Element => {
-	const [selectedPainting, setSelectedPainting] = useState<ShowPaintingResponse | undefined>(
-		undefined,
-	);
 	const [searchPaintings, setSearchPaintings] = useState<ShowPainting[]>(props.findResult.data); // Q. 초기값은 언제 반영되지? 만약 다른 state가 갱신되면, 현재 state는 기존값 유지 Or 초기값?
 	const isLoadingRef: RefObject<boolean> = useRef(false);
 	const findResultRef = useRef<PaginationResponse<ShowPainting>>(props.findResult);
 	const searchParam = useSearchParams();
+	const router = useRouter();
 
-	const openModal = async (paintingId: string) => {
-		const result = await getPaintingAction(paintingId);
-		if (result.ok) {
-			setSelectedPainting(result.data);
-		} else {
-			toast.error(result.message);
-		}
-	};
-
-	const closeModal = () => {
-		setSelectedPainting(undefined);
+	const routeDetailPainting = async (paintingId: string) => {
+		const url = PAINTING_LOGIC_ROUTE.DETAIL_PAINTING(paintingId);
+		router.push(url);
 	};
 
 	// 스크롤 이벤트 핸들러
 	useEffect(() => {
 		const loadMorePainting = async () => {
 			if (
-				!(findResultRef.current.page !== findResultRef.current.pageCount) ||
+				findResultRef.current.page === findResultRef.current.pageCount ||
 				isLoadingRef.current
 			) {
 				console.log("not load painting");
@@ -49,17 +41,15 @@ export const PaintingCardGrid = (props: PaintingCardGridProps): React.JSX.Elemen
 				return;
 			}
 			isLoadingRef.current = true;
-			const searchTitle: string = searchParam.get("title") || "";
-			const searchArtist: string = searchParam.get("artist") || "";
-			const searchTags: string[] = searchParam.getAll("tags[]") || [];
-			const searchStyles: string[] = searchParam.getAll("styles[]") || [];
+			const keyword = searchParam.get(PAINTING_PARAM_KEY.KEYWORD) || "";
+			const { title, artist, tags, styles } = getSearchParams(keyword);
 
 			console.log(`load ${findResultRef.current.page + 1} page`);
 			const result = await findPaintingAction(
-				searchTitle,
-				searchArtist,
-				searchTags,
-				searchStyles,
+				title,
+				artist,
+				tags,
+				styles,
 				findResultRef.current.page + 1,
 			);
 			isLoadingRef.current = false;
@@ -128,17 +118,12 @@ export const PaintingCardGrid = (props: PaintingCardGridProps): React.JSX.Elemen
 							},
 							title: item.title,
 						}}
-						onClick={() => openModal(item.id)}
+						onClick={() => routeDetailPainting(item.id)}
 					>
 						<PreviewPainting shortPainting={item} />
 					</HoverCard>
 				</div>
 			))}
-			{selectedPainting && (
-				<Modal onClose={closeModal}>
-					<PaintingDetailView painting={selectedPainting} />
-				</Modal>
-			)}
 			{isLoadingRef.current && <p className="mt-4 text-center">Loading...</p>}
 		</div>
 	);
