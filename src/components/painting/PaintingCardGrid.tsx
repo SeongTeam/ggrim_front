@@ -7,7 +7,6 @@ import { PaintingDetailView } from "./PaintingDetailView";
 import { useSearchParams } from "next/navigation";
 import { throttle } from "../../util/optimization";
 import { findPaintingAction, getPaintingAction } from "../../server-action/backend/painting/api";
-import { isServerActionError } from "@/server-action/backend/_common/serverActionError";
 import { PaginationResponse } from "../../server-action/backend/_common/type";
 import { ShowPainting, ShowPaintingResponse } from "../../generated/dto-types";
 import toast from "react-hot-toast";
