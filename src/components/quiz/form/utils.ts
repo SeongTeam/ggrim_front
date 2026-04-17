@@ -27,3 +27,14 @@ export function validateQuiz(quiz: NewQuiz): quiz is NoUndefined<NewQuiz> {
 
 	return true;
 }
+
+export function validatePaintingId(paintingId: string) {
+	if (paintingId.trim().length !== paintingId.length) {
+		throw new Error(`${paintingId} has space or tab. please check start and end of string`);
+	}
+
+	const UUID_SIZE = 36;
+	if (paintingId.length !== UUID_SIZE) {
+		throw new Error(`${paintingId} is out of ID format`);
+	}
+}

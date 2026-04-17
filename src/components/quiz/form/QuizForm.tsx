@@ -1,44 +1,15 @@
 "use client";
-import { SubmitEvent, useCallback, useEffect, useReducer, useState, type JSX } from "react";
+import { useCallback, useEffect, useState, type JSX } from "react";
 import { Card } from "../../common/Card";
-import { useRouter } from "next/navigation";
 import { AlertModal } from "../../modal/AlertModal";
 import { InsertToggleInput } from "../../common/InsertToggleInput";
 import { Loading } from "../../common/Loading";
 import { CheckCircle, XCircle } from "lucide-react";
-import { getPaintingAction } from "../../../server-action/backend/painting/api";
-import { addQuizAction, updateQuizAction } from "../../../server-action/backend/quiz/api";
-import { getSavedNewQuiz, removeSavedNewQuiz, saveNewQuiz } from "../../../state/browser/quiz";
+import { getSavedNewQuiz, saveNewQuiz } from "../../../state/browser/quiz";
 import { useDebounceCallback } from "../../../hooks/useDebounceCallback";
-import {
-	CreateQuizDto,
-	QUIZ_TYPE,
-	ShowPainting,
-	ShowQuizResponse,
-} from "../../../generated/dto-types";
-import { NewQuiz, Action, StatePaintingKey } from "./type";
-import { isDuplicatedPaintingPainting, validateQuiz } from "./utils";
-
-function reducer(state: NewQuiz, action: Action): NewQuiz {
-	switch (action.type) {
-		case "SET_TITLE":
-			return { ...state, title: action.title };
-		case "SET_DESCRIPTION":
-			return { ...state, description: action.description };
-		case "SET_ANSWER":
-			return { ...state, answer: action.painting };
-		case "SET_DISTRACTOR1":
-			return { ...state, distractor1: action.painting };
-		case "SET_DISTRACTOR2":
-			return { ...state, distractor2: action.painting };
-		case "SET_DISTRACTOR3":
-			return { ...state, distractor3: action.painting };
-		case "SET_ALL":
-			return { ...action.newQuiz };
-		default:
-			return state;
-	}
-}
+import { ShowQuizResponse } from "../../../generated/dto-types";
+import { StatePaintingKey } from "./type";
+import { useQuizForm } from "./useQuizForm";
 
 // TODO: QuizForm() 개선
 // - [x] : 그림 보여주기 영역 디버깅
@@ -57,155 +28,18 @@ interface QuizFormProps {
 	quiz?: ShowQuizResponse;
 }
 
-const initState: NewQuiz = {
-	answer: undefined,
-	distractor1: undefined,
-	distractor2: undefined,
-	distractor3: undefined,
-	title: "",
-	description: "",
-	type: QUIZ_TYPE.ONE_CHOICE,
-	timeLimit: 30,
-};
-
-const initializeState = (quiz?: ShowQuizResponse): NewQuiz => {
-	if (!quiz) {
-		return initState;
-	}
-
-	return {
-		answer: quiz.answer_paintings[0],
-		distractor1: quiz.distractor_paintings[0],
-		distractor2: quiz.distractor_paintings[1],
-		distractor3: quiz.distractor_paintings[2],
-		title: quiz.title,
-		description: quiz.description,
-		type: QUIZ_TYPE.ONE_CHOICE,
-		timeLimit: quiz.time_limit,
-	};
-};
-
 export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
-	const [newQuiz, dispatch] = useReducer(reducer, quiz, initializeState);
 	const [error, setError] = useState("");
-	const router = useRouter();
 	const distractorKeys: StatePaintingKey[] = ["distractor1", "distractor2", "distractor3"];
-
-	function mapPaintingKeyToAction(key: StatePaintingKey, painting: ShowPainting | undefined) {
-		switch (key) {
-			case "answer":
-				return dispatch({ type: "SET_ANSWER", painting });
-			case "distractor1":
-				return dispatch({ type: "SET_DISTRACTOR1", painting });
-			case "distractor2":
-				return dispatch({ type: "SET_DISTRACTOR2", painting });
-			case "distractor3":
-				return dispatch({ type: "SET_DISTRACTOR3", painting });
-			default:
-				setError("wrong handler run");
-				return;
-		}
-	}
-
-	const callServerAction = async (dto: CreateQuizDto, quiz: ShowQuizResponse | undefined) => {
-		const serverAction =
-			quiz === undefined
-				? addQuizAction
-				: (dto: CreateQuizDto) => updateQuizAction(quiz.id, dto);
-
-		const result = await serverAction(dto);
-		if (result.ok) {
-			removeSavedNewQuiz();
-			router.push(`/quiz/${result.data.id}`);
-		} else {
-			setError(result.message);
-		}
-		return;
-	};
-
-	const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
-		//server action 추가하기.
-		// 그림 개수, 정답 그림 등 검증하기
-		e.preventDefault();
-
-		try {
-			if (!validateQuiz(newQuiz)) {
-				return;
-			}
-
-			const { answer, distractor1, distractor2, distractor3 } = newQuiz;
-
-			const dto: CreateQuizDto = {
-				answerPaintingIds: [answer?.id],
-				distractorPaintingIds: [distractor1?.id, distractor2?.id, distractor3?.id],
-				title: newQuiz!.title,
-				description: newQuiz!.description,
-				type: newQuiz!.type,
-				timeLimit: newQuiz.timeLimit,
-			};
-			await callServerAction(dto, quiz);
-		} catch (error) {
-			if (error instanceof Error) {
-				setError(error.message);
-			} else {
-				setError("An unexpected error occurred.");
-			}
-		}
-	};
-
-	const handleAddQuizPainting = async (key: StatePaintingKey, id: string): Promise<boolean> => {
-		if (id.trim().length !== id.length) {
-			setError(`Input ${key} has space or tab. please check start and end of string`);
-			return false;
-		}
-
-		const UUID_SIZE = 36;
-		if (id.length !== UUID_SIZE) {
-			setError(`Input ${key} is out of ID format`);
-			return false;
-		}
-
-		const result = await getPaintingAction(id);
-
-		if (!result.ok) {
-			setError(result.message);
-			return false;
-		}
-		const painting = result.data;
-		if (isDuplicatedPaintingPainting(newQuiz, painting)) {
-			setError(`Can't Add painting. ${id} is already exist. `);
-			return false;
-		}
-
-		mapPaintingKeyToAction(key, painting);
-
-		return true;
-	};
-
-	const handleDeleteQuizPainting = async (key: StatePaintingKey): Promise<boolean> => {
-		mapPaintingKeyToAction(key, undefined);
-		return true;
-	};
-
-	const handleChangeTitle = async (title: string) => {
-		const MAX_LENGTH = 150;
-		if (title.length > MAX_LENGTH) {
-			setError(`title can't be over ${MAX_LENGTH} characters`);
-			return;
-		}
-
-		dispatch({ type: "SET_TITLE", title });
-	};
-
-	const handleChangeDescription = async (description: string) => {
-		const MAX_LENGTH = 2000;
-
-		if (description.length > MAX_LENGTH) {
-			setError(`description can't be over ${MAX_LENGTH} characters`);
-			return;
-		}
-		dispatch({ type: "SET_DESCRIPTION", description });
-	};
+	const {
+		newQuiz,
+		setTitle,
+		setDescription,
+		selectPainting,
+		deletePainting,
+		submitQuiz,
+		setNewQuiz,
+	} = useQuizForm(quiz);
 
 	// TODO: 훅 로직 점검하기
 	// - [x] debounce wrapper 훅 체크하기
@@ -215,14 +49,14 @@ export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
 	// ? 질문: <의문점 또는 개선 방향>
 	// * 참고: <관련 정보나 링크>
 
-	const saveNewQuizDebounced = useDebounceCallback(saveNewQuiz, 500);
-
 	const loadNewQuiz = useCallback(() => {
 		const prevNewQuiz = getSavedNewQuiz();
 		if (prevNewQuiz) {
-			dispatch({ type: "SET_ALL", newQuiz: prevNewQuiz });
+			setNewQuiz(prevNewQuiz);
 		}
 	}, []);
+
+	const saveNewQuizDebounced = useDebounceCallback(saveNewQuiz, 500);
 
 	useEffect(() => {
 		// 1.렌더링 된 후에 useEffect가 실행되므로, 저장된 값을 불러오는 동안에 깜빡이는 현상이 발생함.
@@ -248,7 +82,10 @@ export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
 		<div className="flex h-full items-center justify-center">
 			{error && <AlertModal message={error} onClose={async () => setError("")} />}
 			<form
-				onSubmit={(e) => handleSubmit(e)}
+				onSubmit={(e) => {
+					e.preventDefault();
+					submitQuiz(newQuiz).catch((err) => setError(err.message));
+				}}
 				className="max-w-5xl rounded-lg text-white shadow-lg md:min-w-[600px]"
 			>
 				<div className="mb-4">
@@ -256,7 +93,9 @@ export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
 						type="text"
 						placeholder="Title"
 						value={newQuiz.title}
-						onChange={(e) => handleChangeTitle(e.target.value)}
+						onChange={(e) =>
+							setTitle(e.target.value).catch((err) => setError(err.message))
+						}
 						className="w-full rounded border border-gray-700 bg-gray-800 p-3 transition focus:border-red-600 focus:outline-none"
 						required
 					/>
@@ -269,10 +108,8 @@ export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
 						>
 							<CheckCircle className="hidden text-green-500 md:block" />
 							<InsertToggleInput
-								handleAdd={(value: string) =>
-									handleAddQuizPainting("answer", value)
-								}
-								handleDelete={() => handleDeleteQuizPainting("answer")}
+								handleAdd={(value: string) => selectPainting("answer", value)}
+								handleDelete={() => deletePainting("answer")}
 								defaultIsInserted={newQuiz["answer"] ? true : false}
 								defaultValue={newQuiz["answer"]?.id}
 								placeholder={"answer"}
@@ -285,8 +122,8 @@ export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
 							>
 								<XCircle className="hidden text-red-500 md:block" />
 								<InsertToggleInput
-									handleAdd={(value: string) => handleAddQuizPainting(key, value)}
-									handleDelete={() => handleDeleteQuizPainting(key)}
+									handleAdd={(value: string) => selectPainting(key, value)}
+									handleDelete={() => deletePainting(key)}
 									defaultIsInserted={newQuiz[key] ? true : false}
 									defaultValue={newQuiz[key]?.id}
 									placeholder={key}
@@ -336,7 +173,9 @@ export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
 					<textarea
 						placeholder="Description"
 						value={newQuiz.description}
-						onChange={(e) => handleChangeDescription(e.target.value)}
+						onChange={(e) =>
+							setDescription(e.target.value).catch((err) => setError(err.message))
+						}
 						className="w-full rounded border border-gray-700 bg-gray-800 p-3 transition focus:border-red-600 focus:outline-none"
 						required
 					/>
