@@ -1,4 +1,4 @@
-import { NewQuiz } from "../../components/quiz/QuizForm";
+import { NewQuiz } from "@/components/quiz/form/type";
 import { QuizStatus } from "../../server-action/backend/quiz/type";
 import { LOCAL_STORAGE_KEY } from "./const";
 import { getItemWithExpiry, setItemWithExpiry } from "./util";

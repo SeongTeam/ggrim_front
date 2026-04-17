@@ -1,5 +1,5 @@
 import { ErrorModal } from "../../../../components/modal/ErrorModal";
-import { QuizForm } from "../../../../components/quiz/QuizForm";
+import { QuizForm } from "../../../../components/quiz/form/QuizForm";
 import { getQuizAction } from "../../../../server-action/backend/quiz/api";
 import { getSignInResponse } from "../../../../server-action/backend/_common/cookie";
 

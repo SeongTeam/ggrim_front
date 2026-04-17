@@ -1,41 +1,23 @@
 "use client";
 import { SubmitEvent, useCallback, useEffect, useReducer, useState, type JSX } from "react";
-import { Card } from "../common/Card";
+import { Card } from "../../common/Card";
 import { useRouter } from "next/navigation";
-import { AlertModal } from "../modal/AlertModal";
-import { InsertToggleInput } from "../common/InsertToggleInput";
-import { Loading } from "../common/Loading";
+import { AlertModal } from "../../modal/AlertModal";
+import { InsertToggleInput } from "../../common/InsertToggleInput";
+import { Loading } from "../../common/Loading";
 import { CheckCircle, XCircle } from "lucide-react";
-import { getPaintingAction } from "../../server-action/backend/painting/api";
-import { addQuizAction, updateQuizAction } from "../../server-action/backend/quiz/api";
-import { getSavedNewQuiz, removeSavedNewQuiz, saveNewQuiz } from "../../state/browser/quiz";
-import { useDebounceCallback } from "../../hooks/useDebounceCallback";
+import { getPaintingAction } from "../../../server-action/backend/painting/api";
+import { addQuizAction, updateQuizAction } from "../../../server-action/backend/quiz/api";
+import { getSavedNewQuiz, removeSavedNewQuiz, saveNewQuiz } from "../../../state/browser/quiz";
+import { useDebounceCallback } from "../../../hooks/useDebounceCallback";
 import {
 	CreateQuizDto,
 	QUIZ_TYPE,
 	ShowPainting,
 	ShowQuizResponse,
-} from "../../generated/dto-types";
-
-export interface NewQuiz {
-	answer: ShowPainting | undefined;
-	distractor1: ShowPainting | undefined;
-	distractor2: ShowPainting | undefined;
-	distractor3: ShowPainting | undefined;
-	title: string;
-	timeLimit: number;
-	description: string;
-	type: QUIZ_TYPE.ONE_CHOICE;
-}
-type StatePaintingKey = "answer" | "distractor1" | "distractor2" | "distractor3";
-type PaintingActionType = "SET_ANSWER" | "SET_DISTRACTOR1" | "SET_DISTRACTOR2" | "SET_DISTRACTOR3";
-type PaintingAction = { type: PaintingActionType; painting: ShowPainting | undefined };
-
-type Action =
-	| { type: "SET_TITLE"; title: string }
-	| { type: "SET_DESCRIPTION"; description: string }
-	| { type: "SET_ALL"; newQuiz: NewQuiz }
-	| PaintingAction;
+} from "../../../generated/dto-types";
+import { NewQuiz, Action, StatePaintingKey } from "./type";
+import { isDuplicatedPaintingPainting, validateQuiz } from "./utils";
 
 function reducer(state: NewQuiz, action: Action): NewQuiz {
 	switch (action.type) {
@@ -103,14 +85,6 @@ const initializeState = (quiz?: ShowQuizResponse): NewQuiz => {
 	};
 };
 
-const isDuplicatedPaintingPainting = (state: NewQuiz, painting: ShowPainting) => {
-	const keys: StatePaintingKey[] = ["answer", "distractor1", "distractor2", "distractor3"];
-	const paintings: ShowPainting[] = [];
-	keys.forEach((key) => (state[key] ? paintings.push(state[key]) : key));
-
-	return paintings.some((p) => painting.id === p.id);
-};
-
 export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
 	const [newQuiz, dispatch] = useReducer(reducer, quiz, initializeState);
 	const [error, setError] = useState("");
@@ -149,42 +123,34 @@ export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
 		return;
 	};
 
-	const validateBeforeSubmit = () => {
-		if (newQuiz!.title.trim().length === 0) {
-			setError("please write title");
-			return;
-		}
-
-		if (newQuiz!.description.trim().length === 0) {
-			setError("please write description");
-			return;
-		}
-	};
-
 	const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
 		//server action 추가하기.
 		// 그림 개수, 정답 그림 등 검증하기
 		e.preventDefault();
 
-		validateBeforeSubmit();
+		try {
+			if (!validateQuiz(newQuiz)) {
+				return;
+			}
 
-		//TODO 4개중 하나라도 정의안되면 submit 금지하기
-		const { answer, distractor1, distractor2, distractor3 } = newQuiz;
+			const { answer, distractor1, distractor2, distractor3 } = newQuiz;
 
-		if (!answer || !distractor1 || !distractor2 || !distractor3) {
-			setError("please write description");
-			return;
+			const dto: CreateQuizDto = {
+				answerPaintingIds: [answer?.id],
+				distractorPaintingIds: [distractor1?.id, distractor2?.id, distractor3?.id],
+				title: newQuiz!.title,
+				description: newQuiz!.description,
+				type: newQuiz!.type,
+				timeLimit: newQuiz.timeLimit,
+			};
+			await callServerAction(dto, quiz);
+		} catch (error) {
+			if (error instanceof Error) {
+				setError(error.message);
+			} else {
+				setError("An unexpected error occurred.");
+			}
 		}
-
-		const dto: CreateQuizDto = {
-			answerPaintingIds: [answer?.id],
-			distractorPaintingIds: [distractor1?.id, distractor2?.id, distractor3?.id],
-			title: newQuiz!.title,
-			description: newQuiz!.description,
-			type: newQuiz!.type,
-			timeLimit: newQuiz.timeLimit,
-		};
-		await callServerAction(dto, quiz);
 	};
 
 	const handleAddQuizPainting = async (key: StatePaintingKey, id: string): Promise<boolean> => {
