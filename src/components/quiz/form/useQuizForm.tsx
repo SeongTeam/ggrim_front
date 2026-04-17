@@ -8,7 +8,7 @@ import {
 	ShowQuizResponse,
 } from "../../../generated/dto-types";
 import { NewQuiz, Action, StatePaintingKey } from "./type";
-import { isDuplicatedPaintingPainting, validateQuiz } from "./utils";
+import { isDuplicatedPainting, validateQuiz } from "./utils";
 import { addQuizAction, updateQuizAction } from "../../../server-action/backend/quiz/api";
 import { removeSavedNewQuiz } from "../../../state/browser/quiz";
 import { useRouter } from "next/navigation";
@@ -125,7 +125,7 @@ export const useQuizForm = (prevQuiz?: ShowQuizResponse) => {
 			throw new Error(result.message);
 		}
 		const painting = result.data;
-		if (isDuplicatedPaintingPainting(newQuiz, painting)) {
+		if (isDuplicatedPainting(newQuiz, painting)) {
 			throw new Error(`Can't Add painting. ${id} is already exist. `);
 		}
 		setQuizPainting(key, painting);

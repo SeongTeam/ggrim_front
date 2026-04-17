@@ -2,7 +2,7 @@ import { ShowPainting } from "../../../generated/dto-types";
 import { NoUndefined } from "../../../type/NoUndefined";
 import { NewQuiz, StatePaintingKey } from "./type";
 
-export const isDuplicatedPaintingPainting = (state: NewQuiz, painting: ShowPainting) => {
+export const isDuplicatedPainting = (state: NewQuiz, painting: ShowPainting) => {
 	const keys: StatePaintingKey[] = ["answer", "distractor1", "distractor2", "distractor3"];
 	const paintings: ShowPainting[] = [];
 	keys.forEach((key) => (state[key] ? paintings.push(state[key]) : key));
