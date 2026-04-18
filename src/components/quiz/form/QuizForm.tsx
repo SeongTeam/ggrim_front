@@ -1,15 +1,14 @@
 "use client";
 import { useCallback, useEffect, useState, type JSX } from "react";
-import { Card } from "../../common/Card";
-import { AlertModal } from "../../modal/AlertModal";
-import { InsertToggleInput } from "../../common/InsertToggleInput";
+
 import { Loading } from "../../common/Loading";
-import { CheckCircle, XCircle } from "lucide-react";
 import { getSavedNewQuiz, saveNewQuiz } from "../../../state/browser/quiz";
 import { useDebounceCallback } from "../../../hooks/useDebounceCallback";
 import { ShowQuizResponse } from "../../../generated/dto-types";
 import { StatePaintingKey } from "./type";
 import { useQuizForm } from "./useQuizForm";
+import { PaintingSelector } from "./PaintingSelector";
+import toast from "react-hot-toast";
 
 // TODO: QuizForm() 개선
 // - [x] : 그림 보여주기 영역 디버깅
@@ -29,7 +28,6 @@ interface QuizFormProps {
 }
 
 export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
-	const [error, setError] = useState("");
 	const distractorKeys: StatePaintingKey[] = ["distractor1", "distractor2", "distractor3"];
 	const {
 		newQuiz,
@@ -80,11 +78,10 @@ export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
 
 	return (
 		<div className="flex h-full items-center justify-center">
-			{error && <AlertModal message={error} onClose={async () => setError("")} />}
 			<form
 				onSubmit={(e) => {
 					e.preventDefault();
-					submitQuiz(newQuiz).catch((err) => setError(err.message));
+					submitQuiz(newQuiz).catch((err) => toast.error(err.message));
 				}}
 				className="max-w-5xl rounded-lg text-white shadow-lg md:min-w-[600px]"
 			>
@@ -94,7 +91,7 @@ export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
 						placeholder="Title"
 						value={newQuiz.title}
 						onChange={(e) =>
-							setTitle(e.target.value).catch((err) => setError(err.message))
+							setTitle(e.target.value).catch((err) => toast.error(err.message))
 						}
 						className="w-full rounded border border-gray-700 bg-gray-800 p-3 transition focus:border-red-600 focus:outline-none"
 						required
@@ -102,70 +99,45 @@ export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
 				</div>
 
 				<div key="painting selection" className="mb-4">
-					<div className="mb-2 grid grid-cols-1 gap-2">
-						<div
-							className={`flex items-center gap-3 rounded-lg border-2 border-green-500 p-2`}
-						>
-							<CheckCircle className="hidden text-green-500 md:block" />
-							<InsertToggleInput
-								handleAdd={(value: string) => selectPainting("answer", value)}
-								handleDelete={() => deletePainting("answer")}
-								defaultIsInserted={newQuiz["answer"] ? true : false}
-								defaultValue={newQuiz["answer"]?.id}
-								placeholder={"answer"}
-							/>
-						</div>
-						{distractorKeys.map((key) => (
-							<div
-								key={key}
-								className={`flex items-center gap-3 rounded-lg border-2 border-red-800 p-2`}
-							>
-								<XCircle className="hidden text-red-500 md:block" />
-								<InsertToggleInput
-									handleAdd={(value: string) => selectPainting(key, value)}
-									handleDelete={() => deletePainting(key)}
-									defaultIsInserted={newQuiz[key] ? true : false}
-									defaultValue={newQuiz[key]?.id}
-									placeholder={key}
-								/>
-							</div>
-						))}
-					</div>
 					<div>
 						<h1 className="mb-2 text-2xl font-bold"> Quiz Paintings </h1>
-						<div className="grid min-h-56 items-center gap-4 rounded-lg border-2 border-gray-200 bg-gray-500 p-2 sm:grid-cols-1 md:grid-cols-2">
-							{newQuiz.answer && (
-								<div className={`max-w-xs rounded-lg border-2 border-green-500`}>
-									<Card
-										imageProps={{
-											src: newQuiz.answer.image_url,
-											alt: newQuiz.answer.title,
-											width: newQuiz.answer.width,
-											height: newQuiz.answer.height,
-										}}
-										title={newQuiz.answer.title}
+						<div className="grid min-h-56 content-center items-center gap-4 rounded-lg border-2 border-gray-200 bg-gray-500 p-2 sm:grid-cols-1 md:grid-cols-2">
+							<div className={`flex w-fit rounded-lg border-2 border-green-500`}>
+								<PaintingSelector
+									onSelect={(paintingId) =>
+										selectPainting("answer", paintingId).catch((err) =>
+											toast.error(err.message),
+										)
+									}
+									onDelete={(paintingId) =>
+										deletePainting("answer").catch((err) =>
+											toast.error(err.message),
+										)
+									}
+									prevPainting={newQuiz.answer}
+								/>
+							</div>
+
+							{distractorKeys.map((key) => (
+								<div
+									key={key}
+									className={`flex w-fit rounded-lg border-2 border-red-800`}
+								>
+									<PaintingSelector
+										onSelect={(paintingId) =>
+											selectPainting(key, paintingId).catch((err) =>
+												toast.error(err.message),
+											)
+										}
+										onDelete={(paintingId) =>
+											deletePainting("answer").catch((err) =>
+												toast.error(err.message),
+											)
+										}
+										prevPainting={newQuiz[key]}
 									/>
 								</div>
-							)}
-							{distractorKeys
-								.map((key) => newQuiz[key])
-								.filter((p) => p !== undefined)
-								.map((p) => (
-									<div
-										key={p.id}
-										className={`max-w-xs rounded-lg border-2 border-red-800`}
-									>
-										<Card
-											imageProps={{
-												src: p.image_url,
-												alt: p.title,
-												width: p.width,
-												height: p.height,
-											}}
-											title={p.title}
-										/>
-									</div>
-								))}
+							))}
 						</div>
 					</div>
 				</div>
@@ -174,7 +146,7 @@ export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
 						placeholder="Description"
 						value={newQuiz.description}
 						onChange={(e) =>
-							setDescription(e.target.value).catch((err) => setError(err.message))
+							setDescription(e.target.value).catch((err) => toast.error(err.message))
 						}
 						className="w-full rounded border border-gray-700 bg-gray-800 p-3 transition focus:border-red-600 focus:outline-none"
 						required
