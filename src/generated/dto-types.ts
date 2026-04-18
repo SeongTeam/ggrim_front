@@ -973,6 +973,7 @@ export type components = {
 		};
 		ReplaceQuizDTO: {
 			examplePaintingId?: string;
+			type: components["schemas"]["QUIZ_TYPE"];
 			answerPaintingIds: string[];
 			distractorPaintingIds: string[];
 			title: string;
@@ -1265,14 +1266,6 @@ export interface operations {
 					"application/json": components["schemas"]["ServiceException"];
 				};
 			};
-			default: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					"application/json": components["schemas"]["ShowTagResponse"];
-				};
-			};
 		};
 	};
 	deleteOneBaseTagControllerTag: {
@@ -1472,14 +1465,6 @@ export interface operations {
 					"application/json": components["schemas"]["ServiceException"];
 				};
 			};
-			default: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					"application/json": components["schemas"]["ShowTagResponse"];
-				};
-			};
 		};
 	};
 	TagController_create: {
@@ -1538,14 +1523,6 @@ export interface operations {
 					"application/json": components["schemas"]["ServiceException"];
 				};
 			};
-			default: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					"application/json": components["schemas"]["ShowTagResponse"];
-				};
-			};
 		};
 	};
 	AuthController_signIn: {
@@ -1591,14 +1568,6 @@ export interface operations {
 				};
 				content: {
 					"application/json": components["schemas"]["ServiceException"];
-				};
-			};
-			default: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					"application/json": components["schemas"]["SignInResponse"];
 				};
 			};
 		};
@@ -1651,14 +1620,6 @@ export interface operations {
 					"application/json": components["schemas"]["ServiceException"];
 				};
 			};
-			default: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					"application/json": components["schemas"]["ShowVerificationResponse"];
-				};
-			};
 		};
 	};
 	AuthController_verifyPinCode: {
@@ -1707,14 +1668,6 @@ export interface operations {
 				};
 				content: {
 					"application/json": components["schemas"]["ServiceException"];
-				};
-			};
-			default: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					"application/json": components["schemas"]["ShowOneTimeTokenResponse"];
 				};
 			};
 		};
@@ -1768,14 +1721,6 @@ export interface operations {
 					"application/json": components["schemas"]["ServiceException"];
 				};
 			};
-			default: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					"application/json": components["schemas"]["ShowOneTimeTokenResponse"];
-				};
-			};
 		};
 	};
 	AuthController_emailSecurityToken: {
@@ -1823,12 +1768,6 @@ export interface operations {
 				content: {
 					"application/json": components["schemas"]["ServiceException"];
 				};
-			};
-			default: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content?: never;
 			};
 		};
 	};
@@ -1881,14 +1820,6 @@ export interface operations {
 				};
 				content: {
 					"application/json": components["schemas"]["ServiceException"];
-				};
-			};
-			default: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					"application/json": components["schemas"]["EmailVerificationTokenResponse"];
 				};
 			};
 		};
@@ -1947,14 +1878,6 @@ export interface operations {
 					"application/json": components["schemas"]["ServiceException"];
 				};
 			};
-			default: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					"application/json": components["schemas"]["HashedOneTimeTokenResponse"];
-				};
-			};
 		};
 	};
 	UserController_getOne: {
@@ -2001,14 +1924,6 @@ export interface operations {
 				};
 				content: {
 					"application/json": components["schemas"]["ServiceException"];
-				};
-			};
-			default: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					"application/json": components["schemas"]["ShowUserResponse"];
 				};
 			};
 		};
@@ -2489,14 +2404,6 @@ export interface operations {
 					"application/json": components["schemas"]["ServiceException"];
 				};
 			};
-			default: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					"application/json": components["schemas"]["ShowStyleResponse"];
-				};
-			};
 		};
 	};
 	replaceOneBaseStyleControllerStyle: {
@@ -2821,14 +2728,6 @@ export interface operations {
 					"application/json": components["schemas"]["ServiceException"];
 				};
 			};
-			default: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					"application/json": components["schemas"]["ShowPaintingResponse"][];
-				};
-			};
 		};
 	};
 	PaintingController_getWeeklyArtworkData: {
@@ -2875,14 +2774,6 @@ export interface operations {
 				};
 				content: {
 					"application/json": components["schemas"]["ServiceException"];
-				};
-			};
-			default: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					"application/json": components["schemas"]["ShowPaintingResponse"][];
 				};
 			};
 		};
@@ -2933,14 +2824,6 @@ export interface operations {
 				};
 				content: {
 					"application/json": components["schemas"]["ServiceException"];
-				};
-			};
-			default: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					"application/json": components["schemas"]["ShowPaintingResponse"];
 				};
 			};
 		};
@@ -3001,14 +2884,6 @@ export interface operations {
 				};
 				content: {
 					"application/json": components["schemas"]["ServiceException"];
-				};
-			};
-			default: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					"application/json": components["schemas"]["ShowPaintingResponse"];
 				};
 			};
 		};
@@ -3186,14 +3061,6 @@ export interface operations {
 				};
 				content: {
 					"application/json": components["schemas"]["ServiceException"];
-				};
-			};
-			default: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					"application/json": components["schemas"]["ShowPainting"];
 				};
 			};
 		};
@@ -3676,14 +3543,6 @@ export interface operations {
 					"application/json": components["schemas"]["ServiceException"];
 				};
 			};
-			default: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					"application/json": components["schemas"]["ShowQuizReactionResponse"][];
-				};
-			};
 		};
 	};
 	QuizController_createQuizReaction: {
@@ -3832,14 +3691,6 @@ export interface operations {
 				};
 				content: {
 					"application/json": components["schemas"]["ServiceException"];
-				};
-			};
-			default: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					"application/json": components["schemas"]["ScheduleQuizResponse"];
 				};
 			};
 		};
@@ -4020,14 +3871,6 @@ export interface operations {
 					"application/json": components["schemas"]["ServiceException"];
 				};
 			};
-			default: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					"application/json": components["schemas"]["ShowQuizResponse"];
-				};
-			};
 		};
 	};
 	QuizController_getDetailQuiz: {
@@ -4078,14 +3921,6 @@ export interface operations {
 				};
 				content: {
 					"application/json": components["schemas"]["ServiceException"];
-				};
-			};
-			default: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					"application/json": components["schemas"]["DetailQuizResponse"];
 				};
 			};
 		};
@@ -4146,14 +3981,6 @@ export interface operations {
 				};
 				content: {
 					"application/json": components["schemas"]["ServiceException"];
-				};
-			};
-			default: {
-				headers: {
-					[name: string]: unknown;
-				};
-				content: {
-					"application/json": components["schemas"]["ShowQuizResponse"];
 				};
 			};
 		};
