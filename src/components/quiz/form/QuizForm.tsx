@@ -49,10 +49,10 @@ export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
 	// ? 질문: <의문점 또는 개선 방향>
 	// * 참고: <관련 정보나 링크>
 
-	const loadNewQuiz = useCallback(() => {
-		const prevNewQuiz = getSavedNewQuiz();
-		if (prevNewQuiz) {
-			setNewQuiz(prevNewQuiz);
+	const loadSavedNewQuiz = useCallback(() => {
+		const savedNewQuiz = getSavedNewQuiz();
+		if (savedNewQuiz) {
+			setNewQuiz(savedNewQuiz);
 		}
 	}, []);
 
@@ -64,9 +64,9 @@ export const QuizForm = ({ quiz }: QuizFormProps): JSX.Element => {
 		// 2. <InsertInput />요소의 값이 복원되지 않음.
 		//=> 해결 방법 : <InsertInput /> prop에 전달될 값도 localStorage에 백업.
 		if (!quiz) {
-			loadNewQuiz();
+			loadSavedNewQuiz();
 		}
-	}, [quiz, loadNewQuiz]);
+	}, [quiz, loadSavedNewQuiz]);
 
 	useEffect(() => {
 		if (!quiz) {
