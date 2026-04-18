@@ -23,7 +23,7 @@ export const PaintingCardGrid = ({
 	const findResultRef = useRef<PaginationResponse<ShowPainting>>(findResult);
 	const observerTarget = useRef<HTMLDivElement>(null);
 
-	const loadMorePainting = async () => {
+	const loadMorePainting = useCallback(async () => {
 		if (
 			findResultRef.current.page === findResultRef.current.pageCount ||
 			isLoadingRef.current
@@ -52,7 +52,7 @@ export const PaintingCardGrid = ({
 		} else {
 			toast.error(result.message);
 		}
-	};
+	}, [loadQuery]);
 
 	// 스크롤 이벤트 핸들러
 	useEffect(() => {
@@ -92,7 +92,7 @@ export const PaintingCardGrid = ({
 		observer.observe(target);
 
 		return () => observer.unobserve(target);
-	}, []);
+	}, [loadQuery]);
 
 	useEffect(() => {
 		setSearchPaintings(findResult.data);
