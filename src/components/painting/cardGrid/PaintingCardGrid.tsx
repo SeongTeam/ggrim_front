@@ -1,9 +1,7 @@
 "use client";
-import { RefObject, useEffect, useRef, useState } from "react";
+import { RefObject, useCallback, useEffect, useRef, useState } from "react";
 import { HoverCard } from "../../common/HoverCard";
 import { PreviewPainting } from "../PreviewPainting";
-import { useSearchParams } from "next/navigation";
-import { throttle } from "../../../util/optimization";
 import { findPaintingAction } from "../../../server-action/backend/painting/api";
 import { PaginationResponse } from "../../../server-action/backend/_common/type";
 import { ShowPainting } from "../../../generated/dto-types";
@@ -23,69 +21,78 @@ export const PaintingCardGrid = ({
 	const [searchPaintings, setSearchPaintings] = useState<ShowPainting[]>(findResult.data); // Q. 초기값은 언제 반영되지? 만약 다른 state가 갱신되면, 현재 state는 기존값 유지 Or 초기값?
 	const isLoadingRef: RefObject<boolean> = useRef(false);
 	const findResultRef = useRef<PaginationResponse<ShowPainting>>(findResult);
-	const searchParam = useSearchParams();
+	const observerTarget = useRef<HTMLDivElement>(null);
+
+	const loadMorePainting = async () => {
+		if (
+			findResultRef.current.page === findResultRef.current.pageCount ||
+			isLoadingRef.current
+		) {
+			console.log("not load painting");
+			console.log(findResultRef, isLoadingRef);
+			return;
+		}
+		isLoadingRef.current = true;
+
+		const { title, artist, tags, styles } = loadQuery;
+
+		console.log(`load ${findResultRef.current.page + 1} page`);
+		const result = await findPaintingAction(
+			title,
+			artist,
+			tags,
+			styles,
+			findResultRef.current.page + 1,
+		);
+		isLoadingRef.current = false;
+		if (result.ok) {
+			const { data: pagination } = result;
+			findResultRef.current = pagination;
+			setSearchPaintings((prev) => [...prev, ...pagination.data]);
+		} else {
+			toast.error(result.message);
+		}
+	};
 
 	// 스크롤 이벤트 핸들러
 	useEffect(() => {
-		const loadMorePainting = async () => {
-			if (
-				findResultRef.current.page === findResultRef.current.pageCount ||
-				isLoadingRef.current
-			) {
-				console.log("not load painting");
-				console.log(findResultRef, isLoadingRef);
-				return;
-			}
-			isLoadingRef.current = true;
+		// TODO: handleScroll 로직 성능 개선
+		// - [x] throttle 구현
+		//   -> innerHeight,scrollY,offsetHeight 참조는 리플로우를 발생시킬 수 있다.
+		//   -> throttle을 통해서, 스크롤 핸들러가 특정 주기마다만 호출할 수 있게 하면, 리플로우 발생 횟수가 감소
+		// - [x] Intersection Observer API 사용
+		//    -> throttle에 의해 리플로우 발생 횟수를 줄이더라도, 스크롤 이벤트에 특정 주기마다 리플로우가 발생할 수 있다.
+		//    -> 브라우저가 직접 요소의 가시성을 감지하므로, 리플로우가 발생할 때만 처리된다.
+		// ! 주의: <경고할 사항>
+		// ? 질문: <의문점 또는 개선 방향>
+		// * 참고: - infinite Scroll 참조 문서 https://tech.kakaoenterprise.com/149
+		console.log(`[handleScroll]`);
+		const target = observerTarget.current;
+		if (!target) {
+			console.error("Observer target is not set");
+			return;
+		}
 
-			const { title, artist, tags, styles } = loadQuery;
+		const observer = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((entry) => {
+					if (entry.isIntersecting && !isLoadingRef.current) {
+						console.log(`[IntersectionObserver] target is intersecting`);
+						loadMorePainting();
+					}
+				});
+			},
+			{
+				root: null, // viewport
+				rootMargin: "0px",
+				threshold: 1.0, // 타겟이 완전히 보일 때 콜백 실행
+			},
+		);
 
-			console.log(`load ${findResultRef.current.page + 1} page`);
-			const result = await findPaintingAction(
-				title,
-				artist,
-				tags,
-				styles,
-				findResultRef.current.page + 1,
-			);
-			isLoadingRef.current = false;
-			if (result.ok) {
-				const { data: pagination } = result;
-				findResultRef.current = pagination;
-				setSearchPaintings((prev) => [...prev, ...pagination.data]);
-			} else {
-				toast.error(result.message);
-			}
-		};
+		observer.observe(target);
 
-		const handleScroll = () => {
-			console.log(`[handleScroll]`);
-			if (
-				// TODO: handleScroll 로직 성능 개선
-				// - [x] throttle 구현
-				//   -> innerHeight,scrollY,offsetHeight 참조는 리플로우를 발생시킬 수 있다.
-				//   -> throttle을 통해서, 스크롤 핸들러가 특정 주기마다만 호출할 수 있게 하면, 리플로우 발생 횟수가 감소
-				// - [ ] Intersection Observer API 사용
-				//    -> throttle에 의해 리플로우 발생 횟수를 줄이더라도, 스크롤 이벤트에 특정 주기마다 리플로우가 발생할 수 있다.
-				//    -> 브라우저가 직접 요소의 가시성을 감지하므로, 리플로우가 발생할 때만 처리된다.
-				// ! 주의: <경고할 사항>
-				// ? 질문: <의문점 또는 개선 방향>
-				// * 참고: - infinite Scroll 참조 문서 https://tech.kakaoenterprise.com/149
-
-				window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 &&
-				!isLoadingRef.current
-			) {
-				console.log(`[loadMorePainting]`);
-				loadMorePainting();
-			}
-		};
-
-		const handleScrollThrottle = throttle(handleScroll, 300);
-
-		console.log("[useEffect] : for config scroll event");
-		window.addEventListener("scroll", handleScrollThrottle);
-		return () => window.removeEventListener("scroll", handleScrollThrottle);
-	}, [searchParam]);
+		return () => observer.unobserve(target);
+	}, []);
 
 	useEffect(() => {
 		setSearchPaintings(findResult.data);
@@ -120,7 +127,9 @@ export const PaintingCardGrid = ({
 					</HoverCard>
 				</div>
 			))}
-			{isLoadingRef.current && <p className="mt-4 text-center">Loading...</p>}
+			<div ref={observerTarget} className="flex h-20 items-center justify-center">
+				{isLoadingRef.current && <p className="mt-4 text-center">Loading...</p>}
+			</div>
 		</div>
 	);
 };
