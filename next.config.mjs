@@ -29,6 +29,9 @@ const nextConfig = {
 		config.resolve.alias["@"] = path.resolve(__dirname, "src");
 		return config;
 	},
+	turbopack: {
+		root: path.join(__dirname, '.'),
+	  },
 };
 
 if (process.env.NODE_ENV === "production") {
