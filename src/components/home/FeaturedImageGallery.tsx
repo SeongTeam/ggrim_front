@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { PaintingDetailView } from "../search/PaintingDetailView";
+import { PaintingDetailView } from "../painting/PaintingDetailView";
 import { Modal } from "../modal/Modal";
 import { ShowPaintingResponse } from "../../generated/dto-types";
 

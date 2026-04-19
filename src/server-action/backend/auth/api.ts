@@ -29,7 +29,7 @@ const signIn = async (email: string, password: string) => {
 		throw error;
 	}
 
-	setSignInResponse(data);
+	await setSignInResponse(data);
 };
 
 const sendPinCode = async (dto: RequestVerificationDto) => {

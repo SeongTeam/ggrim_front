@@ -1,8 +1,9 @@
 import React, { Suspense } from "react";
-import { PaintingCardGrid } from "../../components/search/PaintingCardGrid";
 import { findPaintingAction } from "../../server-action/backend/painting/api";
 import { ErrorModal } from "../../components/modal/ErrorModal";
-import { SEARCH_PARAM_KEY } from "../../components/search/const";
+import { getSearchParams } from "../../components/painting/searchBar/util";
+import { PAINTING_PARAM_KEY } from "../../components/painting/searchBar/const";
+import { PaintingSearch } from "../../components/painting/PaintingSearch";
 
 // TODO: Search Page 개선
 // - [x] '/'page에 search bar 추가
@@ -19,15 +20,12 @@ interface SearchPageProps {
 }
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {
-	const title = (await searchParams)[SEARCH_PARAM_KEY.TITLE] || "";
-	const artist = (await searchParams)[SEARCH_PARAM_KEY.ARTIST] || "";
-	const tags = (await searchParams)[SEARCH_PARAM_KEY.TAGS] || [];
-	const styles = (await searchParams)[SEARCH_PARAM_KEY.STYLES] || [];
-
-	if (Array.isArray(title) || Array.isArray(artist)) {
+	const keyword = (await searchParams)[PAINTING_PARAM_KEY.KEYWORD] || "";
+	if (Array.isArray(keyword)) {
 		return <ErrorModal message="wrong access with invalid parameter" />;
 	}
 
+	const { title, artist, tags, styles } = getSearchParams(keyword);
 	const response = await findPaintingAction(
 		title,
 		artist,
@@ -40,8 +38,8 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
 	return (
 		<Suspense>
-			<div className="mt-20">
-				<PaintingCardGrid findResult={response.data} />
+			<div className="mx-4 mt-20">
+				<PaintingSearch initPaintings={response.data} />
 			</div>
 		</Suspense>
 	);

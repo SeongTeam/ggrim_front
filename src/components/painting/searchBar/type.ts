@@ -1,4 +1,4 @@
-import { INPUT_KEY, SEARCH_PARAM_KEY } from "./const";
+import { INPUT_KEY, PAINTING_PARAM_KEY } from "./const";
 
 // Types
 export type ParamCase = "NO_QUOTED" | "NO_PARAM" | "PARAM_KEY_ONLY" | "DEFAULT";
@@ -31,4 +31,10 @@ export type InputAction =
 	| { type: "SET_ALL"; payload: Partial<InputState> };
 
 export type InputKeyValue = (typeof INPUT_KEY)[keyof typeof INPUT_KEY];
-export type SearchParamKeyValue = (typeof SEARCH_PARAM_KEY)[keyof typeof SEARCH_PARAM_KEY];
+export type SearchParamKeyValue = (typeof PAINTING_PARAM_KEY)[keyof typeof PAINTING_PARAM_KEY];
+export interface ParsedInput {
+	title: string;
+	artist: string;
+	tags: string[];
+	styles: string[];
+}

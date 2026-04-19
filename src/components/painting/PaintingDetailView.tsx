@@ -55,10 +55,6 @@ export const PaintingDetailView = ({ painting }: PaintingDetailViewProps) => {
 				<p className="mt-2 text-sm text-gray-500">
 					Styles: {painting.showStyles.map((style) => style.name).join(", ")}
 				</p>
-				<div className="flex gap-2">
-					<p className="mt-2 text-sm text-gray-500">painting ID: {painting.id}</p>
-					<CopyButton textToCopy={painting.id} />
-				</div>
 				<p className="mt-2 text-base text-gray-500">
 					Description:{" "}
 					{painting.description.length > 30 && !showFullDescription

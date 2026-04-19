@@ -6,10 +6,8 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { deleteQuizAction } from "../../server-action/backend/quiz/api";
 import toast from "react-hot-toast";
-import { SEARCH_LOGIC_ROUTE } from "../../route/search/route";
+import { PAINTING_LOGIC_ROUTE } from "../../route/painting/route";
 import { ShowQuizResponse } from "../../generated/dto-types";
-import { isServerActionError } from "@/server-action/backend/_common/serverActionError";
-
 type QuizMenuProps = {
 	quiz: ShowQuizResponse;
 	isOwner: boolean;
@@ -121,17 +119,17 @@ const ShowDescription = ({ quiz, isShow, setShow }: ShowDescriptionProps) => {
 	const modalRef = useRef<HTMLDivElement>(null);
 
 	const handleClickTag = (name: string) => {
-		const url = SEARCH_LOGIC_ROUTE.SEARCH_PAINTING("", "", [name]);
+		const url = PAINTING_LOGIC_ROUTE.SEARCH_PAINTING(`tag:${name}`);
 		router.push(url);
 	};
 
 	const handleClickStyle = (name: string) => {
-		const url = SEARCH_LOGIC_ROUTE.SEARCH_PAINTING("", "", [], [name]);
+		const url = PAINTING_LOGIC_ROUTE.SEARCH_PAINTING(`style:${name}`);
 		router.push(url);
 	};
 
 	const handleClickArtist = (name: string) => {
-		const url = SEARCH_LOGIC_ROUTE.SEARCH_PAINTING("", name);
+		const url = PAINTING_LOGIC_ROUTE.SEARCH_PAINTING(`artist:${name}`);
 		router.push(url);
 	};
 

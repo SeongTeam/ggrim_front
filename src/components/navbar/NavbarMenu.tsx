@@ -7,6 +7,7 @@ const NavRoute = {
 	home: "/",
 	quiz: "/quiz",
 	quizCreate: "/quiz/create",
+	painting: "/painting",
 };
 
 export const NavbarMenu = () => {
@@ -35,6 +36,9 @@ export const NavbarMenu = () => {
 				</li>
 				<li className="cursor-pointer hover:text-gray-300">
 					<Link href={NavRoute.quizCreate}> Create Quiz</Link>
+				</li>
+				<li className="cursor-pointer hover:text-gray-300">
+					<Link href={NavRoute.painting}> Painting</Link>
 				</li>
 			</ul>
 		</div>
