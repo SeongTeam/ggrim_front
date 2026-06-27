@@ -2,6 +2,15 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "type": "node",
+            "name": "Attach to next.js server side",
+            "request": "attach",
+            "cwd": "${workspaceFolder}",
+            "port": 9230,
+            "sourceMaps": true,
+            "restart": true
+        },
+        {
             "name": "Next.js: debug server-side",
             "type": "node-terminal",
             "request": "launch",
@@ -12,26 +21,8 @@
                 "${workspaceFolder}/**",
                 "!**/node_modules/**",
                 "!**/.next/**"
-            ]
-        },
-        {
-            "name": "Next.js: debug client-side",
-            "type": "chrome",
-            "request": "launch",
-            "url": "http://localhost:4000"
-        },
-        {
-            "name": "Next.js: debug client-side (Firefox)",
-            "type": "firefox",
-            "request": "launch",
-            "url": "http://localhost:4000",
-            "reAttach": true,
-            "pathMappings": [
-                {
-                    "url": "webpack://_N_E",
-                    "path": "${workspaceFolder}"
-                }
-            ]
+            ],
+            
         },
         {
             "name": "Next.js: debug full stack",
