@@ -8,6 +8,7 @@ import { deleteQuizAction } from "../../server-action/backend/quiz/api";
 import toast from "react-hot-toast";
 import { PAINTING_LOGIC_ROUTE } from "../../route/painting/route";
 import { ShowQuizResponse } from "../../generated/dto-types";
+import { QUIZ_LOGIC_ROUTE } from "@/route/quiz/route";
 type QuizMenuProps = {
 	quiz: ShowQuizResponse;
 	isOwner: boolean;
@@ -38,7 +39,7 @@ export const QuizMenu = ({ quiz, isOwner }: QuizMenuProps) => {
 	}, [open]);
 
 	const onEdit = () => {
-		router.push(`/quiz/${quiz.id}/edit`);
+		router.push(QUIZ_LOGIC_ROUTE.EDIT_QUIZ(quiz.id));
 	};
 
 	const onDescription = () => {
@@ -48,7 +49,7 @@ export const QuizMenu = ({ quiz, isOwner }: QuizMenuProps) => {
 	const onDelete = async () => {
 		const result = await deleteQuizAction(quiz.id);
 		if (result.ok) {
-			router.push("/quiz");
+			router.push(QUIZ_LOGIC_ROUTE.SEARCH_QUIZ);
 		} else {
 			toast.error(result.message);
 		}

@@ -9,6 +9,7 @@ import { PaginationResponse } from "../../server-action/backend/_common/type";
 import { ShowQuiz } from "../../generated/dto-types";
 import { isServerActionError } from "@/server-action/backend/_common/serverActionError";
 import toast from "react-hot-toast";
+import { QUIZ_LOGIC_ROUTE } from "@/route/quiz/route";
 
 interface QuizCardGridProps {
 	findResult: PaginationResponse<ShowQuiz>;
@@ -22,8 +23,7 @@ export const QuizCardGrid = (props: QuizCardGridProps): React.JSX.Element => {
 	// const searchParam = useSearchParams();
 
 	const handleClickCard = (quiz: ShowQuiz) => {
-		const url: string = `/quiz/${quiz.id}`;
-		router.push(url);
+		router.push(QUIZ_LOGIC_ROUTE.DETAIL_QUIZ(quiz.id));
 	};
 
 	// 스크롤 이벤트 핸들러

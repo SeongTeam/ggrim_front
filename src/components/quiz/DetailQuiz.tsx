@@ -21,6 +21,7 @@ import {
 	ShowPaintingResponse,
 } from "../../generated/dto-types";
 import toast from "react-hot-toast";
+import { QUIZ_LOGIC_ROUTE } from "@/route/quiz/route";
 interface DetailQuizProps {
 	detailQuizDTO: DetailQuizResponse;
 	isOwnerAccess: boolean;
@@ -58,7 +59,7 @@ export const DetailQuiz = ({
 		if (result.ok) {
 			const { endIndex, currentIndex, context, shortQuiz } = result.data;
 			saveQuizStatus({ endIndex, currentIndex, context });
-			router.push(`/quiz/${shortQuiz.id}`);
+			router.push(QUIZ_LOGIC_ROUTE.DETAIL_QUIZ(shortQuiz.id));
 		} else {
 			toast.error(result.message);
 		}

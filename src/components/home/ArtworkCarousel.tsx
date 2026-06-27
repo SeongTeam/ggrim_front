@@ -5,6 +5,7 @@ import React from "react";
 import { QuizCard } from "../quiz/QuizCard";
 import { useRouter } from "next/navigation";
 import { ShowPaintingResponse, ShowQuiz } from "../../generated/dto-types";
+import { QUIZ_LOGIC_ROUTE } from "@/route/quiz/route";
 
 interface ArtworkCarouselProps {
 	curatedWorkAttributes: ShowPaintingResponse[];
@@ -16,7 +17,7 @@ export const ArtworkCarousel = (props: ArtworkCarouselProps) => {
 	const router = useRouter();
 
 	const handleClickCard = (quiz: ShowQuiz) => {
-		const url: string = `/quiz/${quiz.id}`;
+		const url = QUIZ_LOGIC_ROUTE.DETAIL_QUIZ(quiz.id);
 		router.push(url);
 	};
 
