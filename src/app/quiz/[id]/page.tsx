@@ -21,7 +21,7 @@ export default async function QuizDetailPage(props: QuizDetailPageProps) {
 	const quizActionResponse = quizActionResult.data;
 
 	const isOwnerAccess = signInResponse?.user
-		? quizActionResponse.quiz.owner.id === signInResponse.user.id
+		? quizActionResponse.quiz.user.id === signInResponse.user.id
 		: false;
 
 	return (
