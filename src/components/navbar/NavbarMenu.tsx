@@ -2,12 +2,15 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
+import { QUIZ_LOGIC_ROUTE } from "@/route/quiz/route";
+import { PAINTING_LOGIC_ROUTE } from "@/route/painting/route";
+import { BASE_LOGIC_ROUTE } from "@/route/route";
 
 const NavRoute = {
-	home: "/",
-	quiz: "/quiz",
-	quizCreate: "/quiz/create",
-	painting: "/painting",
+	home: BASE_LOGIC_ROUTE.BASE,
+	quiz: QUIZ_LOGIC_ROUTE.SEARCH_QUIZ,
+	quizCreate: QUIZ_LOGIC_ROUTE.CREATE_QUIZ,
+	painting: PAINTING_LOGIC_ROUTE.SEARCH_PAINTING(""),
 };
 
 export const NavbarMenu = () => {

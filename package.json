@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack -p 4000",
+    "dev": "NODE_OPTIONS='--inspect' next dev --turbopack -p 4000",
     "build": "next build",
     "start": "next start -p 4000",
     "lint": "eslint ."
@@ -33,7 +33,6 @@
     "server-only": "^0.0.1",
     "sharp": "^0.34.2",
     "styled-components": "^6.1.13",
-    "uuid": "^11.1.0",
     "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0",
     "zustand": "^5.0.12"

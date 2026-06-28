@@ -13,6 +13,7 @@ import { addQuizAction, updateQuizAction } from "../../../server-action/backend/
 import { removeSavedNewQuiz } from "../../../state/browser/quiz";
 import { useRouter } from "next/navigation";
 import { getPaintingAction } from "../../../server-action/backend/painting/api";
+import { QUIZ_LOGIC_ROUTE } from "@/route/quiz/route";
 
 function reducer(state: NewQuiz, action: Action): NewQuiz {
 	switch (action.type) {
@@ -105,7 +106,7 @@ export const useQuizForm = (prevQuiz?: ShowQuizResponse) => {
 			const result = await serverAction(dto);
 			if (result.ok) {
 				removeSavedNewQuiz();
-				router.push(`/quiz/${result.data.id}`);
+				router.push(QUIZ_LOGIC_ROUTE.DETAIL_QUIZ(result.data.id));
 			} else {
 				throw new Error(result.message);
 			}

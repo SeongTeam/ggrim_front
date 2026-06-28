@@ -47,7 +47,8 @@ export function withErrorHandler<T extends Action>(actionName: string, action: T
 }
 
 function handleServerActionError(actionName: string, err: ServerActionError): ServerActionFailure {
-	serverLogger.error(`${actionName}() fail. ServerActionError: ${JSON.stringify(err, null, 2)}`);
+	serverLogger.error(`${actionName}() fail. ServerActionError: ${err.message}
+		Stack : ${err.stack}`);
 	return { ok: false, message: err.message };
 }
 

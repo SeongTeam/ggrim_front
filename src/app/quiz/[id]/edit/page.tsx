@@ -40,7 +40,7 @@ const fetchQuizEditData = async (id: string) => {
 	const { quiz } = quizActionResult.data;
 	const { user } = signInResponse;
 
-	if (quiz.owner.id !== user.id) {
+	if (quiz.user.id !== user.id) {
 		return { message: "No Authorized to edit" };
 	}
 	return { quiz };
